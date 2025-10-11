@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Logical spacing helpers for RTL friendliness */
+[dir="rtl"] .ms-2 { margin-right: .5rem; }
+[dir="rtl"] .me-2 { margin-left: .5rem; }
+[dir="ltr"] .ms-2 { margin-left: .5rem; }
+[dir="ltr"] .me-2 { margin-right: .5rem; }
+
+/* Global background image for all views */
+html, body {
+	background-image: url('/images/HighTidebg.jpeg');
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+}

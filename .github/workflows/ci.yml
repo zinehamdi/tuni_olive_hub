@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: laravel
+          MYSQL_ROOT_PASSWORD: password
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ppassword" --health-interval=10s --health-timeout=5s --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo_mysql
+          coverage: none
+      - name: Install dependencies
+        run: |
+          cd tuni-olive-hub
+          composer install --no-interaction --prefer-dist
+      - name: Copy .env
+        run: |
+          cd tuni-olive-hub
+          cp .env.example .env || true
+          php -r "file_exists('artisan') || exit(0);"
+      - name: Generate key and migrate
+        run: |
+          cd tuni-olive-hub
+          php artisan key:generate
+          php artisan migrate --force
+      - name: Run tests
+        run: |
+          cd tuni-olive-hub
+          php artisan test --testsuite=Feature
+      - name: Guard routes
+        run: |
+          cd tuni-olive-hub
+          php scripts/guard_routes.php
+      - name: Start server for payload guard
+        run: |
+          cd tuni-olive-hub
+          php artisan serve --host=127.0.0.1 --port=8000 &
+          sleep 3
+      - name: Guard payloads
+        env:
+          APP_URL: http://127.0.0.1:8000
+        run: |
+          cd tuni-olive-hub
+          php scripts/guard_payloads.php

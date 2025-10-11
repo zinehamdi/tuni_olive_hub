@@ -1,0 +1,23 @@
+<?php
+return [
+    'sahli' => 'Sahli',
+    'chemlali' => 'Chemlali',
+    'chetwi' => 'Chetwi',
+    'baldi' => 'Baldi',
+    'choronaiki' => 'Choronaiki',
+    'arbozana' => 'Arbozana',
+    'meski' => 'Meski',
+    'zarrazi' => 'Zarrazi',
+    'toffehi' => 'Toffehi',
+    'sfarjal' => 'Sfarjal',
+    'barouni' => 'Barouni',
+    'manzanilla' => 'Manzanilla',
+    'picholine' => 'Picholine',
+    'frantoio' => 'Frantoio',
+    'leccino' => 'Leccino',
+    'koroneiki' => 'Koroneiki',
+    'arbequina' => 'Arbequina',
+    'picual' => 'Picual',
+    'hojiblanca' => 'Hojiblanca',
+    'verdale' => 'Verdale',
+];
