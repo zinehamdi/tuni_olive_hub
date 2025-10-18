@@ -57,7 +57,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
             </div>
 
             <!-- Form Content -->
-            <form method="POST" action="{{ url('public/listings/store') }}" @submit.prevent="handleSubmit" enctype="multipart/form-data" class="p-8">
+            <form method="POST" action="{{ route('listings.store') }}" @submit.prevent="handleSubmit" enctype="multipart/form-data" class="p-8">
                 @csrf
                 <input type="hidden" name="seller_id" value="{{ auth()->id() }}">
                 <input type="hidden" name="status" value="active">
