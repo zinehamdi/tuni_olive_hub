@@ -98,7 +98,7 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
 require __DIR__.'/auth.php';
 
 // Public storefront + SEO
-Route::group(function(){
+Route::group([], function(){
     Route::get('landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
     Route::get('sitemap.xml', [\App\Http\Controllers\PublicController::class, 'sitemap'])->name('public.sitemap');
     Route::get('feed.rss', [\App\Http\Controllers\PublicController::class, 'rss'])->name('public.rss');
