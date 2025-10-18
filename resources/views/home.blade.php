@@ -16,11 +16,17 @@
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
         <div id="prices-bar"
              class="w-full text-sm px-4 md:px-6 py-2 bg-emerald-600 text-white flex flex-wrap items-center gap-x-6 gap-y-1">
-            <span class="font-semibold">أسعار اليوم:</span>
-            <span id="price-global" class="opacity-90">الزيت العالمي (طن): —</span>
-            <span id="price-baz" class="opacity-90">باز تونس (كغ): —</span>
-            <span id="price-organic" class="opacity-90">عضوي (لتر): —</span>
-            <span id="price-date" class="ms-auto opacity-90">التاريخ: —</span>
+            <span class="font-semibold">{{ __('Today\'s Prices') }}:</span>
+            <span id="price-global" class="opacity-90">
+                <span class="font-medium">{{ __('Global Oil') }}</span> ({{ __('ton') }}): <span class="price-value">—</span>
+            </span>
+            <span id="price-baz" class="opacity-90">
+                <span class="font-medium">{{ __('Tunisia Baz') }}</span> ({{ __('kg') }}): <span class="price-value">—</span>
+            </span>
+            <span id="price-organic" class="opacity-90">
+                <span class="font-medium">{{ __('Organic') }}</span> ({{ __('liter') }}): <span class="price-value">—</span>
+            </span>
+            <span id="price-date" class="ms-auto opacity-90">{{ __('Date') }}: <span class="date-value">—</span></span>
         </div>
 
         <nav class="px-4 md:px-6 py-3">
@@ -166,6 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const base = '{{ url('/') }}';
     const url = base + '/api/v1/prices/today';
     const sel = id => document.getElementById(id);
+    const locale = '{{ app()->getLocale() }}';
 
     try {
         const resp = await fetch(url, { headers: { 'Accept': 'application/json' }});
@@ -173,10 +180,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const json = await resp.json();
         const d = json?.data || {};
 
-        if (d.global_oil_usd_ton != null) sel('price-global').textContent = `الزيت العالمي (طن): ${Number(d.global_oil_usd_ton).toLocaleString('ar-TN')}`;
-        if (d.tunis_baz_tnd_kg != null) sel('price-baz').textContent = `باز تونس (كغ): ${Number(d.tunis_baz_tnd_kg).toLocaleString('ar-TN')}`;
-        if (d.organic_tnd_l != null) sel('price-organic').textContent = `عضوي (لتر): ${Number(d.organic_tnd_l).toLocaleString('ar-TN')}`;
-        if (d.date) sel('price-date').textContent = `التاريخ: ${d.date}`;
+        // Update only the price values, not the labels
+        if (d.global_oil_usd_ton != null) {
+            const priceValue = sel('price-global').querySelector('.price-value');
+            if (priceValue) priceValue.textContent = Number(d.global_oil_usd_ton).toLocaleString(locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US');
+        }
+        if (d.tunis_baz_tnd_kg != null) {
+            const priceValue = sel('price-baz').querySelector('.price-value');
+            if (priceValue) priceValue.textContent = Number(d.tunis_baz_tnd_kg).toLocaleString(locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US');
+        }
+        if (d.organic_tnd_l != null) {
+            const priceValue = sel('price-organic').querySelector('.price-value');
+            if (priceValue) priceValue.textContent = Number(d.organic_tnd_l).toLocaleString(locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US');
+        }
+        if (d.date) {
+            const dateValue = sel('price-date').querySelector('.date-value');
+            if (dateValue) dateValue.textContent = d.date;
+        }
     } catch (e) {
         // Silent fallback; keep defaults
     }
