@@ -92,15 +92,18 @@
             </a>
         </div>
 
-        <!-- Mobile View: Rotating Ticker -->
-        <div class="sm:hidden flex items-center justify-center gap-2 relative overflow-hidden" style="min-height: 36px;">
-            <span class="text-lg">📊</span>
-            
-            <div class="relative flex-1 flex items-center justify-center">
-                <!-- Rotating price items -->
-                <div class="price-ticker-mobile">
+        <!-- Mobile View: Horizontal Scrolling Ticker (News Channel Style) -->
+        <div class="sm:hidden relative overflow-hidden bg-gradient-to-r from-[#C8A356] via-[#d4b166] to-[#C8A356]" style="height: 36px;">
+            <div class="ticker-wrapper">
+                <div class="ticker-content">
+                    <!-- First set of prices -->
+                    <div class="ticker-item">
+                        <span class="text-lg">📊</span>
+                        <span class="font-bold text-xs">{{ __('Today\'s Prices') }}</span>
+                    </div>
+                    
                     @if($soukAvgTND)
-                    <div class="price-item flex items-center justify-center gap-2">
+                    <div class="ticker-item">
                         <span class="text-base">🫒</span>
                         <span class="text-xs font-semibold">{{ __('Olives') }}:</span>
                         <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
@@ -110,7 +113,7 @@
                     @endif
 
                     @if($soukOilAvgTND)
-                    <div class="price-item flex items-center justify-center gap-2">
+                    <div class="ticker-item">
                         <img src="{{ asset('images/olive-oil.png') }}" alt="Oil" class="w-4 h-4 object-contain">
                         <span class="text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'زيت/سعر الباز' : __('Oil') }}:</span>
                         <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
@@ -120,7 +123,7 @@
                     @endif
 
                     @if($worldAvgEUR)
-                    <div class="price-item flex items-center justify-center gap-2">
+                    <div class="ticker-item">
                         <span class="text-base">🌍</span>
                         <span class="text-xs font-semibold">{{ __('World') }}:</span>
                         <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
@@ -128,10 +131,58 @@
                         </span>
                     </div>
                     @endif
+
+                    <!-- Separator -->
+                    <div class="ticker-item">
+                        <span class="text-gray-700/40 text-2xl">●</span>
+                    </div>
+
+                    <!-- Duplicate set for seamless loop -->
+                    <div class="ticker-item">
+                        <span class="text-lg">📊</span>
+                        <span class="font-bold text-xs">{{ __('Today\'s Prices') }}</span>
+                    </div>
+                    
+                    @if($soukAvgTND)
+                    <div class="ticker-item">
+                        <span class="text-base">🫒</span>
+                        <span class="text-xs font-semibold">{{ __('Olives') }}:</span>
+                        <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                            {{ number_format($soukAvgTND, 2) }} TND/kg
+                        </span>
+                    </div>
+                    @endif
+
+                    @if($soukOilAvgTND)
+                    <div class="ticker-item">
+                        <img src="{{ asset('images/olive-oil.png') }}" alt="Oil" class="w-4 h-4 object-contain">
+                        <span class="text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'زيت/سعر الباز' : __('Oil') }}:</span>
+                        <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                            {{ number_format($soukOilAvgTND, 2) }} TND/kg
+                        </span>
+                    </div>
+                    @endif
+
+                    @if($worldAvgEUR)
+                    <div class="ticker-item">
+                        <span class="text-base">🌍</span>
+                        <span class="text-xs font-semibold">{{ __('World') }}:</span>
+                        <span class="bg-white/20 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                            {{ number_format($worldAvgEUR, 2) }} EUR/kg
+                        </span>
+                    </div>
+                    @endif
+
+                    <!-- Separator -->
+                    <div class="ticker-item">
+                        <span class="text-gray-700/40 text-2xl">●</span>
+                    </div>
                 </div>
             </div>
             
-            <a href="{{ route('prices.index') }}" class="flex items-center gap-1 hover:bg-black/10 px-2 py-1 rounded transition flex-shrink-0">
+            <!-- View All Button (Fixed on right) -->
+            <a href="{{ route('prices.index') }}" 
+               class="absolute right-0 top-0 bottom-0 flex items-center gap-1 bg-gradient-to-l from-[#C8A356] via-[#C8A356]/95 to-transparent px-3 hover:from-[#b08a3c] transition z-10">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -141,40 +192,55 @@
 </div>
 
 <style>
-    /* Mobile Price Ticker Animation */
+    /* Horizontal Scrolling Ticker Animation (News Channel Style) */
     @media (max-width: 639px) {
-        .price-ticker-mobile {
-            position: relative;
+        .ticker-wrapper {
             width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
         }
         
-        .price-ticker-mobile .price-item {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            opacity: 0;
-            animation: tickerFade 9s infinite;
+        .ticker-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            white-space: nowrap;
+            animation: scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 30s linear infinite;
+            padding-left: 100%;
         }
         
-        .price-ticker-mobile .price-item:nth-child(1) {
-            animation-delay: 0s;
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
         
-        .price-ticker-mobile .price-item:nth-child(2) {
-            animation-delay: 3s;
+        /* LTR: Scroll from right to left */
+        @keyframes scroll-ltr {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
         }
         
-        .price-ticker-mobile .price-item:nth-child(3) {
-            animation-delay: 6s;
+        /* RTL: Scroll from left to right */
+        @keyframes scroll-rtl {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(50%);
+            }
         }
         
-        @keyframes tickerFade {
-            0% { opacity: 0; transform: translateY(10px); }
-            5% { opacity: 1; transform: translateY(0); }
-            30% { opacity: 1; transform: translateY(0); }
-            35% { opacity: 0; transform: translateY(-10px); }
-            100% { opacity: 0; transform: translateY(-10px); }
+        /* Pause on hover */
+        .ticker-wrapper:hover .ticker-content {
+            animation-play-state: paused;
         }
     }
 </style>
