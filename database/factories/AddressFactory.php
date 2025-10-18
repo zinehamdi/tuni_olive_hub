@@ -12,13 +12,15 @@ class AddressFactory extends Factory
 
     public function definition(): array
     {
+        $labels = ['Warehouse', 'Farm', 'Mill', 'Store', 'Office', 'Main Location'];
+        
         return [
             'user_id' => User::factory(),
             'governorate' => $this->faker->randomElement(['Tunis','Sfax','Sousse','Kairouan','Gabes','Nabeul']),
             'delegation' => null,
             'lat' => $this->faker->latitude(33,37),
             'lng' => $this->faker->longitude(8,12),
-            'label' => 'المخزن',
+            'label' => $this->faker->randomElement($labels),
         ];
     }
 }

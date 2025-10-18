@@ -23,14 +23,34 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         $supported = ['ar', 'fr', 'en'];
+        $defaultLocale = 'ar'; // Always default to Arabic
+        
+        // Check for language in query parameter
         $lang = $request->query('lang');
         if ($lang && in_array($lang, $supported, true)) {
             Session::put('locale', $lang);
+            
+            // Save to user's profile if authenticated
+            if ($request->user()) {
+                $request->user()->update(['locale' => $lang]);
+            }
         }
 
-        $locale = Session::get('locale', config('app.locale'));
+        // Priority: 1. Session, 2. User's saved locale, 3. Default to Arabic
+        $locale = Session::get('locale');
+        
+        if (!$locale && $request->user() && $request->user()->locale) {
+            $locale = $request->user()->locale;
+            Session::put('locale', $locale);
+        }
+        
+        if (!$locale) {
+            $locale = $defaultLocale;
+        }
+        
+        // Validate locale is supported, otherwise use Arabic
         if (! in_array($locale, $supported, true)) {
-            $locale = config('app.fallback_locale');
+            $locale = $defaultLocale;
         }
 
         AppFacade::setLocale($locale);

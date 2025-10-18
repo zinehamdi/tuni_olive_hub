@@ -8,26 +8,91 @@ use Illuminate\Support\Facades\Auth;
 // Route::middleware('auth')->get('/onboarding', [\App\Http\Controllers\ProfileController::class, 'onboarding'])->name('onboarding');
 // Route::middleware('auth')->post('/onboarding/{role}', [\App\Http\Controllers\ProfileController::class, 'submitOnboarding'])->name('onboarding.submit');
 
+// Language switcher - must be outside middleware groups and available globally
+Route::get('/lang/{locale}', function (string $locale) {
+    $supported = ['ar','fr','en'];
+    if (in_array($locale, $supported, true)) {
+        session(['locale' => $locale]);
+        
+        // Save to user's profile if authenticated
+        if (auth()->check()) {
+            auth()->user()->update(['locale' => $locale]);
+        }
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::middleware('set.locale')->group(function () {
     Route::get('/', function () {
-        return view('home');
+        // Get all active listings with product details and seller addresses for location-based filtering
+        $featuredListings = \App\Models\Listing::with(['product', 'seller.addresses'])
+            ->where('status', 'active')
+            ->latest()
+            ->get();
+        
+        return view('home_marketplace', compact('featuredListings'));
     })->name('home');
-
-    Route::get('/lang/{locale}', function (string $locale) {
-        $supported = ['ar','fr','en'];
-        if (in_array($locale, $supported, true)) {
-            session(['locale' => $locale]);
-        }
-        return redirect()->back();
-    })->name('lang.switch');
+    
+    // About Us page
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about');
 });
 
-Route::middleware('auth')->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
+Route::middleware(['auth', 'set.locale'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+// Public user profile - accessible to anyone (view seller/publisher profiles)
+Route::middleware('set.locale')->get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
+
+Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Price Routes (Public)
+Route::middleware('set.locale')->group(function () {
+    Route::get('/prices', [\App\Http\Controllers\PriceController::class, 'index'])->name('prices.index');
+    Route::get('/prices/souks', [\App\Http\Controllers\PriceController::class, 'souks'])->name('prices.souks');
+    Route::get('/prices/world', [\App\Http\Controllers\PriceController::class, 'world'])->name('prices.world');
+});
+
+// Admin Routes - Rate limited to prevent abuse
+// Limit: 60 requests per minute per user
+Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+    Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::get('/listings', [\App\Http\Controllers\AdminController::class, 'listings'])->name('listings');
+    
+    // Listing moderation
+    Route::post('/listings/{listing}/approve', [\App\Http\Controllers\AdminController::class, 'approveListing'])->name('listings.approve');
+    Route::post('/listings/{listing}/reject', [\App\Http\Controllers\AdminController::class, 'rejectListing'])->name('listings.reject');
+    
+    // Price Management - Souk Prices
+    Route::prefix('prices/souk')->name('prices.souk.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'indexSouk'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\PriceManagementController::class, 'createSouk'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'storeSouk'])->name('store');
+        Route::get('/{price}/edit', [\App\Http\Controllers\Admin\PriceManagementController::class, 'editSouk'])->name('edit');
+        Route::put('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'updateSouk'])->name('update');
+        Route::delete('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'destroySouk'])->name('destroy');
+    });
+    
+    // Price Management - World Prices
+    Route::prefix('prices/world')->name('prices.world.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'indexWorld'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\PriceManagementController::class, 'createWorld'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'storeWorld'])->name('store');
+        Route::get('/{price}/edit', [\App\Http\Controllers\Admin\PriceManagementController::class, 'editWorld'])->name('edit');
+        Route::put('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'updateWorld'])->name('update');
+        Route::delete('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'destroyWorld'])->name('destroy');
+    });
+
+    Route::delete('/listings/{listing}', [\App\Http\Controllers\AdminController::class, 'deleteListing'])->name('listings.delete');
+    
+    // User moderation
+    Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'banUser'])->name('users.ban');
+    Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
 });
 
 require __DIR__.'/auth.php';
@@ -44,24 +109,35 @@ Route::prefix('public')->group(function(){
 });
 
 // Named routes for CTAs under allowed prefixes per CI guard
-Route::prefix('public')->group(function(){
+Route::prefix('public')->middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
     if (!app('router')->has('listings.create')) {
-        Route::get('listings/create', function(){
-            if (!Auth::check()) {
-                return view('public.forms.auth_required', [
-                    'title' => 'إنشاء عرض جديد',
-                    'hint' => 'الرجاء تسجيل الدخول لإنشاء عرض.'
-                ]);
-            }
-            $products = \App\Models\Product::query()->latest('id')->get(['id','variety','quality','price']);
-            return view('listings.create', [
-                'products' => $products,
-                'userId' => Auth::id(),
-            ]);
-        })->name('listings.create');
-        // Add POST route for listing store
-        Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])->name('listings.store');
+        Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
+            ->middleware('auth')
+            ->name('listings.create');
+        
+        // Limit listing creation to 10 per hour per user (prevents spam)
+        Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])
+            ->middleware(['auth', 'throttle:10,60'])
+            ->name('listings.store');
+        
+        // Add routes for edit and delete
+        Route::get('listings/{listing}/edit', [\App\Http\Controllers\ListingController::class, 'edit'])
+            ->middleware('auth')
+            ->name('listings.edit');
+        
+        // Limit updates to 20 per hour per user
+        Route::put('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'update'])
+            ->middleware(['auth', 'throttle:20,60'])
+            ->name('listings.update');
+        
+        // Limit deletes to 10 per hour per user
+        Route::delete('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'destroy'])
+            ->middleware(['auth', 'throttle:10,60'])
+            ->name('listings.destroy');
+        
+        // Add route for viewing single listing
+        Route::get('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'show'])->name('listings.show');
     }
 
     // Aoula order request form (requires auth)

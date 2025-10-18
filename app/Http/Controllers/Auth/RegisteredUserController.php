@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ImageOptimizationService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,13 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Display the registration view.
      */
@@ -33,8 +41,11 @@ class RegisteredUserController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_picture' => ['nullable', 'image', 'max:2048'],
+            'profile_picture' => ['nullable', 'image'], // Accept any image format/size
+            'cover_photos' => ['nullable', 'array', 'max:5'],
+            'cover_photos.*' => ['nullable', 'image'], // Accept any image format/size
         ];
         if ($role === 'farmer') {
             $rules['olive_type'] = ['required', 'string', 'max:255'];
@@ -49,6 +60,7 @@ class RegisteredUserController extends Controller
         $user = new User();
         $user->name = $validated['name'];
         $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
         $user->password = Hash::make($validated['password']);
         $user->role = $role;
         if ($role === 'farmer') {
@@ -60,11 +72,31 @@ class RegisteredUserController extends Controller
         } elseif ($role === 'mill') {
             $user->mill_name = $validated['mill_name'];
         }
+        
+        // Handle profile picture upload with optimization
         if ($request->hasFile('profile_picture')) {
-            $user->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $this->imageService->optimizeProfilePicture(
+                $request->file('profile_picture')
+            );
         }
+        
+        // Handle cover photos upload with optimization (up to 5 photos)
+        if ($request->hasFile('cover_photos')) {
+            $coverPhotos = [];
+            foreach ($request->file('cover_photos') as $photo) {
+                if (count($coverPhotos) < 5) {
+                    $coverPhotos[] = $this->imageService->optimizeCoverPhoto($photo);
+                }
+            }
+            $user->cover_photos = $coverPhotos;
+        }
+        
         $user->save();
+        
+        event(new Registered($user));
+        
         Auth::login($user);
-        return redirect()->route('home');
+        
+        return redirect()->route('dashboard')->with('success', 'Registration successful! Welcome to your dashboard.');
     }
 }

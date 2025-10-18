@@ -1,13 +1,20 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
-import csp from '@alpinejs/csp';
 
+// Import wizard component registration function
+import registerWizardComponent from './components/wizard.js';
+
+// Set Alpine on window
 window.Alpine = Alpine;
 
-Alpine.plugin(csp);
+// Register wizard component BEFORE starting Alpine
+registerWizardComponent(Alpine);
 
+// Start Alpine
 Alpine.start();
+
+console.log('Alpine started');
 
 // Background slideshow: reads slide URLs from <meta name="bg-slides"> (JSON array) and optional <meta name="bg-interval">
 document.addEventListener('DOMContentLoaded', () => {

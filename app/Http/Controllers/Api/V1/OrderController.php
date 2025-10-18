@@ -1,8 +1,4 @@
-use App\Services\Payments\LocalPaymentAdapter;
 <?php
-<?php
-
-    public function index(Request $request)
 
 namespace App\Http\Controllers\Api\V1;
 
@@ -16,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Services\Payments\LocalPaymentAdapter;
 
 class OrderController extends ApiController
+{
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Order::class);
         $q = Order::query()->with(['buyer','seller','listing'])->latest();

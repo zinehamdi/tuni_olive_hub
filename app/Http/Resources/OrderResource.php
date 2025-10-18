@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /** @mixin \App\Models\Order */
 class OrderResource extends JsonResource
@@ -14,8 +15,23 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'buyer' => $this->whenLoaded('buyer', function () { return [ 'id' => $this->buyer->id, 'name' => $this->buyer->name, 'role' => $this->buyer->role ]; }),
-            'seller' => $this->whenLoaded('seller', function () { return [ 'id' => $this->seller->id, 'name' => $this->seller->name, 'role' => $this->seller->role ]; }),
+            'buyer' => $this->whenLoaded('buyer', function () { 
+                return [ 
+                    'id' => $this->buyer->id, 
+                    'name' => $this->buyer->name, 
+                    'role' => $this->buyer->role,
+                    'profile_url' => route('user.profile', $this->buyer->id)
+                ]; 
+            }),
+            'seller' => $this->whenLoaded('seller', function () { 
+                return [ 
+                    'id' => $this->seller->id, 
+                    'name' => $this->seller->name, 
+                    'role' => $this->seller->role,
+                    'profile_url' => route('user.profile', $this->seller->id),
+                    'profile_picture' => $this->seller->profile_picture ? Storage::url($this->seller->profile_picture) : null
+                ]; 
+            }),
             'listing_id' => $this->listing_id,
             'qty' => $this->qty,
             'unit' => $this->unit,

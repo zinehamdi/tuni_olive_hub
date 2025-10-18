@@ -41,8 +41,37 @@
               <label for="variety" class="block text-[#C8A356] font-semibold mb-1">الصنف / النوع</label>
               <select id="variety" name="variety" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]">
                 <option value="">— اختر —</option>
-                <option value="chemlali">شملاّلي</option>
-                <option value="chetoui">شتوي</option>
+                
+                <!-- أصناف محلية شائعة -->
+                <optgroup label="📍 أصناف تونسية محلية">
+                    <option value="chemlali">شملالي – Chemlali (وسط/جنوب – زيت خفيف، ذهبي)</option>
+                    <option value="chetoui">شتوي – Chetoui (شمال – زيت قوي، مرّ، عطري)</option>
+                    <option value="oueslati">وسلاتي – Oueslati (وسط – متوازن، ممتاز للجودة العالية)</option>
+                    <option value="zalmati">زلماتي – Zalmati (جنوب شرقي – ثقيل، مقاوم للجفاف)</option>
+                    <option value="zarrazi">زرازي – Zarrazi (قابس – غامق، ثابت في الطعم)</option>
+                    <option value="barouni">برّوني – Barouni (شمال – ناعم، زيت ومائدة)</option>
+                    <option value="meski">مسكي – Meski (مائدة – حلو، ثمرة كبيرة)</option>
+                    <option value="chemchali">شمشالي – Chemchali (جنوب – متوسط، مرارة خفيفة)</option>
+                    <option value="gerboui">جربوي – Gerboui (شمال غربي – متوازن، إنتاج محدود)</option>
+                    <option value="sayali">سيالي – Sayali (شمال – طري، ذهبي)</option>
+                </optgroup>
+                
+                <!-- أصناف دخيلة -->
+                <optgroup label="🌍 أصناف دخيلة (مستوردة)">
+                    <option value="arbequina">أربيكينا – Arbequina (إسباني – خفيف، فاكهي)</option>
+                    <option value="arbosana">أربوسانا – Arbosana (إسباني – عطري، مرّ خفيف)</option>
+                    <option value="koroneiki">كورونيكي – Koroneiki (يوناني – مركز، مرّ، قوي)</option>
+                    <option value="picholine">بيشولين – Picholine (فرنسي – عشبي، متوسط الجودة)</option>
+                </optgroup>
+                
+                <!-- أصناف نادرة -->
+                <optgroup label="⭐ أصناف نادرة ومحلية">
+                    <option value="adefou">عدّفو – Adefou (أصلي، محدود الإنتاج)</option>
+                    <option value="boudaoud">بوداود – Boudaoud (تقليدي، عطري)</option>
+                    <option value="fougi-gtar">فوڨي ڨطار – Fougi Gtar (جبلي، زيت غامق)</option>
+                </optgroup>
+                
+                <!-- مزيج -->
                 <option value="blend">مزيج (Blend)</option>
               </select>
             </div>

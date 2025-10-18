@@ -7,6 +7,54 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $owner_id
+ * @property string $kind
+ * @property numeric $qty
+ * @property string $unit
+ * @property int $pickup_addr_id
+ * @property int $dropoff_addr_id
+ * @property \Illuminate\Support\Carbon|null $deadline_at
+ * @property numeric|null $price_floor
+ * @property numeric|null $price_ceiling
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $order_id
+ * @property int|null $carrier_id
+ * @property int|null $eta_minutes
+ * @property array<array-key, mixed>|null $meta
+ * @property-read \App\Models\User|null $carrier
+ * @property-read \App\Models\Address $dropoffAddress
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CarrierOffer> $offers
+ * @property-read int|null $offers_count
+ * @property-read \App\Models\Order|null $order
+ * @property-read \App\Models\User $owner
+ * @property-read \App\Models\Address $pickup
+ * @method static \Database\Factories\LoadFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereCarrierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereDeadlineAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereDropoffAddrId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereEtaMinutes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereKind($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load wherePickupAddrId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load wherePriceCeiling($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load wherePriceFloor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereQty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Load whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Load extends Model
 {
     use HasFactory;

@@ -189,54 +189,87 @@ document.addEventListener('DOMContentLoaded', async () => {
     <x-price-ticker />
 
     <div class="grid sm:grid-cols-3 gap-4">
-        <a href="#" class="block border rounded p-4 hover:shadow bg-olive text-white text-center">اعرض زيتك/زيتونك اليوم</a>
-        <a href="#" class="block border rounded p-4 hover:shadow bg-gold text-white text-center">اطلب عولة</a>
-        <a href="#" class="block border rounded p-4 hover:shadow bg-sky text-white text-center">شوف عروض التصدير</a>
+        <a href="{{ $safeRoute('listings.create', '/public/listings/create') }}" class="block border rounded p-4 hover:shadow bg-[#6A8F3B] text-white text-center font-bold transition">اعرض زيتك/زيتونك اليوم</a>
+        <a href="{{ $safeRoute('orders.requestAoula', '/public/orders/request-aoula') }}" class="block border rounded p-4 hover:shadow bg-[#C8A356] text-white text-center font-bold transition">اطلب عولة</a>
+        <a href="{{ $safeRoute('gulf.catalog', '/public/gulf/catalog') }}" class="block border rounded p-4 hover:shadow bg-blue-600 text-white text-center font-bold transition">شوف عروض التصدير</a>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-4">
-                <div class="border rounded overflow-hidden bg-white">
-                    <img src="/images/zitchemlali.PNG" alt="زيت زيتون شملالي" class="w-full aspect-video object-cover" />
-                    <div class="p-3 ">
-                        <div class="font-semibold">زيت زيتون شملالي</div>
-                        <div class="text-sm text-gray-600 flex items-center gap-2 ">
-                            <span class="px-2 py-0.5 rounded bg-olive text-white text-xs">chemlali</span>
-                            <span class="px-2 py-0.5 rounded bg-gold text-white text-xs">premium</span>
-                        </div>
-                        <div class="mt-2 font-medium text-olive">18.500 TND/L</div>
-                        <div class="mt-2">
-                            <a href="#" class="inline-block px-3 py-1 bg-sky text-white rounded text-sm">تفاصيل</a>
-                        </div>
+    <!-- Latest Products Section -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-right">أحدث المنتجات المعروضة</h2>
+        
+        @if(isset($featuredListings) && $featuredListings->count() > 0)
+            <div class="grid md:grid-cols-3 gap-6">
+                @foreach($featuredListings as $listing)
+                    <div class="border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-xl transition">
+                        @if($listing->product)
+                            <!-- Product Image Placeholder -->
+                            <div class="w-full aspect-video bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center">
+                                <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    @if($listing->product->type === 'oil')
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                    @else
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                    @endif
+                                </svg>
+                            </div>
+                            
+                            <div class="p-4">
+                                <div class="font-bold text-lg text-gray-900 mb-2">{{ $listing->product->variety }}</div>
+                                
+                                <div class="flex items-center gap-2 mb-3 flex-wrap">
+                                    <span class="px-2 py-1 rounded-full bg-[#6A8F3B] text-white text-xs font-semibold">
+                                        {{ $listing->product->type === 'olive' ? 'زيتون' : 'زيت زيتون' }}
+                                    </span>
+                                    @if($listing->product->quality)
+                                        <span class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold">
+                                            {{ $listing->product->quality }}
+                                        </span>
+                                    @endif
+                                </div>
+                                
+                                @if($listing->product->price)
+                                    <div class="text-lg font-bold text-[#6A8F3B] mb-3">
+                                        {{ number_format($listing->product->price, 2) }} دينار
+                                    </div>
+                                @endif
+                                
+                                <div class="text-sm text-gray-600 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <span>{{ $listing->seller->name ?? 'بائع' }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>{{ $listing->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="#" class="block w-full text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-semibold">
+                                        عرض التفاصيل
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
-                </div>
-                <div class="border rounded overflow-hidden bg-white">
-                    <img src="/images/zitounchamal.jpg" alt="زيتون شمالي" class="w-full aspect-video object-cover" />
-                    <div class="p-3 ">
-                        <div class="font-semibold">زيتون شمالي</div>
-                        <div class="text-sm text-gray-600 flex items-center gap-2 ">
-                            <span class="px-2 py-0.5 rounded bg-olive text-white text-xs">north</span>
-                            <span class="px-2 py-0.5 rounded bg-gold text-white text-xs">foodservice</span>
-                        </div>
-                        <div class="mt-2 font-medium text-olive">2.800 TND/Kg</div>
-                        <div class="mt-2">
-                            <a href="#" class="inline-block px-3 py-1 bg-sky text-white rounded text-sm">تفاصيل</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="border rounded overflow-hidden bg-white">
-                    <img src="/images/zitzitoun.png" alt="زيت زيتون" class="w-full aspect-video object-cover" />
-                    <div class="p-3 ">
-                        <div class="font-semibold">زيت زيتون</div>
-                        <div class="text-sm text-gray-600 flex items-center gap-2 ">
-                            <span class="px-2 py-0.5 rounded bg-olive text-white text-xs">south</span>
-                            <span class="px-2 py-0.5 rounded bg-gold text-white text-xs">medium</span>
-                        </div>
-                        <div class="mt-2 font-medium text-olive">16.900 TND/L</div>
-                        <div class="mt-2">
-                            <a href="#" class="inline-block px-3 py-1 bg-sky text-white rounded text-sm">تفاصيل</a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-12 bg-gray-50 rounded-lg">
+                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+                <p class="text-gray-600 text-lg mb-4">لا توجد منتجات معروضة حالياً</p>
+                <a href="{{ $safeRoute('listings.create', '/public/listings/create') }}" class="inline-block bg-[#6A8F3B] text-white font-bold py-2 px-6 rounded-xl hover:bg-[#5a7a2f] transition">
+                    كن أول من يعرض منتجاته
+                </a>
+            </div>
+        @endif
     </div>
 
     <x-awareness-toast type="confirm">✅ تأكيدك يُلزمك قانونياً. راجع التفاصيل.</x-awareness-toast>
