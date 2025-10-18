@@ -37,57 +37,13 @@
                 </a>
 
                 <div class="flex items-center gap-3 md:gap-4">
-                    <!-- Language Switcher - Desktop (Pills) -->
-                    <div class="hidden md:flex items-center gap-1 bg-blue-50 rounded-lg p-1">
-                        <a href="{{ route('lang.switch','ar') }}" 
-                           class="px-3 py-1.5 text-sm font-semibold rounded {{ app()->getLocale()==='ar' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100' }} transition">
-                            AR
-                        </a>
-                        <a href="{{ route('lang.switch','fr') }}" 
-                           class="px-3 py-1.5 text-sm font-semibold rounded {{ app()->getLocale()==='fr' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100' }} transition">
-                            FR
-                        </a>
-                        <a href="{{ route('lang.switch','en') }}" 
-                           class="px-3 py-1.5 text-sm font-semibold rounded {{ app()->getLocale()==='en' ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-100' }} transition">
-                            EN
-                        </a>
-                    </div>
-                    
-                    <!-- Language Switcher - Mobile (Dropdown) -->
-                    <div class="md:hidden relative" x-data="{ langOpen: false }">
-                        <button @click="langOpen = !langOpen" 
-                                class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                            </svg>
-                            <span class="text-sm font-semibold">{{ strtoupper(app()->getLocale()) }}</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="langOpen"
-                             x-cloak
-                             @click.away="langOpen = false"
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 scale-95"
-                             x-transition:enter-end="opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="opacity-100 scale-100"
-                             x-transition:leave-end="opacity-0 scale-95"
-                             class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-2 w-32 bg-white rounded-lg shadow-lg py-1 z-50">
-                            <a href="{{ route('lang.switch','ar') }}" 
-                               class="block px-4 py-2 text-sm {{ app()->getLocale()==='ar' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition">
-                                العربية (AR)
-                            </a>
-                            <a href="{{ route('lang.switch','fr') }}" 
-                               class="block px-4 py-2 text-sm {{ app()->getLocale()==='fr' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition">
-                                Français (FR)
-                            </a>
-                            <a href="{{ route('lang.switch','en') }}" 
-                               class="block px-4 py-2 text-sm {{ app()->getLocale()==='en' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }} transition">
-                                English (EN)
-                            </a>
-                        </div>
+                    <div class="flex items-center gap-1 md:gap-2">
+                        <a class="px-3 py-1 rounded-full bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none"
+                           href="{{ route('lang.switch', ['locale' => 'ar']) }}">AR</a>
+                        <a class="px-3 py-1 rounded-full bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none"
+                           href="{{ route('lang.switch', ['locale' => 'fr']) }}">FR</a>
+                        <a class="px-3 py-1 rounded-full bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none"
+                           href="{{ route('lang.switch', ['locale' => 'en']) }}">EN</a>
                     </div>
 
                     @auth
