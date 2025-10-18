@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'], // Accept both email and phone
             'password' => ['required', 'string'],
         ];
     }
@@ -41,7 +41,10 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Determine if input is email or phone number
+        $credentials = $this->getCredentials();
+
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -50,6 +53,45 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Get the credentials from the request.
+     * Determines if the input is an email or phone number.
+     * Tunisian phone numbers: 8 digits (e.g., 22123123, 98123123, 55123123)
+     *
+     * @return array
+     */
+    protected function getCredentials(): array
+    {
+        $input = trim($this->input('email'));
+        
+        // Clean the input by removing spaces, +, -, and parentheses
+        $cleanInput = preg_replace('/[\s\+\-\(\)]/', '', $input);
+        
+        // Check if it's a phone number (only digits remaining)
+        $isPhone = preg_match('/^\d+$/', $cleanInput);
+        
+        if ($isPhone) {
+            // Handle Tunisian phone numbers
+            // If it has country code +216, remove it to get 8 digits
+            if (strlen($cleanInput) === 11 && str_starts_with($cleanInput, '216')) {
+                // +216 22123123 → 22123123
+                $cleanInput = substr($cleanInput, 3);
+            }
+            
+            // Now we should have an 8-digit Tunisian number (e.g., 22123123)
+            return [
+                'phone' => $cleanInput,
+                'password' => $this->input('password'),
+            ];
+        }
+        
+        // Otherwise, treat as email
+        return [
+            'email' => $input,
+            'password' => $this->input('password'),
+        ];
     }
 
     /**

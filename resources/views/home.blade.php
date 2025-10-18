@@ -203,15 +203,43 @@ document.addEventListener('DOMContentLoaded', async () => {
                 @foreach($featuredListings as $listing)
                     <div class="border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-xl transition">
                         @if($listing->product)
-                            <!-- Product Image Placeholder -->
-                            <div class="w-full aspect-video bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center">
-                                <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- Product Image -->
+                            <div class="relative w-full aspect-video bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] overflow-hidden">
+                                @php
+                                    // Try to get image from product media first, then listing media
+                                    $productImage = null;
+                                    if($listing->product->media && is_array($listing->product->media) && count($listing->product->media) > 0) {
+                                        $productImage = $listing->product->media[0];
+                                    } elseif($listing->media && is_array($listing->media) && count($listing->media) > 0) {
+                                        $productImage = $listing->media[0];
+                                    }
+                                @endphp
+                                
+                                @if($productImage)
+                                    <!-- Display actual product image -->
+                                    <img src="{{ Storage::url($productImage) }}" 
+                                         alt="{{ $listing->product->variety }}" 
+                                         class="w-full h-full object-cover"
+                                         loading="lazy">
+                                    
+                                    <!-- Product Type Badge -->
                                     @if($listing->product->type === 'oil')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                        <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫗 زيت زيتون</span>
                                     @else
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                        <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫒 زيتون</span>
                                     @endif
-                                </svg>
+                                @else
+                                    <!-- Fallback to icon if no image -->
+                                    <div class="flex items-center justify-center w-full h-full">
+                                        <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            @if($listing->product->type === 'oil')
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                            @else
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                            @endif
+                                        </svg>
+                                    </div>
+                                @endif
                             </div>
                             
                             <div class="p-4">

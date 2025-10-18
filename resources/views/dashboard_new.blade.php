@@ -394,20 +394,47 @@
                             <div class="space-y-4">
                                 @foreach($listings as $listing)
                                     <div class="group border-2 border-gray-200 rounded-2xl overflow-hidden hover:border-[#6A8F3B] hover:shadow-xl transition-all duration-300">
-                                        <div class="flex">
+                                        <div class="flex flex-col sm:flex-row">
                                             <!-- Product Image -->
-                                            <div class="w-40 h-40 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative">
-                                                @if($listing->product)
-                                                    @if($listing->product->type === 'oil')
-                                                        <svg class="w-20 h-20 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                                        </svg>
-                                                        <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold">🫗 {{ __('Oil') }}</span>
-                                                    @else
-                                                        <svg class="w-20 h-20 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                                                        </svg>
-                                                        <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold">🫒 {{ __('Olives') }}</span>
+                                            <div class="w-full sm:w-48 h-48 sm:h-40 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                                                @php
+                                                    // Try to get image from product media first, then listing media
+                                                    $productImage = null;
+                                                    if($listing->product && $listing->product->media && is_array($listing->product->media) && count($listing->product->media) > 0) {
+                                                        $productImage = $listing->product->media[0];
+                                                    } elseif($listing->media && is_array($listing->media) && count($listing->media) > 0) {
+                                                        $productImage = $listing->media[0];
+                                                    }
+                                                @endphp
+                                                
+                                                @if($productImage)
+                                                    <!-- Display actual product image -->
+                                                    <img src="{{ Storage::url($productImage) }}" 
+                                                         alt="{{ $listing->product ? $listing->product->variety : __('Product Image') }}" 
+                                                         class="w-full h-full object-cover"
+                                                         loading="lazy">
+                                                    <!-- Product Type Badge -->
+                                                    @if($listing->product)
+                                                        @if($listing->product->type === 'oil')
+                                                            <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold shadow-md">🫗 {{ __('Oil') }}</span>
+                                                        @else
+                                                            <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold shadow-md">🫒 {{ __('Olives') }}</span>
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    <!-- Fallback to icon if no image -->
+                                                    @if($listing->product)
+                                                        @if($listing->product->type === 'oil')
+                                                            <svg class="w-20 h-20 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                                            </svg>
+                                                            <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold">🫗 {{ __('Oil') }}</span>
+                                                        @else
+                                                            <svg class="w-20 h-20 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                                            </svg>
+                                                            <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold">🫒 {{ __('Olives') }}</span>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </div>

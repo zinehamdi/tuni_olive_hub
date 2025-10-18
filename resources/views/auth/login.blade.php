@@ -8,22 +8,22 @@
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
 
-                <!-- Email Address -->
+                <!-- Email or Phone Number -->
                 <div>
-                    <x-input-label for="email" :value="__('Email')" class="text-gray-900 font-bold mb-2 flex items-center gap-2">
+                    <x-input-label for="email" :value="__('Email or Phone Number')" class="text-gray-900 font-bold mb-2 flex items-center gap-2">
                         <svg class="w-5 h-5 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                         </svg>
                     </x-input-label>
                     <x-text-input id="email" 
                         class="block mt-2 w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                        type="email" 
+                        type="text" 
                         name="email" 
                         :value="old('email')" 
                         required 
                         autofocus 
                         autocomplete="username" 
-                        placeholder="example@email.com" />
+                        placeholder="{{ __('Email or phone number') }}" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 

@@ -212,9 +212,11 @@
                                 {{ __('Contact Seller') }}
                             </button>
                             
-                            <!-- View Location Button -->
-                            @if($listing->seller->addresses->first() && $listing->seller->addresses->first()->lat && $listing->seller->addresses->first()->lng)
-                                <button @click="openMap" class="px-6 py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg" :title="'{{ __('View on Map') }}'">
+                            <!-- View Location Button - Always visible -->
+                            @if($listing->seller->addresses->first())
+                                <button @click="openLocationInfo" 
+                                        class="px-6 py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg" 
+                                        :title="'{{ __('View Location') }}'">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -506,6 +508,22 @@ document.addEventListener('alpine:init', () => {
                 this.isFavorite = true;
             }
             localStorage.setItem('favorites', JSON.stringify(favorites));
+        },
+        
+        openLocationInfo() {
+            @if($listing->seller->addresses->first() && $listing->seller->addresses->first()->lat && $listing->seller->addresses->first()->lng)
+                // Has GPS coordinates - open map
+                this.openMap();
+            @else
+                // No GPS coordinates - show address info alert
+                @if($listing->seller->addresses->first())
+                    const address = '{{ $listing->seller->addresses->first()->governorate ?? '' }}' + 
+                                  ('{!! $listing->seller->addresses->first()->delegation ?? '' !!}' ? ', {!! $listing->seller->addresses->first()->delegation ?? '' !!}' : '');
+                    alert('{{ __('Location') }}:\n' + address + '\n\n{{ __('GPS coordinates not available for this location.') }}');
+                @else
+                    alert('{{ __('No location information available for this seller.') }}');
+                @endif
+            @endif
         },
         
         openMap() {
