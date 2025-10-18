@@ -87,7 +87,7 @@
                     <a href="{{ route('home') }}" class="flex-shrink-0 group">
                         <img src="{{ asset('images/barecodeTN.png') }}" 
                              alt="Tuni Olive Hub - Made in Tunisia" 
-                             class="h-20 w-20 rounded-full object-cover shadow-xl group-hover:scale-150 transition-transform duration-300">
+                             class="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300">
                     </a>
 
                     <!-- Desktop Navigation Links -->

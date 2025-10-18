@@ -35,19 +35,16 @@
     ];
 @endphp
 
-<!-- Barcode-Style Price Ticker (All Screens) -->
-<div class="relative overflow-hidden" style="background: repeating-linear-gradient(90deg, #DC2626 0px, #DC2626 8px, #FFFFFF 8px, #FFFFFF 16px); min-height: 50px;">
-    <!-- White overlay for content -->
-    <div class="absolute inset-0 bg-white/95"></div>
-    
+<!-- Price Ticker with Original Gold Background (All Screens) -->
+<div class="relative overflow-hidden bg-gradient-to-r from-[#C8A356] via-[#d4b166] to-[#C8A356] border-t border-[#b08a3c]/30" style="min-height: 50px;">
     <!-- Ticker Content -->
-    <div class="relative z-10 w-full h-full flex items-center">
+    <div class="relative z-10 w-full h-full flex items-center py-2.5">
         <div class="ticker-wrapper">
             <div class="ticker-content">
                 <!-- Header -->
                 <div class="ticker-item">
                     <span class="text-xl">📊</span>
-                    <span class="font-bold text-sm text-red-600">{{ __('Live Prices from Tunisian Souks') }}</span>
+                    <span class="font-bold text-sm text-gray-900">{{ __('Live Prices from Tunisian Souks') }}</span>
                 </div>
                 
                 <!-- Separator -->
@@ -63,17 +60,17 @@
                                 <img src="{{ asset('images/olive-oil.png') }}" alt="Oil" class="w-4 h-4 object-contain inline-block">
                             @endif
                         </span>
-                        <span class="text-xs font-bold text-red-600">
+                        <span class="text-xs font-bold text-gray-900">
                             {{ app()->getLocale() === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
                         </span>
-                        <span class="text-xs opacity-75">
+                        <span class="text-xs opacity-75 text-gray-800">
                             @if($price->product_type === 'olive')
                                 ({{ ucfirst($price->variety) }})
                             @else
                                 ({{ app()->getLocale() === 'ar' ? 'زيت' : __('Oil') }})
                             @endif
                         </span>
-                        <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                        <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
                             {{ number_format($price->avg_price, 2) }} TND
                         </span>
                     </div>
@@ -85,11 +82,11 @@
                 @if($worldAvgEUR)
                     <div class="ticker-item">
                         <span class="text-base">🌍</span>
-                        <span class="text-xs font-bold text-red-600">{{ __('World Market') }}</span>
-                        <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                        <span class="text-xs font-bold text-gray-900">{{ __('World Market') }}</span>
+                        <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
                             {{ number_format($worldAvgEUR, 2) }} EUR/kg
                         </span>
-                        <span class="text-xs opacity-75">({{ number_format($worldAvgTND, 2) }} TND)</span>
+                        <span class="text-xs opacity-75 text-gray-800">({{ number_format($worldAvgTND, 2) }} TND)</span>
                     </div>
                     
                     <div class="ticker-separator">●</div>
@@ -98,7 +95,7 @@
                 <!-- Duplicate content for seamless loop -->
                 <div class="ticker-item">
                     <span class="text-xl">📊</span>
-                    <span class="font-bold text-sm text-red-600">{{ __('Live Prices from Tunisian Souks') }}</span>
+                    <span class="font-bold text-sm text-gray-900">{{ __('Live Prices from Tunisian Souks') }}</span>
                 </div>
                 
                 <div class="ticker-separator">●</div>
@@ -112,17 +109,17 @@
                                 <img src="{{ asset('images/olive-oil.png') }}" alt="Oil" class="w-4 h-4 object-contain inline-block">
                             @endif
                         </span>
-                        <span class="text-xs font-bold text-red-600">
+                        <span class="text-xs font-bold text-gray-900">
                             {{ app()->getLocale() === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
                         </span>
-                        <span class="text-xs opacity-75">
+                        <span class="text-xs opacity-75 text-gray-800">
                             @if($price->product_type === 'olive')
                                 ({{ ucfirst($price->variety) }})
                             @else
                                 ({{ app()->getLocale() === 'ar' ? 'زيت' : __('Oil') }})
                             @endif
                         </span>
-                        <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                        <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
                             {{ number_format($price->avg_price, 2) }} TND
                         </span>
                     </div>
@@ -133,11 +130,11 @@
                 @if($worldAvgEUR)
                     <div class="ticker-item">
                         <span class="text-base">🌍</span>
-                        <span class="text-xs font-bold text-red-600">{{ __('World Market') }}</span>
-                        <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap">
+                        <span class="text-xs font-bold text-gray-900">{{ __('World Market') }}</span>
+                        <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
                             {{ number_format($worldAvgEUR, 2) }} EUR/kg
                         </span>
-                        <span class="text-xs opacity-75">({{ number_format($worldAvgTND, 2) }} TND)</span>
+                        <span class="text-xs opacity-75 text-gray-800">({{ number_format($worldAvgTND, 2) }} TND)</span>
                     </div>
                 @endif
             </div>
@@ -145,7 +142,7 @@
         
         <!-- View All Button (Fixed on right) -->
         <a href="{{ route('prices.index') }}" 
-           class="absolute right-0 top-0 bottom-0 flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 transition z-20 shadow-lg">
+           class="absolute right-0 top-0 bottom-0 flex items-center gap-1 bg-gradient-to-l from-[#C8A356] via-[#b08a3c] to-transparent hover:from-[#b08a3c] text-gray-900 px-4 transition z-20 shadow-lg backdrop-blur-sm">
             <span class="text-xs font-bold hidden sm:inline">{{ __('View All') }}</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -182,7 +179,7 @@
     }
     
     .ticker-separator {
-        color: rgba(220, 38, 38, 0.3);
+        color: rgba(107, 74, 28, 0.4);
         font-size: 0.75rem;
         flex-shrink: 0;
     }
