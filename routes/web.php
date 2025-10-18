@@ -111,68 +111,60 @@ Route::prefix('public')->group(function(){
 // Named routes for CTAs under allowed prefixes per CI guard
 Route::prefix('public')->middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
-    if (!app('router')->has('listings.create')) {
-        Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
-            ->middleware('auth')
-            ->name('listings.create');
-        
-        // Limit listing creation to 10 per hour per user (prevents spam)
-        Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])
-            ->middleware(['auth', 'throttle:10,60'])
-            ->name('listings.store');
-        
-        // Add routes for edit and delete
-        Route::get('listings/{listing}/edit', [\App\Http\Controllers\ListingController::class, 'edit'])
-            ->middleware('auth')
-            ->name('listings.edit');
-        
-        // Limit updates to 20 per hour per user
-        Route::put('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'update'])
-            ->middleware(['auth', 'throttle:20,60'])
-            ->name('listings.update');
-        
-        // Limit deletes to 10 per hour per user
-        Route::delete('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'destroy'])
-            ->middleware(['auth', 'throttle:10,60'])
-            ->name('listings.destroy');
-        
-        // Add route for viewing single listing
-        Route::get('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'show'])->name('listings.show');
-    }
+    Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
+        ->middleware('auth')
+        ->name('listings.create');
+    
+    // Limit listing creation to 10 per hour per user (prevents spam)
+    Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])
+        ->middleware(['auth', 'throttle:10,60'])
+        ->name('listings.store');
+    
+    // Add routes for edit and delete
+    Route::get('listings/{listing}/edit', [\App\Http\Controllers\ListingController::class, 'edit'])
+        ->middleware('auth')
+        ->name('listings.edit');
+    
+    // Limit updates to 20 per hour per user
+    Route::put('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'update'])
+        ->middleware(['auth', 'throttle:20,60'])
+        ->name('listings.update');
+    
+    // Limit deletes to 10 per hour per user
+    Route::delete('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'destroy'])
+        ->middleware(['auth', 'throttle:10,60'])
+        ->name('listings.destroy');
+    
+    // Add route for viewing single listing
+    Route::get('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'show'])->name('listings.show');
 
     // Aoula order request form (requires auth)
-    if (!app('router')->has('orders.requestAoula')) {
-        Route::get('orders/request-aoula', function(){
-            if (!Auth::check()) {
-                return view('public.forms.auth_required', [
-                    'title' => 'طلب عولة',
-                    'hint' => 'الرجاء تسجيل الدخول لإرسال طلب.'
-                ]);
-            }
-            $listings = \App\Models\Listing::query()
-                ->with(['product:id,variety,quality,price','seller:id,name'])
-                ->where('status','active')
-                ->latest('id')->limit(50)->get(['id','product_id','seller_id']);
-            return view('public.forms.request_aoula', [
-                'listings' => $listings,
-                'userId' => Auth::id(),
+    Route::get('orders/request-aoula', function(){
+        if (!Auth::check()) {
+            return view('public.forms.auth_required', [
+                'title' => 'طلب عولة',
+                'hint' => 'الرجاء تسجيل الدخول لإرسال طلب.'
             ]);
-        })->name('orders.requestAoula');
-    }
+        }
+        $listings = \App\Models\Listing::query()
+            ->with(['product:id,variety,quality,price','seller:id,name'])
+            ->where('status','active')
+            ->latest('id')->limit(50)->get(['id','product_id','seller_id']);
+        return view('public.forms.request_aoula', [
+            'listings' => $listings,
+            'userId' => Auth::id(),
+        ]);
+    })->name('orders.requestAoula');
 
     // Carrier mobile UI
-    if (!app('router')->has('mobile.trip')) {
-        Route::get('mobile/trip', function(){
-            return view('public.mobile.trip');
-        })->name('mobile.trip');
-    }
+    Route::get('mobile/trip', function(){
+        return view('public.mobile.trip');
+    })->name('mobile.trip');
 
     // Contact placeholder (public)
-    if (!app('router')->has('public.contact')) {
-        Route::get('contact', function(){
-            return view('stubs.cta', ['title' => 'تواصل معنا']);
-        })->name('public.contact');
-    }
+    Route::get('contact', function(){
+        return view('stubs.cta', ['title' => 'تواصل معنا']);
+    })->name('public.contact');
     // gulf.catalog now defined above
 });
 
