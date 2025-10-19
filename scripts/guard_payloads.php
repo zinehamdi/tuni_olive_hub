@@ -36,7 +36,7 @@ $base = getenv('APP_URL') ?: 'http://localhost';
 $probes = [
     $base.'/api/v1/prices/today',
     $base.'/api/v1/gulf/catalog',
-    $base.'/public/landing.json',
+    $base.'/landing.json',
 ];
 
 $failed = [];

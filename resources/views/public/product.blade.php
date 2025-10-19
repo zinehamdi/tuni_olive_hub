@@ -44,7 +44,7 @@
 
     <div class="mt-8 flex gap-3 justify-end">
       <a href="{{ route('orders.requestAoula', ['product' => $product->id]) }}" class="px-4 py-3 rounded-xl bg-emerald-600 text-white hover:opacity-90">اطلب عولة</a>
-      <a href="{{ url('/public/contact') }}" class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:opacity-90">تواصل</a>
+      <a href="{{ url('/contact') }}" class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:opacity-90">تواصل</a>
     </div>
   </main>
   </body>

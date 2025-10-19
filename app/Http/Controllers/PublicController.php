@@ -65,7 +65,7 @@ class PublicController extends Controller
     public function gulfCatalog(Request $request)
     {
         $cacheKey = 'public:catalog:' . md5(json_encode($request->query()));
-        $paginator = Cache::tags(['catalog'])->remember($cacheKey, 300, function() use ($request) {
+        $paginator = Cache::remember($cacheKey, 300, function() use ($request) {
             $q = Product::query()->with('seller')
                 ->where('is_premium', true)
                 ->where('export_ready', true);

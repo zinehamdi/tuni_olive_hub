@@ -180,3 +180,4 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
     }
     return view('auth.register_' . $role, compact('role'));
 })->name('register.role');
+Route::get('/healthz', function(){ return 'OK'; });

@@ -107,7 +107,7 @@
                                 اطلب عولة
                             </a>
 
-                            <a href="{{ $safeRoute('gulf.catalog', '/public/gulf/catalog') }}"
+                            <a href="{{ $safeRoute('gulf.catalog', '/gulf/catalog') }}"
                                class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none">
                                 شوف عروض التصدير
                             </a>
@@ -126,11 +126,11 @@
                             </ul>
 
                             <div class="mt-6 flex flex-wrap gap-3 justify-end">
-                                <a href="{{ $safeRoute('public.sitemap', '/public/sitemap.xml') }}"
+                                <a href="{{ $safeRoute('public.sitemap', '/sitemap.xml') }}"
                                    class="px-4 py-3 rounded-xl bg-gray-800 text-white hover:opacity-90 focus:ring focus:outline-none">
                                     خريطة الموقع
                                 </a>
-                                <a href="{{ $safeRoute('public.rss', '/public/feed.rss') }}"
+                                <a href="{{ $safeRoute('public.rss', '/feed.rss') }}"
                                    class="px-4 py-3 rounded-xl bg-gray-700 text-white hover:opacity-90 focus:ring focus:outline-none">
                                     آخر الإضافات (RSS)
                                 </a>
@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     <x-price-ticker />
 
     <div class="grid sm:grid-cols-3 gap-4">
-        <a href="{{ $safeRoute('listings.create', '/public/listings/create') }}" class="block border rounded p-4 hover:shadow bg-[#6A8F3B] text-white text-center font-bold transition">اعرض زيتك/زيتونك اليوم</a>
-        <a href="{{ $safeRoute('orders.requestAoula', '/public/orders/request-aoula') }}" class="block border rounded p-4 hover:shadow bg-[#C8A356] text-white text-center font-bold transition">اطلب عولة</a>
-        <a href="{{ $safeRoute('gulf.catalog', '/public/gulf/catalog') }}" class="block border rounded p-4 hover:shadow bg-blue-600 text-white text-center font-bold transition">شوف عروض التصدير</a>
+        <a href="{{ $safeRoute('listings.create', '/listings/create') }}" class="block border rounded p-4 hover:shadow bg-[#6A8F3B] text-white text-center font-bold transition">اعرض زيتك/زيتونك اليوم</a>
+        <a href="{{ $safeRoute('orders.requestAoula', '/orders/request-aoula') }}" class="block border rounded p-4 hover:shadow bg-[#C8A356] text-white text-center font-bold transition">اطلب عولة</a>
+        <a href="{{ $safeRoute('gulf.catalog', '/gulf/catalog') }}" class="block border rounded p-4 hover:shadow bg-blue-600 text-white text-center font-bold transition">شوف عروض التصدير</a>
     </div>
 
     <!-- Latest Products Section -->
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
                 <p class="text-gray-600 text-lg mb-4">لا توجد منتجات معروضة حالياً</p>
-                <a href="{{ $safeRoute('listings.create', '/public/listings/create') }}" class="inline-block bg-[#6A8F3B] text-white font-bold py-2 px-6 rounded-xl hover:bg-[#5a7a2f] transition">
+                <a href="{{ $safeRoute('listings.create', '/listings/create') }}" class="inline-block bg-[#6A8F3B] text-white font-bold py-2 px-6 rounded-xl hover:bg-[#5a7a2f] transition">
                     كن أول من يعرض منتجاته
                 </a>
             </div>

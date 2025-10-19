@@ -507,15 +507,15 @@
 
                                                 <!-- Actions -->
                                                 <div class="flex gap-2">
-                                                    <a href="{{ url('/public/listings/' . $listing->id) }}" 
+                                                    <a href="{{ url('/listings/' . $listing->id) }}" 
                                                        class="flex-1 text-center bg-[#6A8F3B] text-white px-4 py-2 rounded-lg hover:bg-[#5a7a2f] transition font-medium text-sm">
                                                         👁️ {{ __('View') }}
                                                     </a>
-                                                    <a href="{{ url('/public/listings/' . $listing->id . '/edit') }}" 
+                                                    <a href="{{ url('/listings/' . $listing->id . '/edit') }}" 
                                                        class="flex-1 text-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition font-medium text-sm">
                                                         ✏️ {{ __('Edit') }}
                                                     </a>
-                                                    <form action="{{ url('/public/listings/' . $listing->id) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('Are you sure you want to delete this listing?') }}')">
+                                                    <form action="{{ url('/listings/' . $listing->id) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('Are you sure you want to delete this listing?') }}')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="w-full text-center bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition font-medium text-sm">

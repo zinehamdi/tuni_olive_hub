@@ -211,7 +211,7 @@
                                 </div>
 
                                 <div class="flex gap-2">
-                                    <a :href="'/public/listings/' + listing.id" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
+                                    <a :href="'/listings/' + listing.id" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
                                         عرض التفاصيل
                                     </a>
                                     <button class="px-4 py-2 bg-[#C8A356] text-white rounded-lg hover:bg-[#b08a3c] transition">
@@ -266,7 +266,7 @@
                                         <span class="text-sm text-gray-600">دينار</span>
                                     </div>
                                     <div class="flex gap-2">
-                                        <a :href="'/public/listings/' + listing.id" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
+                                        <a :href="'/listings/' + listing.id" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
                                             عرض التفاصيل
                                         </a>
                                     </div>

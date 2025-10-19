@@ -23,7 +23,7 @@ RateLimiter::for('pod-photos', function(Request $request){
         ->response(fn() => response()->json(['success'=>false,'error'=>'Too Many Requests'], 429));
 });
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->name('api.')->group(function () {
     Route::get('/ping', fn() => response()->json(['ok' => true, 'v' => 1]));
 
     Route::middleware('auth:sanctum')->group(function () {
