@@ -1,0 +1,88 @@
+@extends('layouts.app')
+
+@section('title','أسعار السوق')
+@section('content')
+<style>
+  .souk-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .souk-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border-bottom:1px solid #eef2f7;border-top-left-radius:16px;border-top-right-radius:16px}
+  .souk-body{padding:1rem}
+  .pill{padding:.15rem .55rem;border-radius:9999px;font-size:.75rem;font-weight:700;white-space:nowrap}
+</style>
+
+<div class="max-w-6xl mx-auto p-6 space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">أسعار السوق (Souks)</h1>
+    <a href="{{ route('prices.index') }}" class="text-sm text-[#6A8F3B] hover:underline">العودة لملخص الأسعار</a>
+  </div>
+
+  @php
+    /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection $souks */
+    $items = isset($souks) ? $souks : collect();
+  @endphp
+
+  @if($items->count())
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @foreach($items as $row)
+        @php
+          $souk     = $row->souk_name ?? $row->souk ?? $row->market ?? $row->location ?? $row->city ?? '—';
+          $product  = $row->product_type ?? $row->product ?? ($row->variety ? 'olive' : 'oil'); // fallback
+          $variety  = $row->variety ?? '';
+          $quality  = $row->quality ?? '';
+          $avg      = $row->price_avg ?? $row->price ?? null;
+          $price    = isset($avg) ? number_format((float)$avg, 2) : '—';
+          $currency = $row->currency ?? 'TND';
+          $unit     = $row->unit ?? 'kg';
+          $dateRaw  = $row->date ?? $row->priced_at ?? $row->created_at ?? null;
+          try { $date = \Carbon\Carbon::parse($dateRaw)->format('Y-m-d'); } catch (\Throwable $e) { $date = ''; }
+
+          // header tint: oil = gold, olive = green
+          $isOil    = strtolower((string)$product) === 'oil';
+          $headBg   = $isOil ? '#C8A356' : '#6A8F3B';
+          $icon     = $isOil ? '<img src="'.asset('images/olive-oil.png').'" alt="Oil" class="w-4 h-4 object-contain">' : '🫒';
+          // Optional: show olives “as oil” label (visual only)
+          $productLabel = $isOil ? 'زيت' : 'زيتون';
+        @endphp
+
+        <div class="souk-card overflow-hidden">
+          <div class="souk-head text-white" style="background: {{ $headBg }}">
+            <div class="font-bold flex items-center gap-2">
+              <span class="text-lg">{!! $icon !!}</span>
+              <span>{{ $souk }}</span>
+              @if($variety)
+                <span class="pill bg-white/20">{{ $variety }}</span>
+              @endif
+            </div>
+            <span class="pill bg-white/20">{{ $date }}</span>
+          </div>
+
+          <div class="souk-body space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">المنتج</span>
+              <span class="font-semibold">{{ $productLabel }}</span>
+            </div>
+            @if($quality)
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">الجودة</span>
+                <span class="font-semibold">{{ $quality }}</span>
+              </div>
+            @endif
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600">المعدل</span>
+              <span class="text-lg font-extrabold">{{ $price }} <span class="text-sm font-bold">{{ $currency }}/{{ $unit }}</span></span>
+            </div>
+            @if(!empty($row->notes))
+              <div class="text-xs text-gray-500">{{ $row->notes }}</div>
+            @endif
+          </div>
+        </div>
+      @endforeach
+    </div>
+
+    @if(method_exists($items, 'links'))
+      <div class="mt-6">{{ $items->links() }}</div>
+    @endif
+  @else
+    <p class="text-gray-600">لا توجد بيانات حاليا.</p>
+  @endif
+</div>
+@endsection

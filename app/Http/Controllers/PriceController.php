@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\SoukPrice;
 use App\Models\WorldOlivePrice;
 use App\Models\DailyPrice;
@@ -25,11 +26,12 @@ class PriceController extends Controller
             ->limit(4)
             ->get();
 
-        // Calculate Tunisian average
-        $tunisianAvg = SoukPrice::where('is_active', true)
-            ->where('date', '>=', now()->subDays(7))
-            ->avg('price_avg');
-
+// Calculate Tunisian average — oil only
+$tunisianAvg = SoukPrice::where('is_active', true)
+    ->where('product_type', 'oil')
+    ->where('date', '>=', now()->subDays(7))
+    ->avg('price_avg');
+        $tunisianOliveAvg = SoukPrice::where('is_active', true)->where('product_type','olive')->where('date','>=', now()->subDays(7))->avg('price_avg');
         // Calculate world average
         $worldAvg = WorldOlivePrice::where('date', '>=', now()->subDays(7))
             ->avg('price');
@@ -42,7 +44,8 @@ class PriceController extends Controller
             'worldPrices',
             'tunisianAvg',
             'worldAvg',
-            'marketTrend'
+            'marketTrend',
+            'tunisianOliveAvg'
         ));
     }
 

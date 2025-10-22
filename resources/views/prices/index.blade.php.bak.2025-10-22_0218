@@ -1,0 +1,176 @@
+@extends('layouts.app')
+
+@section('title', 'أسعار اليوم')
+@section('content')
+<div class="max-w-7xl mx-auto p-6 space-y-8">
+
+  {{-- KPIs --}}
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="bg-white rounded-2xl shadow border p-5">
+      <div class="text-xs text-gray-500 mb-2">متوسط تونس (آخر 7 أيام)</div>
+      <div class="flex flex-wrap gap-2">
+        <span class="px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-semibold">زيت: {{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2) : '—' }} TND</span>
+        <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold">زيتون: {{ isset($tunisianOliveAvg) ? number_format((float)$tunisianOliveAvg, 2) : '—' }} TND</span>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow border p-5">
+      <div class="text-xs text-gray-500 mb-2">متوسط عالمي (آخر 7 أيام)</div>
+      <div class="text-2xl font-extrabold">{{ isset($worldAvg) ? number_format((float)$worldAvg, 2) : '—' }} <span class="text-base font-semibold">EUR/kg</span></div>
+    </div>
+  </div>
+
+  {{-- Tunisian Souks --}}
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-bold">أسعار الأسواق التونسية (آخر إدخالات)</h2>
+    <a href="{{ route('prices.souks') }}" class="text-sm text-[#6A8F3B] hover:underline">عرض الكل</a>
+  </div>
+
+  @php $souks = $soukPrices ?? collect(); @endphp
+  @if($souks->count())
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @foreach($souks as $row)
+        @php
+          $dateRaw = $row->date ?? $row->created_at ?? null;
+          try { $date = \Carbon\Carbon::parse($dateRaw)->format('Y-m-d'); } catch (\Throwable $e) { $date = ''; }
+          $isOil = ($row->product_type ?? '') === 'oil';
+          $trend = $row->trend ?? null; // up | down | null
+          $trendColor = $trend === 'up' ? 'text-green-600' : ($trend === 'down' ? 'text-red-600' : 'text-gray-600');
+          $trendIcon  = $trend === 'up' ? '📈' : ($trend === 'down' ? '📉' : '➡️');
+          $changePct  = isset($row->change_percentage) ? rtrim(rtrim(number_format((float)$row->change_percentage,2),'0'),'.').'%' : '—';
+          $priceMin = isset($row->price_min) ? number_format((float)$row->price_min, 2) : null;
+          $priceAvg = isset($row->price_avg) ? number_format((float)$row->price_avg, 2) : null;
+          $priceMax = isset($row->price_max) ? number_format((float)$row->price_max, 2) : null;
+          $unit = $row->unit ?? ($isOil ? 'kg' : 'kg');
+          $currency = $row->currency ?? 'TND';
+          $quality = $row->quality ?? null;
+          $variety = $row->variety ?? null;
+          $gov = $row->governorate ?? '';
+          $souk = $row->souk_name ?? '';
+        @endphp
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {{-- unified header (Souk + Governorate — Variety) --}}
+          <div class="bg-[#6A8F3B] text-white px-4 py-3 flex items-center justify-between">
+            <div>
+              <div class="font-bold">{{ $souk ?: '—' }}</div>
+              <div class="text-[11px] opacity-95">
+                {{ $gov ?: '—' }} @if($variety) — {{ $variety }} @endif
+              </div>
+            </div>
+            <div class="text-xs opacity-95">{{ $date }}</div>
+          </div>
+
+          {{-- body --}}
+          @if($isOil)
+            {{-- OIL CARD (rich layout) --}}
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm font-bold text-gray-600 uppercase">🫗 زيت الزيتون</span>
+                @if($quality)
+                  <span class="px-3 py-1 bg-[#F8F4EC] rounded-full text-xs font-bold text-[#6A8F3B]">{{ $quality }}</span>
+                @endif
+              </div>
+
+              <div class="mb-4">
+                <div class="text-sm text-gray-500 mb-1">السعر المتوسط</div>
+                <div class="text-3xl font-bold text-[#1B2A1B]">
+                  {{ $priceAvg ?? '—' }} <span class="text-lg text-gray-600">{{ $currency }}/{{ $unit }}</span>
+                </div>
+                @if($priceMin && $priceMax)
+                  <div class="text-xs text-gray-500 mt-1">
+                    النطاق: {{ $priceMin }} - {{ $priceMax }} {{ $currency }}
+                  </div>
+                @endif
+              </div>
+
+              <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                <span class="text-sm text-gray-600">الاتجاه</span>
+                <div class="flex items-center {{ $trendColor }}">
+                  <span class="text-2xl mr-2">{{ $trendIcon }}</span>
+                  <span class="font-bold">{{ $changePct }}</span>
+                </div>
+              </div>
+
+              <div class="mt-3 text-xs text-gray-400">📅 {{ $date ? \Carbon\Carbon::parse($date)->format('d/m/Y') : '' }}</div>
+            </div>
+          @else
+            {{-- OLIVE CARD (min/avg/max) --}}
+            <div class="p-5 space-y-3">
+              <div class="text-sm text-gray-500">زيتون @if($variety) — {{ $variety }} @endif</div>
+
+              <div class="grid grid-cols-3 gap-3 mt-2">
+                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                  <div class="text-xs text-gray-500 mb-1">الأدنى</div>
+                  <div class="font-extrabold">{{ $priceMin ? $priceMin.' '.$currency : '—' }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                  <div class="text-xs text-gray-500 mb-1">المتوسط</div>
+                  <div class="font-extrabold">{{ $priceAvg ? $priceAvg.' '.$currency : '—' }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                  <div class="text-xs text-gray-500 mb-1">الأعلى</div>
+                  <div class="font-extrabold">{{ $priceMax ? $priceMax.' '.$currency : '—' }}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                <span class="text-sm text-gray-600">الاتجاه</span>
+                <div class="flex items-center {{ $trendColor }}">
+                  <span class="text-2xl mr-2">{{ $trendIcon }}</span>
+                  <span class="font-bold">{{ $changePct }}</span>
+                </div>
+              </div>
+
+              <div class="mt-3 text-xs text-gray-400">📅 {{ $date ? \Carbon\Carbon::parse($date)->format('Y-m-d') : '' }}</div>
+              <div class="text-xs text-gray-400"> {{ $unit }} </div>
+            </div>
+          @endif
+        </div>
+      @endforeach
+    </div>
+  @else
+    <p class="text-gray-600">لا توجد بيانات أسواق حاليا.</p>
+  @endif
+
+  {{-- World (keep table for now) --}}
+  <div class="flex items-center justify-between mt-8">
+    <h2 class="text-xl font-bold">أسعار عالمية (آخر إدخالات)</h2>
+    <a href="{{ route('prices.world') }}" class="text-sm text-[#6A8F3B] hover:underline">عرض الكل</a>
+  </div>
+
+  @php $world = $worldPrices ?? collect(); @endphp
+  @if($world->count())
+    <div class="bg-white rounded-2xl shadow border overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left">Country</th>
+            <th class="px-4 py-2 text-left">Variety</th>
+            <th class="px-4 py-2 text-left">Quality</th>
+            <th class="px-4 py-2 text-left">Price (EUR/kg)</th>
+            <th class="px-4 py-2 text-left">Date</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-900">
+          @foreach($world as $row)
+            @php
+              $dateRaw = $row->date ?? $row->created_at ?? null;
+              try { $date = \Carbon\Carbon::parse($dateRaw)->format('Y-m-d'); } catch (\Throwable $e) { $date = ''; }
+            @endphp
+            <tr class="border-t">
+              <td class="px-4 py-2">{{ $row->country }}</td>
+              <td class="px-4 py-2">{{ $row->variety ?? '' }}</td>
+              <td class="px-4 py-2">{{ $row->quality ?? '' }}</td>
+              <td class="px-4 py-2">{{ isset($row->price) ? number_format((float)$row->price, 2) : '' }}</td>
+              <td class="px-4 py-2">{{ $date }}</td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  @else
+    <p class="text-gray-600">لا توجد بيانات عالمية حاليا.</p>
+  @endif
+
+</div>
+@endsection

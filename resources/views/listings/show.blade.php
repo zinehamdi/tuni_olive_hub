@@ -173,7 +173,18 @@
                                 </svg>
                                 <div>
                                     <div class="text-sm text-gray-600">{{ __('Payment Methods') }}</div>
-                                    <div class="font-bold">{{ is_array($listing->payment_methods) ? implode('، ', $listing->payment_methods) : $listing->payment_methods }}</div>
+                                    @php
+$__map = [
+  "cash"=>"نقداً","bank_transfer"=>"تحويل بنكي","check"=>"شيك",
+  "cod"=>"الدفع عند التسليم","flouci"=>"فلوسي","d17"=>"D17",
+  "stripe"=>"بطاقة بنكية","bank_lc"=>"اعتماد مستندي (LC)"
+];
+$__raw = $listing->payment_methods;
+$__arr = is_array($__raw) ? $__raw
+       : (is_string($__raw) ? (json_decode($__raw,true) ?: preg_split('/\s*,\s*/', $__raw,-1,PREG_SPLIT_NO_EMPTY)) : []);
+$__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
+@endphp
+<div class="font-bold">{{ implode('، ', array_filter($__arr)) ?: 'غير محدد' }}</div>
                                 </div>
                             </div>
                         @endif
@@ -185,7 +196,19 @@
                                 </svg>
                                 <div>
                                     <div class="text-sm text-gray-600">{{ __('Delivery Options') }}</div>
-                                    <div class="font-bold">{{ is_array($listing->delivery_options) ? implode('، ', $listing->delivery_options) : $listing->delivery_options }}</div>
+                                    @php
+$__map = [
+  "pickup"=>"استلام من الموقع",
+  "local_delivery"=>"توصيل محلي",
+  "carrier"=>"عبر ناقل",
+  "export"=>"تصدير"
+];
+$__raw = $listing->delivery_options;
+$__arr = is_array($__raw) ? $__raw
+       : (is_string($__raw) ? (json_decode($__raw,true) ?: preg_split('/\s*,\s*/', $__raw,-1,PREG_SPLIT_NO_EMPTY)) : []);
+$__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
+@endphp
+<div class="font-bold">{{ implode('، ', array_filter($__arr)) ?: 'غير محدد' }}</div>
                                 </div>
                             </div>
                         @endif

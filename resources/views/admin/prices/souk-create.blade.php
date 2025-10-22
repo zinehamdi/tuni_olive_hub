@@ -20,11 +20,10 @@
                             <select name="souk_name" id="souk_name" required
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:border-olive focus:ring-olive">
                                 <option value="">اختر السوق</option>
-                                @foreach(\App\Models\SoukPrice::getFamousSouks() as $soukKey => $soukName)
-                                <option value="{{ $soukKey }}" {{ old('souk_name') === $soukKey ? 'selected' : '' }}>
-                                    {{ $soukName }}
-                                </option>
-                                @endforeach
+@php $allSouks = collect(config('souks', []))->flatten()->unique()->values(); @endphp
+@foreach($allSouks as $soukName)
+    <option value="{{ $soukName }}" {{ old('souk_name') === $soukName ? 'selected' : '' }}>{{ $soukName }}</option>
+@endforeach
                             </select>
                             @error('souk_name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -34,11 +33,14 @@
                         <!-- Governorate -->
                         <div>
                             <label for="governorate" class="block text-sm font-medium text-gray-700 mb-2">
-                                المحافظة
+                                الولاية
                             </label>
-                            <input type="text" name="governorate" id="governorate" value="{{ old('governorate') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-olive focus:ring-olive"
-                                placeholder="مثال: صفاقس، تونس، سوسة...">
+                            <select name="governorate" id="governorate" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]">
+                                <option value="">اختر الولاية</option>
+                                @foreach(config('governorates', []) as $gov)
+                                    <option value="{{ $gov }}" {{ old("governorate") == $gov ? "selected" : "" }}>{{ $gov }}</option>
+                                @endforeach
+                            </select>
                             @error('governorate')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
