@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\ImageOptimizationService;
 
 /**
  * Listing Controller - متحكم العروض
@@ -58,6 +59,12 @@ class ListingController extends Controller
         ]);
         
         try {
+        Log::error('🧩 Debug Upload:', [
+            'hasFile_images' => $request->hasFile('images'),
+            'input_images_type' => gettype($request->input('images')),
+            'allFiles' => array_keys($request->allFiles()),
+            'image_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
+        ]);
             // Validate the request
             $validated = $request->validate([
                 'category' => 'required|in:olive,oil',
@@ -77,7 +84,7 @@ class ListingController extends Controller
                 'longitude' => 'nullable|numeric',
                 'governorate' => 'nullable|string',
                 'delegation' => 'nullable|string',
-                'images.*' => 'nullable|image|max:2048', // Max 2MB per image
+                'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:8192', // Accept any image format/size, will be optimized
             ]);
 
             // Set seller_id to authenticated user if not provided
@@ -158,16 +165,18 @@ class ListingController extends Controller
             // Create the listing
             $listing = Listing::create($validated);
             
-            // Handle image uploads if provided
+            // Handle image uploads with optimization
             if ($request->hasFile('images')) {
+                $imageOptimizer = new ImageOptimizationService();
                 $imagePaths = [];
                 foreach ($request->file('images') as $image) {
-                    $path = $image->store('listings/' . $listing->id, 'public');
+                    // Optimize and resize image to WebP format (max 1200px, 85% quality)
+                    $path = $imageOptimizer->optimizeListingImage($image, (string)$listing->id);
                     $imagePaths[] = $path;
                 }
-                // Save image paths to the listing
+                // Save optimized image paths to the listing
                 $listing->update(['media' => $imagePaths]);
-                Log::info('Images Uploaded and Saved:', ['paths' => $imagePaths, 'listing_id' => $listing->id]);
+                Log::info('Images Optimized and Saved:', ['paths' => $imagePaths, 'listing_id' => $listing->id]);
             }
             
             Log::info('✅ Listing Created Successfully:', [
