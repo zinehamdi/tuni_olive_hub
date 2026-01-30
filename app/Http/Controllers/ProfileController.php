@@ -43,7 +43,7 @@ class ProfileController extends Controller
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
 
-        return view('dashboard_new', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl'));
+        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl'));
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
