@@ -26,7 +26,14 @@
 
     $profilePhotoUrl = $normalizePath($user->profile_picture) ?? asset('images/zintoop-logo.png');
 @endphp
-@php $isOwner = auth()->check() && auth()->id() === $user->id; @endphp
+@php
+    $isOwner = auth()->check() && auth()->id() === $user->id;
+    // Basic contact info fallback to avoid undefined variables in view
+    $contactInfo = [
+        'phone' => $user->phone ?? $user->phone_number ?? null,
+        'email' => $user->email ?? null,
+    ];
+@endphp
 
 <x-app-layout>
     <div class="min-h-screen bg-gray-100" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
