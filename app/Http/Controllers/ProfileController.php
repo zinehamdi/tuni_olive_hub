@@ -58,7 +58,11 @@ class ProfileController extends Controller
         } catch (\Throwable $e) {
             $coverUrl = null;
         }
-        return view('profile.public', compact('user','coverUrl'));
+        $activeListings  = $user->listings()->where('status', 'active')->count();
+        $pendingListings = $user->listings()->where('status', 'pending')->count();
+        $profileCompletion = $this->calculateProfileCompletion($user);
+
+        return view('profile.public', compact('user','coverUrl','activeListings','pendingListings','profileCompletion'));
     }
     public function edit(Request $request): View
     {
