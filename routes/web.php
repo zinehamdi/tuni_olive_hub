@@ -227,3 +227,40 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
     return view('auth.register_' . $role, compact('role'));
 })->name('register.role');
 Route::get('/healthz', function(){ return 'OK'; });
+
+Route::get("/_debug", function(\Illuminate\Http\Request $r){ \Illuminate\Support\Facades\Log::info("DEBUG: /_debug", ["auth" => \Illuminate\Support\Facades\Auth::check(), "user_id" => optional($r->user())->id]); return "ok"; });
+Route::middleware("auth")->get("/_debug/auth", function(\Illuminate\Http\Request $r){ \Illuminate\Support\Facades\Log::info("DEBUG: /_debug/auth", ["auth" => \Illuminate\Support\Facades\Auth::check(), "user_id" => optional($r->user())->id]); return "ok auth"; });
+Route::get('/_debug/session-set', function (\Illuminate\Http\Request $r) {
+    session(['ping' => 'pong', 'set_at' => now()->toDateTimeString()]);
+    \Illuminate\Support\Facades\Log::info('DEBUG: session-set', ['sid' => session()->getId()]);
+    return response()->json(['ok' => true, 'sid' => session()->getId()]);
+});
+
+Route::get('/_debug/session-get', function (\Illuminate\Http\Request $r) {
+    $data = ['ping' => session('ping'), 'set_at' => session('set_at'), 'sid' => session()->getId()];
+    \Illuminate\Support\Facades\Log::info('DEBUG: session-get', $data);
+    return response()->json($data);
+});
+
+Route::get('/_debug/auth', function (\Illuminate\Http\Request $r) {
+    $data = [
+        'auth'   => \Illuminate\Support\Facades\Auth::check(),
+        'user'   => optional(\Illuminate\Support\Facades\Auth::user())->only('id','email','role'),
+        'sid'    => session()->getId(),
+    ];
+    \Illuminate\Support\Facades\Log::info('DEBUG: /_debug/auth', $data);
+    return response()->json($data);
+});
+Route::middleware('web')->get('/_whoami', function (\Illuminate\Http\Request $r) {
+    \Log::info('WHOAMI', [
+        'auth' => \Illuminate\Support\Facades\Auth::check(),
+        'user_id' => optional(\Illuminate\Support\Facades\Auth::user())->id,
+        'sid' => $r->session()->getId(),
+        'has_session_cookie' => $r->hasSession()
+    ]);
+    return response()->json([
+        'auth' => \Illuminate\Support\Facades\Auth::check(),
+        'user_id' => optional(\Illuminate\Support\Facades\Auth::user())->id,
+        'sid' => $r->session()->getId(),
+    ]);
+});

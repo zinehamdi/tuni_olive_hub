@@ -530,9 +530,6 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                    @change="
                                        const files = Array.from($event.target.files);
                                        if (files.length > 5) { alert('يمكنك رفع 5 صور كحد أقصى'); return; }
-                                       for (const file of files) {
-                                           if (file.size > 2 * 1024 * 1024) { alert('حجم الصورة يجب أن يكون أقل من 2MB'); return; }
-                                       }
                                        formData.images = files;
                                        formData.imagePreview = [];
                                        files.forEach((file, idx) => {

@@ -51,13 +51,25 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition">
                 <!-- Product Image/Icon -->
                 <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative">
-                    <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    @php
+    $media = $listing->media[0] ?? null;
+    if ($media) {
+        $thumb = preg_replace('/^(listings\/\d+)\/([^\/]+)\.[a-z0-9]+$/i', '$1/thumbs/$2_sm.webp', $media);
+    }
+@endphp
+@if($media)
+    <img src="{{ asset('storage/' . $thumb) }}"
+         onerror="this.onerror=null;this.src='{{ asset('storage/' . $media) }}';"
+         alt="{{ $listing->product->variety }}"
+         class="w-full h-full object-cover"
+         loading="lazy">
+@else<svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         @if($listing->product->type === 'oil')
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         @else
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                         @endif
-                    </svg>
+                    </svg>@endif
                     
                     <!-- Status Badge -->
                     <div class="absolute top-4 right-4">
@@ -96,8 +108,16 @@
                             {{ substr($listing->seller->name, 0, 1) }}
                         </div>
                         <div>
-                            <div class="text-sm font-semibold text-gray-900">{{ $listing->seller->name }}</div>
-                            <div class="text-xs text-gray-600">{{ ucfirst($listing->seller->role) }}</div>
+                            <div class="text-sm font-semibold text-gray-900">
+    @if($listing->seller->role !== 'admin')
+      <a href="{{ route('user.profile', $listing->seller) }}" target="_blank" class="hover:underline">{{ $listing->seller->name }}</a>
+    @else
+      {{ __('Seller') }}
+    @endif
+  </div>
+  <div class="text-xs text-gray-600">
+    {{ $listing->seller->role === 'admin' ? __('Seller') : ucfirst($listing->seller->role) }}
+  </div>
                         </div>
                     </div>
 

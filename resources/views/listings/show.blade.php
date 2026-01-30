@@ -68,7 +68,7 @@
                     <!-- Product Name & Badges -->
                     <div class="mb-6">
                         <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ __($listing->product->variety) }}</h1>
-                        <div class="flex items-center gap-2 flex-wrap">
+                        <div class="flex items-center gap-2 flex-wrap" flex-wrap">
                             <span class="px-4 py-2 rounded-full bg-[#6A8F3B] text-white font-bold">
                                 {{ $listing->product->type === 'olive' ? __('Olives') : __('Olive Oil') }}
                             </span>
@@ -115,19 +115,23 @@
                                 {{ substr($listing->seller->name, 0, 1) }}
                             </div>
                             <div>
-                                <div class="font-bold text-gray-900">{{ $listing->seller->name }}</div>
+                                <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
                                 <div class="text-sm text-gray-600">
-                                    @if($listing->seller->role === 'farmer')
-                                        {{ __('Farmer') }}
-                                    @elseif($listing->seller->role === 'carrier')
-                                        {{ __('Carrier') }}
-                                    @elseif($listing->seller->role === 'mill')
-                                        {{ __('Mill') }}
-                                    @elseif($listing->seller->role === 'packer')
-                                        {{ __('Packer') }}
-                                    @else
-                                        {{ __('User') }}
-                                    @endif
+                                   <div class="text-sm text-gray-600">
+                                      @if($listing->seller->role !== 'admin')
+                                          @if($listing->seller->role === 'farmer')
+                                              {{ __('Farmer') }}
+                                          @elseif($listing->seller->role === 'carrier')
+                                              {{ __('Carrier') }}
+                                          @elseif($listing->seller->role === 'mill')
+                                              {{ __('Mill') }}
+                                          @elseif($listing->seller->role === 'packer')
+                                              {{ __('Packer') }}
+                                          @endif
+                                      @else
+                                          {{ __('User') }}
+                                      @endif
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -277,8 +281,9 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                                 {{ substr($listing->seller->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="font-bold text-gray-900">{{ $listing->seller->name }}</div>
+                                                <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
                                                 <div class="text-sm text-gray-600">
+@if($listing->seller->role !== 'admin')
                                                     @if($listing->seller->role === 'farmer')
                                                         {{ __('Farmer') }}
                                                     @elseif($listing->seller->role === 'carrier')
@@ -286,6 +291,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                                     @elseif($listing->seller->role === 'mill')
                                                         {{ __('Mill') }}
                                                     @elseif($listing->seller->role === 'packer')
+@endif
                                                         {{ __('Packer') }}
                                                     @else
                                                         {{ __('User') }}
@@ -362,7 +368,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                             {{ substr($listing->seller->name, 0, 1) }}
                                         </div>
                                         <div class="flex-1">
-                                            <div class="font-bold text-gray-900">{{ $listing->seller->name }}</div>
+                                            <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
                                             <div class="text-sm text-gray-600">
                                                 {{ $listing->seller->addresses->first()->governorate ?? '' }}
                                                 @if($listing->seller->addresses->first()->delegation)
@@ -377,7 +383,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                     
                                     <!-- Distance Info -->
                                     <div class="mt-4 flex items-center justify-center gap-4">
-                                        <div x-show="distance" class="flex items-center gap-2 text-[#6A8F3B] font-bold">
+                                        <div x-show="distance" class="flex items-center gap-2 flex-wrap" text-[#6A8F3B] font-bold">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                             </svg>
