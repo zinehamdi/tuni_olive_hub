@@ -525,11 +525,11 @@
                 @php
                     $galleryPhotos = $coverPhotos->take(9);
                 @endphp
-                <div x-data="{ selectedPhoto: null, selectedIndex: 0 }" 
+                 <div x-data="{ photos: {{ json_encode($galleryPhotos->values()->toArray()) }}, selectedPhoto: null, selectedIndex: 0 }" 
                      class="relative mb-8" 
                      @keydown.escape.window="selectedPhoto = null"
-                     @keydown.arrow-right.window="selectedPhoto && selectedIndex < {{ $galleryPhotos->count() - 1 }} && (selectedIndex++, selectedPhoto = '{{ Storage::url($galleryPhotos[0]) }}'.replace('{{ $galleryPhotos[0] }}', {{ json_encode($galleryPhotos->values()->toArray()) }}[selectedIndex]))"
-                     @keydown.arrow-left.window="selectedPhoto && selectedIndex > 0 && (selectedIndex--, selectedPhoto = {{ json_encode($galleryPhotos->map(fn($p) => Storage::url($p))->values()->toArray()) }}[selectedIndex])">
+                     @keydown.arrow-right.window="selectedPhoto && selectedIndex < photos.length - 1 && (selectedIndex++, selectedPhoto = photos[selectedIndex])"
+                     @keydown.arrow-left.window="selectedPhoto && selectedIndex > 0 && (selectedIndex--, selectedPhoto = photos[selectedIndex])">
                     
                     {{-- Gallery Header --}}
                     <div class="flex items-center justify-between mb-6">
@@ -557,8 +557,8 @@
                         @foreach($galleryPhotos as $index => $photo)
                             <button type="button" 
                                     class="group relative aspect-square overflow-hidden rounded-2xl bg-gray-100 focus:outline-none focus:ring-4 focus:ring-amber-300/50 {{ $index === 0 ? 'sm:col-span-2 sm:row-span-2' : '' }}"
-                                    @click="selectedPhoto = '{{ Storage::url($photo) }}'; selectedIndex = {{ $index }}">
-                                <img src="{{ Storage::url($photo) }}" 
+                                    @click="selectedPhoto = photos[{{ $index }}]; selectedIndex = {{ $index }}">
+                                <img src="{{ $photo }}" 
                                      alt="Photo {{ $index + 1 }}" 
                                      class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110">
                                 {{-- Hover Overlay --}}
@@ -613,12 +613,12 @@
 
                         {{-- Navigation Arrows --}}
                         <button x-show="selectedIndex > 0" 
-                                @click="selectedIndex--; selectedPhoto = {{ json_encode($galleryPhotos->map(fn($p) => Storage::url($p))->values()->toArray()) }}[selectedIndex]" 
+                                @click="selectedIndex--; selectedPhoto = photos[selectedIndex]" 
                                 class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition z-20">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                         </button>
                         <button x-show="selectedIndex < {{ $galleryPhotos->count() - 1 }}" 
-                                @click="selectedIndex++; selectedPhoto = {{ json_encode($galleryPhotos->map(fn($p) => Storage::url($p))->values()->toArray()) }}[selectedIndex]" 
+                            @click="selectedIndex++; selectedPhoto = photos[selectedIndex]" 
                                 class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition z-20">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                         </button>
