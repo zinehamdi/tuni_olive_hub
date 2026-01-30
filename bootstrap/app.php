@@ -16,11 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'set.locale' => \App\Http\Middleware\SetLocale::class,
             'role' => \App\Http\Middleware\EnsureRole::class,
+            'security.headers' => \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
-        // Global middleware
-        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        // Apply security headers to web routes only
+        $middleware->web(append: [
+            \App\Http\Middleware\SecurityHeaders::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Custom exception handling is done in App\Exceptions\Handler
+        // Default exception handling
     })->create();
