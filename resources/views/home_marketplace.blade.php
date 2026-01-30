@@ -9,7 +9,7 @@
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" x-data="marketplace">
     
     <!-- Header with Login/Register -->
-    <header class="bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
+    <header class="hidden bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between gap-4">
                 <!-- Logo -->
