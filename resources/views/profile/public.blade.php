@@ -472,9 +472,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="relative h-56 md:h-full">
                             @if($coverPhotos->count() > 1)
-                                <img src="{{ Storage::url($coverPhotos[1]) }}" alt="Farm photo" class="w-full h-full object-cover">
+                                <img src="{{ $coverPhotos[1] }}" alt="Farm photo" class="w-full h-full object-cover">
                             @elseif($coverPhotos->count() > 0)
-                                <img src="{{ Storage::url($coverPhotos[0]) }}" alt="Farm photo" class="w-full h-full object-cover">
+                                <img src="{{ $coverPhotos[0] }}" alt="Farm photo" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-green-700 to-amber-500 flex items-center justify-center">
                                     <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
