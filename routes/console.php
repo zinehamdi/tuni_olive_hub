@@ -8,5 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Daily price ingestion job
-Schedule::job(new \App\Jobs\IngestDailyPrices)->dailyAt('06:00')->onOneServer()->withoutOverlapping();
+// Daily price ingestion job (scheduled via cron)
+// Schedule::job(\App\Jobs\IngestDailyPrices::class)->dailyAt('06:00');
