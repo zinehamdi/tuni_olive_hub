@@ -58,12 +58,31 @@ class ProfileController extends Controller
         } catch (\Throwable $e) {
             $coverUrl = null;
         }
+        // Addresses and role-specific info
+        $addresses = $user->addresses()->get();
+        $roleInfo = [];
+        if ($user->role === 'farmer') {
+            $roleInfo = [
+                'olive_type' => $user->olive_type,
+                'farm_location' => $user->farm_location,
+                'tree_number' => $user->tree_number,
+            ];
+        } elseif ($user->role === 'carrier') {
+            $roleInfo = [
+                'camion_capacity' => $user->camion_capacity,
+            ];
+        } elseif ($user->role === 'mill') {
+            $roleInfo = [
+                'mill_name' => $user->mill_name,
+            ];
+        }
+        $listings = $user->listings()->with('product')->where('status','active')->latest()->take(10)->get();
         $totalListings   = $user->listings()->count();
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
 
-        return view('profile.public', compact('user','coverUrl','totalListings','activeListings','pendingListings','profileCompletion'));
+        return view('profile.public', compact('user','coverUrl','addresses','roleInfo','listings','totalListings','activeListings','pendingListings','profileCompletion'));
     }
     public function edit(Request $request): View
     {
