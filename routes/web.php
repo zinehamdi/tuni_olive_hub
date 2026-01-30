@@ -150,8 +150,11 @@ require __DIR__.'/auth.php';
 // Public storefront + SEO
 Route::group([], function(){
     Route::get('landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
+    Route::get('public/landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
     Route::get('sitemap.xml', [\App\Http\Controllers\PublicController::class, 'sitemap'])->name('public.sitemap');
+    Route::get('public/sitemap.xml', [\App\Http\Controllers\PublicController::class, 'sitemap']);
     Route::get('feed.rss', [\App\Http\Controllers\PublicController::class, 'rss'])->name('public.rss');
+    Route::get('public/feed.rss', [\App\Http\Controllers\PublicController::class, 'rss']);
     Route::get('og/products/{product}', [\App\Http\Controllers\PublicController::class, 'ogListing']);
     // Real HTML pages for storefront
     Route::get('gulf/catalog', [\App\Http\Controllers\PublicController::class, 'gulfCatalog'])->name('gulf.catalog');
