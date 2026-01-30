@@ -79,8 +79,15 @@ class ProfileController extends Controller
         })->filter()->values();
 
         $profilePhotoUrl = null;
-        if ($user->profile_picture && $existsOnDisk($user->profile_picture)) {
-            $profilePhotoUrl = $normalizePath($user->profile_picture);
+        if ($user->profile_picture) {
+            if (!$existsOnDisk($user->profile_picture)) {
+                // Check raw relative path as stored (fallback)
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_picture)) {
+                    $profilePhotoUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($user->profile_picture);
+                }
+            } else {
+                $profilePhotoUrl = $normalizePath($user->profile_picture);
+            }
         }
 
         // Addresses and role-specific info
