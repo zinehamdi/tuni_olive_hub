@@ -76,7 +76,8 @@ class ProfileController extends Controller
                 'mill_name' => $user->mill_name,
             ];
         }
-        $listings = $user->listings()->with('product')->where('status','active')->latest()->take(10)->get();
+        // Paginate active listings for public view to support links()
+        $listings = $user->listings()->with('product')->where('status','active')->latest()->paginate(10);
         $totalListings   = $user->listings()->count();
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
