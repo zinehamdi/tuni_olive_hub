@@ -55,68 +55,6 @@ try {
      * Optimize and save cover photo
      * Converts to WebP, resizes to max 1920px width, quality 80%
      */
-    /**
-     * Optimize and save listing image
-     * Converts to WebP, resizes to max 1200px, quality 85%
-     */
-    public function optimizeListingImage(UploadedFile $file, string $listingId): string
-    {
-        $dir = storage_path("app/public/listings/" . $listingId);
-        if (!file_exists($dir)) mkdir($dir, 0755, true);
-
-        try {
-                    // Convert HEIC/HEIF to JPEG using Imagick before Intervention reads it
-        $ext = strtolower($file->getClientOriginalExtension());
-        if ($ext === 'heic' || $ext === 'heif') {
-            try {
-                $im = new \Imagick($file->getRealPath());
-                $im->setImageFormat('jpeg');
-                $tempPath = sys_get_temp_dir() . '/' . \Illuminate\Support\Str::uuid() . '.jpg';
-                $im->writeImage($tempPath);
-                $file = new \Illuminate\Http\UploadedFile($tempPath, basename($tempPath), 'image/jpeg', null, true);
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('HEIC conversion failed', ['error' => $e->getMessage()]);
-            }
-        }
-$image = \Intervention\Image\Laravel\Facades\Image::read($file);
-            if (method_exists($image, "scaleDown")) $image->scaleDown(width: 1200);
-            else $image->scale(width: 1200, height: 1200);
-            $filename = \Illuminate\Support\Str::uuid() . ".webp";
-            $path = $dir . "/" . $filename;
-            $image->toWebp(85)->save($path);
-// Create thumbnail (~360px width)
-$thumbDir = $dir . "/thumbs";
-if (!file_exists($thumbDir)) mkdir($thumbDir, 0755, true);
-$thumbName = pathinfo($filename, PATHINFO_FILENAME) . "_sm.webp";
-$thumbPath = $thumbDir . "/" . $thumbName;
-
-try {
-    $thumb = \Intervention\Image\Laravel\Facades\Image::read($file);
-    if (method_exists($thumb, "scaleDown")) $thumb->scaleDown(width: 360);
-    else $thumb->scale(width: 360, height: 360);
-    $thumb->toWebp(80)->save($thumbPath);
-    \Illuminate\Support\Facades\Log::info("Thumbnail saved", ["path" => "profile-pictures/thumbs/" . $thumbName]);
-} catch (\Throwable $e) {
-    \Illuminate\Support\Facades\Log::warning("Thumbnail generation failed", ["error" => $e->getMessage()]);
-}
-            return "listings/" . $listingId . "/" . $filename;
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error("Image optimize failed, fallback to original", [
-                "ext" => $file->getClientOriginalExtension(),
-                "mime" => $file->getMimeType(),
-                "error" => $e->getMessage(),
-            ]);
-            $ext = strtolower($file->getClientOriginalExtension() ?: "bin");
-            if (!preg_match("/^[a-z0-9]+$/", $ext)) $ext = "bin";
-            $filename = \Illuminate\Support\Str::uuid() . "." . $ext;
-            $relative = "listings/" . $listingId . "/" . $filename;
-            $file->storeAs("public/" . dirname($relative), basename($relative));
-            return $relative;
-        }
-    }
-
-
-
     public function optimizeCoverPhoto(UploadedFile $file): string
     {
         $filename = Str::uuid() . '.webp';
