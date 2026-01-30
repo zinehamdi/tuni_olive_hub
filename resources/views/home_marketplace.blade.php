@@ -314,10 +314,11 @@
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
                                 <!-- Actual Image if available -->
                                 <template x-if="listing.media && listing.media.length > 0">
-                                    <img :src="'/storage/' + listing.media[0]" 
+                                    <img :src="imageUrl(listing.media)" 
                                          :alt="listing.product.variety" 
                                          class="w-full h-full object-cover"
-                                         loading="lazy">
+                                         loading="lazy"
+                                         @error="$event.target.src='{{ asset('images/zintoop-logo.png') }}'">
                                 </template>
                                 <!-- Fallback SVG icon if no image -->
                                 <template x-if="!listing.media || listing.media.length === 0">
@@ -399,10 +400,11 @@
                             <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                                 <!-- Actual Image if available -->
                                 <template x-if="listing.media && listing.media.length > 0">
-                                    <img :src="'/storage/' + listing.media[0]" 
+                                    <img :src="imageUrl(listing.media)" 
                                          :alt="listing.product.variety" 
                                          class="w-full h-full object-cover"
-                                         loading="lazy">
+                                         loading="lazy"
+                                         @error="$event.target.src='{{ asset('images/zintoop-logo.png') }}'">
                                 </template>
                                 <!-- Fallback SVG icon if no image -->
                                 <template x-if="!listing.media || listing.media.length === 0">
@@ -582,6 +584,22 @@ document.addEventListener('alpine:init', () => {
 
         translate(text) {
             return this.translations[text] || text;
+        },
+
+        imageUrl(media) {
+            if (!media || media.length === 0) {
+                return '{{ asset('images/zintoop-logo.png') }}';
+            }
+
+            const first = media[0] || '';
+
+            if (first.startsWith('http')) {
+                return first;
+            }
+
+            const cleaned = first.replace(/^\/+/, '').replace(/^storage\//, '');
+
+            return `/storage/${cleaned}`;
         },
 
         // Debounce utility for performance - prevents excessive filtering

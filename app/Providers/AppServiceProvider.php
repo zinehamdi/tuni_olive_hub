@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Ensure all console commands resolved via the container receive the app instance.
+        $this->app->afterResolving(\Illuminate\Console\Command::class, function ($command, $app): void {
+            if (method_exists($command, 'setLaravel')) {
+                $command->setLaravel($app);
+            }
+        });
     }
 }

@@ -16,7 +16,7 @@
             <!-- Logo -->
             <div class="mb-8">
                 <a href="/" class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" class="h-20 w-20 rounded-full object-cover shadow-lg hover:scale-105 transition">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" class="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover shadow-lg hover:scale-105 transition">
                     <div class="text-center">
                         <h1 class="text-2xl font-bold text-gray-900">منصة زيت الزيتون التونسي</h1>
                         <p class="text-sm text-gray-600">Tunisian Olive Oil Platform</p>

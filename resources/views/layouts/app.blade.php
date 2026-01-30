@@ -86,7 +86,7 @@
                     <a href="{{ route('home') }}" class="flex-shrink-0 group flex items-center gap-3">
                         <div class="relative">
                             <div class="absolute inset-0 bg-white/20 rounded-full blur-md group-hover:bg-white/30 transition-all duration-300"></div>
-                            <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" class="relative h-11 sm:h-12 w-auto rounded-full object-contain group-hover:scale-105 transition-transform duration-300 ring-2 ring-white/30">
+                            <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" class="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full object-contain group-hover:scale-105 transition-transform duration-300 ring-2 ring-white/30 max-w-[3rem]">
                         </div>
                         <div class="hidden sm:block">
                             <span class="text-lg font-bold tracking-tight">ZinToop</span>

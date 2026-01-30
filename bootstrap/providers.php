@@ -2,5 +2,5 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    // App\Providers\AuthServiceProvider::class,  // Temporarily disabled
+    App\Providers\AuthServiceProvider::class,
 ];
