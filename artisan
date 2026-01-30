@@ -11,13 +11,7 @@ require __DIR__.'/vendor/autoload.php';
 // Bootstrap Laravel and handle the command...
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-
-$status = $kernel->handle(
-    $input = new ArgvInput,
-    new Symfony\Component\Console\Output\ConsoleOutput
-);
-
-$kernel->terminate($input, $status);
+// Handle the incoming command
+$status = $app->handleCommand(new ArgvInput);
 
 exit($status);
