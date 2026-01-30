@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 
 // Onboarding dispatcher
 // Route::middleware('auth')->get('/onboarding', [\App\Http\Controllers\ProfileController::class, 'onboarding'])->name('onboarding');
@@ -33,10 +36,40 @@ Route::middleware('set.locale')->group(function () {
         return view('home_marketplace', compact('featuredListings'));
     })->name('home');
     
-    // About Us page
-    Route::get('/about', function () {
-        return view('about');
-    })->name('about');
+    // Public & legal pages
+    Route::view('/about', 'public.about')->name('about');
+    Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
+    Route::view('/pricing', 'public.pricing')->name('pricing');
+    Route::view('/contact', 'public.contact')->name('public.contact');
+    Route::post('/contact', function(Request $request){
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        $to = config('app.contact_email') ?? config('mail.from.address');
+        if (!$to) {
+            return back()->withErrors(['email' => __('Contact email not configured.')])->withInput();
+        }
+
+        $body = "Contact message from {$data['name']} ({$data['email']})" . (empty($data['phone']) ? '' : "\nPhone: {$data['phone']}") . "\n\nMessage:\n{$data['message']}";
+
+        Mail::raw($body, function($message) use ($to) {
+            $message->to($to)->subject('New contact message');
+        });
+
+        return back()->with('status', __('Your message has been sent.'));
+    })->name('public.contact.submit');
+    Route::view('/terms', 'public.terms')->name('terms');
+    Route::view('/privacy', 'public.privacy')->name('privacy');
+    Route::view('/seller-policy', 'public.seller_policy')->name('seller-policy');
+    Route::view('/commission-policy', 'public.commission_policy')->name('commission-policy');
+    Route::view('/licensing-policy', 'public.licensing_policy')->name('licensing-policy');
+
+    // Stories (public fetch)
+    Route::get('/user/{user}/stories', [StoryController::class, 'index'])->name('user.stories');
 });
 
 Route::middleware(['auth', 'set.locale'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
@@ -44,10 +77,27 @@ Route::middleware(['auth', 'set.locale'])->get('/dashboard', [\App\Http\Controll
 // Public user profile - accessible to anyone (view seller/publisher profiles)
 Route::middleware('set.locale')->get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
 
+// User interaction routes (follow/like)
+Route::middleware('set.locale')->get('/user/{user}/interaction-status', [\App\Http\Controllers\UserInteractionController::class, 'getStatus'])->name('user.interaction.status');
+Route::middleware(['auth', 'set.locale'])->post('/user/{user}/toggle-follow', [\App\Http\Controllers\UserInteractionController::class, 'toggleFollow'])->name('user.toggle-follow');
+Route::middleware(['auth', 'set.locale'])->post('/user/{user}/toggle-like', [\App\Http\Controllers\UserInteractionController::class, 'toggleLike'])->name('user.toggle-like');
+
 Route::middleware(['auth', 'set.locale'])->group(function () {
+    Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Inline profile field updates (AJAX)
+    Route::patch('/profile/field', [ProfileController::class, 'updateField'])->name('profile.update.field');
+    Route::post('/profile/photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload.photo');
+    
+    // Messaging routes
+    Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'inbox'])->name('messages.inbox');
+    Route::get('/messages/unread-count', [\App\Http\Controllers\MessageController::class, 'unreadCount'])->name('messages.unread');
+    Route::get('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{user}/send', [\App\Http\Controllers\MessageController::class, 'send'])->name('messages.send');
+    Route::get('/messages/{user}/get', [\App\Http\Controllers\MessageController::class, 'getMessages'])->name('messages.get');
 });
 
 // Price Routes (Public)
@@ -161,10 +211,6 @@ Route::middleware('set.locale')->group(function(){
         return view('public.mobile.trip');
     })->name('mobile.trip');
 
-    // Contact placeholder (public)
-    Route::get('contact', function(){
-        return view('stubs.cta', ['title' => 'تواصل معنا']);
-    })->name('public.contact');
     // gulf.catalog now defined above
 });
 

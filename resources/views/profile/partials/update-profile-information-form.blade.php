@@ -1,4 +1,6 @@
-{{-- @var \App\Models\User $user --}}
+@php
+/** @var \App\Models\User $user */
+@endphp
 <section class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
     <!-- Header Section with Gradient -->
     <div class="bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] p-4 sm:p-6 md:p-8">
@@ -97,6 +99,7 @@
                 </div>
             </div>
             
+            <div id="photos"></div>
             <!-- Current Cover Photos Preview -->
             @if($user->cover_photos && is_array($user->cover_photos) && count($user->cover_photos) > 0)
                 <div class="mb-4 sm:mb-6">
@@ -157,16 +160,74 @@
                     </div>
                 </div>
             </label>
+            
+            <!-- New Photos Preview -->
+            <div id="new_photos_preview" class="hidden mt-4">
+                <p class="text-xs sm:text-sm font-semibold text-green-700 mb-2 sm:mb-3">
+                    <span class="inline-flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {{ __('Selected for upload') }}: <span id="selected_count">0</span> {{ __('photos') }}
+                    </span>
+                </p>
+                <div id="preview_grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+                    <!-- Preview images will be inserted here -->
+                </div>
+            </div>
+            
             <x-input-error class="mt-3" :messages="$errors->get('cover_photos')" />
+            <x-input-error class="mt-3" :messages="$errors->get('cover_photos.*')" />
         </div>
 
         <script>
             let photosToRemove = [];
+            
             function removeCoverPhoto(index) {
                 photosToRemove.push(index);
                 document.getElementById('remove_cover_photos').value = JSON.stringify(photosToRemove);
                 event.target.closest('.relative').style.display = 'none';
             }
+            
+            // Preview selected files
+            document.getElementById('cover_photos').addEventListener('change', function(e) {
+                const files = e.target.files;
+                const previewContainer = document.getElementById('new_photos_preview');
+                const previewGrid = document.getElementById('preview_grid');
+                const selectedCount = document.getElementById('selected_count');
+                
+                // Clear previous previews
+                previewGrid.innerHTML = '';
+                
+                if (files.length > 0) {
+                    previewContainer.classList.remove('hidden');
+                    selectedCount.textContent = files.length;
+                    
+                    Array.from(files).forEach((file, index) => {
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const div = document.createElement('div');
+                                div.className = 'relative group';
+                                div.innerHTML = `
+                                    <img src="${e.target.result}" alt="Preview ${index + 1}" 
+                                        class="w-full h-24 sm:h-28 md:h-32 object-cover rounded-lg sm:rounded-xl border-2 border-green-400">
+                                    <div class="absolute top-1 left-1 sm:top-2 sm:left-2 bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md sm:rounded-lg shadow-lg">
+                                        {{ __('New') }}
+                                    </div>
+                                    <div class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded">
+                                        ${(file.size / 1024 / 1024).toFixed(2)} MB
+                                    </div>
+                                `;
+                                previewGrid.appendChild(div);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                } else {
+                    previewContainer.classList.add('hidden');
+                }
+            });
         </script>
 
         <!-- Basic Information Section -->

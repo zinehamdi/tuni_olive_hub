@@ -8,25 +8,25 @@
 
         <!-- SEO Meta Tags -->
         <title>@yield('title', __('Login') . ' - ' . config('app.name'))</title>
-        <meta name="description" content="@yield('description', __('Join Tunisia\'s leading olive oil marketplace. Connect with farmers, mills, packers, and buyers. Discover authentic Tunisian olive oil products.'))">
-        <meta name="keywords" content="@yield('keywords', 'olive oil login, tunisia marketplace, زيت الزيتون, تسجيل الدخول, huile d\'olive connexion')">
-        <meta name="author" content="Tunisian Olive Oil Platform">
+        <meta name="description" content="@yield('description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
+        <meta name="keywords" content="@yield('keywords', 'olive oil, tunisian olive oil, زيت الزيتون التونسي, زيت الزيتون, zinToop, marketplace, login')">
+        <meta name="author" content="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}">
         <meta name="robots" content="index, follow">
         
         <!-- Open Graph Meta Tags -->
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="{{ config('app.name') }}">
-        <meta property="og:title" content="@yield('og_title', __('Join TOOP - Tunisian Olive Oil Platform'))">
-        <meta property="og:description" content="@yield('og_description', __('Connect with Tunisia\'s olive industry. Buy and sell premium olive oil and olives directly from producers.'))">
+        <meta property="og:title" content="@yield('og_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
+        <meta property="og:description" content="@yield('og_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image" content="@yield('og_image', asset('images/logotoop.PNG'))">
+        <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
         <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
         
         <!-- Twitter Card Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="@yield('twitter_title', __('Join TOOP - Tunisian Olive Oil Platform'))">
-        <meta name="twitter:description" content="@yield('twitter_description', __('Connect with Tunisia\'s olive industry'))">
-        <meta name="twitter:image" content="@yield('twitter_image', asset('images/logotoop.PNG'))">
+        <meta name="twitter:title" content="@yield('twitter_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
+        <meta name="twitter:description" content="@yield('twitter_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
+        <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
         
         <!-- Alternate Language Links -->
         <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
@@ -38,8 +38,8 @@
         <link rel="canonical" href="{{ url()->current() }}">
         
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('images/logotoop.PNG') }}">
-        <link rel="apple-touch-icon" href="{{ asset('images/logotoop.PNG') }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/zintoop-logo.png') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

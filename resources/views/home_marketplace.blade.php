@@ -8,73 +8,25 @@
 @section('content')
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" x-data="marketplace">
     
-    <!-- Header with Login/Register -->
-    <header class="bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="flex items-center justify-between gap-4">
-                <!-- Logo -->
-                <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                    <div class="h-20 w-20 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-all">
-                        <img src="{{ asset('images/logotoop.PNG') }}" alt="Tunisian Olive Oil Platform" class="h-full w-full object-cover scale-125 translate-y-2 group-hover:scale-[1.35] transition-transform">
-                    </div>
-                    <div>
-                        <div class="text-xl font-bold text-gray-900">{{ __('Tunisian Olive Oil Platform') }}</div>
-                        <div class="text-xs text-gray-600">Tunisian Olive Oil Platform</div>
-                    </div>
-                </a>
-
-                <!-- Navigation Menu -->
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="{{ url('/') }}" class="text-gray-700 hover:text-[#6A8F3B] font-semibold transition">
-                        {{ __('Home') }}
-                    </a>
-                    <a href="#products" class="text-gray-700 hover:text-[#6A8F3B] font-semibold transition">
-                        {{ __('Products') }}
-                    </a>
-                    @auth
-                        <a href="{{ route('listings.create') }}" class="text-gray-700 hover:text-[#6A8F3B] font-semibold transition">
-                            {{ __('Add Listing') }}
-                        </a>
-                    @endauth
-                    <a href="{{ route('about') }}" class="text-gray-700 hover:text-[#6A8F3B] font-semibold transition">
-                        {{ __('About') }}
-                    </a>
-                </nav>
-
-                <!-- Mobile Menu Toggle -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Mobile Menu -->
-            <div x-show="mobileMenuOpen" x-transition class="md:hidden mt-4 pb-4 border-t pt-4">
-                <nav class="space-y-2">
-                    <a href="{{ url('/') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">{{ __('Home') }}</a>
-                    <a href="#products" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">{{ __('Products') }}</a>
-                    @auth
-                        <a href="{{ route('listings.create') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">{{ __('Add Listing') }}</a>
-                    @endauth
-                    <a href="{{ route('about') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">{{ __('About') }}</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-
     <!-- Hero Section with Search -->
     <section class="relative bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white py-16 px-4 overflow-hidden">
-        <!-- Background Image -->
-        <div class="absolute inset-0 bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/dealbackground.png') }}'); background-position: center 30%;"></div>
+        <!-- Background Image - Responsive: mobile uses 53KB image, desktop uses 432KB image -->
+        <div class="absolute inset-0 bg-cover bg-no-repeat md:hidden" style="background-image: url('{{ asset('images/dealbackground-mobile.jpg') }}'); background-position: center 30%;"></div>
+        <div class="absolute inset-0 bg-cover bg-no-repeat hidden md:block" style="background-image: url('{{ asset('images/dealbackground-opt.jpg') }}'); background-position: center 30%;"></div>
         <!-- Gradient Overlay -->
         <div class="absolute inset-0 bg-gradient-to-br from-[#6A8F3B]/40 to-[#5a7a2f]/40"></div>
         <!-- Dark Overlay -->
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('Tunisian Olive Oil Platform') }}</h1>
-                <p class="text-xl text-white/90 mb-8">{{ __('Discover the best offers from direct producers in your area') }}</p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                    {{ __('Zin Platform for Tunisian Olive Oil') }}
+                    <span class="block text-5xl md:text-6xl font-extrabold tracking-tight"
+                          style="text-shadow: 0 10px 30px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.25);">
+                        ZINTOOP
+                    </span>
+                </h1>
+                <p class="text-xl text-white/90 mb-8">{{ __('Discover the best offers from direct producers in your region') }}</p>
             </div>
 
             <!-- Search Bar with Location -->
@@ -83,7 +35,7 @@
                     <div class="flex-1 relative">
                         <input type="text" 
                                x-model="searchQuery"
-                               @input="filterListings"
+                               @input="debouncedFilter()"
                                placeholder="{{ __('Search for product (oil, olive, shemlali...)') }}"
                                class="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 focus:border-[#6A8F3B] focus:outline-none text-gray-900">
                         <svg class="absolute right-4 top-4 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,8 +119,6 @@
                         <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
-                        {{ __('Filter Results') }}
-                    </h3>
                         {{ __('Filter Results') }}
                     </h3>
 
@@ -358,7 +308,7 @@
 
                 <!-- Products Grid View -->
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <template x-for="listing in filteredListings" :key="listing.id">
+                    <template x-for="listing in displayedListings" :key="listing.id">
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <!-- Product Image -->
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
@@ -406,12 +356,12 @@
                                 </div>
 
                                 <div class="space-y-2 text-sm text-gray-600 mb-4">
-                                    <div class="flex items-center gap-2">
+                                    <a :href="'{{ url('/user') }}/' + (listing.seller?.id || listing.seller_id || '')" class="flex items-center gap-2 text-[#6A8F3B] font-semibold hover:underline">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                         <span x-text="listing.seller.name"></span>
-                                    </div>
+                                    </a>
                                     <div x-show="listing.seller.location || listing.seller.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -443,7 +393,7 @@
 
                 <!-- Products List View -->
                 <div x-show="viewMode === 'list'" class="space-y-4">
-                    <template x-for="listing in filteredListings" :key="listing.id">
+                    <template x-for="listing in displayedListings" :key="listing.id">
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row">
                             <!-- Product Image -->
                             <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
@@ -481,12 +431,12 @@
                                         <span x-show="listing.product.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
-                                        <div class="flex items-center gap-2">
+                                        <a :href="'{{ url('/user') }}/' + (listing.seller?.id || listing.seller_id || '')" class="flex items-center gap-2 text-[#6A8F3B] font-semibold hover:underline">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
                                             <span x-text="listing.seller.name"></span>
-                                        </div>
+                                        </a>
                                         <div x-show="listing.seller.location || listing.seller.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -515,6 +465,15 @@
                             </div>
                         </div>
                     </template>
+                </div>
+
+                <!-- Load More Button -->
+                <div x-show="hasMoreItems" class="text-center mt-8">
+                    <button @click="loadMore" 
+                            class="px-8 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold shadow-lg inline-flex items-center gap-2">
+                        <span>{{ __('Load More') }}</span>
+                        <span class="text-sm opacity-80" x-text="'(' + (filteredListings.length - displayedListings.length) + ' {{ __('remaining') }})'"></span>
+                    </button>
                 </div>
 
                 <!-- Empty State -->
@@ -570,10 +529,10 @@
                     @endauth
                 </ul>
             </div>
-            <div>
+            <div dir="rtl" class="text-right">
                 <h4 class="font-bold mb-4">{{ __('Contact Us') }}</h4>
-                <p class="text-gray-400">{{ __('Email') }}: info@olivemarketplace.tn</p>
-                <p class="text-gray-400">{{ __('Phone') }}: +216 XX XXX XXX</p>
+                <p class="text-gray-400">{{ __('Email') }}: contact@toop.kairouanhub.com</p>
+                <p class="text-gray-400">{{ __('Phone') }}: +216 25 777 926</p>
             </div>
         </div>
         <div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
@@ -587,6 +546,9 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('marketplace', () => ({
         listings: @json($featuredListings ?? []),
         filteredListings: [],
+        displayedListings: [],
+        itemsPerPage: window.innerWidth < 768 ? 6 : 12,
+        currentPage: 1,
         searchQuery: '',
         viewMode: 'grid',
         mobileMenuOpen: false,
@@ -622,6 +584,15 @@ document.addEventListener('alpine:init', () => {
             return this.translations[text] || text;
         },
 
+        // Debounce utility for performance - prevents excessive filtering
+        debounce(func, wait) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        },
+
         init() {
             // Always show filters on desktop (>= 1024px)
             if (window.innerWidth >= 1024) {
@@ -629,6 +600,11 @@ document.addEventListener('alpine:init', () => {
             }
             
             this.filteredListings = this.listings;
+            this.updateDisplayedListings();
+            
+            // Create debounced filter function (300ms delay)
+            this.debouncedFilter = this.debounce(() => this.filterListings(), 300);
+            
             // Try to get saved location from localStorage
             const savedLocation = localStorage.getItem('userLocation');
             if (savedLocation) {
@@ -636,6 +612,20 @@ document.addEventListener('alpine:init', () => {
                 this.calculateDistances();
                 this.filterListings();
             }
+        },
+        
+        updateDisplayedListings() {
+            const end = this.currentPage * this.itemsPerPage;
+            this.displayedListings = this.filteredListings.slice(0, end);
+        },
+        
+        loadMore() {
+            this.currentPage++;
+            this.updateDisplayedListings();
+        },
+        
+        get hasMoreItems() {
+            return this.displayedListings.length < this.filteredListings.length;
         },
 
         get totalListings() {
@@ -664,11 +654,11 @@ document.addEventListener('alpine:init', () => {
                         this.filterListings();
                     },
                     (error) => {
-                        alert('لم نتمكن من تحديد موقعك. الرجاء السماح بالوصول إلى الموقع.');
+                        alert('{{ __("Could not determine your location. Please allow location access.") }}');
                     }
                 );
             } else {
-                alert('المتصفح لا يدعم تحديد الموقع.');
+                alert('{{ __("Browser does not support geolocation.") }}');
             }
         },
 
@@ -778,6 +768,8 @@ document.addEventListener('alpine:init', () => {
             }
 
             this.filteredListings = results;
+            this.currentPage = 1; // Reset pagination on filter
+            this.updateDisplayedListings();
         },
 
         resetFilters() {
@@ -853,7 +845,7 @@ document.addEventListener('alpine:init', () => {
                         "name": "{{ $listing->seller->name ?? 'بائع' }}"
                     }
                 },
-                "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/logotoop.PNG') !!}",
+                "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') !!}",
                 "brand": {
                     "@@type": "Brand",
                     "name": "Tunisian Olive Oil"
@@ -878,7 +870,7 @@ document.addEventListener('alpine:init', () => {
     "name": "منصة زيت الزيتون التونسي",
     "alternateName": "Tunisian Olive Oil Platform",
     "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/logotoop.PNG') }}",
+    "logo": "{{ asset('images/zintoop-logo.png') }}",
     "description": "منصة تونسية متخصصة في تجارة زيت الزيتون والزيتون التونسي الأصلي",
     "contactPoint": {
         "@@type": "ContactPoint",

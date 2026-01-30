@@ -52,7 +52,7 @@ class ProfileController extends Controller
         // Calculate profile completion percentage
         $profileCompletion = $this->calculateProfileCompletion($user);
         
-        return view('dashboard_new', compact('user', 'listings', 'activeListings', 'pendingListings', 'profileCompletion'));
+        return view('dashboard', compact('user', 'listings', 'activeListings', 'pendingListings', 'profileCompletion'));
     }
     
     /**
@@ -205,6 +205,16 @@ class ProfileController extends Controller
         if ($request->hasFile('cover_photos')) {
             $coverPhotos = $user->cover_photos ?? [];
             
+            // Ensure coverPhotos is an array of strings only
+            $coverPhotos = array_filter($coverPhotos, fn($p) => is_string($p) && !empty($p));
+            $coverPhotos = array_values($coverPhotos);
+            
+            // Log for debugging
+            \Log::info('Cover photos upload', [
+                'existing_count' => count($coverPhotos),
+                'new_files_count' => count($request->file('cover_photos')),
+            ]);
+            
             // Remove selected photos if any
             if ($request->has('remove_cover_photos')) {
                 $removeIndices = json_decode($request->input('remove_cover_photos'), true) ?? [];
@@ -218,11 +228,18 @@ class ProfileController extends Controller
             }
             
             // Add new photos with optimization (max 5 total)
+            $uploadedCount = 0;
             foreach ($request->file('cover_photos') as $photo) {
                 if (count($coverPhotos) < 5) {
                     $coverPhotos[] = $this->imageService->optimizeCoverPhoto($photo);
+                    $uploadedCount++;
                 }
             }
+            
+            \Log::info('Cover photos after upload', [
+                'total_count' => count($coverPhotos),
+                'uploaded_count' => $uploadedCount,
+            ]);
             
             $user->cover_photos = $coverPhotos;
         }
@@ -247,6 +264,139 @@ class ProfileController extends Controller
         $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    /**
+     * Update a single profile field via AJAX
+     */
+    public function updateField(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $field = $request->input('field');
+        $value = $request->input('value');
+        
+        // Allowed fields for inline editing
+        $allowedFields = [
+            'name', 'email', 'phone',
+            'farm_name', 'farm_name_ar', 'company_name', 'mill_name', 'packer_name',
+            'tree_number', 'olive_type', 'capacity', 'fleet_size', 'camion_capacity', 'packaging_types'
+        ];
+        
+        if (!in_array($field, $allowedFields)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Invalid field.')
+            ], 400);
+        }
+        
+        // Validate based on field type
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $request->user()->id,
+            'phone' => 'nullable|string|max:20',
+            'farm_name' => 'nullable|string|max:255',
+            'farm_name_ar' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'mill_name' => 'nullable|string|max:255',
+            'packer_name' => 'nullable|string|max:255',
+            'tree_number' => 'nullable|integer|min:0',
+            'olive_type' => 'nullable|string|max:255',
+            'capacity' => 'nullable|integer|min:0',
+            'fleet_size' => 'nullable|integer|min:0',
+            'camion_capacity' => 'nullable|numeric|min:0',
+            'packaging_types' => 'nullable|string|max:255',
+        ];
+        
+        $validator = \Illuminate\Support\Facades\Validator::make(
+            [$field => $value],
+            [$field => $rules[$field] ?? 'nullable|string|max:255']
+        );
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first($field)
+            ], 422);
+        }
+        
+        $user = $request->user();
+        $user->$field = $value;
+        
+        // If email changed, reset verification
+        if ($field === 'email' && $user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+        
+        $user->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => __('Updated successfully!')
+        ]);
+    }
+
+    /**
+     * Upload profile or cover photo via AJAX
+     */
+    public function uploadPhoto(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $type = $request->input('type');
+        
+        if (!$request->hasFile('photo')) {
+            return response()->json([
+                'success' => false,
+                'message' => __('No photo uploaded.')
+            ], 400);
+        }
+        
+        $request->validate([
+            'photo' => 'required|image|max:10240' // 10MB max
+        ]);
+        
+        $user = $request->user();
+        
+        if ($type === 'profile') {
+            // Delete old profile picture
+            if ($user->profile_picture) {
+                $this->imageService->deleteImage($user->profile_picture);
+            }
+            
+            // Optimize and store new profile picture
+            $user->profile_picture = $this->imageService->optimizeProfilePicture(
+                $request->file('photo')
+            );
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('Profile picture updated!'),
+                'url' => asset('storage/' . $user->profile_picture)
+            ]);
+        } elseif ($type === 'cover') {
+            $coverPhotos = $user->cover_photos ?? [];
+            $coverPhotos = array_filter($coverPhotos, fn($p) => is_string($p) && !empty($p));
+            $coverPhotos = array_values($coverPhotos);
+            
+            if (count($coverPhotos) >= 5) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Maximum 5 cover photos allowed.')
+                ], 400);
+            }
+            
+            $coverPhotos[] = $this->imageService->optimizeCoverPhoto($request->file('photo'));
+            $user->cover_photos = $coverPhotos;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('Cover photo added!')
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => __('Invalid photo type.')
+        ], 400);
     }
 
     /**

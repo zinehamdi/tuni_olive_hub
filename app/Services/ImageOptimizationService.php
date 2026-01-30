@@ -72,6 +72,50 @@ class ImageOptimizationService
     }
 
     /**
+     * Optimize and save listing image
+     * Converts to WebP, resizes to max 1200px width, quality 85%
+     * This prevents large mobile photos from slowing down the marketplace
+     */
+    public function optimizeListingImage(UploadedFile $file, string $listingId): string
+    {
+        $filename = Str::uuid() . '.webp';
+        $directory = storage_path('app/public/listings/' . $listingId);
+        $path = $directory . '/' . $filename;
+        
+        // Ensure directory exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Read, resize, and optimize image
+        $image = Image::read($file);
+        
+        // Resize to max 1200px width (maintains aspect ratio)
+        // This is optimal for product cards and detail pages
+        $image->scaleDown(width: 1200);
+        
+        // Convert to WebP with 85% quality (good balance of quality vs size)
+        $image->toWebp(85)->save($path);
+        
+        // Also create a thumbnail for faster grid loading (400px)
+        $thumbPath = $directory . '/thumb_' . $filename;
+        $thumbnail = Image::read($file);
+        $thumbnail->scaleDown(width: 400);
+        $thumbnail->toWebp(80)->save($thumbPath);
+
+        return 'listings/' . $listingId . '/' . $filename;
+    }
+    
+    /**
+     * Get thumbnail path from original path
+     */
+    public function getThumbnailPath(string $originalPath): string
+    {
+        $pathInfo = pathinfo($originalPath);
+        return $pathInfo['dirname'] . '/thumb_' . $pathInfo['basename'];
+    }
+
+    /**
      * Get optimized image info
      */
     public function getImageInfo(string $path): array

@@ -7,7 +7,7 @@
         <div class="absolute inset-0 bg-black/20"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl md:text-6xl font-bold mb-4">
-                {{ __('About TOOP') }}
+                {{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}
             </h1>
             <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
                 {{ __('Tunisian Olive Oil Platform - Connecting Tunisia\'s Olive Industry Through Innovation') }}

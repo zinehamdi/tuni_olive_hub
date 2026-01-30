@@ -22,10 +22,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Global middleware
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
-    ->withProviders([
-        \App\Providers\AppServiceProvider::class,
-        \App\Providers\AuthServiceProvider::class,
-    ])
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, $request) {
             // Handle CSRF token mismatch (419 Page Expired) - especially for logout
