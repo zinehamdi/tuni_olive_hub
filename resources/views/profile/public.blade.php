@@ -1,30 +1,8 @@
 @php
     $locale = app()->getLocale();
     $isRTL = $locale === 'ar';
-    // Normalize stored paths to avoid double "storage/" prefixes and support full URLs
-    $normalizePath = function ($path) {
-        if (!$path) {
-            return null;
-        }
-
-        if (str_starts_with($path, 'http')) {
-            return $path;
-        }
-
-        $cleaned = ltrim(preg_replace('/^storage\\//', '', $path), '/');
-
-        return \Illuminate\Support\Facades\Storage::url($cleaned);
-    };
-
-    $coverPhotos = collect($user->cover_photos ?? [])->map(function($p) use ($normalizePath) {
-        if (is_array($p)) {
-            $candidate = $p['path'] ?? $p['url'] ?? ($p[0] ?? null);
-            return $normalizePath($candidate);
-        }
-        return $normalizePath($p);
-    })->filter()->values();
-
-    $profilePhotoUrl = $normalizePath($user->profile_picture) ?? asset('images/zintoop-logo.png');
+    $coverPhotos = ($coverPhotos ?? collect())->filter()->values();
+    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintoop-logo.png');
 @endphp
 @php
     $isOwner = auth()->check() && auth()->id() === $user->id;

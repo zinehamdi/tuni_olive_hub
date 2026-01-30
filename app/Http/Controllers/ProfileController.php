@@ -58,6 +58,31 @@ class ProfileController extends Controller
         } catch (\Throwable $e) {
             $coverUrl = null;
         }
+        // Normalize media paths and filter missing files for public display
+        $normalizePath = function ($path) {
+            if (!$path) return null;
+            if (str_starts_with($path, 'http')) return $path;
+            $cleaned = ltrim(preg_replace('/^storage\//', '', $path), '/');
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($cleaned);
+        };
+        $existsOnDisk = function ($path) {
+            if (!$path || str_starts_with($path, 'http')) return true;
+            $cleaned = ltrim(preg_replace('/^storage\//', '', $path), '/');
+            return \Illuminate\Support\Facades\Storage::disk('public')->exists($cleaned);
+        };
+
+        $rawCover = collect($user->cover_photos ?? []);
+        $coverPhotos = $rawCover->map(function ($p) use ($normalizePath, $existsOnDisk) {
+            $candidate = is_array($p) ? ($p['path'] ?? $p['url'] ?? ($p[0] ?? null)) : $p;
+            if (!$existsOnDisk($candidate)) return null;
+            return $normalizePath($candidate);
+        })->filter()->values();
+
+        $profilePhotoUrl = null;
+        if ($user->profile_picture && $existsOnDisk($user->profile_picture)) {
+            $profilePhotoUrl = $normalizePath($user->profile_picture);
+        }
+
         // Addresses and role-specific info
         $addresses = $user->addresses()->get();
         $roleInfo = [];
@@ -83,7 +108,7 @@ class ProfileController extends Controller
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
 
-        return view('profile.public', compact('user','coverUrl','addresses','roleInfo','listings','totalListings','activeListings','pendingListings','profileCompletion'));
+        return view('profile.public', compact('user','coverUrl','coverPhotos','profilePhotoUrl','addresses','roleInfo','listings','totalListings','activeListings','pendingListings','profileCompletion'));
     }
     public function edit(Request $request): View
     {
