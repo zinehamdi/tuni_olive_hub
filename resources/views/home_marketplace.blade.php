@@ -73,8 +73,8 @@
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('Tunisian Olive Oil Platform') }}</h1>
-                <p class="text-xl text-white/90 mb-8">{{ __('Discover the best offers from direct producers in your area') }}</p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('Tunisian Olive Oil Platform') }} - ZinToop</h1>
+                <p class="text-xl text-white/90 mb-8">{{ __('Discover the best offers from direct producers in your area') }} {{ __('on') }} ZinToop</p>
             </div>
 
             <!-- Search Bar with Location -->
