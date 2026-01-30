@@ -24,6 +24,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, $request) {
+            // Skip custom handling for console commands
+            if (app()->runningInConsole() && !$request) {
+                return null;
+            }
+            
             // Handle CSRF token mismatch (419 Page Expired) - especially for logout
             if ($e instanceof \Illuminate\Session\TokenMismatchException) {
                 // If it's a logout attempt, just redirect to home
