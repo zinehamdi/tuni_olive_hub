@@ -13,8 +13,8 @@
         <div class="absolute inset-0 bg-black/10"></div>
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">منصة زيت الزيتون التونسي</h1>
-                <p class="text-xl text-white/90 mb-8">اكتشف أفضل العروض من المنتجين المباشرين</p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">منصة زيت الزيتون التونسي من ZinToop</h1>
+                <p class="text-xl text-white/90 mb-8">اكتشف أفضل العروض من المنتجين المباشرين على ZinToop</p>
             </div>
 
             <!-- Search Bar -->
