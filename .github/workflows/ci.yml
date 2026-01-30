@@ -26,34 +26,27 @@ jobs:
           coverage: none
       - name: Install dependencies
         run: |
-          cd tuni-olive-hub
           composer install --no-interaction --prefer-dist
       - name: Copy .env
         run: |
-          cd tuni-olive-hub
           cp .env.example .env || true
           php -r "file_exists('artisan') || exit(0);"
       - name: Generate key and migrate
         run: |
-          cd tuni-olive-hub
           php artisan key:generate
           php artisan migrate --force
       - name: Run tests
         run: |
-          cd tuni-olive-hub
           php artisan test --testsuite=Feature
       - name: Guard routes
         run: |
-          cd tuni-olive-hub
           php scripts/guard_routes.php
       - name: Start server for payload guard
         run: |
-          cd tuni-olive-hub
           php artisan serve --host=127.0.0.1 --port=8000 &
           sleep 3
       - name: Guard payloads
         env:
           APP_URL: http://127.0.0.1:8000
         run: |
-          cd tuni-olive-hub
           php scripts/guard_payloads.php
