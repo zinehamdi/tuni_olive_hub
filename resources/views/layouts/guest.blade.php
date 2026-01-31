@@ -42,7 +42,7 @@
         <link rel="apple-touch-icon" href="{{ asset('images/zintoop-logo.png') }}">
 
         <!-- Scripts -->
-        @if(file_exists(public_path('build/manifest.json')))
+        @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @endif
         @stack('head')
