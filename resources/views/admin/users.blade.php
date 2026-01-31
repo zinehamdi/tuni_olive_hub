@@ -98,7 +98,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('dashboard') }}?user_id={{ $user->id }}" 
+                                    <a href="{{ route('user.profile', $user) }}" 
                                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" 
                                         title="{{ __('View Profile') }}">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
