@@ -43,6 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'cover_photos' => 'array',
+        'show_contact_info' => 'boolean',
+        'show_address' => 'boolean',
     ];
 
     /**

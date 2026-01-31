@@ -30,6 +30,8 @@ class ProfileUpdateRequest extends FormRequest
             'profile_picture' => ['nullable', 'image'], // Accept any image format/size
             'cover_photos.*' => ['nullable', 'image'], // Accept any image format/size
             'remove_cover_photos' => ['nullable', 'string'],
+            'show_contact_info' => ['sometimes', 'boolean'],
+            'show_address' => ['sometimes', 'boolean'],
             
             // Farmer fields - حقول المزارع
             'farm_name' => ['nullable', 'string', 'max:255'],

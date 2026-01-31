@@ -11,6 +11,9 @@
         'phone' => $user->phone ?? $user->phone_number ?? null,
         'email' => $user->email ?? null,
     ];
+    if (isset($showContact) && !$showContact) {
+        $contactInfo = ['phone' => null, 'email' => null];
+    }
 @endphp
 
 <x-app-layout>

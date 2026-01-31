@@ -114,8 +114,32 @@ class ProfileController extends Controller
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
+        $showContact = (bool) ($user->show_contact_info ?? false);
+        $showAddress = (bool) ($user->show_address ?? false);
 
-        return view('profile.public', compact('user','coverUrl','coverPhotos','profilePhotoUrl','addresses','roleInfo','listings','totalListings','activeListings','pendingListings','profileCompletion'));
+        if (!$showContact) {
+            $contactInfo = ['phone' => null, 'email' => null];
+        }
+
+        if (!$showAddress) {
+            $addresses = collect();
+        }
+
+        return view('profile.public', compact(
+            'user',
+            'coverUrl',
+            'coverPhotos',
+            'profilePhotoUrl',
+            'addresses',
+            'roleInfo',
+            'listings',
+            'totalListings',
+            'activeListings',
+            'pendingListings',
+            'profileCompletion',
+            'showContact',
+            'showAddress'
+        ));
     }
     public function edit(Request $request): View
     {
@@ -131,7 +155,13 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $user->fill($request->validated());
+        $data = $request->validated();
+        $data['show_contact_info'] = $request->boolean('show_contact_info');
+        $data['show_address'] = $request->boolean('show_address');
+
+        $user->fill($data);
+        $user->show_contact_info = $data['show_contact_info'];
+        $user->show_address = $data['show_address'];
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;

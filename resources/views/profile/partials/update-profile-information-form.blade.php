@@ -345,6 +345,34 @@
                     <div>
                         <label for="farm_name" class="block text-sm font-bold text-gray-900 mb-2">{{ __('Farm Name') }}</label>
                         <input type="text" id="farm_name" name="farm_name" 
+
+            {{-- Privacy controls --}}
+            <div class="mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl border border-gray-200 bg-gray-50">
+                <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-3">{{ __('Privacy & visibility') }}</h4>
+                <p class="text-sm text-gray-600 mb-4">{{ __('Choose what visitors can see on your public profile.') }}</p>
+
+                <div class="space-y-3">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="hidden" name="show_contact_info" value="0">
+                        <input type="checkbox" name="show_contact_info" value="1" class="mt-1 text-[#6A8F3B] focus:ring-[#6A8F3B] rounded"
+                            {{ old('show_contact_info', $user->show_contact_info) ? 'checked' : '' }}>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">{{ __('Show phone and email') }}</div>
+                            <div class="text-xs text-gray-600">{{ __('Display your contact details on the public profile page.') }}</div>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="hidden" name="show_address" value="0">
+                        <input type="checkbox" name="show_address" value="1" class="mt-1 text-[#6A8F3B] focus:ring-[#6A8F3B] rounded"
+                            {{ old('show_address', $user->show_address) ? 'checked' : '' }}>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">{{ __('Show address') }}</div>
+                            <div class="text-xs text-gray-600">{{ __('Reveal your saved addresses on the public profile page.') }}</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
                             value="{{ old('farm_name', $user->farm_name) }}"
                             class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all bg-white">
                         <x-input-error class="mt-2" :messages="$errors->get('farm_name')" />
