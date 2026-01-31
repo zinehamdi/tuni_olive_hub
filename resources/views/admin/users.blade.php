@@ -98,6 +98,13 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.users.edit', $user) }}"
+                                        class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                                        title="{{ __('Edit User') }}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1 14v-6m0 0V9m0 4H9m2 0h2m4-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </a>
                                     <a href="{{ route('user.profile', $user) }}" 
                                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" 
                                         title="{{ __('View Profile') }}">

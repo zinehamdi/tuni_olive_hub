@@ -7,6 +7,7 @@ use App\Models\Listing;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 /**
  * Admin Controller - متحكم لوحة الإدارة
@@ -114,6 +115,39 @@ class AdminController extends Controller
         $users = $query->latest()->paginate(20);
 
         return view('admin.users', compact('users'));
+    }
+
+    public function editUser(User $user)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        return view('admin.user_edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'show_contact_info' => ['sometimes', 'boolean'],
+            'show_address' => ['sometimes', 'boolean'],
+        ]);
+
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->phone = $data['phone'] ?? null;
+        $user->show_contact_info = $request->boolean('show_contact_info');
+        $user->show_address = $request->boolean('show_address');
+        $user->save();
+
+        return redirect()->route('admin.users.edit', $user)->with('status', __('User updated successfully'));
     }
 
     /**

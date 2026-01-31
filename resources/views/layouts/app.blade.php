@@ -40,7 +40,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
 
-    @vite(['resources/css/app.css','resources/js/app.js'])
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css','resources/js/app.js'])
+    @endif
     <style nonce="{{ $cspNonce ?? '' }}">
         :root{--olive:#6b8e23;--gold:#b8860b;--sky:#38bdf8;--pepper:#b91c1c}
         .text-olive{color:var(--olive)} .bg-olive{background:var(--olive)}
