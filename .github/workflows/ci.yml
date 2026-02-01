@@ -59,7 +59,7 @@ jobs:
       - name: Start server for payload guard
         run: |
           php artisan serve --host=127.0.0.1 --port=8000 &
-          sleep 3
+          sleep 8
       - name: Guard payloads
         env:
           APP_URL: http://127.0.0.1:8000
