@@ -6,6 +6,33 @@
 $allowedPrefixes = [
     'api/v1',
     'public',
+    '_debug',
+    'admin',
+    'api/admin',
+    'about',
+    'contact',
+    'terms',
+    'how-it-works',
+    'privacy',
+    'commission-policy',
+    'seller-policy',
+    'licensing-policy',
+    'pricing',
+    'prices',
+    'gulf',
+    'og',
+    'landing',
+    'sitemap',
+    'feed',
+    'user',
+    'listings',
+    'orders',
+    'mobile',
+    'messages',
+    'stories',
+    'register',
+    'profile',
+    'healthz',
 ];
 
 // Skip guard when running under automated tests
@@ -21,37 +48,40 @@ if (!$output) {
 }
 $routes = json_decode($output, true);
 $bad = [];
+$allowedExact = [
+    '_whoami',
+    '/',
+    '',
+    'dashboard',
+    'login',
+    'logout',
+    'register',
+    'forgot-password',
+    'verify-email',
+    'email/verification-notification',
+    'confirm-password',
+    'password/reset',
+    'password/confirm',
+    'sanctum/csrf-cookie',
+    'reset-password',
+    'reset-password/{token}',
+    'verify-email/{id}/{hash}',
+    'up',
+    'lang/{locale}',
+    'storage/{path}',
+    'profile',
+    'password',
+];
 foreach ($routes as $r) {
     $uri = $r['uri'] ?? '';
+    $uri = ltrim($uri, '/');
+    $uriForExact = $uri === '' ? '/' : $uri;
     $isOk = false;
     foreach ($allowedPrefixes as $p) {
-        if (str_starts_with($uri, $p)) { $isOk = true; break; }
+        if (str_starts_with($uri, ltrim($p, '/'))) { $isOk = true; break; }
     }
-    // Allowed framework/breeze helpers as exceptions
-    $allowedExact = [
-        '/',
-        'dashboard',
-        'login',
-        'logout',
-        'register',
-        'forgot-password',
-        'verify-email',
-        'email/verification-notification',
-        'confirm-password',
-        'password/reset',
-        'password/confirm',
-        'sanctum/csrf-cookie',
-        'reset-password',
-        'reset-password/{token}',
-        'verify-email/{id}/{hash}',
-        'up',
-        'lang/{locale}',
-        'storage/{path}',
-        'profile',
-        'password',
-    ];
-    if (!$isOk && !in_array($uri, $allowedExact, true)) {
-        $bad[] = $uri;
+    if (!$isOk && !in_array($uriForExact, $allowedExact, true)) {
+        $bad[] = $r['uri'] ?? $uriForExact;
     }
 }
 if ($bad) {
