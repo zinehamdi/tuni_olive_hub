@@ -99,7 +99,8 @@
                     </div>
 
                     <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
-                        {{ number_format($listing->product->price, 2) }} {{ __('TND') }}/{{ __('kg') }}
+                        {{ number_format($listing->product->price, 2) }} {{ __('TND') }}/
+                        {{ $listing->unit === 'liter' ? __('L') : __('kg') }}
                     </div>
 
                     <!-- Seller Info -->

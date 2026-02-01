@@ -211,6 +211,7 @@ class AdminController extends Controller
 
         $listing->load('product');
         $unit = $listing->product->type === 'oil' ? 'liter' : 'kg';
+        $allowedStatuses = ['draft','active','paused','sold','out'];
 
         $data = $request->validate([
             'variety' => ['required', 'string', 'max:64'],
@@ -221,12 +222,20 @@ class AdminController extends Controller
             'quantity' => ['nullable', 'numeric', 'min:0'],
             'unit' => ['nullable', 'string', Rule::in(['kg','liter'])],
             'min_order' => ['nullable', 'numeric', 'min:0'],
-            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold'])],
+            'status' => ['required', 'string', Rule::in($allowedStatuses)],
             'weight_kg' => ['nullable', 'numeric', 'min:0'],
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
             'media' => ['nullable', 'string'],
         ]);
+
+        // Map legacy values to DB enum to avoid truncation
+        $statusMap = [
+            'inactive' => 'paused',
+            'pending' => 'draft',
+            'expired' => 'out',
+        ];
+        $data['status'] = $statusMap[$data['status']] ?? $data['status'];
 
         $mediaArray = null;
         if (!empty($data['media'])) {
@@ -300,7 +309,7 @@ class AdminController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $listing->update(['status' => 'inactive']);
+        $listing->update(['status' => 'paused']);
 
         return redirect()->back()->with('success', __('Listing rejected'));
     }
