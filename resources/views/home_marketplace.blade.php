@@ -367,7 +367,8 @@
                                      class="w-full h-full object-cover"
                                      loading="lazy">
                                 <div class="absolute top-3 right-3 flex gap-2">
-                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-white/20 backdrop-blur" 
+                                    <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
+                                          :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                           x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                 </div>
                                 <!-- Distance Badge -->
@@ -456,8 +457,10 @@
                             <div class="flex-1 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2 flex-wrap">
-                                        <h3 class="text-2xl font-bold text-gray-900" x-text="translate(listing.product.variety)"></h3>
-                                        <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#6A8F3B]" x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
+                                            <h3 class="text-2xl font-bold text-gray-900" x-text="translate(listing.product.variety)"></h3>
+                                            <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
+                                                :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                                x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                         <span x-show="listing.product.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
@@ -596,11 +599,21 @@ document.addEventListener('alpine:init', () => {
             'Meski Olives': '{{ __("Meski Olives") }}',
             'Zalmati Olives': '{{ __("Zalmati Olives") }}',
             'Fresh Olives': '{{ __("Fresh Olives") }}',
-            'Table Olives': '{{ __("Table Olives") }}'
+            'Table Olives': '{{ __("Table Olives") }}',
+            // Lowercase keys for direct matches from API/data
+            'chemlali': 'شملالي',
+            'chetoui': 'شتوي',
+            'meski': 'مسكي',
+            'zalmati': 'زلمطي',
+            'koroneiki': 'كورونيكي',
+            'jemlati': 'جملاتي',
+            'barouni': 'برعوني'
         },
 
         translate(text) {
-            return this.translations[text] || text;
+            if (!text) return '';
+            const lower = text.toLowerCase();
+            return this.translations[text] || this.translations[lower] || text;
         },
 
         init() {

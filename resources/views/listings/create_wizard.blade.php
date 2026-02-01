@@ -347,7 +347,7 @@
                         <label class="block text-[#C8A356] font-semibold mb-2">السعر للوحدة *</label>
                         <input type="number" x-model="price" step="0.01" min="0" required
                             class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-[#C8A356]"
-                            placeholder="15.50">
+                            placeholder="مثال: 2.50">
                     </div>
 
                     <div>

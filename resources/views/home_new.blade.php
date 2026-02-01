@@ -177,13 +177,15 @@
                                      class="w-full h-full object-cover"
                                      loading="lazy">
                                 <div class="absolute top-3 right-3">
-                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-white/20 backdrop-blur" x-text="listing.product.type === 'olive' ? 'زيتون' : 'زيت زيتون'"></span>
+                                    <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
+                                          :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                          x-text="listing.product.type === 'olive' ? 'زيتون' : 'زيت زيتون'"></span>
                                 </div>
                             </div>
 
                             <!-- Product Details -->
                             <div class="p-5">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="listing.product.variety"></h3>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="translateVariety(listing.product.variety)"></h3>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
                                     <span x-show="listing.product.quality" class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
@@ -241,8 +243,10 @@
                             <div class="flex-1 p-6 flex justify-between items-center">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2">
-                                        <h3 class="text-2xl font-bold text-gray-900" x-text="listing.product.variety"></h3>
-                                        <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#6A8F3B]" x-text="listing.product.type === 'olive' ? 'زيتون' : 'زيت زيتون'"></span>
+                                            <h3 class="text-2xl font-bold text-gray-900" x-text="translateVariety(listing.product.variety)"></h3>
+                                            <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
+                                                :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                                x-text="listing.product.type === 'olive' ? 'زيتون' : 'زيت زيتون'"></span>
                                         <span x-show="listing.product.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600">
@@ -311,12 +315,27 @@ document.addEventListener('alpine:init', () => {
         searchQuery: '',
         viewMode: 'grid',
         fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
+        varietyTranslations: {
+            'chemlali': 'شملالي',
+            'chetoui': 'شتوي',
+            'meski': 'مسكي',
+            'zalmati': 'زلمطي',
+            'koroneiki': 'كورونيكي',
+            'jemlati': 'جملاتي',
+            'barouni': 'برعوني'
+        },
         filters: {
             type: 'all',
             qualities: [],
             priceMin: '',
             priceMax: '',
             sortBy: 'newest'
+        },
+
+        translateVariety(text) {
+            if (!text) return '';
+            const lower = text.toLowerCase();
+            return this.varietyTranslations[lower] || text;
         },
 
         init() {

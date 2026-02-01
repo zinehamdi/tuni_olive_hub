@@ -227,7 +227,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <div class="relative">
                                 <input type="number" x-model="formData.price" step="0.01" min="0" required
                                     class="w-full text-3xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 pr-24 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition text-right"
-                                    placeholder="0.00">
+                                    placeholder="مثال: 2.50">
                                 <span class="absolute left-6 top-1/2 transform -translate-y-1/2 text-2xl font-bold text-gray-400" x-text="formData.currency"></span>
                             </div>
                         </div>

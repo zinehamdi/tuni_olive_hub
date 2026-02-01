@@ -9,6 +9,19 @@
 
 @section('content')
 <div dir="rtl" class="min-h-screen bg-gray-50 py-8">
+    @php
+        $varietyLabels = [
+            'chemlali' => 'شملالي',
+            'chetoui' => 'شتوي',
+            'meski' => 'مسكي',
+            'zalmati' => 'زلمطي',
+            'koroneiki' => 'كورونيكي',
+            'jemlati' => 'جملاتي',
+            'barouni' => 'برعوني'
+        ];
+        $varietyKey = strtolower($listing->product->variety ?? '');
+        $varietyName = $varietyLabels[$varietyKey] ?? __($listing->product->variety);
+    @endphp
     <div class="max-w-6xl mx-auto px-4">
         <!-- Back Button -->
         <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-[#6A8F3B] hover:text-[#5a7a2f] mb-6 font-bold">
@@ -72,7 +85,7 @@
                 <div class="bg-white rounded-2xl shadow-xl p-8">
                     <!-- Product Name & Badges -->
                     <div class="mb-6">
-                        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ __($listing->product->variety) }}</h1>
+                        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $varietyName }}</h1>
                         <div class="flex items-center gap-2 flex-wrap" flex-wrap">
                             <span class="px-4 py-2 rounded-full bg-[#6A8F3B] text-white font-bold">
                                 {{ $listing->product->type === 'olive' ? __('Olives') : __('Olive Oil') }}
@@ -465,17 +478,18 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                         $relatedMedia = is_array($related->media ?? null) && count($related->media ?? []) > 0
                             ? $related->media[0]
                             : null;
+                        $relatedVariety = $varietyLabels[strtolower($related->product->variety ?? '')] ?? __($related->product->variety);
                     @endphp
                     <a href="{{ route('listings.show', $related) }}" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
                         <div class="h-40 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center overflow-hidden">
                             <img src="{{ $relatedMedia ? asset('storage/' . $relatedMedia) : $fallbackImage }}"
-                                 alt="{{ __($related->product->variety) }}"
+                                 alt="{{ $relatedVariety }}"
                                  class="w-full h-full object-cover"
                                  loading="lazy"
                                  onerror="this.onerror=null;this.src='{{ $fallbackImage }}'">
                         </div>
                         <div class="p-4">
-                            <h3 class="font-bold text-gray-900 mb-2">{{ __($related->product->variety) }}</h3>
+                            <h3 class="font-bold text-gray-900 mb-2">{{ $relatedVariety }}</h3>
                             <div class="text-lg font-bold text-[#6A8F3B]">
                                 {{ number_format($related->product->price, 2) }} {{ __('TND') }}
                             </div>
