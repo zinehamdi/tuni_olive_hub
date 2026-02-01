@@ -21,7 +21,7 @@
         <div class="grid lg:grid-cols-2 gap-8">
             <!-- Product Image Section -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                @php $fallbackImage = 'https://toop.kairouanhub.com/listings/23'; @endphp
+                @php $fallbackImage = 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp'; @endphp
                 <div x-data="{ activeImage: 0 }">
                     <!-- Main Image Display -->
                     <div class="aspect-square bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">

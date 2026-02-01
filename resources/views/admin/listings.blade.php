@@ -53,7 +53,7 @@
                 <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative">
                     @php
     $media = $listing->media[0] ?? null;
-    $fallbackImage = 'https://toop.kairouanhub.com/listings/23';
+    $fallbackImage = 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp';
     if ($media) {
         $thumb = preg_replace('/^(listings\/\d+)\/([^\/]+)\.[a-z0-9]+$/i', '$1/thumbs/$2_sm.webp', $media);
     }
