@@ -60,11 +60,12 @@
                 <div class="grid md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Quantity') }}</label>
-                        <input type="number" step="0.01" min="0" name="quantity" value="{{ old('quantity', $listing->quantity) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        <input type="number" step="0.01" min="0" name="quantity" value="{{ old('quantity', $listing->quantity) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" placeholder="{{ $product->type === 'oil' ? __('Liters') : __('Kilograms') }}">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Unit') }}</label>
-                        <input name="unit" value="{{ old('unit', $listing->unit) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        <input value="{{ $product->type === 'oil' ? __('Liter (fixed)') : __('Kilogram (fixed)') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-700" readonly>
+                        <input type="hidden" name="unit" value="{{ $product->type === 'oil' ? 'liter' : 'kg' }}">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Min order') }}</label>
@@ -90,7 +91,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Status') }}</label>
                     <select name="status" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
-                        @foreach(['active','pending','inactive','sold'] as $state)
+                        @foreach(['active','pending','inactive','sold','expired'] as $state)
                             <option value="{{ $state }}" {{ old('status', $listing->status) === $state ? 'selected' : '' }}>{{ ucfirst($state) }}</option>
                         @endforeach
                     </select>

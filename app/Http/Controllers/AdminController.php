@@ -210,6 +210,7 @@ class AdminController extends Controller
         }
 
         $listing->load('product');
+        $unit = $listing->product->type === 'oil' ? 'liter' : 'kg';
 
         $data = $request->validate([
             'variety' => ['required', 'string', 'max:64'],
@@ -218,9 +219,9 @@ class AdminController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'currency' => ['nullable', 'string', 'max:8'],
             'quantity' => ['nullable', 'numeric', 'min:0'],
-            'unit' => ['nullable', 'string', 'max:16'],
+            'unit' => ['nullable', 'string', Rule::in(['kg','liter'])],
             'min_order' => ['nullable', 'numeric', 'min:0'],
-            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold'])],
+            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold','expired'])],
             'weight_kg' => ['nullable', 'numeric', 'min:0'],
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
@@ -250,7 +251,8 @@ class AdminController extends Controller
             'price' => $data['price'],
             'currency' => $data['currency'] ?? $listing->currency,
             'quantity' => $data['quantity'] ?? $listing->quantity,
-            'unit' => $data['unit'] ?? $listing->unit,
+            // Force unit based on product type to prevent mismatches
+            'unit' => $unit,
             'min_order' => $data['min_order'] ?? $listing->min_order,
             'status' => $data['status'],
             'media' => $mediaArray ?? $listing->media,
