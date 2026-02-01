@@ -91,7 +91,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Status') }}</label>
                     <select name="status" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
-                        @foreach(['active','pending','inactive','sold','expired'] as $state)
+                        @foreach(['active','pending','inactive','sold'] as $state)
                             <option value="{{ $state }}" {{ old('status', $listing->status) === $state ? 'selected' : '' }}>{{ ucfirst($state) }}</option>
                         @endforeach
                     </select>

@@ -221,7 +221,7 @@ class AdminController extends Controller
             'quantity' => ['nullable', 'numeric', 'min:0'],
             'unit' => ['nullable', 'string', Rule::in(['kg','liter'])],
             'min_order' => ['nullable', 'numeric', 'min:0'],
-            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold','expired'])],
+            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold'])],
             'weight_kg' => ['nullable', 'numeric', 'min:0'],
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
