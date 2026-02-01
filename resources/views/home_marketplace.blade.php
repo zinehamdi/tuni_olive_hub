@@ -362,14 +362,14 @@
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <!-- Product Image -->
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
-                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
                                      :alt="listing.product.variety"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
                                 <div class="absolute top-3 right-3 flex gap-2">
                                     <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
-                                          :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                          x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
+                                        :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                        x-text="listing.product.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
                                 </div>
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
@@ -438,7 +438,7 @@
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row">
                             <!-- Product Image -->
                             <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
                                      :alt="listing.product.variety"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
@@ -458,9 +458,9 @@
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2 flex-wrap">
                                             <h3 class="text-2xl font-bold text-gray-900" x-text="translate(listing.product.variety)"></h3>
-                                            <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
-                                                :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                                x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
+                                                <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
+                                                    :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                                    x-text="listing.product.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
                                         <span x-show="listing.product.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
@@ -573,6 +573,7 @@ document.addEventListener('alpine:init', () => {
         searchQuery: '',
         viewMode: 'grid',
         fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
+        oilFallbackImage: '{{ asset('images/oliveoiltandefault.jpg') }}',
         mobileMenuOpen: false,
         showFilters: false,
         userLocation: {

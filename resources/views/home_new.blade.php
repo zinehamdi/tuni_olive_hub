@@ -172,7 +172,7 @@
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <!-- Product Image -->
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative">
-                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
                                      :alt="listing.product.variety"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
@@ -233,7 +233,7 @@
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex">
                             <!-- Product Image -->
                             <div class="w-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0">
-                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
                                      :alt="listing.product.variety"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
@@ -315,6 +315,7 @@ document.addEventListener('alpine:init', () => {
         searchQuery: '',
         viewMode: 'grid',
         fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
+        oilFallbackImage: '{{ asset('images/oliveoiltandefault.jpg') }}',
         varietyTranslations: {
             'chemlali': 'شملالي',
             'chetoui': 'شتوي',

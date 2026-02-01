@@ -88,7 +88,7 @@
                         <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $varietyName }}</h1>
                         <div class="flex items-center gap-2 flex-wrap" flex-wrap">
                             <span class="px-4 py-2 rounded-full bg-[#6A8F3B] text-white font-bold">
-                                {{ $listing->product->type === 'olive' ? __('Olives') : __('Olive Oil') }}
+                                {{ $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil')) }}
                             </span>
                             @if($listing->product->quality)
                                 <span class="px-4 py-2 rounded-full bg-[#C8A356] text-white font-bold">
