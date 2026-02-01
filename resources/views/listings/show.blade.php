@@ -27,13 +27,15 @@
                     <div class="aspect-square bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
                         @if($listing->media && count($listing->media) > 0)
                             @foreach($listing->media as $index => $media)
-                                <img x-show="activeImage === {{ $index }}" 
-                                     src="{{ asset('storage/' . $media) }}" 
-                                     alt="{{ $listing->product->variety }}" 
-                                     class="w-full h-full object-contain"
-                                     x-transition:enter="transition ease-out duration-300"
-                                     x-transition:enter-start="opacity-0"
-                                     x-transition:enter-end="opacity-100">
+                                  <img x-show="activeImage === {{ $index }}" 
+                                      src="{{ asset('storage/' . $media) }}" 
+                                      alt="{{ $listing->product->variety }}" 
+                                      class="w-full h-full object-contain"
+                                      loading="lazy"
+                                      onerror="this.onerror=null;this.src='{{ $fallbackImage }}'"
+                                      x-transition:enter="transition ease-out duration-300"
+                                      x-transition:enter-start="opacity-0"
+                                      x-transition:enter-end="opacity-100">
                             @endforeach
                         @else
                             <img src="{{ $fallbackImage }}" alt="{{ $listing->product->variety }}" class="w-full h-full object-cover">
@@ -47,9 +49,11 @@
                                 <button @click="activeImage = {{ $index }}" 
                                         class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all"
                                         :class="activeImage === {{ $index }} ? 'border-[#6A8F3B] shadow-lg scale-105' : 'border-gray-300 opacity-70 hover:opacity-100'">
-                                    <img src="{{ asset('storage/' . $media) }}" 
+                                     <img src="{{ asset('storage/' . $media) }}" 
                                          alt="{{ __('Image') }} {{ $index + 1 }}" 
-                                         class="w-full h-full object-cover">
+                                         class="w-full h-full object-cover"
+                                         loading="lazy"
+                                         onerror="this.onerror=null;this.src='{{ $fallbackImage }}'">
                                 </button>
                             @endforeach
                         </div>
