@@ -362,20 +362,10 @@
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <!-- Product Image -->
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
-                                <!-- Actual Image if available -->
-                                <template x-if="listing.media && listing.media.length > 0">
-                                    <img :src="'/storage/' + listing.media[0]" 
-                                         :alt="listing.product.variety" 
-                                         class="w-full h-full object-cover"
-                                         loading="lazy">
-                                </template>
-                                <!-- Fallback SVG icon if no image -->
-                                <template x-if="!listing.media || listing.media.length === 0">
-                                    <svg class="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path x-show="listing.product.type === 'oil'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        <path x-show="listing.product.type === 'olive'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                                    </svg>
-                                </template>
+                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                     :alt="listing.product.variety"
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
                                 <div class="absolute top-3 right-3 flex gap-2">
                                     <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-white/20 backdrop-blur" 
                                           x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
@@ -447,20 +437,10 @@
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row">
                             <!-- Product Image -->
                             <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                                <!-- Actual Image if available -->
-                                <template x-if="listing.media && listing.media.length > 0">
-                                    <img :src="'/storage/' + listing.media[0]" 
-                                         :alt="listing.product.variety" 
-                                         class="w-full h-full object-cover"
-                                         loading="lazy">
-                                </template>
-                                <!-- Fallback SVG icon if no image -->
-                                <template x-if="!listing.media || listing.media.length === 0">
-                                    <svg class="w-20 h-20 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path x-show="listing.product.type === 'oil'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        <path x-show="listing.product.type === 'olive'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                                    </svg>
-                                </template>
+                                <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : fallbackImage"
+                                     :alt="listing.product.variety"
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
                                     <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#C8A356] backdrop-blur flex items-center gap-1">
@@ -589,6 +569,7 @@ document.addEventListener('alpine:init', () => {
         filteredListings: [],
         searchQuery: '',
         viewMode: 'grid',
+        fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
         mobileMenuOpen: false,
         showFilters: false,
         userLocation: {
