@@ -99,8 +99,13 @@
                     </div>
 
                     <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
-                        {{ number_format($listing->product->price, 2) }} {{ __('TND') }}/
-                        {{ $listing->unit === 'liter' ? __('L') : __('kg') }}
+                        {{ number_format($listing->product->price, 2) }} {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}/
+                        @php
+                            $unitLabel = $listing->unit === 'liter'
+                                ? (app()->getLocale() === 'ar' ? 'لتر' : 'L')
+                                : (app()->getLocale() === 'ar' ? 'كلغ' : 'kg');
+                        @endphp
+                        {{ $unitLabel }}
                     </div>
 
                     <!-- Seller Info -->

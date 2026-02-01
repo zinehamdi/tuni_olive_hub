@@ -88,19 +88,19 @@
                         <div class="text-sm text-gray-600 mb-2">{{ __('Price') }}</div>
                         <div class="text-5xl font-bold text-[#6A8F3B]">
                             {{ number_format($listing->price, 2) }}
-                            <span class="text-2xl text-gray-600">{{ __('TND') }}</span>
+                            <span class="text-2xl text-gray-600">{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}</span>
                         </div>
                                         <!-- Price per Unit -->
                 <div class="text-sm text-gray-600 mt-2">
                     {{ __('Per') }} 
                     @if($listing->unit === 'kg')
-                        {{ __('Kilogram') }}
+                        {{ app()->getLocale() === 'ar' ? 'كلغ' : __('Kilogram') }}
                     @elseif($listing->unit === 'ton')
-                        {{ __('Ton') }}
+                        {{ app()->getLocale() === 'ar' ? 'طن' : __('Ton') }}
                     @elseif($listing->unit === 'liter')
-                        {{ __('Liter') }}
+                        {{ app()->getLocale() === 'ar' ? 'لتر' : __('Liter') }}
                     @elseif($listing->unit === 'bottle')
-                        {{ __('Bottle') }}
+                        {{ app()->getLocale() === 'ar' ? 'قارورة' : __('Bottle') }}
                     @else
                         {{ $listing->unit ?? __('Unit') }}
                     @endif
