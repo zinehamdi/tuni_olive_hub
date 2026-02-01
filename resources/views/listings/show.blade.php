@@ -21,6 +21,7 @@
         <div class="grid lg:grid-cols-2 gap-8">
             <!-- Product Image Section -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                @php $fallbackImage = 'https://toop.kairouanhub.com/listings/23'; @endphp
                 <div x-data="{ activeImage: 0 }">
                     <!-- Main Image Display -->
                     <div class="aspect-square bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
@@ -35,13 +36,7 @@
                                      x-transition:enter-end="opacity-100">
                             @endforeach
                         @else
-                            <svg class="w-48 h-48 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                @if($listing->product->type === 'oil')
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                @else
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                                @endif
-                            </svg>
+                            <img src="{{ $fallbackImage }}" alt="{{ $listing->product->variety }}" class="w-full h-full object-cover">
                         @endif
                     </div>
                     
@@ -57,6 +52,12 @@
                                          class="w-full h-full object-cover">
                                 </button>
                             @endforeach
+                        </div>
+                    @elseif(!$listing->media || count($listing->media) === 0)
+                        <div class="p-4 bg-gray-50 flex gap-3 overflow-x-auto">
+                            <div class="w-20 h-20 rounded-lg overflow-hidden border-2 border-gray-300">
+                                <img src="{{ $fallbackImage }}" alt="fallback" class="w-full h-full object-cover">
+                            </div>
                         </div>
                     @endif
                 </div>
