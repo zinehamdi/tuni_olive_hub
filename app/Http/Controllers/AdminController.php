@@ -188,6 +188,77 @@ class AdminController extends Controller
         return view('admin.listings', compact('listings'));
     }
 
+    public function editListing(Listing $listing)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $listing->load(['product', 'seller']);
+
+        return view('admin.listing_edit', [
+            'listing' => $listing,
+            'product' => $listing->product,
+            'seller' => $listing->seller,
+        ]);
+    }
+
+    public function updateListing(Request $request, Listing $listing)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $listing->load('product');
+
+        $data = $request->validate([
+            'variety' => ['required', 'string', 'max:64'],
+            'quality' => ['nullable', 'string', 'max:64'],
+            'is_organic' => ['sometimes', 'boolean'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'currency' => ['nullable', 'string', 'max:8'],
+            'quantity' => ['nullable', 'numeric', 'min:0'],
+            'unit' => ['nullable', 'string', 'max:16'],
+            'min_order' => ['nullable', 'numeric', 'min:0'],
+            'status' => ['required', 'string', Rule::in(['active','pending','inactive','sold'])],
+            'weight_kg' => ['nullable', 'numeric', 'min:0'],
+            'volume_liters' => ['nullable', 'numeric', 'min:0'],
+            'stock' => ['nullable', 'numeric', 'min:0'],
+            'media' => ['nullable', 'string'],
+        ]);
+
+        $mediaArray = null;
+        if (!empty($data['media'])) {
+            $mediaArray = collect(explode(',', $data['media']))
+                ->map(fn($v) => trim($v))
+                ->filter()
+                ->values()
+                ->all();
+        }
+
+        $product = $listing->product;
+        $product->variety = $data['variety'];
+        $product->quality = $data['quality'] ?? null;
+        $product->is_organic = $request->boolean('is_organic');
+        $product->price = $data['price'];
+        $product->stock = $data['stock'] ?? ($data['quantity'] ?? $product->stock);
+        $product->weight_kg = $data['weight_kg'] ?? null;
+        $product->volume_liters = $data['volume_liters'] ?? null;
+        $product->save();
+
+        $listing->update([
+            'price' => $data['price'],
+            'currency' => $data['currency'] ?? $listing->currency,
+            'quantity' => $data['quantity'] ?? $listing->quantity,
+            'unit' => $data['unit'] ?? $listing->unit,
+            'min_order' => $data['min_order'] ?? $listing->min_order,
+            'status' => $data['status'],
+            'media' => $mediaArray ?? $listing->media,
+        ]);
+
+        return redirect()->route('admin.listings')->with('success', __('Listing updated successfully'));
+    }
+
     /**
      * Approve a listing
      * الموافقة على عرض

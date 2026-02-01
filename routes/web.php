@@ -115,6 +115,8 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
     Route::get('/listings', [\App\Http\Controllers\AdminController::class, 'listings'])->name('listings');
+    Route::get('/listings/{listing}/edit', [\App\Http\Controllers\AdminController::class, 'editListing'])->name('listings.edit');
+    Route::patch('/listings/{listing}', [\App\Http\Controllers\AdminController::class, 'updateListing'])->name('listings.update');
     
     // Listing moderation
     Route::post('/listings/{listing}/approve', [\App\Http\Controllers\AdminController::class, 'approveListing'])->name('listings.approve');

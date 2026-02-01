@@ -158,6 +158,9 @@
                             <a href="{{ route('listings.show', $listing) }}" class="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-bold">
                                 {{ __('View') }}
                             </a>
+                            <a href="{{ route('admin.listings.edit', $listing) }}" class="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-200 transition font-bold">
+                                {{ __('Edit') }}
+                            </a>
                             <form action="{{ route('admin.listings.delete', $listing) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('Are you sure you want to delete this listing?') }}')">
                                 @csrf
                                 @method('DELETE')
