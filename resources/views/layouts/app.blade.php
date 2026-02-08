@@ -42,6 +42,7 @@
     <link rel="apple-touch-icon" href="/icons/zintoop-192.png">
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="theme-color" content="#6A8F3B">
+    <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
 
     @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))
         @vite(['resources/css/app.css','resources/js/app.js'])
@@ -139,6 +140,9 @@
                     <div class="flex items-center gap-2 sm:gap-3">
                         <button id="pwa-install" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm">
                             {{ __('Install app') }}
+                        </button>
+                        <button id="enable-notifications" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm opacity-50 cursor-not-allowed">
+                            {{ __('Enable notifications') }}
                         </button>
                         <!-- Language Switcher - Compact Pills -->
                         <div class="hidden sm:flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full p-0.5">

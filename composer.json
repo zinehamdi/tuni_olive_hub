@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "intervention/image-laravel": "^1.5",
+        "laravel-notification-channels/webpush": "^10.4",
         "laravel/breeze": "^2.1",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.2",

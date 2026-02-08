@@ -110,3 +110,89 @@ if ('serviceWorker' in navigator) {
 		installButton.classList.add(...disabledClasses);
 	});
 })();
+
+// Web Push subscription flow
+(() => {
+	const pushButton = document.getElementById('enable-notifications');
+	const vapidMeta = document.querySelector('meta[name="vapid-public-key"]');
+	const vapidKey = vapidMeta?.content || '';
+	const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+	const disabledClasses = ['opacity-50', 'cursor-not-allowed'];
+
+	const isIos = () => /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+	if (!pushButton) return;
+
+	const supported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && vapidKey;
+	if (!supported || isIos()) {
+		// Hide on unsupported platforms (notably iOS browsers)
+		pushButton.classList.add('hidden');
+		return;
+	}
+
+	pushButton.classList.remove('hidden');
+	pushButton.classList.add(...disabledClasses);
+
+	const urlBase64ToUint8Array = (base64String) => {
+		const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+		const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+		const rawData = window.atob(base64);
+		const outputArray = new Uint8Array(rawData.length);
+		for (let i = 0; i < rawData.length; ++i) {
+			outputArray[i] = rawData.charCodeAt(i);
+		}
+		return outputArray;
+	};
+
+	const sendSubscription = async (subscription) => {
+		await fetch('/push/subscribe', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-TOKEN': csrf || '',
+				'Accept': 'application/json'
+			},
+			body: JSON.stringify(subscription)
+		});
+	};
+
+	const enableButton = () => pushButton.classList.remove(...disabledClasses);
+	const disableButton = () => pushButton.classList.add(...disabledClasses);
+
+	window.addEventListener('beforeinstallprompt', () => {
+		// no-op, just ensuring SW registration exists; push logic independent
+	});
+
+	navigator.serviceWorker.ready.then(async (registration) => {
+		const existing = await registration.pushManager.getSubscription();
+		if (existing) {
+			disableButton();
+			return;
+		}
+		enableButton();
+	}).catch(() => {});
+
+	pushButton.addEventListener('click', async () => {
+		if (pushButton.classList.contains('opacity-50')) return;
+		try {
+			const permission = await Notification.requestPermission();
+			if (permission !== 'granted') {
+				disableButton();
+				return;
+			}
+
+			const registration = await navigator.serviceWorker.ready;
+			const subscription = await registration.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: urlBase64ToUint8Array(vapidKey),
+			});
+
+			await sendSubscription(subscription);
+			disableButton();
+		} catch (e) {
+			// If anything fails, keep button enabled for retry
+			enableButton();
+		}
+	});
+})();
