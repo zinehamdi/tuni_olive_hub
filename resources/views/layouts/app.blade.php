@@ -39,6 +39,9 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
+    <link rel="apple-touch-icon" href="/icons/zintoop-192.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#6A8F3B">
 
     @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))
         @vite(['resources/css/app.css','resources/js/app.js'])
@@ -134,6 +137,9 @@
 
                     <!-- Right Side Actions -->
                     <div class="flex items-center gap-2 sm:gap-3">
+                        <button id="pwa-install" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm">
+                            {{ __('Install app') }}
+                        </button>
                         <!-- Language Switcher - Compact Pills -->
                         <div class="hidden sm:flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full p-0.5">
                             <a href="{{ route('lang.switch','ar') }}" class="px-2.5 py-1 text-xs font-bold rounded-full {{ app()->getLocale()==='ar' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} transition-all duration-200">AR</a>

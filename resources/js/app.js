@@ -71,3 +71,42 @@ window.alpineRegisterForm = function() {
         }
     }
 }
+
+// PWA install prompt and service worker registration
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+		navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+	});
+}
+
+(() => {
+	let deferredPrompt;
+	const installButton = document.getElementById('pwa-install');
+	if (!installButton) return;
+
+	const disabledClasses = ['opacity-50', 'cursor-not-allowed'];
+	installButton.classList.remove('hidden');
+	installButton.classList.add(...disabledClasses);
+
+	window.addEventListener('beforeinstallprompt', (event) => {
+		event.preventDefault();
+		deferredPrompt = event;
+		installButton.classList.remove(...disabledClasses);
+	});
+
+	installButton.addEventListener('click', async () => {
+		if (!deferredPrompt) return;
+		deferredPrompt.prompt();
+		try {
+			await deferredPrompt.userChoice;
+		} finally {
+			deferredPrompt = null;
+			installButton.classList.add(...disabledClasses);
+		}
+	});
+
+	window.addEventListener('appinstalled', () => {
+		deferredPrompt = null;
+		installButton.classList.add(...disabledClasses);
+	});
+})();
