@@ -1,14 +1,15 @@
-const CACHE_NAME = 'zintoop-cache-v1';
-const OFFLINE_URLS = [
-  '/',
+const CACHE_NAME = 'zintoop-cache-v2';
+const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/icons/zintoop-192.png',
-  '/icons/zintoop-512.png'
+  '/icons/zintoop-512.png',
+  '/images/zintoop-logo.png',
+  '/images/oliveoiltandefault.jpg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(OFFLINE_URLS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)).then(() => self.skipWaiting())
   );
 });
 
@@ -23,14 +24,33 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+  
+  // For HTML pages (no extension or .php), use network-first to preserve auth state
+  const isHtmlRequest = event.request.headers.get('accept')?.includes('text/html') ||
+                        (!url.pathname.includes('.') || url.pathname.endsWith('.php'));
+  
+  if (isHtmlRequest) {
+    // Network-first for HTML - always get fresh content for auth state
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match('/offline.html') || new Response('Offline', { status: 503 }))
+    );
+    return;
+  }
+  
+  // Cache-first for static assets only
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
       return fetch(event.request).then((response) => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        // Only cache successful responses for static assets
+        if (response.ok && (url.pathname.match(/\.(js|css|png|jpg|jpeg|webp|svg|woff2?)$/))) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
         return response;
-      }).catch(() => caches.match('/'));
+      });
     })
   );
 });
