@@ -33,6 +33,7 @@ $allowedPrefixes = [
     'register',
     'profile',
     'healthz',
+    'push',
 ];
 
 // Skip guard when running under automated tests
