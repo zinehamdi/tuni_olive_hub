@@ -114,6 +114,12 @@
                             </div>
                             <span>{{ __('nav.prices') }}</span>
                         </a>
+                        <a href="{{ route('listings.create') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6A8F3B]/30 to-[#5a7a2f]/30 group-hover:from-[#6A8F3B]/50 group-hover:to-[#5a7a2f]/50 flex items-center justify-center transition-all">
+                                <span class="text-base">🫒</span>
+                            </div>
+                            <span>{{ app()->getLocale() === 'ar' ? 'بيع زيتك/زيتونك' : __('Sell Your Oil') }}</span>
+                        </a>
                         <a href="{{ route('how-it-works') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
