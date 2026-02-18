@@ -159,6 +159,13 @@ class ProfileController extends Controller
         $data['show_contact_info'] = $request->boolean('show_contact_info');
         $data['show_address'] = $request->boolean('show_address');
 
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            $data['profile_picture'] = $this->imageService->optimizeProfilePicture(
+                $request->file('profile_picture')
+            );
+        }
+
         $user->fill($data);
         $user->show_contact_info = $data['show_contact_info'];
         $user->show_address = $data['show_address'];
