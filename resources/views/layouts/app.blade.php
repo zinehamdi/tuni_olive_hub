@@ -144,9 +144,6 @@
 
                     <!-- Right Side Actions -->
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <button id="pwa-install" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm">
-                            {{ __('Install app') }}
-                        </button>
                         <button id="enable-notifications" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm opacity-50 cursor-not-allowed">
                             {{ __('Enable notifications') }}
                         </button>
