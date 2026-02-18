@@ -56,6 +56,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Contact Email
+    |--------------------------------------------------------------------------
+    |
+    | This email address is used for the contact form and displayed on the
+    | contact page. Set this in your ".env" file.
+    |
+    */
+
+    'contact_email' => env('CONTACT_EMAIL', 'contact@zintoop.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

@@ -6,7 +6,7 @@ $description = __('public.contact.description');
 $heading = __('public.contact.heading');
 $body = __('public.contact.body');
 $disclaimer = __('public.common.disclaimer');
-$contactEmail = config('app.contact_email') ?? 'contact@toop.kairouanhub.com';
+$contactEmail = config('app.contact_email') ?? 'contact@zintoop.com';
 $contactPhone = config('app.contact_phone') ?? '+21625777926';
 @endphp
 
