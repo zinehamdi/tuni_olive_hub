@@ -84,13 +84,22 @@ if ('serviceWorker' in navigator) {
 	const installButton = document.getElementById('pwa-install');
 	if (!installButton) return;
 
+	// Check if already installed (running as standalone PWA)
+	const isInstalled = window.matchMedia('(display-mode: standalone)').matches ||
+	                    window.navigator.standalone === true ||
+	                    localStorage.getItem('pwa-installed') === 'true';
+	
+	if (isInstalled) {
+		installButton.classList.add('hidden');
+		return;
+	}
+
 	const disabledClasses = ['opacity-50', 'cursor-not-allowed'];
-	installButton.classList.remove('hidden');
-	installButton.classList.add(...disabledClasses);
 
 	window.addEventListener('beforeinstallprompt', (event) => {
 		event.preventDefault();
 		deferredPrompt = event;
+		installButton.classList.remove('hidden');
 		installButton.classList.remove(...disabledClasses);
 	});
 
@@ -98,16 +107,20 @@ if ('serviceWorker' in navigator) {
 		if (!deferredPrompt) return;
 		deferredPrompt.prompt();
 		try {
-			await deferredPrompt.userChoice;
+			const { outcome } = await deferredPrompt.userChoice;
+			if (outcome === 'accepted') {
+				localStorage.setItem('pwa-installed', 'true');
+				installButton.classList.add('hidden');
+			}
 		} finally {
 			deferredPrompt = null;
-			installButton.classList.add(...disabledClasses);
 		}
 	});
 
 	window.addEventListener('appinstalled', () => {
 		deferredPrompt = null;
-		installButton.classList.add(...disabledClasses);
+		localStorage.setItem('pwa-installed', 'true');
+		installButton.classList.add('hidden');
 	});
 })();
 
