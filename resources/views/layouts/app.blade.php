@@ -96,7 +96,7 @@
                         </div>
                         <div class="hidden sm:block">
                             <span class="text-lg font-bold tracking-tight">ZinToop</span>
-                            <span class="block text-[10px] text-white/70 font-medium -mt-0.5">{{ __('brand.descriptor_short') ?? 'Olive Oil Platform' }}</span>
+                            <span class="block text-[10px] text-white/70 font-medium -mt-0.5">{{ trans()->has('brand.descriptor_short') ? __('brand.descriptor_short') : 'Olive Oil Platform' }}</span>
                         </div>
                     </a>
 
@@ -254,6 +254,10 @@
                         <a href="{{ route('prices.index') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                             <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center"><span class="text-lg">📊</span></div>
                             {{ __('nav.prices') }}
+                        </a>
+                        <a href="{{ route('listings.create') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
+                            <div class="w-9 h-9 rounded-lg bg-[#6A8F3B]/30 flex items-center justify-center"><span class="text-lg">🫒</span></div>
+                            {{ app()->getLocale() === 'ar' ? 'بيع زيتك/زيتونك' : __('Sell Your Oil') }}
                         </a>
                         <a href="{{ route('how-it-works') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">

@@ -155,20 +155,18 @@
             <!-- Sidebar Filters -->
             <aside class="lg:w-64 flex-shrink-0">
                 <div class="bg-white rounded-2xl shadow-lg p-6 lg:sticky lg:top-4 max-h-[70vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto lg:block"
+                     x-cloak
                      x-show="showFilters"
                      x-transition:enter="lg:transition-none transition ease-out duration-200"
                      x-transition:enter-start="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2"
                      x-transition:enter-end="opacity-100 translate-y-0"
                      x-transition:leave="lg:transition-none transition ease-in duration-150"
                      x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2"
-                     style="display: none;">
+                     x-transition:leave-end="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2">
                     <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                         <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
-                        {{ __('Filter Results') }}
-                    </h3>
                         {{ __('Filter Results') }}
                     </h3>
 
