@@ -154,8 +154,7 @@
 
             <!-- Sidebar Filters -->
             <aside class="lg:w-64 flex-shrink-0">
-                <div class="bg-white rounded-2xl shadow-lg p-6 lg:sticky lg:top-4 max-h-[70vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto lg:block"
-                     x-cloak
+                <div class="bg-white rounded-2xl shadow-lg p-6 lg:sticky lg:top-4 max-h-[70vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto"
                      x-show="showFilters"
                      x-transition:enter="lg:transition-none transition ease-out duration-200"
                      x-transition:enter-start="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2"
@@ -573,7 +572,7 @@ document.addEventListener('alpine:init', () => {
         fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
         oilFallbackImage: '{{ asset('images/oliveoiltandefault.jpg') }}',
         mobileMenuOpen: false,
-        showFilters: false,
+        showFilters: window.innerWidth >= 1024,
         userLocation: {
             lat: null,
             lng: null
