@@ -83,7 +83,7 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900 antialiased">
     <!-- Modern Navigation with Glass Effect -->
-    <nav class="fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = window.scrollY > 20">
+    <nav class="fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false, scrolled: false, unreadCount: 0, async fetchUnread() { try { const res = await fetch('/messages/unread-count'); const data = await res.json(); this.unreadCount = data.count || 0; } catch(e) {} } }" x-init="@auth fetchUnread(); setInterval(() => fetchUnread(), 30000) @endauth" @scroll.window="scrolled = window.scrollY > 20">
         <!-- Main Nav Bar -->
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -189,8 +189,10 @@
                                         <a href="{{ route('messages.inbox') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-blue-50 transition-all duration-200 flex items-center gap-3">
                                             <div class="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center transition-all relative">
                                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                                <span x-show="unreadCount > 0" x-cloak class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center" x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
                                             </div>
                                             <span class="font-medium text-sm">{{ __('Inbox') }}</span>
+                                            <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                         </a>
                                         <a href="{{ route('profile.edit') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-[#6A8F3B]/10 transition-all duration-200 flex items-center gap-3">
                                             <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 group-hover:bg-[#6A8F3B]/20 flex items-center justify-center transition-all">
@@ -283,10 +285,12 @@
                                     {{ __('nav.dashboard') }}
                                 </a>
                                 <a href="{{ route('messages.inbox') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
-                                    <div class="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                    <div class="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center relative">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                        <span x-show="unreadCount > 0" x-cloak class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center" x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
                                     </div>
                                     {{ __('Inbox') }}
+                                    <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                 </a>
                                 <a href="{{ route('profile.edit') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                                     <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
