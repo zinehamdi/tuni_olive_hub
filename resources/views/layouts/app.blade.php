@@ -338,10 +338,13 @@
     <!-- Spacer for fixed navbar -->
     <div class="h-16 sm:h-[72px]"></div>
 
-    <!-- Sticky Price Ticker -->
-    <div class="sticky top-16 sm:top-[72px] z-40 shadow-md">
+    <!-- Price Ticker - Fixed below navbar -->
+    <div class="fixed top-16 sm:top-[72px] left-0 right-0 z-40 shadow-md">
         @include('components.price-ticker')
     </div>
+
+    <!-- Spacer for price ticker -->
+    <div class="h-10"></div>
 
     @isset($header)
     <header class="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-100">
