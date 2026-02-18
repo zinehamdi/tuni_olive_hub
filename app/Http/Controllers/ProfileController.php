@@ -166,6 +166,23 @@ class ProfileController extends Controller
             );
         }
 
+        // Handle cover photos removal
+        $currentCovers = $user->cover_photos ?? [];
+        if ($request->filled('remove_cover_photos')) {
+            $toRemove = json_decode($request->input('remove_cover_photos'), true) ?? [];
+            $currentCovers = array_values(array_filter($currentCovers, fn($p) => !in_array($p, $toRemove)));
+        }
+
+        // Handle cover photos upload
+        if ($request->hasFile('cover_photos')) {
+            foreach ($request->file('cover_photos') as $photo) {
+                if ($photo->isValid() && count($currentCovers) < 5) {
+                    $currentCovers[] = $this->imageService->optimizeCoverPhoto($photo);
+                }
+            }
+        }
+        $data['cover_photos'] = $currentCovers;
+
         $user->fill($data);
         $user->show_contact_info = $data['show_contact_info'];
         $user->show_address = $data['show_address'];
