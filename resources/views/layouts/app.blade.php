@@ -83,9 +83,9 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900 antialiased">
     <!-- Modern Navigation with Glass Effect -->
-    <nav class="relative z-50" x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = window.scrollY > 20">
+    <nav class="fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = window.scrollY > 20">
         <!-- Main Nav Bar -->
-        <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white shadow-xl" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
+        <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16 sm:h-18">
                     <!-- Logo -->
@@ -335,8 +335,11 @@
         </div>
     </nav>
 
+    <!-- Spacer for fixed navbar -->
+    <div class="h-16 sm:h-[72px]"></div>
+
     <!-- Sticky Price Ticker -->
-    <div class="sticky top-0 z-40 shadow-md">
+    <div class="sticky top-16 sm:top-[72px] z-40 shadow-md">
         @include('components.price-ticker')
     </div>
 
