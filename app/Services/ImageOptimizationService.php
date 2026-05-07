@@ -154,4 +154,26 @@ try {
             'url' => Storage::url($path)
         ];
     }
+    /**
+     * Optimize and save article image
+     * Converts to WebP, resizes to max 1200px width, quality 85%
+     */
+    public function optimizeArticleImage(UploadedFile $file): string
+    {
+        $filename = Str::uuid() . '.webp';
+        $directory = storage_path('app/public/articles');
+        $path = $directory . '/' . $filename;
+        
+        // Ensure directory exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Read, resize, and optimize image
+        $image = Image::read($file);
+        $image->scaleDown(width: 1200);
+        $image->toWebp(85)->save($path);
+
+        return 'articles/' . $filename;
+    }
 }

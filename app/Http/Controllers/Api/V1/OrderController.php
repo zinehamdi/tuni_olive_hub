@@ -34,6 +34,12 @@ class OrderController extends ApiController
         $data['status'] = Order::STATUS_PENDING;
         $order = Order::create($data);
         $this->audit('order.created', 'order', $order->id);
+        
+        // Notify seller
+        if ($order->seller) {
+            $order->seller->notify(new \App\Notifications\NewDeal($order));
+        }
+
         $thread = Chat::ensureThread('order', $order->id, [$order->buyer_id, $order->seller_id]);
         Chat::system($thread, 'تم إنشاء طلب جديد.');
         return $this->ok(new OrderResource($order->load(['buyer','seller','listing'])), 201);
@@ -67,7 +73,25 @@ class OrderController extends ApiController
         if ($nextVerb === 'confirm') {
             // clamp total
             $order->total = (string) ((float) $order->qty * (float) $order->price_unit);
-            // TODO: re-check stock/min_order (Prompt2)
+            
+            // Automatically decrement quantity on the listing when a deal is confirmed
+            $listing = $order->listing;
+            if ($listing && $listing->quantity !== null) {
+                $newQty = (float) $listing->quantity - (float) $order->qty;
+                
+                if ($newQty < 0) {
+                    abort(422, 'الكمية المطلوبة غير متوفرة حالياً.'); // Insufficient stock
+                }
+                
+                $listing->quantity = (string) $newQty;
+                
+                // Auto-archive listing if stock is depleted
+                if ($newQty <= 0) {
+                    $listing->status = 'archived';
+                }
+                
+                $listing->save();
+            }
         }
 
         if ($nextVerb === 'ready') {

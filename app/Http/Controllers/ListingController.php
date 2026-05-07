@@ -84,6 +84,7 @@ class ListingController extends Controller
                 'longitude' => 'nullable|numeric',
                 'governorate' => 'nullable|string',
                 'delegation' => 'nullable|string',
+                'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
                 'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:8192', // Accept any image format/size, will be optimized
             ]);
 
@@ -190,14 +191,14 @@ class ListingController extends Controller
             ]);
 
             // Redirect to dashboard with success message
-            return Redirect::route('dashboard')->with('success', 'تم نشر العرض بنجاح! 🎉');
+            return Redirect::route('dashboard')->with('success', __('Listing published successfully! 🎉'));
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('❌ Validation Error:', [
                 'errors' => $e->errors(),
                 'user_id' => Auth::id()
             ]);
-            return Redirect::back()->withErrors($e->errors())->withInput()->with('error', 'الرجاء التأكد من ملء جميع الحقول المطلوبة');
+            return Redirect::back()->withErrors($e->errors())->withInput()->with('error', __('Please ensure all required fields are filled.'));
             
         } catch (\Exception $e) {
             Log::error('❌ Listing Creation Error:', [
@@ -206,7 +207,7 @@ class ListingController extends Controller
                 'line' => $e->getLine(),
                 'user_id' => Auth::id()
             ]);
-            return Redirect::back()->withInput()->with('error', 'حدث خطأ أثناء نشر العرض. الرجاء المحاولة مرة أخرى.');
+            return Redirect::back()->withInput()->with('error', __('An error occurred while publishing the listing. Please try again.'));
         }
     }
 
@@ -277,7 +278,7 @@ class ListingController extends Controller
         $listing->update($validated);
 
         // Redirect to dashboard with success message
-        return Redirect::route('dashboard')->with('success', 'تم تحديث العرض بنجاح!');
+        return Redirect::route('dashboard')->with('success', __('Listing updated successfully!'));
     }
 
     /**
@@ -298,6 +299,6 @@ class ListingController extends Controller
 
         $listing->delete();
 
-        return Redirect::route('dashboard')->with('success', 'تم حذف العرض بنجاح!');
+        return Redirect::route('dashboard')->with('success', __('Listing deleted successfully!'));
     }
 }

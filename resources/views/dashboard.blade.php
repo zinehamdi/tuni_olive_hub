@@ -8,20 +8,20 @@
         successMessage: '',
         errorMessage: '',
         formData: {
-            name: '{{ Auth::user()->name }}',
-            email: '{{ Auth::user()->email }}',
-            phone: '{{ Auth::user()->phone ?? '' }}',
-            farm_name: '{{ Auth::user()->farm_name ?? '' }}',
-            farm_name_ar: '{{ Auth::user()->farm_name_ar ?? '' }}',
-            company_name: '{{ Auth::user()->company_name ?? '' }}',
-            mill_name: '{{ Auth::user()->mill_name ?? '' }}',
-            packer_name: '{{ Auth::user()->packer_name ?? '' }}',
-            tree_number: '{{ Auth::user()->tree_number ?? '' }}',
-            olive_type: '{{ Auth::user()->olive_type ?? '' }}',
-            capacity: '{{ Auth::user()->capacity ?? '' }}',
-            fleet_size: '{{ Auth::user()->fleet_size ?? '' }}',
-            camion_capacity: '{{ Auth::user()->camion_capacity ?? '' }}',
-            packaging_types: '{{ Auth::user()->packaging_types ?? '' }}'
+            name: @js(Auth::user()->name),
+            email: @js(Auth::user()->email),
+            phone: @js(Auth::user()->phone ?? ''),
+            farm_name: @js(Auth::user()->farm_name ?? ''),
+            farm_name_ar: @js(Auth::user()->farm_name_ar ?? ''),
+            company_name: @js(Auth::user()->company_name ?? ''),
+            mill_name: @js(Auth::user()->mill_name ?? ''),
+            packer_name: @js(Auth::user()->packer_name ?? ''),
+            tree_number: @js(Auth::user()->tree_number ?? ''),
+            olive_type: @js(Auth::user()->olive_type ?? ''),
+            capacity: @js(Auth::user()->capacity ?? ''),
+            fleet_size: @js(Auth::user()->fleet_size ?? ''),
+            camion_capacity: @js(Auth::user()->camion_capacity ?? ''),
+            packaging_types: @js(Auth::user()->packaging_types ?? '')
         },
         openEdit(field) {
             this.editModal = field;
@@ -100,7 +100,94 @@
             }
             
             this.saving = false;
-        }
+        },
+        async acceptLoad(id) {
+            if (!confirm('{{ __('Accept this transport task?') }}')) return;
+            this.saving = true;
+            try {
+                const response = await fetch(`/api/v1/mobile/loads/${id}/accept`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('{{ __('Failed to accept load.') }}');
+                }
+            } catch (error) {
+                alert('{{ __('Network error.') }}');
+            }
+            this.saving = false;
+        },
+        async rejectLoad(id) {
+            if (!confirm('{{ __('Reject this transport task?') }}')) return;
+            this.saving = true;
+            try {
+                const response = await fetch(`/api/v1/mobile/loads/${id}/reject`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('{{ __('Failed to reject load.') }}');
+                }
+            } catch (error) {
+                alert('{{ __('Network error.') }}');
+            }
+            this.saving = false;
+        },
+        async finalizeTrip(tripId, pin) {
+            if (!pin) return;
+            this.saving = true;
+            try {
+                // 1. Verify PIN via POD endpoint
+                const podRes = await fetch(`/api/v1/trips/${tripId}/pod`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ signed_pin: pin })
+                });
+                
+                if (!podRes.ok) {
+                    const result = await podRes.json();
+                    throw new Error(result.message || '{{ __('Invalid PIN') }}');
+                }
+
+                // 2. Complete Trip
+                const response = await fetch(`/api/v1/trips/${tripId}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                
+                if (response.ok) {
+                    this.successMessage = '{{ __('Trip completed successfully!') }}';
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    const result = await response.json();
+                    throw new Error(result.message || '{{ __('Failed to complete trip.') }}');
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+            this.saving = false;
+        },
+
     }"
     @keydown.escape.window="closeEdit()">
 
@@ -528,12 +615,21 @@
         <div class="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 mb-6 sm:mb-8">
             <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">{{ __('Quick Actions') }}</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-                <a href="{{ route('listings.create') }}" class="flex items-center p-3 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white rounded-xl hover:shadow-lg transition transform hover:scale-105">
-                    <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span class="font-bold">{{ __('Add New Product') }}</span>
-                </a>
+                @if(Auth::user()->role === 'carrier')
+                    <a href="#assigned-tasks" class="flex items-center p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-lg transition transform hover:scale-105">
+                        <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span class="font-bold">{{ __('Manage Deliveries') }}</span>
+                    </a>
+                @else
+                    <a href="{{ route('listings.create') }}" class="flex items-center p-3 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white rounded-xl hover:shadow-lg transition transform hover:scale-105">
+                        <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span class="font-bold">{{ __('Add New Product') }}</span>
+                    </a>
+                @endif
                 <a href="{{ route('home') }}" class="flex items-center p-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition transform hover:scale-105">
                     <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -552,52 +648,100 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Total Listings -->
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm font-medium mb-1">{{ __('Total Listings') }}</p>
-                        <p class="text-4xl font-bold">{{ $listings->total() }}</p>
-                    </div>
-                    <div class="bg-white/20 rounded-full p-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Active Listings -->
-            <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm font-medium mb-1">{{ __('Active Listings') }}</p>
-                        <p class="text-4xl font-bold">{{ $activeListings }}</p>
-                    </div>
-                    <div class="bg-white/20 rounded-full p-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+            @if(Auth::user()->role === 'carrier')
+                <!-- Total Assigned Loads -->
+                <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm font-medium mb-1">{{ __('Assigned Tasks') }}</p>
+                            <p class="text-4xl font-bold">{{ $assignedLoads->total() }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Pending Listings -->
-            <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-amber-100 text-sm font-medium mb-1">{{ __('Pending Listings') }}</p>
-                        <p class="text-4xl font-bold">{{ $pendingListings }}</p>
-                    </div>
-                    <div class="bg-white/20 rounded-full p-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                <!-- Active Trips (In Transit) -->
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-amber-100 text-sm font-medium mb-1">{{ __('In Transit') }}</p>
+                            <p class="text-4xl font-bold">{{ Auth::user()->assignedLoads()->where('status', 'in_transit')->count() }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Profile Completion -->
+                <!-- Completed Trips -->
+                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100 text-sm font-medium mb-1">{{ __('Delivered') }}</p>
+                            <p class="text-4xl font-bold">{{ Auth::user()->assignedLoads()->whereIn('status', ['delivered', 'settled'])->count() }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <!-- Total Listings -->
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm font-medium mb-1">{{ __('Total Listings') }}</p>
+                            <p class="text-4xl font-bold">{{ $listings->total() }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Listings -->
+                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100 text-sm font-medium mb-1">{{ __('Active Listings') }}</p>
+                            <p class="text-4xl font-bold">{{ $activeListings }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Listings -->
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-amber-100 text-sm font-medium mb-1">{{ __('Pending Listings') }}</p>
+                            <p class="text-4xl font-bold">{{ $pendingListings }}</p>
+                        </div>
+                        <div class="bg-white/20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Profile Completion (Shared) -->
             <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-300">
                 <div class="flex items-center justify-between">
                     <div>
@@ -916,6 +1060,194 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Listings Section (2/3 width) -->
             <div class="lg:col-span-2">
+                @if(Auth::user()->role === 'carrier')
+                    <!-- Assigned Loads Section -->
+                    <div id="assigned-tasks" class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+                        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-white flex items-center">
+                                <svg class="w-7 h-7 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                                </svg>
+                                {{ __('Assigned Transport Tasks') }}
+                            </h2>
+                            <span class="bg-white/20 text-white px-4 py-1 rounded-full text-sm font-bold">
+                                {{ $assignedLoads->total() }} {{ __('Total') }}
+                            </span>
+                        </div>
+
+                        <div class="p-6">
+                            @if($assignedLoads->count() > 0)
+                                <div class="space-y-4">
+                                    @foreach($assignedLoads as $load)
+                                        <div class="border-2 border-gray-100 rounded-2xl p-5 hover:border-blue-500 hover:shadow-xl transition-all duration-300">
+                                            <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center gap-2 mb-2">
+                                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold uppercase">
+                                                            #{{ $load->id }}
+                                                        </span>
+                                                        <span class="text-sm font-bold text-gray-900">
+                                                            {{ $load->qty }} {{ __($load->unit) }} {{ __('of') }} {{ __($load->kind) }}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="mt-1 w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600 flex-shrink-0">
+                                                                📍
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 uppercase font-bold">{{ __('Pickup') }}</p>
+                                                                <p class="text-sm text-gray-900">{{ $load->pickup?->governorate }}, {{ $load->pickup?->delegation }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="mt-1 w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600 flex-shrink-0">
+                                                                🚩
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 uppercase font-bold">{{ __('Dropoff') }}</p>
+                                                                <p class="text-sm text-gray-900">{{ $load->dropoffAddress?->governorate }}, {{ $load->dropoffAddress?->delegation }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="flex items-center gap-4 mt-4 pt-4 border-t border-gray-50">
+                                                        <div class="flex items-center gap-2">
+                                                            <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
+                                                                @if($load->owner->profile_picture)
+                                                                    <img src="{{ asset('storage/' . $load->owner->profile_picture) }}" class="w-full h-full object-cover">
+                                                                @else
+                                                                    <div class="w-full h-full flex items-center justify-center bg-blue-500 text-white text-xs">
+                                                                        {{ substr($load->owner->name, 0, 1) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">{{ __('Client') }}</p>
+                                                                <p class="text-sm font-bold text-gray-900">{{ $load->owner->name }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex flex-col gap-2 w-full sm:w-auto">
+                                                    @if($load->status === \App\Models\Load::ST_MATCHED)
+                                                        <button @click="acceptLoad({{ $load->id }})" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                                                            ✅ {{ __('Accept Task') }}
+                                                        </button>
+                                                        <button @click="rejectLoad({{ $load->id }})" class="px-4 py-2 bg-white text-red-600 border-2 border-red-50 rounded-xl text-sm font-bold hover:bg-red-50 transition">
+                                                            ❌ {{ __('Reject') }}
+                                                        </button>
+                                                    @else
+                                                        @php
+                                                            $statusClasses = [
+                                                                'new' => 'bg-gray-100 text-gray-700',
+                                                                'matched' => 'bg-blue-100 text-blue-700',
+                                                                'in_transit' => 'bg-amber-100 text-amber-700',
+                                                                'delivered' => 'bg-green-100 text-green-700',
+                                                                'settled' => 'bg-emerald-100 text-emerald-700',
+                                                            ];
+                                                        @endphp
+                                                        <span class="px-4 py-2 rounded-xl text-center text-sm font-bold {{ $statusClasses[$load->status] ?? 'bg-gray-100' }}">
+                                                            {{ __(ucfirst($load->status)) }}
+                                                        </span>
+                                                        <a href="{{ route('messages.show', $load->owner->id) }}" class="px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition text-center flex items-center justify-center gap-2">
+                                                            💬 {{ __('Chat') }}
+                                                        </a>
+                                                        <a href="{{ route('mobile.trip.public', ['id' => $load->id]) }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition text-center flex items-center justify-center gap-2">
+                                                            📦 {{ __('Manage Load') }}
+                                                        </a>
+                                                        
+                                                        @if($load->status === 'in_transit')
+                                                            @php $at = $load->activeTrip(); @endphp
+                                                            @if($at)
+                                                                <div class="mt-4 p-4 bg-amber-50 rounded-2xl border border-amber-200" x-data="{ quickPin: '' }">
+                                                                    <label class="block text-[10px] font-black text-amber-800 uppercase tracking-wider mb-2 text-center">{{ __('Quick Complete with PIN') }}</label>
+                                                                    <div class="flex gap-2">
+                                                                        <input type="text" x-model="quickPin" placeholder="PIN" class="flex-1 min-w-0 px-3 py-2 border-2 border-amber-200 rounded-xl text-center font-black tracking-widest focus:border-amber-500 focus:ring-0 text-sm">
+                                                                        <button @click="finalizeTrip({{ $at->id }}, quickPin)" :disabled="!quickPin || saving" class="px-4 py-2 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition disabled:opacity-50 flex items-center gap-1 text-sm whitespace-nowrap">
+                                                                            <span>🏁</span> {{ __('Finish') }}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-6">
+                                    {{ $assignedLoads->links() }}
+                                </div>
+                            @else
+                                <div class="text-center py-12">
+                                    <div class="w-20 h-20 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                                        🚚
+                                    </div>
+                                    <h3 class="text-lg font-bold text-gray-600">{{ __('No assigned tasks yet') }}</h3>
+                                    <p class="text-sm text-gray-500">{{ __('When you are summoned for a load, it will appear here.') }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+                @if(isset($activeLoads) && $activeLoads->count() > 0)
+                    <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 border-2 border-green-500/20">
+                        <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-4 flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                                <svg class="w-6 h-6 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                                {{ __('Live Shipments') }}
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @foreach($activeLoads as $load)
+                                    @php $activeTrip = $load->activeTrip(); @endphp
+                                    <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 hover:shadow-md transition">
+                                        <div class="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h3 class="font-bold text-gray-900">{{ ($load->order && $load->order->listing && $load->order->listing->product && $load->order->listing->product->type === 'olive') ? __('Olives') : __('Olive Oil') }}</h3>
+                                                <p class="text-xs text-gray-500">REF: {{ $load->id }} • {{ $load->qty }} {{ __($load->unit) }}</p>
+                                            </div>
+                                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-black uppercase tracking-wider">{{ __('In Transit') }}</span>
+                                        </div>
+                                        <div class="space-y-2 mb-4">
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <span class="w-5 text-center">🚚</span>
+                                                <span class="font-medium text-gray-900">{{ $load->carrier->name ?? '---' }}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                <span class="w-5 text-center">📍</span>
+                                                <span class="truncate">{{ $load->dropoffAddress->governorate }}, {{ $load->dropoffAddress->delegation }}</span>
+                                            </div>
+                                            <div class="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between">
+                                                <div>
+                                                    <p class="text-[10px] font-black text-amber-800 uppercase tracking-wider mb-1">{{ __('Security PIN') }}</p>
+                                                    <p class="font-mono font-black text-lg text-amber-900 tracking-widest">{{ $activeTrip->pin_token }}</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="text-[10px] font-bold text-amber-600">{{ __('Share with driver') }}</p>
+                                                    <p class="text-[10px] font-bold text-amber-600">{{ __('at destination') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if($activeTrip)
+                                            <a href="{{ route('mobile.trip.public', ['id' => $activeTrip->id]) }}" target="_blank" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow hover:bg-blue-700 transition">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
+                                                {{ __('Track Live') }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
                     <!-- Header -->
                     <div class="bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] px-6 py-5 flex items-center justify-between">
@@ -1113,6 +1445,39 @@
 
             <!-- Sidebar (1/3 width) -->
             <div class="lg:col-span-1 space-y-6">
+                <!-- Recent Notifications -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            {{ __('Recent Activity') }}
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        @if(Auth::user()->notifications->count() > 0)
+                            <div class="space-y-4">
+                                @foreach(Auth::user()->notifications()->latest()->limit(5)->get() as $notification)
+                                    <div class="flex gap-3 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                            🔔
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-900">{{ $notification->data['body'] ?? '' }}</p>
+                                            <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-8">
+                                <p class="text-gray-400 text-sm">{{ __('No recent activity') }}</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
                 <!-- Tips Card -->
                 <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6">
                     <div class="flex items-start">

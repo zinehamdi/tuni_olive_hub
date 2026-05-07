@@ -56,6 +56,12 @@ class AdminController extends Controller
             // Recent registrations (last 7 days)
             'new_users_week' => User::where('created_at', '>=', now()->subDays(7))->count(),
             'new_listings_week' => Listing::where('created_at', '>=', now()->subDays(7))->count(),
+            
+            // Marketing Analytics
+            'marketing_purchases' => \App\Models\ServiceAnalytic::where('event_type', 'purchase')->count(),
+            'marketing_checkouts' => \App\Models\ServiceAnalytic::where('event_type', 'checkout_initiated')->count(),
+            'marketing_add_to_cart' => \App\Models\ServiceAnalytic::where('event_type', 'add_to_cart')->count(),
+            'marketing_revenue' => \App\Models\ServiceAnalytic::where('event_type', 'purchase')->sum('value'),
         ];
 
         // Get recent users
@@ -76,7 +82,12 @@ class AdminController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('admin.dashboard', compact('stats', 'recentUsers', 'recentListings', 'pendingListings'));
+        // Get pending marketing appointments
+        $pendingAppointments = \App\Models\MarketingAppointment::where('status', 'pending')
+            ->latest()
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'recentUsers', 'recentListings', 'pendingListings', 'pendingAppointments'));
     }
 
     /**

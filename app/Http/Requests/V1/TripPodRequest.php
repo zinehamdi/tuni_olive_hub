@@ -13,9 +13,9 @@ class TripPodRequest extends FormRequest
     {
         return [
             'pickup_photos' => ['nullable','array'],
-            'dropoff_photos' => ['required','array','min:1'],
+            'dropoff_photos' => ['required_without:signed_pin','array'],
             'dropoff_photos.*' => ['string'],
-            'signed_name' => ['required','string'],
+            'signed_name' => ['required_without:signed_pin','nullable','string'],
             'signed_pin' => ['nullable','string'],
             'qr_token' => ['nullable','string'],
         ];

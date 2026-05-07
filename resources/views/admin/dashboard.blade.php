@@ -87,6 +87,31 @@
             </div>
         </div>
 
+        <!-- Marketing Analytics -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span>📈</span> {{ app()->getLocale() === 'ar' ? 'إحصائيات التسويق' : __('Marketing Analytics') }}
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-green-50 rounded-xl border border-green-100">
+                    <div class="text-3xl font-black text-green-600">{{ $stats['marketing_purchases'] }}</div>
+                    <div class="text-sm font-semibold text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'عمليات الشراء' : __('Purchases') }}</div>
+                </div>
+                <div class="text-center p-4 bg-orange-50 rounded-xl border border-orange-100">
+                    <div class="text-3xl font-black text-orange-600">{{ $stats['marketing_checkouts'] }}</div>
+                    <div class="text-sm font-semibold text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'بدء مرحلة الشراء' : __('Checkout Initiations') }}</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
+                    <div class="text-3xl font-black text-blue-600">{{ $stats['marketing_add_to_cart'] }}</div>
+                    <div class="text-sm font-semibold text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'أضف إلى السلة' : __('Add to Carts') }}</div>
+                </div>
+                <div class="text-center p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <div class="text-3xl font-black text-emerald-600">{{ number_format($stats['marketing_revenue']) }} <span class="text-sm">TND</span></div>
+                    <div class="text-sm font-semibold text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'إجمالي الإيرادات' : __('Revenue') }}</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <a href="{{ route('admin.users') }}" class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition group">
@@ -140,6 +165,42 @@
                     </div>
                 </div>
             </a>
+
+            <a href="{{ route('admin.articles.index') }}" class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition group">
+                <div class="flex items-center gap-4">
+                    <div class="p-4 bg-purple-100 rounded-xl group-hover:bg-purple-200 transition">
+                        <span class="text-4xl">📰</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Articles') }}</h3>
+                        <p class="text-gray-600">{{ __('Manage articles and ads') }}</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.deals.index') }}" class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition group">
+                <div class="flex items-center gap-4">
+                    <div class="p-4 bg-amber-100 rounded-xl group-hover:bg-amber-200 transition">
+                        <span class="text-4xl">🤝</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Deals') }}</h3>
+                        <p class="text-gray-600">{{ __('Manage requests & services') }}</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.deals.requests.index') }}" class="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition group">
+                <div class="flex items-center gap-4">
+                    <div class="p-4 bg-blue-100 rounded-xl group-hover:bg-blue-200 transition">
+                        <span class="text-4xl">📩</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('Deal Requests') }}</h3>
+                        <p class="text-gray-600">{{ __('View incoming interests') }}</p>
+                    </div>
+                </div>
+            </a>
         </div>
 
         <!-- Pending Listings for Approval -->
@@ -183,6 +244,53 @@
                                 {{ __('Reject') }}
                             </button>
                         </form>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        <!-- Pending Marketing Appointments -->
+        @if(isset($pendingAppointments) && $pendingAppointments->count() > 0)
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <span>📅</span> {{ app()->getLocale() === 'ar' ? 'مواعيد التسويق المعلقة' : __('Pending Marketing Appointments') }}
+                </h2>
+                <a href="{{ route('admin.marketing.index') }}" class="text-[#6A8F3B] hover:text-[#5a7a2f] font-semibold">
+                    {{ __('Manage All') }} →
+                </a>
+            </div>
+            
+            <div class="space-y-4">
+                @foreach($pendingAppointments as $appointment)
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-100 transition hover:shadow-md">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-gray-900 text-lg">{{ $appointment->name }}</h3>
+                            <span class="text-sm font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{{ $appointment->phone }}</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mt-2"><span class="font-semibold">{{ app()->getLocale() === 'ar' ? 'النشاط التجاري:' : 'Business Info:' }}</span> {{ $appointment->business_info }}</p>
+                        <p class="text-sm text-gray-700 mt-1"><span class="font-semibold">{{ app()->getLocale() === 'ar' ? 'تاريخ الموعد:' : 'Appointment Date:' }}</span> <span class="text-[#6A8F3B] font-bold">{{ $appointment->appointment_date->format('Y-m-d H:i') }}</span></p>
+                        <div class="mt-2 text-xs text-gray-500">
+                            <span class="font-semibold">{{ app()->getLocale() === 'ar' ? 'الميزانية الإجمالية:' : 'Total Budget:' }}</span> {{ number_format($appointment->total_budget, 2) }} TND
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <a href="{{ route('admin.marketing.edit', $appointment) }}" class="px-4 py-2 bg-white text-blue-600 font-bold rounded-lg text-sm border border-blue-200 hover:bg-blue-50 transition shadow-sm">
+                            {{ __('Edit') }}
+                        </a>
+                        <form action="{{ route('admin.marketing.destroy', $appointment) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 bg-white text-red-600 font-bold rounded-lg text-sm border border-red-200 hover:bg-red-50 transition shadow-sm">
+                                {{ __('Delete') }}
+                            </button>
+                        </form>
+                        <span class="px-4 py-2 bg-orange-100 text-orange-800 font-bold rounded-lg text-xs border border-orange-200 uppercase tracking-wider">
+                            {{ app()->getLocale() === 'ar' ? 'بانتظار التواصل' : 'Pending' }}
+                        </span>
                     </div>
                 </div>
                 @endforeach

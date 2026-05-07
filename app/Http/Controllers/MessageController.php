@@ -69,6 +69,16 @@ class MessageController extends Controller
             ->with('sender')
             ->orderBy('created_at', 'asc')
             ->get();
+            
+        // Get pending orders between these two users
+        $pendingOrders = \App\Models\Order::whereIn('status', [\App\Models\Order::STATUS_PENDING, \App\Models\Order::STATUS_CONFIRMED])
+            ->where(function($q) use ($authUser, $user) {
+                $q->where('buyer_id', $authUser->id)->where('seller_id', $user->id)
+                  ->orWhere('buyer_id', $user->id)->where('seller_id', $authUser->id);
+            })
+            ->with(['listing.product', 'transportLoad'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         
         // Mark messages as read
         Message::where('thread_id', $thread->id)
@@ -76,7 +86,16 @@ class MessageController extends Controller
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
         
-        return view('messages.show', compact('user', 'thread', 'messages'));
+        // Get active transporters
+        $carriers = User::where('role', 'carrier')->get();
+        
+        // Get active listings for both participants to allow proposing deals
+        $availableListings = \App\Models\Listing::with('product')
+            ->whereIn('seller_id', [$authUser->id, $user->id])
+            ->where('status', 'active')
+            ->get();
+        
+        return view('messages.show', compact('user', 'thread', 'messages', 'pendingOrders', 'carriers', 'availableListings'));
     }
 
     /**
@@ -109,6 +128,12 @@ class MessageController extends Controller
             'is_deleted' => false,
             'is_hidden' => false,
         ]);
+        
+        // Dispatch the event to broadcast
+        broadcast(new \App\Events\MessageSent($message))->toOthers();
+        
+        // Send WebPush notification
+        $user->notify(new \App\Notifications\NewMessage($message, $authUser));
         
         // Update thread timestamp
         $thread->touch();

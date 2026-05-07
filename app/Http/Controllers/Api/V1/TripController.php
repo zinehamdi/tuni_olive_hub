@@ -63,8 +63,21 @@ class TripController extends ApiController
         }
         $this->audit('trip.started', 'trip', $trip->id);
         event(new TripStarted($trip->id, $trip->carrier_id, $trip->sr_code));
+        
+        // Notify the carrier
         $thread = Chat::ensureThread('trip', $trip->id, [$trip->carrier_id]);
-        Chat::system($thread, '🚛 انطلقت الرحلة SR:'.$trip->sr_code.' | PIN: '.$pin);
+        Chat::system($thread, '🚛 انطلقت الرحلة SR:'.$trip->sr_code);
+
+        // Notify the load owners (Buyer/Seller) with the PIN
+        foreach ((array) $trip->load_ids as $id) {
+            if ($load = Load::with('order')->find($id)) {
+                if ($load->order) {
+                    $dealThread = Chat::ensureThread('order', $load->order->id, [$load->order->buyer_id, $load->order->seller_id]);
+                    Chat::system($dealThread, trans('micro.trip_started_pin', ['pin' => $pin, 'sr' => $trip->sr_code]));
+                }
+            }
+        }
+        
         return $this->ok(new TripResource($trip->fresh()));
     }
 

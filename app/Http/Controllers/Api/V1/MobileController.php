@@ -18,6 +18,45 @@ class MobileController extends ApiController
             abort(403, trans('auth.forbidden_action'));
         }
     }
+    public function loadTrip(Request $request, Load $load)
+    {
+        $trip = $load->activeTrip();
+        if (!$trip) return $this->ok(null);
+        return $this->showTrip($request, $trip);
+    }
+
+    public function showTrip(Request $request, Trip $trip)
+    {
+        $loads = [];
+        foreach ((array) $trip->load_ids as $lid) {
+            $ld = Load::with('order.listing.product')->find($lid);
+            if (!$ld) continue;
+            $loads[] = [
+                'id' => $ld->id,
+                'pickup' => [ 'lat' => $ld->pickup_lat, 'lng' => $ld->pickup_lng, 'address' => $ld->pickup_address ],
+                'dropoff' => [ 'lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_address ],
+                'qty' => (float) $ld->qty,
+                'unit' => $ld->unit,
+                'type' => $ld->order?->listing?->product?->type ?? 'olive',
+            ];
+        }
+
+        $pin = (string) ($trip->pin_token ?? '');
+        $mask = strlen($pin) > 4 ? substr($pin, 0, 4).str_repeat('*', max(0, strlen($pin)-4)) : $pin;
+
+        return $this->ok([
+            'id' => $trip->id,
+            'sr_code' => $trip->sr_code,
+            'loads' => $loads,
+            'pin_mask' => $mask,
+            'started_at' => optional($trip->start_at)->toISOString(),
+            'current_location' => [
+                'lat' => $trip->current_lat,
+                'lng' => $trip->current_lng,
+            ],
+            'status' => $trip->delivered_at ? 'delivered' : ($trip->start_at ? 'in_transit' : 'pending'),
+        ]);
+    }
 
     public function activeTrip(Request $request)
     {
@@ -29,28 +68,36 @@ class MobileController extends ApiController
             ->whereNull('delivered_at')
             ->latest('start_at')->first();
         if (!$trip) return $this->ok(null);
+
+        // Build loads
         $loads = [];
         foreach ((array) $trip->load_ids as $lid) {
-            $ld = Load::with('order')->find($lid);
+            $ld = Load::with('order.listing.product')->find($lid);
             if (!$ld) continue;
             $loads[] = [
-                'id' => $ld->id,
-                'pickup' => [ 'lat' => $ld->pickup_lat, 'lng' => $ld->pickup_lng, 'address' => $ld->pickup_address ],
-                'dropoff' => [ 'lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_address ],
-                'qty' => (float) $ld->qty,
-                'unit' => $ld->unit,
+                'id'      => $ld->id,
+                'pickup'  => ['lat' => $ld->pickup_lat,  'lng' => $ld->pickup_lng,  'address' => $ld->pickup_address],
+                'dropoff' => ['lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_address],
+                'qty'     => (float) $ld->qty,
+                'unit'    => $ld->unit,
+                'kind'    => $ld->order?->listing?->product?->type ?? 'olive',
             ];
         }
-        $pin = (string) ($trip->pin_token ?? '');
-        $mask = strlen($pin) > 4 ? substr($pin, 0, 4).str_repeat('*', max(0, strlen($pin)-4)) : $pin;
+        $pin  = (string) ($trip->pin_token ?? '');
+        $mask = strlen($pin) > 4 ? substr($pin, 0, 4) . str_repeat('*', max(0, strlen($pin) - 4)) : $pin;
+
         return $this->ok([
-            'id' => $trip->id,
-            'sr_code' => $trip->sr_code,
-            'loads' => $loads,
-            'pin_mask' => $mask,
-            'started_at' => optional($trip->start_at)->toISOString(),
+            'id'               => $trip->id,
+            'sr_code'          => $trip->sr_code,
+            'loads'            => $loads,
+            'pin_mask'         => $mask,
+            'pin_full'         => $pin,   // ← shown only to the authenticated carrier
+            'started_at'       => optional($trip->start_at)->toISOString(),
+            'current_location' => ['lat' => $trip->current_lat, 'lng' => $trip->current_lng],
+            'status'           => $trip->delivered_at ? 'delivered' : ($trip->start_at ? 'in_transit' : 'pending'),
         ]);
     }
+
 
     public function podPhoto(Request $request, Trip $trip)
     {
@@ -74,5 +121,77 @@ class MobileController extends ApiController
         $this->audit('trip.pod.photo', 'trip', $trip->id);
         $count = count((array) $pod->pickup_photos) + count((array) $pod->dropoff_photos);
         return $this->ok(['count' => $count]);
+    }
+    public function pendingLoads(Request $request)
+    {
+        $this->ensureCarrier($request);
+        $loads = Load::with(['owner', 'pickup', 'dropoffAddress'])
+            ->where('carrier_id', $request->user()->id)
+            ->where('status', Load::ST_MATCHED)
+            ->get();
+        
+        $formatted = $loads->map(fn($ld) => [
+            'id' => $ld->id,
+            'kind' => $ld->kind,
+            'qty' => (float) $ld->qty,
+            'unit' => $ld->unit,
+            'owner_name' => $ld->owner->name,
+            'pickup' => $ld->pickup?->governorate . ', ' . $ld->pickup?->delegation,
+            'dropoff' => $ld->dropoffAddress?->governorate . ', ' . $ld->dropoffAddress?->delegation,
+        ]);
+
+        return $this->ok($formatted);
+    }
+
+    public function acceptLoad(Request $request, Load $load)
+    {
+        $this->ensureCarrier($request);
+        if ($load->carrier_id !== $request->user()->id) abort(403);
+        if ($load->status !== Load::ST_MATCHED) abort(400, 'Load already processed.');
+
+        $load->update(['status' => Load::ST_IN_TRANSIT]);
+
+        // Create a Trip for this load
+        $trip = Trip::create([
+            'carrier_id' => $request->user()->id,
+            'load_ids' => [$load->id],
+            'sr_code' => 'SR-' . strtoupper(bin2hex(random_bytes(4))),
+            'pin_token' => Trip::generatePin(),
+            'start_at' => now(),
+        ]);
+
+        return $this->ok(['trip_id' => $trip->id]);
+    }
+
+    public function rejectLoad(Request $request, Load $load)
+    {
+        $this->ensureCarrier($request);
+        if ($load->carrier_id !== $request->user()->id) abort(403);
+        if ($load->status !== Load::ST_MATCHED) abort(400, 'Load already processed.');
+
+        $load->update([
+            'status' => Load::ST_NEW,
+            'carrier_id' => null
+        ]);
+
+        return $this->ok(true);
+    }
+
+    public function updateLocation(Request $request, Trip $trip)
+    {
+        $this->ensureCarrier($request);
+        if ((int)$trip->carrier_id !== (int)$request->user()->id) abort(403);
+        
+        $request->validate([
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ]);
+
+        $trip->update([
+            'current_lat' => $request->lat,
+            'current_lng' => $request->lng,
+        ]);
+
+        return $this->ok(true);
     }
 }

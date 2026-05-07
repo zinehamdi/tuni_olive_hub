@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $intended = session()->get('url.intended');
+        if ($intended && str_contains($intended, '/messages/unread-count')) {
+            session()->forget('url.intended');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

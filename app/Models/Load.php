@@ -104,4 +104,12 @@ class Load extends Model
         $this->status = $next;
         $this->save();
     }
+    public function activeTrip()
+    {
+        return Trip::whereJsonContains('load_ids', $this->id)
+            ->whereNotNull('start_at')
+            ->whereNull('delivered_at')
+            ->latest()
+            ->first();
+    }
 }

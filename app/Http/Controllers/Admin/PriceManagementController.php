@@ -50,7 +50,7 @@ class PriceManagementController extends Controller
         SoukPrice::create($validated);
 
         return Redirect::route('admin.prices.souk.index')
-            ->with('success', 'تم إضافة السعر بنجاح');
+            ->with('success', __('Price added successfully'));
     }
 
     public function editSouk(SoukPrice $price)
@@ -83,14 +83,14 @@ class PriceManagementController extends Controller
         $price->update($validated);
 
         return Redirect::route('admin.prices.souk.index')
-            ->with('success', 'تم تحديث السعر بنجاح');
+            ->with('success', __('Price updated successfully'));
     }
 
     public function destroySouk(SoukPrice $price)
     {
         $price->delete();
         return Redirect::route('admin.prices.souk.index')
-            ->with('success', 'تم حذف السعر بنجاح');
+            ->with('success', __('Price deleted successfully'));
     }
 
     // World Prices Management
@@ -129,7 +129,7 @@ class PriceManagementController extends Controller
         WorldOlivePrice::create($validated);
 
         return Redirect::route('admin.prices.world.index')
-            ->with('success', 'تم إضافة السعر العالمي بنجاح');
+            ->with('success', __('World price added successfully'));
     }
 
     public function editWorld(WorldOlivePrice $price)
@@ -158,13 +158,13 @@ class PriceManagementController extends Controller
         $price->update($validated);
 
         return Redirect::route('admin.prices.world.index')
-            ->with('success', 'تم تحديث السعر العالمي بنجاح');
+            ->with('success', __('World price updated successfully'));
     }
 
     public function destroyWorld(WorldOlivePrice $price)
     {
         $price->delete();
         return Redirect::route('admin.prices.world.index')
-            ->with('success', 'تم حذف السعر العالمي بنجاح');
+            ->with('success', __('World price deleted successfully'));
     }
 }

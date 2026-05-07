@@ -80,10 +80,84 @@
         "inLanguage": ["ar", "fr", "en"]
     }
     </script>
+
+    @if(config('services.facebook.pixel_id'))
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '{{ config('services.facebook.pixel_id') }}');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id={{ config('services.facebook.pixel_id') }}&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    @endif
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900 antialiased">
     <!-- Modern Navigation with Glass Effect -->
-    <nav class="fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false, scrolled: false, unreadCount: 0, async fetchUnread() { try { const res = await fetch('/messages/unread-count'); const data = await res.json(); this.unreadCount = data.count || 0; } catch(e) {} } }" x-init="@auth fetchUnread(); setInterval(() => fetchUnread(), 30000) @endauth" @scroll.window="scrolled = window.scrollY > 20">
+    <nav class="fixed top-0 left-0 right-0 z-50" 
+         x-data="{ 
+             mobileMenuOpen: false, 
+             scrolled: false, 
+             unreadCount: 0, 
+             notifications: [], 
+             unreadNotificationsCount: 0,
+             async fetchUnread() { 
+                 try { 
+                     const res = await fetch('/messages/unread-count'); 
+                     const data = await res.json(); 
+                     this.unreadCount = data.count || 0; 
+                 } catch(e) {} 
+             },
+             async fetchNotifications() {
+                 try {
+                     const res = await fetch('/notifications');
+                     const data = await res.json();
+                     this.notifications = data;
+                     this.unreadNotificationsCount = data.filter(n => !n.read_at).length;
+                 } catch(e) {}
+             },
+             async markNotificationsAsRead() {
+                 if (this.unreadNotificationsCount === 0) return;
+                 try {
+                     await fetch('/notifications/mark-read', { 
+                         method: 'POST', 
+                         headers: { 
+                             'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                             'Accept': 'application/json'
+                         } 
+                     });
+                     this.unreadNotificationsCount = 0;
+                     this.notifications.forEach(n => n.read_at = n.read_at || new Date().toISOString());
+                 } catch(e) {}
+             }
+         }" 
+         x-init="@auth 
+             fetchUnread(); 
+             fetchNotifications();
+             setInterval(() => { fetchUnread(); fetchNotifications(); }, 60000);
+             if (window.Echo) {
+                 window.Echo.private('App.Models.User.' + {{ auth()->id() }})
+                     .notification((notification) => {
+                         this.notifications.unshift({
+                             id: notification.id,
+                             data: notification,
+                             read_at: null,
+                             created_at: new Date().toISOString()
+                         });
+                         this.unreadNotificationsCount++;
+                     });
+             }
+         @endauth" 
+         @scroll.window="scrolled = window.scrollY > 20">
         <!-- Main Nav Bar -->
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,39 +175,72 @@
                     </a>
 
                     <!-- Desktop Navigation -->
-                    <div class="hidden md:flex items-center gap-1 flex-1 justify-center {{ app()->getLocale()==='ar' ? 'mr-6' : 'ml-6' }}">
-                        <a href="{{ route('home') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                    <div class="hidden md:flex items-center gap-1 flex-1 justify-center relative {{ app()->getLocale()==='ar' ? 'mr-6' : 'ml-6' }}"
+                         x-data="{ 
+                             showBot: false, 
+                             botLeft: 0, 
+                             botMessage: '', 
+                             moveBot(e, msg) { 
+                                 this.showBot = true; 
+                                 this.botMessage = msg; 
+                                 this.botLeft = e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2); 
+                             }, 
+                             hideBot() { 
+                                 this.showBot = false; 
+                             } 
+                         }" 
+                         @mouseleave="hideBot()">
+                         
+                        <!-- Navbar Hover Bot -->
+                        <div class="absolute -bottom-16 transition-all duration-300 ease-out flex flex-col items-center pointer-events-none z-[60] w-max"
+                             :class="showBot ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'"
+                             :style="`left: 0; transform: translateX(calc(${botLeft}px - 50%));`">
+                             
+                            <!-- Chat Bubble -->
+                            <div class="bg-white text-[#1a3310] px-3 py-1.5 rounded-xl shadow-2xl border border-[#6A8F3B]/30 text-xs font-bold whitespace-nowrap mb-1.5 relative">
+                                <span x-text="botMessage"></span>
+                                <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rotate-45 border-l border-t border-[#6A8F3B]/30"></div>
+                            </div>
+                            
+                            <!-- Bot Image -->
+                            <div class="relative">
+                                <div class="absolute inset-0 bg-[#6A8F3B] rounded-full blur-sm opacity-40"></div>
+                                <img src="{{ asset('images/ezzitouni_bot.png') }}" class="relative w-10 h-10 rounded-full border-2 border-white shadow-lg object-cover bg-white">
+                            </div>
+                        </div>
+
+                        <a href="{{ route('home') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'اكتشف أحدث العروض والمنتجات القريبة منك 🫒' : 'Discover the latest offers near you 🫒' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                             </div>
                             <span>{{ __('nav.home') }}</span>
                         </a>
-                        <a href="{{ route('prices.index') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'تابع أسعار السوق المحلية لحظة بلحظة 📊' : 'Track local market prices in real-time 📊' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/30 to-amber-600/30 group-hover:from-amber-400/40 group-hover:to-amber-600/40 flex items-center justify-center transition-all">
                                 <span class="text-base">📊</span>
                             </div>
                             <span>{{ __('nav.prices') }}</span>
                         </a>
-                        <a href="{{ route('listings.create') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'أضف منتجك أو زيتونك للبيع مجاناً الآن! 💰' : 'Add your product or olives for sale free! 💰' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6A8F3B]/30 to-[#5a7a2f]/30 group-hover:from-[#6A8F3B]/50 group-hover:to-[#5a7a2f]/50 flex items-center justify-center transition-all">
                                 <span class="text-base">🫒</span>
                             </div>
                             <span>{{ app()->getLocale() === 'ar' ? 'بيع زيتك/زيتونك' : __('Sell Your Oil') }}</span>
                         </a>
-                        <a href="{{ route('how-it-works') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('how-it-works') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'تعرف على كيفية عمل المنصة خطوة بخطوة 📖' : 'Learn how the platform works step by step 📖' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </div>
                             <span>{{ __('nav.how_it_works') }}</span>
                         </a>
-                        <a href="{{ route('about') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('about') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'من نحن وما هي رسالتنا لقطاع الزيتون التونسي 🇹🇳' : 'Who we are and our mission for Tunisian olive sector 🇹🇳' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                             </div>
                             <span>{{ __('nav.about') }}</span>
                         </a>
                         @auth
-                            <a href="{{ route('dashboard') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'لوحة التحكم الخاصة بك لإدارة حسابك وعروضك ⚙️' : 'Your dashboard to manage your account and offers ⚙️' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C8A356]/30 to-[#b08a3c]/30 group-hover:from-[#C8A356]/40 group-hover:to-[#b08a3c]/40 flex items-center justify-center transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                                 </div>
@@ -144,14 +251,66 @@
 
                     <!-- Right Side Actions -->
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <button id="enable-notifications" class="hidden px-3 py-1.5 bg-white/90 text-[#6A8F3B] rounded-full font-semibold shadow hover:bg-white transition text-sm opacity-50 cursor-not-allowed">
-                            {{ __('Enable notifications') }}
-                        </button>
-                        <!-- Language Switcher - Compact Pills -->
-                        <div class="hidden sm:flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full p-0.5">
-                            <a href="{{ route('lang.switch','ar') }}" class="px-2.5 py-1 text-xs font-bold rounded-full {{ app()->getLocale()==='ar' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} transition-all duration-200">AR</a>
-                            <a href="{{ route('lang.switch','fr') }}" class="px-2.5 py-1 text-xs font-bold rounded-full {{ app()->getLocale()==='fr' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} transition-all duration-200">FR</a>
-                            <a href="{{ route('lang.switch','en') }}" class="px-2.5 py-1 text-xs font-bold rounded-full {{ app()->getLocale()==='en' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} transition-all duration-200">EN</a>
+
+                        <!-- Notification Bell -->
+                        @auth
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open; if(open) markNotificationsAsRead()" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition relative">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <span x-show="unreadNotificationsCount > 0" x-cloak class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-[#6A8F3B]" x-text="unreadNotificationsCount"></span>
+                            </button>
+                            
+                            <div x-show="open" x-cloak @click.away="open = false" 
+                                 x-transition:enter="transition ease-out duration-200" 
+                                 x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
+                                 class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden">
+                                <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
+                                    <h3 class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</h3>
+                                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{{ __('Recent') }}</span>
+                                </div>
+                                <div class="max-h-96 overflow-y-auto">
+                                    <template x-for="n in notifications" :key="n.id">
+                                        <a :href="n.data.url || (n.data.type === 'message' ? '/messages' : '/dashboard')" 
+                                           class="block px-4 py-3 hover:bg-gray-50 transition border-b border-gray-50 last:border-0 relative group">
+                                            <div class="flex gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                                                    <span x-text="n.data.type === 'message' ? '💬' : '🔔'"></span>
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="n.data.body || n.data.message || 'New notification'"></p>
+                                                    <p class="text-[10px] text-gray-400 mt-1" x-text="new Date(n.created_at).toLocaleString()"></p>
+                                                </div>
+                                            </div>
+                                            <div x-show="!n.read_at" class="absolute top-1/2 -translate-y-1/2 {{ app()->getLocale()==='ar' ? 'left-2' : 'right-2' }} w-2 h-2 bg-blue-500 rounded-full"></div>
+                                        </a>
+                                    </template>
+                                    <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-400 italic text-sm">
+                                        {{ __('No notifications yet') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endauth
+
+                        <!-- Language Dropdown -->
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm text-white rounded-full hover:bg-white/20 transition-all duration-200 font-bold text-xs uppercase border border-white/20 shadow-sm">
+                                <span>{{ strtoupper(app()->getLocale()) }}</span>
+                                <svg class="w-3 h-3 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            
+                            <div x-show="open" x-cloak @click.away="open = false" 
+                                 x-transition:enter="transition ease-out duration-200" 
+                                 x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
+                                 class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-2 w-24 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
+                                <a href="{{ route('lang.switch','ar') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">العربية (AR)</a>
+                                <a href="{{ route('lang.switch','fr') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">Français (FR)</a>
+                                <a href="{{ route('lang.switch','en') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">English (EN)</a>
+                            </div>
                         </div>
 
                         @auth
@@ -345,10 +504,11 @@
     <!-- Price Ticker - Fixed below navbar -->
     <div class="fixed top-16 sm:top-[72px] left-0 right-0 z-40 shadow-md">
         @include('components.price-ticker')
+        @include('components.ads-ticker')
     </div>
 
-    <!-- Spacer for price ticker -->
-    <div class="h-10"></div>
+    <!-- Spacer for both tickers (price ~50px + ads ~38px) -->
+    <div class="h-24"></div>
 
     @isset($header)
     <header class="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-100">
@@ -364,61 +524,55 @@
         @yield('content')
     </main>
 
-    <!-- Modern Footer -->
-    <footer class="bg-gradient-to-b from-gray-50 to-gray-100 border-t border-gray-200 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <!-- Footer Links Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-                <div>
-                    <h4 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">{{ __('nav.company') ?? 'Company' }}</h4>
-                    <div class="flex flex-col gap-2">
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('about') }}">{{ __('nav.about') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('how-it-works') }}">{{ __('nav.how_it_works') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('public.contact') }}">{{ __('nav.contact') }}</a>
-                    </div>
+    <!-- Unified Black Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 mt-12">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" class="h-10 w-10 rounded-full">
+                    <h3 class="text-xl font-bold">ZinToop</h3>
                 </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">{{ __('nav.services') ?? 'Services' }}</h4>
-                    <div class="flex flex-col gap-2">
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('pricing') }}">{{ __('nav.pricing') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('prices.index') }}">{{ __('nav.prices') }}</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">{{ __('nav.legal') ?? 'Legal' }}</h4>
-                    <div class="flex flex-col gap-2">
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('terms') }}">{{ __('nav.terms') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('privacy') }}">{{ __('nav.privacy') }}</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">{{ __('nav.policies') ?? 'Policies' }}</h4>
-                    <div class="flex flex-col gap-2">
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('seller-policy') }}">{{ __('nav.seller_policy') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('commission-policy') }}">{{ __('nav.commission_policy') }}</a>
-                        <a class="text-gray-600 hover:text-[#6A8F3B] transition-colors text-sm" href="{{ route('licensing-policy') }}">{{ __('nav.licensing_policy') }}</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">{{ __('nav.language') ?? 'Language' }}</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('lang.switch','ar') }}" class="px-3 py-1.5 {{ app()->getLocale()==='ar' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} rounded-lg text-xs font-semibold transition-all">العربية</a>
-                        <a href="{{ route('lang.switch','fr') }}" class="px-3 py-1.5 {{ app()->getLocale()==='fr' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} rounded-lg text-xs font-semibold transition-all">FR</a>
-                        <a href="{{ route('lang.switch','en') }}" class="px-3 py-1.5 {{ app()->getLocale()==='en' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} rounded-lg text-xs font-semibold transition-all">EN</a>
-                    </div>
+                <p class="text-gray-400">{{ __('Platform connecting producers and buyers') }}</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">{{ __('Quick Links') }}</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="{{ url('/') }}" class="hover:text-white transition">{{ __('Home') }}</a></li>
+                    <li><a href="{{ url('/#products') }}" class="hover:text-white transition">{{ __('Products') }}</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-white transition">{{ __('About') }}</a></li>
+                    <li><a href="{{ route('pricing') }}" class="hover:text-white transition">{{ __('nav.pricing') }}</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">{{ __('Account') }}</h4>
+                <ul class="space-y-2 text-gray-400">
+                    @auth
+                        <li><a href="{{ route('dashboard') }}" class="hover:text-white transition">{{ __('Dashboard') }}</a></li>
+                        <li><a href="{{ route('profile.edit') }}" class="hover:text-white transition">{{ __('Profile') }}</a></li>
+                    @else
+                        <li><a href="{{ route('login') }}" class="hover:text-white transition">{{ __('Login') }}</a></li>
+                        <li><a href="{{ route('register') }}" class="hover:text-white transition">{{ __('Register') }}</a></li>
+                    @endauth
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">{{ __('Contact Us') }}</h4>
+                <p class="text-gray-400 mb-2">{{ __('Email') }}: <span dir="ltr" style="unicode-bidi: embed;">contact@zintoop.com</span></p>
+                <p class="text-gray-400 mb-4">{{ __('Phone') }}: <span dir="ltr" style="unicode-bidi: embed;">+216 25 777 926</span></p>
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ route('lang.switch','ar') }}" class="px-2 py-1 {{ app()->getLocale()==='ar' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">العربية</a>
+                    <a href="{{ route('lang.switch','fr') }}" class="px-2 py-1 {{ app()->getLocale()==='fr' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">FR</a>
+                    <a href="{{ route('lang.switch','en') }}" class="px-2 py-1 {{ app()->getLocale()==='en' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">EN</a>
                 </div>
             </div>
-            
-            <!-- Footer Bottom -->
-            <div class="pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" class="h-8 w-8 rounded-full">
-                    <div>
-                        <span class="font-bold text-gray-900">ZinToop</span>
-                        <span class="text-gray-500 text-xs block">{{ __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor') }}</span>
-                    </div>
-                </div>
-                <p class="text-gray-500 text-sm">© {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') ?? 'All rights reserved.' }}</p>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© 2024 - {{ now()->year }} ZinToop. {{ __('All Rights Reserved') }}.</p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm">
+                <a href="{{ route('terms') }}" class="hover:text-white transition">{{ __('nav.terms') }}</a>
+                <a href="{{ route('privacy') }}" class="hover:text-white transition">{{ __('nav.privacy') }}</a>
+                <a href="{{ route('seller-policy') }}" class="hover:text-white transition">{{ __('nav.seller_policy') }}</a>
+                <a href="{{ route('commission-policy') }}" class="hover:text-white transition">{{ __('nav.commission_policy') }}</a>
             </div>
         </div>
     </footer>

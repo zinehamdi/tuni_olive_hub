@@ -18,10 +18,10 @@ class SecurityHeaders
         
         // CSP with Alpine.js support and Leaflet.js (maps) support
         $csp = "default-src 'self'; " .
-               "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://unpkg.com; " .
-               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; " .
-               "style-src 'self' 'unsafe-inline' https://unpkg.com; " .
-               "connect-src 'self' ws: wss: https://*.tile.openstreetmap.org https://unpkg.com";
+               "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://unpkg.com https://www.facebook.com; " .
+               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://connect.facebook.net; " .
+               "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " .
+               "connect-src 'self' ws: wss: https://*.tile.openstreetmap.org https://unpkg.com https://cdn.jsdelivr.net";
         
         $response->headers->set('Content-Security-Policy', $csp);
         return $response;

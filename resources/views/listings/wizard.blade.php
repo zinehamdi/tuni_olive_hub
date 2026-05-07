@@ -61,6 +61,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                 @csrf
                 <input type="hidden" name="seller_id" value="{{ auth()->id() }}">
                 <input type="hidden" name="status" value="active">
+                <input type="hidden" name="estimated_oil_yield" x-model="formData.estimated_oil_yield">
                 <input type="hidden" name="category" x-model="formData.category">
                 <input type="hidden" name="variety" x-model="formData.variety">
                 <input type="hidden" name="quality" x-model="formData.quality">
@@ -172,6 +173,46 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         <p class="mt-4 text-sm text-gray-600">
                             💡 <strong>ملاحظة:</strong> اختر الصنف الأساسي لمنتجك. إذا كان مزيج من عدة أصناف، اختر "مزيج".
                         </p>
+                    </div>
+
+                    <!-- AI Smart Yield Estimator -->
+                    <div x-show="formData.category === 'olive'" class="mt-8 bg-gradient-to-br from-[#1B2A1B] to-[#6A8F3B] rounded-2xl p-6 shadow-xl text-white relative overflow-hidden" x-cloak>
+                        <!-- Decorative Background -->
+                        <div class="absolute inset-0 opacity-5 mix-blend-overlay" style="background-image: url('{{ asset('images/ezzitouni_bot.png') }}'); background-repeat: no-repeat; background-position: left top; background-size: 200px;"></div>
+                        
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <!-- Ezzitouni Bot Avatar -->
+                            <div class="w-24 h-24 mb-4 rounded-full border-4 border-[#C8A356] shadow-xl overflow-hidden bg-white transform hover:scale-110 transition duration-300">
+                                <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Ezzitouni Bot" class="w-full h-full object-cover">
+                            </div>
+                            
+                            <h3 class="text-2xl font-bold mb-3">
+                                التقدير الذكي لنسبة الزيت (حصري) مع Ezzitouni Bot
+                            </h3>
+                            <p class="text-white/90 mb-6 text-lg max-w-2xl">هل تريد إقناع المشترين بجودة زيتونك؟ التقط صورة لزيتونة مهروسة بين أصابعك ودع صديقك الذكي "Ezzitouni Bot" يقدر نسبة الزيت!</p>
+                            
+                            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
+                                <div class="w-full sm:w-auto">
+                                    <input type="file" id="smashed_olive_image" accept="image/*" @change="analyzeOliveImage($event)" class="hidden">
+                                    <label for="smashed_olive_image" class="cursor-pointer w-full flex items-center justify-center px-6 py-4 bg-white text-[#1B2A1B] rounded-xl hover:bg-gray-100 transition shadow-lg font-bold">
+                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        التقط صورة للاختبار
+                                    </label>
+                                </div>
+                                
+                                <div x-show="isAnalyzingOlive" class="flex-1 w-full flex items-center justify-center p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20" x-cloak>
+                                    <svg class="animate-spin h-6 w-6 text-white ml-3" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span class="font-bold">جاري تحليل الصورة بالذكاء الاصطناعي...</span>
+                                </div>
+                                
+                                <div x-show="formData.estimated_oil_yield" class="flex-1 w-full flex items-center justify-center p-4 bg-white text-[#1B2A1B] border-4 border-[#C8A356] rounded-xl shadow-2xl transform scale-105 transition-all" x-cloak>
+                                    <span class="font-black text-xl">النسبة المتوقعة: <span x-text="formData.estimated_oil_yield" class="text-[#6A8F3B] text-2xl"></span>%</span>
+                                    <button type="button" @click="formData.estimated_oil_yield = null; document.getElementById('smashed_olive_image').value='';" class="mr-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full transition hover:bg-red-100">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -691,6 +732,7 @@ document.addEventListener('alpine:init', () => {
         currentStep: 1,
         totalSteps: 8,
         isSubmitting: false,
+        isAnalyzingOlive: false,
         errorMessage: '',
         formData: {
             category: '',
@@ -707,7 +749,8 @@ document.addEventListener('alpine:init', () => {
             latitude: '',
             longitude: '',
             governorate: '',
-            delegation: ''
+            delegation: '',
+            estimated_oil_yield: null
         },
         locationError: '',
         locationSuccess: false,
@@ -729,6 +772,97 @@ document.addEventListener('alpine:init', () => {
         selectCategory(category) {
             this.formData.category = category;
             this.formData.variety = '';
+            if (category !== 'olive') {
+                this.formData.estimated_oil_yield = null;
+            }
+        },
+
+        async compressImage(file, maxWidth = 800) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            }));
+                        }, 'image/jpeg', 0.8);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        },
+        
+        async analyzeOliveImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            this.isAnalyzingOlive = true;
+            this.formData.estimated_oil_yield = null;
+            
+            try {
+                // Compress image client-side to easily pass the 2MB PHP limit
+                const compressedFile = await this.compressImage(file);
+                
+                const data = new FormData();
+                data.append('image', compressedFile);
+                
+                const response = await fetch('/api/v1/ai/yield-estimate', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: data
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 413) {
+                        throw new Error('حجم الصورة كبير جداً (تجاوز الحد المسموح به للخادم).');
+                    }
+                    
+                    if (response.status === 422) {
+                        throw new Error('الصورة غير صالحة أو تجاوزت الحجم المسموح به (2 ميغابايت).');
+                    }
+                    
+                    let errorMessage = 'فشل في الاتصال بخادم الذكاء الاصطناعي (رمز الخطأ: ' + response.status + ')';
+                    try {
+                        const errorData = await response.json();
+                        if (errorData.message) errorMessage = errorData.message;
+                    } catch (e) {
+                        // JSON parsing failed, stick with default message
+                    }
+                    throw new Error(errorMessage);
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    this.formData.estimated_oil_yield = result.estimated_yield;
+                } else {
+                    alert('عذراً، لم نتمكن من تحليل الصورة. ' + (result.message || ''));
+                }
+            } catch (error) {
+                console.error(error);
+                alert(error.message || 'حدث خطأ أثناء الاتصال بخادم الذكاء الاصطناعي.');
+            } finally {
+                this.isAnalyzingOlive = false;
+            }
         },
         
         getSelectedVarietyName() {

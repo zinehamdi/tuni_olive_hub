@@ -54,7 +54,7 @@ class Trip extends Model
     use HasFactory;
 
     protected $fillable = [
-        'carrier_id','load_ids','route_polyline','start_at','delivered_at','distance_km','earning','sr_code','pin_token','pin_hash','pin_qr'
+        'carrier_id','load_ids','route_polyline','start_at','delivered_at','distance_km','earning','sr_code','pin_token','pin_hash','pin_qr','current_lat','current_lng'
     ];
 
     protected $casts = [

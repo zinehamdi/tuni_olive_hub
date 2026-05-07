@@ -95,4 +95,5 @@ class Order extends Model
     public function buyer() { return $this->belongsTo(User::class, 'buyer_id'); }
     public function seller() { return $this->belongsTo(User::class, 'seller_id'); }
     public function listing() { return $this->belongsTo(Listing::class); }
+    public function transportLoad() { return $this->hasOne(Load::class); }
 }

@@ -48,7 +48,7 @@
 
                     @auth
                         @if(auth()->user()->role === 'carrier')
-                            <a href="{{ route('mobile.trip') }}"
+                            <a href="{{ route('mobile.trip.public') }}"
                                class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none">
                                 رحلتي النشطة (للنّاقل)
                             </a>

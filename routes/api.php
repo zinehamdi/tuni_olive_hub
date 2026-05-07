@@ -58,6 +58,9 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::get('prices/today', [\App\Http\Controllers\Api\V1\PricesController::class, 'today']);
     Route::get('prices/history', [\App\Http\Controllers\Api\V1\PricesController::class, 'history']);
 
+    // AI Smart Yield Estimator
+    Route::post('ai/yield-estimate', [\App\Http\Controllers\Api\V1\AiYieldController::class, 'estimate']);
+
     // Reviews
     Route::middleware('auth:sanctum')->group(function(){
         Route::post('reviews', [\App\Http\Controllers\Api\V1\ReviewsController::class, 'store']);
@@ -106,9 +109,17 @@ Route::prefix('v1')->name('api.')->group(function () {
     });
 
     // Mobile carrier aids
+    Route::get('mobile/trips/{trip}', [\App\Http\Controllers\Api\V1\MobileController::class, 'showTrip']);
+    Route::get('mobile/loads/{load}/trip', [\App\Http\Controllers\Api\V1\MobileController::class, 'loadTrip']);
+
+
     Route::middleware(['auth:sanctum'])->group(function(){
         Route::get('mobile/trips/active', [\App\Http\Controllers\Api\V1\MobileController::class, 'activeTrip']);
+        Route::get('mobile/loads/pending', [\App\Http\Controllers\Api\V1\MobileController::class, 'pendingLoads']);
+        Route::post('mobile/loads/{load}/accept', [\App\Http\Controllers\Api\V1\MobileController::class, 'acceptLoad']);
+        Route::post('mobile/loads/{load}/reject', [\App\Http\Controllers\Api\V1\MobileController::class, 'rejectLoad']);
         Route::post('mobile/trips/{trip}/pod/photo', [\App\Http\Controllers\Api\V1\MobileController::class, 'podPhoto'])->middleware('throttle:pod-photos');
+        Route::post('mobile/trips/{trip}/location', [\App\Http\Controllers\Api\V1\MobileController::class, 'updateLocation']);
         Route::get('threads/{thread}/messages', [\App\Http\Controllers\Api\V1\MessagesController::class, 'index']);
 
         // Export Shipments
