@@ -8,7 +8,8 @@
 @section('content')
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" 
      x-data="marketplace"
-     @keydown.escape.window="articleModalOpen = false">
+     @keydown.escape.window="articleModalOpen = false"
+     @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open">
     
     @if(session('status'))
         <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[150] w-full max-w-md px-4" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
@@ -80,7 +81,7 @@
     </header>
 
     <!-- Hero Section with Slideshow and Search -->
-    <section class="relative bg-black text-white py-16 px-4 overflow-hidden"
+    <section class="relative bg-black text-white py-8 px-4 overflow-hidden"
              x-data="{ 
                  slides: [
                      '{{ asset('images/hero_slide_1.png') }}',
@@ -105,8 +106,7 @@
         <div class="absolute inset-0 bg-gradient-to-b from-[#6A8F3B]/70 via-black/40 to-black/80 z-0 pointer-events-none"></div>
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('Tunisian Olive Oil Platform') }} - ZinToop</h1>
-                <p class="text-xl text-white/90 mb-6">{{ __('Discover the best offers from direct producers in your area') }} {{ __('on') }} ZinToop</p>
+                <x-hero-animation />
                 
                 <!-- Browse Products Shortcut -->
                 <div class="flex justify-center mb-8">
@@ -232,7 +232,7 @@
                         <div class="flex items-center justify-between mb-3">
                             <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest 
                                 {{ $deal->type === 'demand' ? 'text-amber-700 bg-amber-50' : ($deal->type === 'service' ? 'text-blue-700 bg-blue-50' : 'text-emerald-700 bg-emerald-50') }}">
-                                {{ $deal->type }}
+                                {{ __($deal->type) }}
                             </span>
                             <span class="text-[10px] font-bold text-gray-400">{{ $deal->created_at->diffForHumans() }}</span>
                         </div>
@@ -356,13 +356,14 @@
             @foreach($articles as $article)
             <div class="w-full md:min-w-0 snap-center flex-shrink-0 px-1">
                 <div class="group bg-white rounded-3xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.15)] border border-gray-100/50 hover:shadow-[0_30px_60px_-12px_rgba(106,143,59,0.25)] transition-all duration-500 overflow-hidden h-full flex flex-col">
-                    <div class="aspect-[16/9] bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] relative overflow-hidden">
-                        <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : asset($article->image) }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" alt="Article" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <a href="{{ route('articles.show', $article->id) }}" class="aspect-[16/9] bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] relative overflow-hidden block">
+                        <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}" 
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" alt="Article" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         @if(isset($article->category[app()->getLocale()]))
                         <div class="absolute top-4 {{ app()->getLocale()==='ar' ? 'right-4' : 'left-4' }} bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-[#6A8F3B] shadow-sm">{{ $article->category[app()->getLocale()] }}</div>
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
+                    </a>
                     <div class="p-6 flex-1 flex flex-col">
                         <div class="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -372,13 +373,13 @@
                         <p class="text-gray-500 text-sm line-clamp-2 mb-6 leading-relaxed">{{ $article->content[app()->getLocale()] ?? '' }}</p>
                         
                         <div class="mt-auto">
-                            <button @click="openArticle({{ $article->id }}, {{ json_encode($article->title) }}, {{ json_encode($article->content) }}, '{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : asset($article->image) }}')" 
+                            <a href="{{ route('articles.show', $article->id) }}" 
                                     class="inline-flex items-center gap-2 text-[#6A8F3B] font-bold text-sm group/btn hover:underline transition-all">
                                 <span>{{ __('Show More') }}</span>
                                 <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:{{ app()->getLocale()==='ar' ? '-translate-x-1' : 'translate-x-1' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ app()->getLocale()==='ar' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7' }}" />
                                 </svg>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -599,40 +600,26 @@
                         </div>
                         
                         <h2 class="text-xl md:text-2xl font-extrabold text-gray-900 mb-4 leading-tight">
-                            @if(app()->getLocale() === 'ar')
-                                دليلك المجاني ومنصتك للتعريف بالمنتجين والعلامات التجارية لزيت الزيتون التونسي 🇹🇳
-                            @elseif(app()->getLocale() === 'fr')
-                                Votre catalogue gratuit et guide des producteurs et marques d'huile d'olive tunisienne 🇹🇳
-                            @else
-                                Your free catalog and guide of Tunisian olive oil producers and brands 🇹🇳
-                            @endif
+                            {{ __('Your free catalog and guide of Tunisian olive oil producers and brands') }} 🇹🇳
                         </h2>
                         
                         <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                            @if(app()->getLocale() === 'ar')
-                                نحن منصة تجمع الفلاحين، أصحاب المعاصر والمصنعين لعرض منتجاتهم <span class="font-bold text-[#6A8F3B]">بدون أي رسوم إضافية</span>. 
-                                الصفقات التي تتم مباشرة بين المستخدمين <span class="font-bold">لا تخضع لأي عمولة</span>. هدفنا هو دعم المنتج التونسي وتسهيل الوصول إليه.
-                            @elseif(app()->getLocale() === 'fr')
-                                Une plateforme pour les agriculteurs, les meuniers et les emballeurs pour partager leurs produits avec <span class="font-bold text-[#6A8F3B]">ZÉRO frais</span>. 
-                                Les transactions directes entre utilisateurs sont <span class="font-bold">sans aucune commission</span>. Nous valorisons la production nationale.
-                            @else
-                                A platform for farmers, millers, and packers to share their products with <span class="font-bold text-[#6A8F3B]">ZERO fees</span>. 
-                                Deals made directly between users carry <span class="font-bold">no commissions</span>. We aim to promote and guide buyers to authentic producers.
-                            @endif
+                            {{ __('A platform for farmers, millers, and packers to share their products with') }} <span class="font-bold text-[#6A8F3B]">{{ __('ZERO fees') }}</span>. 
+                            {!! __('Deals made directly between users carry <span class="font-bold">no commissions</span>. We aim to promote and guide buyers to authentic producers.') !!}
                         </p>
 
                         <div class="flex flex-wrap justify-center gap-3">
                             <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg shadow-sm border border-gray-50">
                                 <span class="text-lg">🚜</span>
-                                <span class="text-xs font-semibold text-gray-500">{{ app()->getLocale() === 'ar' ? 'للفلاحين' : (app()->getLocale() === 'fr' ? 'Pour Agriculteurs' : 'For Farmers') }}</span>
+                                <span class="text-xs font-semibold text-gray-500">{{ __('For Farmers') }}</span>
                             </div>
                             <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg shadow-sm border border-gray-50">
                                 <span class="text-lg">⚙️</span>
-                                <span class="text-xs font-semibold text-gray-500">{{ app()->getLocale() === 'ar' ? 'لأصحاب المعاصر' : (app()->getLocale() === 'fr' ? 'Pour Meuniers' : 'For Millers') }}</span>
+                                <span class="text-xs font-semibold text-gray-500">{{ __('For Millers') }}</span>
                             </div>
                             <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg shadow-sm border border-gray-50">
                                 <span class="text-lg">📦</span>
-                                <span class="text-xs font-semibold text-gray-500">{{ app()->getLocale() === 'ar' ? 'للمصنعين' : (app()->getLocale() === 'fr' ? 'Pour Emballeurs' : 'For Packers') }}</span>
+                                <span class="text-xs font-semibold text-gray-500">{{ __('For Packers') }}</span>
                             </div>
                         </div>
                     </div>
@@ -674,7 +661,7 @@
                                 <div class="absolute top-3 right-3 flex gap-2">
                                     <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
                                         :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                        x-text="listing.product.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
+                                        x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                 </div>
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
@@ -682,7 +669,7 @@
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
-                                        <span x-text="(listing.distance || 0).toFixed(1) + ' {{ __('km') }}'"></span>
+                                        <span x-text="(listing.distance || 0).toFixed(1) + ' ' + '{{ __('km') }}'"></span>
                                     </span>
                                 </div>
                             </div>
@@ -753,7 +740,7 @@
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
-                                        <span x-text="(listing.distance || 0).toFixed(1) + ' كم'"></span>
+                                        <span x-text="(listing.distance || 0).toFixed(1) + ' ' + '{{ __('km') }}'"></span>
                                     </span>
                                 </div>
                             </div>
@@ -877,7 +864,7 @@
     </div>
 
     <!-- Zitouni Welcome Message -->
-    <div x-show="showZitouni" 
+    <div x-show="showZitouni && !mobileMenuOpen" 
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="-translate-x-full opacity-0"
          x-transition:enter-end="translate-x-0 opacity-100"

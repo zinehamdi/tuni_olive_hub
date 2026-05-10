@@ -52,7 +52,7 @@ Route::middleware('set.locale')->group(function () {
     // Articles
     Route::get('/articles/{id}', function($id) {
         $article = \App\Models\Article::where('is_active', true)->findOrFail($id);
-        return view('public.article', ['article' => $article]);
+        return view('public.article', compact('article'));
     })->name('articles.show');
     Route::post('/contact', function(Request $request){
         $data = $request->validate([

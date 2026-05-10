@@ -205,7 +205,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6 {{ app()->getLocale()==='ar' ? 'text-right' : '' }}">
+<div class="space-y-12 {{ app()->getLocale()==='ar' ? 'text-right' : '' }}">
+    <x-hero-animation />
+    
     <x-price-ticker />
 
     <div class="grid sm:grid-cols-3 gap-4">

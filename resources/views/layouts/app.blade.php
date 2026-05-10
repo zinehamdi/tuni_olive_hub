@@ -7,7 +7,23 @@
 
     <!-- SEO Meta Tags -->
     <title>{{ config('app.name') }} - @yield('title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))</title>
-    <meta name="description" content="@yield('description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
+    <meta name="description" content="@yield('description', 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills.')">
+    <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('og_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
+    <meta property="og:description" content="@yield('og_description', 'Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.')">
+    <meta property="og:image" content="@yield('og_image', url('images/zintoop-social-banner.jpg'))">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('og_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
+    <meta property="twitter:description" content="@yield('og_description', 'Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.')">
+    <meta property="twitter:image" content="@yield('twitter_image', url('images/zintoop-social-banner.jpg'))">
+
     <meta name="keywords" content="زيت الزيتون التونسي, زيتون تونس, olive oil tunisia, huile d'olive tunisienne, تجارة زيت الزيتون, معصرة زيتون, مزارع زيتون, zinToop, marketplace, e-commerce">
     <meta name="author" content="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}">
     <meta name="robots" content="index, follow">
@@ -56,6 +72,31 @@
         [x-cloak] { display: none !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Modern Animated Logo Styles */
+        .logo-animate { animation: float 4s ease-in-out infinite; }
+        .drop-pulse { animation: pulse-gold 3s ease-in-out infinite; }
+        .z-draw { 
+            stroke-dasharray: 200; 
+            stroke-dashoffset: 0;
+            transition: all 0.6s ease;
+        }
+        .group:hover .z-draw { 
+            stroke: #C8A356; 
+            filter: drop-shadow(0 0 5px rgba(200, 163, 86, 0.5));
+        }
+        .group:hover .drop-pulse {
+            fill: url(#gold_gradient);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+        @keyframes pulse-gold {
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(106, 143, 59, 0.4)); }
+            50% { filter: drop-shadow(0 0 8px rgba(200, 163, 86, 0.6)); }
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('head')
@@ -162,15 +203,36 @@
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16 sm:h-18">
-                    <!-- Logo -->
-                    <a href="{{ route('home') }}" class="flex-shrink-0 group flex items-center gap-3">
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-white/20 rounded-full blur-md group-hover:bg-white/30 transition-all duration-300"></div>
-                            <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" class="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full object-contain group-hover:scale-105 transition-transform duration-300 ring-2 ring-white/30 max-w-[3rem]">
+                    <!-- Modern Animated Logo -->
+                    <a href="{{ url('/') }}" class="flex-shrink-0 group flex items-center gap-3 no-underline">
+                        <div class="relative w-12 h-12 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                            <!-- Background Glow -->
+                            <div class="absolute inset-0 bg-[#6A8F3B]/20 rounded-xl blur-lg group-hover:bg-[#C8A356]/30 transition-all duration-500"></div>
+                            
+                            <!-- SVG Logo -->
+                            <svg class="relative w-10 h-10 drop-shadow-md logo-animate" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Outer Drop Shape -->
+                                <path d="M50 95C72.0914 95 90 77.0914 90 55C90 32.9086 50 5 50 5C50 5 10 32.9086 10 55C10 77.0914 27.9086 95 50 95Z" fill="url(#logo_gradient)" class="drop-pulse"/>
+                                
+                                <!-- Stylized Z -->
+                                <path d="M35 40H65L35 70H65" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="z-draw"/>
+                                
+                                <defs>
+                                    <linearGradient id="logo_gradient" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#6A8F3B" />
+                                        <stop offset="100%" stop-color="#4A662A" />
+                                    </linearGradient>
+                                    <!-- Secondary Golden Gradient for Hover -->
+                                    <linearGradient id="gold_gradient" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#C8A356" />
+                                        <stop offset="100%" stop-color="#9A7A3A" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
-                        <div class="hidden sm:block">
-                            <span class="text-lg font-bold tracking-tight">ZinToop</span>
-                            <span class="block text-[10px] text-white/70 font-medium -mt-0.5">{{ trans()->has('brand.descriptor_short') ? __('brand.descriptor_short') : 'Olive Oil Platform' }}</span>
+                        <div class="flex flex-col">
+                            <span class="text-2xl font-black text-white tracking-tighter leading-none group-hover:text-[#C8A356] transition-colors duration-300">ZinToop</span>
+                            <span class="text-[9px] uppercase font-bold tracking-[0.2em] text-white/60 group-hover:text-white transition-colors duration-300">Marketplace</span>
                         </div>
                     </a>
 
@@ -390,7 +452,7 @@
                         @endauth
 
                         <!-- Mobile Menu Button -->
-                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-xl hover:bg-white/15 transition-all duration-200">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen; $dispatch('mobile-menu-toggled', { open: mobileMenuOpen })" class="md:hidden p-2 rounded-xl hover:bg-white/15 transition-all duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                                 <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+Sitemap: https://zintoop.com/sitemap.xml
