@@ -77,5 +77,26 @@
         </div>
     </div>
 </div>
+
+@push('head')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Article",
+  "headline": "{{ $article->title[app()->getLocale()] ?? '' }}",
+  "image": [
+    "{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}"
+  ],
+  "datePublished": "{{ $article->created_at->toIso8601String() }}",
+  "dateModified": "{{ $article->updated_at->toIso8601String() }}",
+  "author": [{
+      "@@type": "Organization",
+      "name": "ZinToop Marketplace",
+      "url": "{{ url('/') }}"
+  }]
+}
+</script>
+@endpush
+
 @endsection
 
