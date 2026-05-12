@@ -12,19 +12,19 @@
     <!-- JSON-LD Product Schema for Google & Facebook SEO -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org/",
-      "@type": "Product",
+      "@@context": "https://schema.org/",
+      "@@type": "Product",
       "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
       "image": [
         "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}"
       ],
       "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
       "brand": {
-        "@type": "Brand",
+        "@@type": "Brand",
         "name": "ZinToop"
       },
       "offers": {
-        "@type": "Offer",
+        "@@type": "Offer",
         "url": "{{ url()->current() }}",
         "priceCurrency": "TND",
         "price": "{{ $listing->price }}",
@@ -32,7 +32,7 @@
         "itemCondition": "https://schema.org/NewCondition",
         "availability": "https://schema.org/InStock",
         "seller": {
-          "@type": "Organization",
+          "@@type": "Organization",
           "name": "{{ $listing->seller->name ?? 'ZinToop Verified Seller' }}"
         }
       }
