@@ -23,9 +23,9 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
-    <meta name="twitter:title" content="@yield('twitter_title', yieldContent('og_title'))">
-    <meta name="twitter:description" content="@yield('twitter_description', yieldContent('og_description'))">
-    <meta name="twitter:image" content="@yield('twitter_image', yieldContent('og_image'))">
+    <meta name="twitter:title" content="@yield('twitter_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'Discover premium Tunisian olive oil directly from producers.')">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
 
     <!-- Alternate Language Links for SEO -->
     <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
