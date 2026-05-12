@@ -331,19 +331,20 @@
                                                 <div class="min-w-0">
                                                     <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="
                                                         (function(text) {
-                                                            @if(app()->getLocale() === 'ar')
-                                                            return text.replace('You have a new transport deal for', 'لديك عرض نقل جديد لـ')
-                                                                       .replace(' of ', ' من ')
-                                                                       .replace('Liters', 'لتر')
-                                                                       .replace('Tonnes', 'طن')
-                                                                       .replace('Chemlali', 'شملالي')
-                                                                       .replace('Chétoui', 'شتوي');
-                                                            @elseif(app()->getLocale() === 'fr')
-                                                            return text.replace('You have a new transport deal for', 'Vous avez une nouvelle offre de transport pour')
-                                                                       .replace(' of ', ' de ');
-                                                            @else
-                                                            return text;
-                                                            @endif
+                                                            const locale = '{{ app()->getLocale() }}';
+                                                            if (locale === 'ar') {
+                                                                return text.replace('You have a new transport deal for', 'لديك عرض نقل جديد لـ')
+                                                                           .replace(' of ', ' من ')
+                                                                           .replace('Liters', 'لتر')
+                                                                           .replace('Tonnes', 'طن')
+                                                                           .replace('Chemlali', 'شملالي')
+                                                                           .replace('Chétoui', 'شتوي');
+                                                            } else if (locale === 'fr') {
+                                                                return text.replace('You have a new transport deal for', 'Vous avez une nouvelle offre de transport pour')
+                                                                           .replace(' of ', ' de ');
+                                                            } else {
+                                                                return text;
+                                                            }
                                                         })(n.data.body || n.data.message || '{{ __('New notification') }}')
                                                     "></p>
                                                     <p class="text-[10px] text-gray-400 mt-1" x-text="new Date(n.created_at).toLocaleString()"></p>
