@@ -6,7 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- SEO Meta Tags -->
-    <title>{{ config('app.name') }} - @yield('title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))</title>
+    @php
+        $defaultBrandName = app()->getLocale() === 'ar' ? __('brand.name_ar') : __('brand.name_latin');
+        $defaultOgTitle = $defaultBrandName . ' | Tunisian Olive Oil Marketplace';
+    @endphp
+    <title>{{ config('app.name') }} - @yield('title', $defaultBrandName)</title>
     <meta name="description" content="@yield('description', 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills.')">
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
@@ -14,7 +18,7 @@
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ config('app.name', 'ZinToop') }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') . ' | Tunisian Olive Oil Marketplace')">
+    <meta property="og:title" content="@yield('og_title', $defaultOgTitle)">
     <meta property="og:description" content="@yield('og_description', __('Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.'))">
     <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
