@@ -48,7 +48,7 @@
 
                     @auth
                         @if(auth()->user()->role === 'carrier')
-                            <a href="{{ route('mobile.trip.public') }}"
+                            <a href="{{ route('mobile.trip') }}"
                                class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none">
                                 رحلتي النشطة (للنّاقل)
                             </a>
@@ -265,7 +265,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                             
                             <div class="p-4">
-                                <div class="font-bold text-lg text-gray-900 mb-2">{{ $listing->product->variety }}</div>
+                                @php
+                                    $cardProductType = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil'));
+                                    $cardQuality = $listing->product->quality ? ' ' . $listing->product->quality : '';
+                                    $cardCity = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
+                                @endphp
+                                <div class="font-bold text-lg text-gray-900 mb-2 leading-tight">
+                                    {{ $cardProductType }} {{ $listing->product->variety }}{{ $cardQuality }}{{ $cardCity }}
+                                </div>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
                                     <span class="px-2 py-1 rounded-full bg-[#6A8F3B] text-white text-xs font-semibold">
@@ -300,7 +307,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>
                                 
                                 <div class="mt-4">
-                                    <a href="#" class="block w-full text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-semibold">
+                                    <a href="{{ route('listings.show', $listing) }}" class="block w-full text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-semibold">
                                         عرض التفاصيل
                                     </a>
                                 </div>

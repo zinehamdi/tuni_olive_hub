@@ -106,7 +106,52 @@
         <div class="absolute inset-0 bg-gradient-to-b from-[#6A8F3B]/70 via-black/40 to-black/80 z-0 pointer-events-none"></div>
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
-                <x-hero-animation />
+                <!-- Hero Animation Inline -->
+                <div class="relative flex flex-col items-center justify-center py-12 px-4 text-center space-y-8 bg-transparent w-full max-w-4xl mx-auto">
+                    <!-- English Slogan -->
+                    <div class="animate-fade-in">
+                        <p class="text-white font-black text-lg md:text-2xl uppercase tracking-[0.25em] drop-shadow-lg">
+                            Zin Tunisian Olive Oil Platform
+                        </p>
+                    </div>
+
+                    <!-- Main Brand: ZinToop -->
+                    <div class="relative group">
+                        <h1 id="zintoop-brand" class="text-7xl md:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#C8A356] via-[#FFF9E0] to-[#C8A356] bg-[length:200%_auto] animate-shine drop-shadow-2xl">
+                            ZinToop
+                        </h1>
+                        <!-- Subtle Glow -->
+                        <div class="absolute -inset-8 bg-[#C8A356]/20 blur-3xl rounded-full -z-10 animate-pulse"></div>
+                    </div>
+
+                    <!-- Arabic Slogan -->
+                    <div class="animate-fade-in-delayed">
+                        <p class="text-[#C8A356] font-black text-3xl md:text-5xl drop-shadow-lg" dir="rtl">
+                            منصة الزين لزيت الزيتون التونسي
+                        </p>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes shine {
+                        0% { background-position: 200% center; }
+                        100% { background-position: -200% center; }
+                    }
+                    .animate-shine {
+                        animation: shine 4s linear infinite;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .animate-fade-in {
+                        animation: fadeIn 1s ease-out forwards;
+                    }
+                    .animate-fade-in-delayed {
+                        animation: fadeIn 1.5s ease-out forwards;
+                        opacity: 0;
+                    }
+                </style>
                 
                 <!-- Browse Products Shortcut -->
                 <div class="flex justify-center mb-8">
@@ -676,7 +721,7 @@
 
                             <!-- Product Details -->
                             <div class="p-5">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="translate(listing.product.variety)"></h3>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
                                     <span x-show="listing.product.quality" class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
@@ -749,7 +794,7 @@
                             <div class="flex-1 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2 flex-wrap">
-                                            <h3 class="text-2xl font-bold text-gray-900" x-text="translate(listing.product.variety)"></h3>
+                                            <h3 class="text-2xl font-bold text-gray-900 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                                 <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
                                                     :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                                     x-text="listing.product.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
@@ -1013,6 +1058,21 @@ document.addEventListener('alpine:init', () => {
             if (!text) return '';
             const lower = text.toLowerCase();
             return this.translations[text] || this.translations[lower] || text;
+        },
+
+        getEnhancedTitle(listing) {
+            const isAr = '{{ app()->getLocale() }}' === 'ar';
+            const typeLabel = listing.product?.type === 'olive' ? (isAr ? 'زيتون' : 'Olives') : (isAr ? 'زيت زيتون' : 'Olive Oil');
+            const variety = this.translate(listing.product?.variety) || '';
+            const quality = listing.product?.quality ? ' ' + listing.product.quality : '';
+            const organic = listing.product?.is_organic ? (isAr ? ' عضوي' : ' Organic') : '';
+            
+            let city = '';
+            if (listing.seller?.addresses && listing.seller.addresses.length > 0 && listing.seller.addresses[0].governorate) {
+                city = (isAr ? ' من ' : ' from ') + listing.seller.addresses[0].governorate;
+            }
+            
+            return `${typeLabel} ${variety}${quality}${organic}${city}`;
         },
 
         init() {

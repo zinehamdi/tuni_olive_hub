@@ -77,6 +77,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the loads assigned to this user (as carrier).
+     */
+    public function assignedLoads()
+    {
+        return $this->hasMany(Load::class, 'carrier_id');
+    }
+
+    /**
      * Get users that this user follows
      * الحصول على المستخدمين الذين يتابعهم هذا المستخدم
      */
@@ -146,5 +154,13 @@ class User extends Authenticatable
     public function getLikesCountAttribute(): int
     {
         return $this->likers()->count();
+    }
+
+    /**
+     * Get the user's tanks (inventories).
+     */
+    public function tanks()
+    {
+        return $this->hasMany(Tank::class);
     }
 }

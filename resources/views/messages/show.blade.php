@@ -110,7 +110,7 @@
                                                 {{ __('Transporter Summoned') }}
                                             </span>
                                             @if($order->transportLoad->status === 'in_transit' && $order->transportLoad->activeTrip())
-                                                <a href="{{ route('mobile.trip.public', ['id' => $order->transportLoad->activeTrip()->id]) }}" target="_blank" class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-green-200 transition-colors">
+                                                <a href="{{ route('mobile.trip', ['id' => $order->transportLoad->id]) }}" target="_blank" class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-green-200 transition-colors">
                                                     <svg class="w-3 h-3 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
                                                     {{ __('Live Track') }}
                                                 </a>

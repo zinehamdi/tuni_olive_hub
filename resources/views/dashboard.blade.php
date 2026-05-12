@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100" dir="rtl"
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col md:flex-row" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
     x-data="{
+        sidebarOpen: false,
         editModal: null,
         saving: false,
         successMessage: '',
@@ -191,7 +192,70 @@
     }"
     @keydown.escape.window="closeEdit()">
 
-    <!-- Success Toast -->
+    <!-- Mobile Sidebar Overlay -->
+    <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" x-transition></div>
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : (document.documentElement.dir === 'rtl' ? 'translate-x-full' : '-translate-x-full')" 
+           class="fixed md:sticky top-0 md:top-[72px] h-[calc(100vh)] md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 md:translate-x-0">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span class="text-[#6A8F3B]">🛡️</span> {{ __('nav.dashboard') }}
+            </h2>
+            <button @click="sidebarOpen = false" class="md:hidden text-gray-500 hover:text-gray-900">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        
+        <div class="p-6 border-b border-gray-50 flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-[#6A8F3B]/10 flex items-center justify-center font-bold text-xl text-[#6A8F3B] border border-[#6A8F3B]/20">
+                {{ substr(Auth::user()->name, 0, 1) }}
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 line-clamp-1">{{ Auth::user()->name }}</h3>
+                <p class="text-xs text-[#6A8F3B] font-bold uppercase">{{ __(Auth::user()->role) }}</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-hide">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold transition">
+                <span class="text-xl">📊</span> {{ __('nav.dashboard') }}
+            </a>
+            
+            @if(Auth::user()->role === 'farmer')
+                <a href="#inventory-section" @click="sidebarOpen = false" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition">
+                    <span class="text-xl">🌿</span> {{ app()->getLocale() === 'ar' ? 'محاصيلي (Batches)' : 'My Batches' }}
+                </a>
+            @endif
+            
+            @if(Auth::user()->role === 'mill')
+                <a href="#inventory-section" @click="sidebarOpen = false" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition">
+                    <span class="text-xl">🛢️</span> {{ app()->getLocale() === 'ar' ? 'الصهاريج والمخزون' : 'Tanks & Stock' }}
+                </a>
+            @endif
+
+            @if(Auth::user()->role === 'carrier')
+                <a href="#assigned-tasks" @click="sidebarOpen = false" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition">
+                    <span class="text-xl">🚚</span> {{ __('Transport Offers & Tasks') }}
+                </a>
+            @endif
+
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition">
+                <span class="text-xl">⚙️</span> {{ __('nav.profile') }}
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 w-full min-w-0">
+        
+        <!-- Mobile Header (Visible only on mobile) -->
+        <div class="md:hidden flex items-center justify-between p-4 bg-white shadow-sm border-b border-gray-100">
+            <h1 class="text-xl font-bold text-gray-900">{{ __('nav.dashboard') }}</h1>
+            <button @click="sidebarOpen = true" class="p-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>    <!-- Success Toast -->
     <div x-show="successMessage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[200]">
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -645,6 +709,137 @@
                 </a>
             </div>
         </div>
+
+        <!-- Inventory Section -->
+        @if(in_array(Auth::user()->role, ['farmer', 'mill']))
+        <div id="inventory-section" class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8 mb-8 relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-[#C8A356]/10 rounded-full blur-2xl"></div>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 relative z-10">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="text-2xl">{{ Auth::user()->role === 'mill' ? '🛢️' : '🌿' }}</span> 
+                        {{ Auth::user()->role === 'mill' ? (app()->getLocale() === 'ar' ? 'الصهاريج والمخزون' : 'Tanks & Stock') : (app()->getLocale() === 'ar' ? 'محاصيلي (Batches)' : 'My Batches') }}
+                    </h2>
+                    <p class="text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'إدارة كمياتك المتاحة للبيع بكل سهولة' : 'Manage your available quantities easily' }}</p>
+                </div>
+                <button @click="alert('{{ __('Feature coming soon! You will be able to add a new tank/batch here.') }}')" class="px-5 py-2.5 bg-gradient-to-r from-[#C8A356] to-[#A88932] text-white font-bold rounded-xl hover:shadow-lg hover:shadow-[#C8A356]/30 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    {{ Auth::user()->role === 'mill' ? (app()->getLocale() === 'ar' ? 'إضافة صهريج' : 'Add Tank') : (app()->getLocale() === 'ar' ? 'إضافة محصول' : 'Add Batch') }}
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+                @forelse($tanks as $tank)
+                    <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200 hover:border-[#C8A356]/50 transition group">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                {{ $tank->name }}
+                            </h3>
+                            <span class="px-2.5 py-1 bg-[#6A8F3B]/10 text-[#6A8F3B] text-xs font-bold uppercase rounded-lg">
+                                {{ $tank->type === 'olive' ? __('Olive') : __('Oil') }}
+                            </span>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs font-bold text-gray-600 mb-1.5">
+                                <span>{{ app()->getLocale() === 'ar' ? 'المتاح' : 'Available' }}</span>
+                                <span>{{ number_format($tank->current_volume) }} / {{ number_format($tank->capacity) }} {{ $tank->type === 'olive' ? 'Kg' : 'L' }}</span>
+                            </div>
+                            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                                @php $pct = $tank->capacity > 0 ? ($tank->current_volume / $tank->capacity) * 100 : 0; @endphp
+                                <div class="h-full {{ $pct > 50 ? 'bg-green-500' : ($pct > 20 ? 'bg-amber-500' : 'bg-red-500') }} rounded-full" style="width: {{ $pct }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-white p-2 rounded-xl border border-gray-100">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">{{ __('Variety') }}</p>
+                                <p class="text-sm font-semibold text-gray-800 truncate">{{ $tank->variety ?? '-' }}</p>
+                            </div>
+                            @if($tank->type === 'oil')
+                            <div class="bg-white p-2 rounded-xl border border-gray-100">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">{{ __('Acidity') }}</p>
+                                <p class="text-sm font-semibold text-gray-800">{{ $tank->acidity ? $tank->acidity . '%' : '-' }}</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <button class="w-full py-2 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition text-sm">
+                            {{ __('Edit Details') }}
+                        </button>
+                    </div>
+                @empty
+                    <div class="col-span-full py-12 flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <span class="text-3xl">{{ Auth::user()->role === 'mill' ? '🛢️' : '🌿' }}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ app()->getLocale() === 'ar' ? 'لا يوجد بيانات بعد' : 'No data yet' }}</h3>
+                        <p class="text-gray-500 max-w-sm">{{ app()->getLocale() === 'ar' ? 'ابدأ بإضافة أول صهريج أو دفعة محصول لتنظيم مبيعاتك بشكل أفضل.' : 'Start by adding your first tank or batch to better organize your sales.' }}</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+        @endif
+
+        @if(Auth::user()->role === 'carrier' && $assignedLoads->count() > 0)
+        <!-- Transporter Offers / Deals Section -->
+        <div id="assigned-tasks" class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="text-2xl">🚚</span> {{ __('Transport Offers & Tasks') }}
+            </h2>
+            <div class="space-y-4">
+                @foreach($assignedLoads as $load)
+                <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 hover:border-blue-300 transition-colors">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-bold uppercase tracking-wide">
+                                    {{ __('Load') }} #{{ $load->id }}
+                                </span>
+                                <span class="px-2 py-1 rounded text-xs font-bold uppercase 
+                                    {{ $load->status === 'new' || $load->status === 'matched' ? 'bg-orange-100 text-orange-700' : '' }}
+                                    {{ $load->status === 'in_transit' ? 'bg-amber-100 text-amber-700' : '' }}
+                                    {{ $load->status === 'delivered' || $load->status === 'settled' ? 'bg-green-100 text-green-700' : '' }}">
+                                    {{ __($load->status) }}
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ number_format($load->qty, 0) }} {{ __($load->unit) }} - {{ __($load->kind) }}</h3>
+                            <div class="mt-2 text-sm text-gray-600 flex flex-col gap-1">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    <span class="font-medium">{{ __('From') }}:</span> {{ $load->pickup->city ?? __('Unknown') }}, {{ $load->pickup->state ?? __('Unknown') }}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    <span class="font-medium">{{ __('To') }}:</span> {{ $load->dropoffAddress->city ?? __('Unknown') }}, {{ $load->dropoffAddress->state ?? __('Unknown') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 md:flex-col md:items-end md:gap-2 w-full md:w-auto">
+                            @if($load->status === 'new' || $load->status === 'matched')
+                                <button @click="acceptLoad({{ $load->id }})" class="flex-1 md:flex-none px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition text-sm text-center">
+                                    {{ __('Accept') }}
+                                </button>
+                                <button @click="rejectLoad({{ $load->id }})" class="flex-1 md:flex-none px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition text-sm text-center">
+                                    {{ __('Reject') }}
+                                </button>
+                            @endif
+                            
+                            <a href="{{ route('messages.show', $load->owner_id) }}" class="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold rounded-xl transition text-sm flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                {{ __('Chat') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <div class="mt-4">
+                {{ $assignedLoads->links() }}
+            </div>
+        </div>
+        @endif
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -1156,7 +1351,7 @@
                                                         <a href="{{ route('messages.show', $load->owner->id) }}" class="px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition text-center flex items-center justify-center gap-2">
                                                             💬 {{ __('Chat') }}
                                                         </a>
-                                                        <a href="{{ route('mobile.trip.public', ['id' => $load->id]) }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition text-center flex items-center justify-center gap-2">
+                                                        <a href="{{ route('mobile.trip', ['id' => $load->id]) }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition text-center flex items-center justify-center gap-2">
                                                             📦 {{ __('Manage Load') }}
                                                         </a>
                                                         
@@ -1236,7 +1431,7 @@
                                             </div>
                                         </div>
                                         @if($activeTrip)
-                                            <a href="{{ route('mobile.trip.public', ['id' => $activeTrip->id]) }}" target="_blank" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow hover:bg-blue-700 transition">
+                                            <a href="{{ route('mobile.trip', ['id' => $order->transportLoad->id]) }}" target="_blank" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-bold shadow hover:bg-blue-700 transition">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
                                                 {{ __('Track Live') }}
                                             </a>
@@ -1824,5 +2019,6 @@
             </div>
         </div>
     </div>
+    </main>
 </div>
 @endsection

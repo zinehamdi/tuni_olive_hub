@@ -11,38 +11,21 @@
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="{{ config('app.name', 'ZinToop') }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
-    <meta property="og:description" content="@yield('og_description', 'Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.')">
-    <meta property="og:image" content="@yield('og_image', url('images/zintoop-social-banner.jpg'))">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('og_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
-    <meta property="twitter:description" content="@yield('og_description', 'Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.')">
-    <meta property="twitter:image" content="@yield('twitter_image', url('images/zintoop-social-banner.jpg'))">
-
-    <meta name="keywords" content="زيت الزيتون التونسي, زيتون تونس, olive oil tunisia, huile d'olive tunisienne, تجارة زيت الزيتون, معصرة زيتون, مزارع زيتون, zinToop, marketplace, e-commerce">
-    <meta name="author" content="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-
-    <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="{{ config('app.name') }}">
-    <meta property="og:title" content="@yield('og_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
-    <meta property="og:description" content="@yield('og_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('og_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') . ' | Tunisian Olive Oil Marketplace')">
+    <meta property="og:description" content="@yield('og_description', __('Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.'))">
     <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
+    <meta property="fb:app_id" content="{{ env('FB_APP_ID', '') }}">
 
-    <!-- Twitter Card Meta Tags -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('twitter_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
-    <meta name="twitter:description" content="@yield('twitter_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
-    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="@yield('twitter_title', yieldContent('og_title'))">
+    <meta name="twitter:description" content="@yield('twitter_description', yieldContent('og_description'))">
+    <meta name="twitter:image" content="@yield('twitter_image', yieldContent('og_image'))">
 
     <!-- Alternate Language Links for SEO -->
     <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
@@ -335,14 +318,30 @@
                                 </div>
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-for="n in notifications" :key="n.id">
-                                        <a :href="n.data.url || (n.data.type === 'message' ? '/messages' : '/dashboard')" 
+                                        <a :href="(n.data.type === 'transport_deal' && n.data.load_id) ? '/mobile/trip?id=' + n.data.load_id : (n.data.url || (n.data.type === 'message' ? '/messages' : '/dashboard'))" 
                                            class="block px-4 py-3 hover:bg-gray-50 transition border-b border-gray-50 last:border-0 relative group">
                                             <div class="flex gap-3">
                                                 <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                                     <span x-text="n.data.type === 'message' ? '💬' : '🔔'"></span>
                                                 </div>
                                                 <div class="min-w-0">
-                                                    <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="n.data.body || n.data.message || 'New notification'"></p>
+                                                    <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="
+                                                        (function(text) {
+                                                            @if(app()->getLocale() === 'ar')
+                                                            return text.replace('You have a new transport deal for', 'لديك عرض نقل جديد لـ')
+                                                                       .replace(' of ', ' من ')
+                                                                       .replace('Liters', 'لتر')
+                                                                       .replace('Tonnes', 'طن')
+                                                                       .replace('Chemlali', 'شملالي')
+                                                                       .replace('Chétoui', 'شتوي');
+                                                            @elseif(app()->getLocale() === 'fr')
+                                                            return text.replace('You have a new transport deal for', 'Vous avez une nouvelle offre de transport pour')
+                                                                       .replace(' of ', ' de ');
+                                                            @else
+                                                            return text;
+                                                            @endif
+                                                        })(n.data.body || n.data.message || '{{ __('New notification') }}')
+                                                    "></p>
                                                     <p class="text-[10px] text-gray-400 mt-1" x-text="new Date(n.created_at).toLocaleString()"></p>
                                                 </div>
                                             </div>

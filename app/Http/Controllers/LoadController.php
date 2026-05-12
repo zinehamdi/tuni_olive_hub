@@ -63,11 +63,7 @@ class LoadController extends Controller
         ]);
 
         // Send Push Notification to Carrier
-        // Create a mock message object for the notification
-        $mockMessage = new \stdClass();
-        $mockMessage->body = __('You have been assigned a new transport load for ') . $order->qty . ' ' . $order->unit . ' of ' . $order->listing->product->type . '.';
-        
-        $carrier->notify(new NewMessage($mockMessage, $user));
+        $carrier->notify(new \App\Notifications\NewTransportDeal($load, $user));
 
         return response()->json([
             'success' => true,

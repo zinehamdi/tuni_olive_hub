@@ -169,4 +169,34 @@
   @endif
 
 </div>
+
+@if(isset($soukPrices) && $soukPrices->count())
+@push('head')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    @foreach($soukPrices as $index => $row)
+    {
+      "@type": "ListItem",
+      "position": {{ $index + 1 }},
+      "item": {
+        "@type": "Product",
+        "name": "{{ ($row->product_type ?? '') === 'oil' ? __('Olive Oil') : __('Olives') }} {{ $row->variety ? '- ' . $row->variety : '' }} - {{ $row->souk_name ?: $row->governorate }}",
+        "offers": {
+          "@type": "Offer",
+          "price": "{{ $row->price_avg ?? $row->price_min }}",
+          "priceCurrency": "{{ $row->currency ?? 'TND' }}",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "{{ now()->addDays(7)->format('Y-m-d') }}"
+        }
+      }
+    }{{ !$loop->last ? ',' : '' }}
+    @endforeach
+  ]
+}
+</script>
+@endpush
+@endif
 @endsection

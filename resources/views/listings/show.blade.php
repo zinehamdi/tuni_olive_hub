@@ -1,4 +1,40 @@
 @extends('layouts.app')
+@section('og_type', 'product')
+@section('og_title', app()->getLocale() === 'ar' ? 'زيت زيتون '.($listing->product->variety ?? '') : ($listing->product->variety ?? '').' Olive Oil')
+@section('og_description', 'Premium Tunisian Olive Oil. Price: ' . $listing->price . ' TND. Buy directly from producers on ZinToop.')
+@section('og_image', !empty($listing->photos) && is_array($listing->photos) ? asset('storage/' . $listing->photos[0]) : asset('images/zintoop-logo.png'))
+
+@push('head')
+    <!-- JSON-LD Product Schema for Google & Facebook SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
+      "image": [
+        "{{ !empty($listing->photos) && is_array($listing->photos) ? asset('storage/' . $listing->photos[0]) : asset('images/zintoop-logo.png') }}"
+      ],
+      "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
+      "brand": {
+        "@type": "Brand",
+        "name": "ZinToop"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "{{ url()->current() }}",
+        "priceCurrency": "TND",
+        "price": "{{ $listing->price }}",
+        "priceValidUntil": "{{ now()->addDays(30)->format('Y-m-d') }}",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "{{ $listing->seller->name ?? 'ZinToop Verified Seller' }}"
+        }
+      }
+    }
+    </script>
+@endpush
 
 @push('head')
     <!-- Leaflet CSS -->
@@ -79,7 +115,15 @@
                 <div class="bg-white rounded-2xl shadow-xl p-8">
                     <!-- Product Name & Badges -->
                     <div class="mb-6">
-                        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $varietyName }}</h1>
+                        @php
+                            $productTypeLabel = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil'));
+                            $qualityLabel = $listing->product->quality ? ' ' . $listing->product->quality : '';
+                            $cityLabel = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
+                            $organicLabel = $listing->product->is_organic ? (app()->getLocale() === 'ar' ? ' عضوي' : ' Organic') : '';
+                        @endphp
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                            {{ $productTypeLabel }} {{ $varietyName }}{{ $qualityLabel }}{{ $organicLabel }}{{ $cityLabel }}
+                        </h1>
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="px-4 py-2 rounded-full bg-[#6A8F3B] text-white font-bold">
                                 {{ $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil')) }}
@@ -247,10 +291,10 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="flex gap-3" x-data="listingActions">
+                    <div class="flex flex-wrap gap-3 w-full" x-data="listingActions">
                         @auth
                             <!-- Contact Seller Button -->
-                            <button @click="showContactModal = true" class="flex-1 px-6 py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
+                            <button @click="showContactModal = true" class="flex-1 min-w-[200px] px-6 py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
@@ -259,7 +303,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                             
                             <!-- Message Seller Button -->
                             @if($listing->seller_id !== auth()->id())
-                                <a href="{{ route('messages.show', $listing->seller) }}" class="flex-1 px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
+                                <a href="{{ route('messages.show', $listing->seller) }}" class="flex-1 min-w-[200px] px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                     </svg>
@@ -267,7 +311,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                 </a>
                                 
                                 <!-- Make Deal Button -->
-                                <button @click="showDealModal = true" class="flex-1 px-6 py-4 bg-gradient-to-r from-[#C8A356] to-[#b08a3c] text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
+                                <button @click="showDealModal = true" class="flex-1 min-w-[200px] px-6 py-4 bg-gradient-to-r from-[#C8A356] to-[#b08a3c] text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -278,7 +322,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                             <!-- View Location Button - Always visible -->
                             @if($listing->seller->addresses->first())
                                 <button @click="openLocationInfo" 
-                                        class="px-6 py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg" 
+                                        class="px-6 py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg flex-shrink-0" 
                                         :title="'{{ __('View Location') }}'">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -288,7 +332,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                             @endif
                             
                             <!-- Favorite Button -->
-                            <button @click="toggleFavorite" class="px-6 py-4 rounded-xl transition font-bold shadow-lg" :class="isFavorite ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'">
+                            <button @click="toggleFavorite" class="px-6 py-4 rounded-xl transition font-bold shadow-lg flex-shrink-0" :class="isFavorite ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'">
                                 <svg class="w-6 h-6" :fill="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
@@ -312,22 +356,25 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                     <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ app()->getLocale() === 'ar' ? 'إنشاء صفقة جديدة' : 'Create New Deal' }}</h3>
                                     
                                     <div class="space-y-4">
-                                        <div>
-                                            <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الكمية (' . $listing->unit . ')' : 'Quantity (' . $listing->unit . ')' }}</label>
-                                            <input type="number" x-model.number="dealQty" min="{{ $listing->min_order ?? 1 }}" step="0.1" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
-                                            @if($listing->min_order)
-                                                <p class="text-xs text-gray-500 mt-1">{{ app()->getLocale() === 'ar' ? 'الحد الأدنى للطلب: ' : 'Minimum order: ' }} {{ $listing->min_order }}</p>
-                                            @endif
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الكمية (' . $listing->unit . ')' : 'Quantity (' . $listing->unit . ')' }}</label>
+                                                <input type="number" x-model.number="dealQty" min="{{ $listing->min_order ?? 1 }}" step="0.1" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
+                                                @if($listing->min_order)
+                                                    <p class="text-xs text-gray-500 mt-1">{{ app()->getLocale() === 'ar' ? 'الحد الأدنى للطلب: ' : 'Minimum order: ' }} {{ $listing->min_order }}</p>
+                                                @endif
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر المقترح للوحدة' : 'Proposed Unit Price' }}</label>
+                                                <input type="number" x-model.number="dealPrice" min="0" step="0.1" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
+                                            </div>
                                         </div>
                                         
-                                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                                            <div class="flex justify-between items-center mb-2">
-                                                <span class="text-gray-600">{{ app()->getLocale() === 'ar' ? 'سعر الوحدة' : 'Unit Price' }}</span>
-                                                <span class="font-bold">{{ $listing->price }} {{ __('TND') }}</span>
-                                            </div>
+                                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-4">
                                             <div class="flex justify-between items-center text-lg font-bold">
                                                 <span class="text-gray-900">{{ app()->getLocale() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
-                                                <span class="text-[#6A8F3B]"><span x-text="(dealQty * {{ $listing->price }}).toFixed(2)"></span> {{ __('TND') }}</span>
+                                                <span class="text-[#6A8F3B]"><span x-text="(dealQty * dealPrice).toFixed(2)"></span> {{ __('TND') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -336,8 +383,8 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                         <button @click="showDealModal = false" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-bold">
                                             {{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}
                                         </button>
-                                        <button @click="submitDeal" :disabled="makingDeal || dealQty < {{ $listing->min_order ?? 1 }}" class="flex-1 px-4 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] disabled:opacity-50 transition font-bold flex items-center justify-center gap-2">
-                                            <span x-show="!makingDeal">{{ app()->getLocale() === 'ar' ? 'تأكيد الطلب' : 'Confirm Order' }}</span>
+                                        <button @click="submitDeal" :disabled="makingDeal || dealQty < {{ $listing->min_order ?? 1 }} || !dealPrice" class="flex-1 px-4 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] disabled:opacity-50 transition font-bold flex items-center justify-center gap-2">
+                                            <span x-show="!makingDeal">{{ app()->getLocale() === 'ar' ? 'إرسال العرض' : 'Send Offer' }}</span>
                                             <svg x-show="makingDeal" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         </button>
                                     </div>
@@ -578,6 +625,7 @@ document.addEventListener('alpine:init', () => {
         showDealModal: false,
         makingDeal: false,
         dealQty: {{ $listing->min_order ?? 1 }},
+        dealPrice: {{ $listing->price }},
         showMapModal: false,
         isFavorite: false,
         map: null,
@@ -650,7 +698,7 @@ document.addEventListener('alpine:init', () => {
                         listing_id: {{ $listing->id }},
                         qty: this.dealQty,
                         unit: '{{ $listing->unit }}',
-                        price_unit: {{ $listing->price }},
+                        price_unit: this.dealPrice,
                         payment_method: 'cod'
                     })
                 });

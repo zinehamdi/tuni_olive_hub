@@ -4,12 +4,11 @@
 
 @section('content')
 
-<div class="min-h-screen" style="background: linear-gradient(135deg, #3d742c 0%, #1a3310 40%, #0f2d0f 70%, #1c2a0e 100%);">
+<div class="min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('{{ asset('images/growpagepicture.png') }}'); background-color: #f8f9fa;">
+    <div class="min-h-screen bg-black/40 backdrop-blur-sm pb-20">
 
     {{-- ─── HERO ─── --}}
-    <div class="relative overflow-hidden pt-24 pb-20 px-4 bg-cover bg-center" style="background-image: url('{{ asset('images/agritech_hero_bg_real.png') }}');">
-        <div class="absolute inset-0 pointer-events-none bg-black/50"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-[#0f1f0a]/30 via-[#0f1f0a]/60 to-[#0f1f0a] pointer-events-none"></div>
+    <div class="relative overflow-hidden pt-32 pb-24 px-4 text-center">
         <div class="relative max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#6A8F3B]/20 border border-[#6A8F3B]/40 text-[#a8d060] text-xs font-semibold mb-6 backdrop-blur-sm">
                 <span class="w-2 h-2 rounded-full bg-[#6A8F3B] animate-pulse"></span>
@@ -102,28 +101,28 @@
                 @endphp
                 @foreach($marketingServices as $service)
                 {{-- Service Card --}}
-                <div class="group relative bg-white/5 border border-white/10 rounded-3xl p-7 hover:bg-white/8 hover:border-[#6A8F3B]/50 hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm flex flex-col overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 shadow-xl rounded-3xl p-7 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#6A8F3B]/20 transition-all duration-300 flex flex-col overflow-hidden">
                     <!-- Background Decorative Icon -->
                     <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.15] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 invert">
                         <img src="{{ asset('icons/eye-browse-svg.svg') }}" class="w-full h-full object-contain">
                     </div>
                     <div class="mb-4">
                         <span class="text-3xl">{{ $service->icon_url }}</span>
-                        <h3 class="text-lg font-bold text-white mt-3">
+                        <h3 class="text-lg font-bold text-gray-900 mt-3">
                             {{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}
                         </h3>
                     </div>
                     <div class="mb-6 flex-grow">
-                        <div class="text-3xl font-black text-white">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-white/50">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
-                        <div class="mt-4 p-3 bg-white/5 rounded-xl border border-white/5">
-                            <p class="text-sm text-[#a8d060] font-semibold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
-                            <p class="text-white/70 text-xs mt-1 leading-relaxed">
+                        <div class="text-3xl font-black text-[#C8A356]">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-gray-500">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
+                        <div class="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="text-sm text-[#6A8F3B] font-semibold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
+                            <p class="text-gray-600 text-xs mt-1 leading-relaxed">
                                 {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
                             </p>
                         </div>
                     </div>
                     
-                    <a href="{{ route('services.appointment', $service->id) }}" class="w-full text-center py-3 rounded-xl border border-white/20 bg-white/5 text-white/90 hover:bg-[#6A8F3B] hover:border-[#6A8F3B] transition-all duration-200 text-sm font-semibold flex items-center justify-center gap-2">
+                    <a href="{{ route('services.appointment', $service->id) }}" class="w-full text-center py-3 rounded-xl border border-[#6A8F3B]/20 bg-[#6A8F3B]/5 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white transition-all duration-200 text-sm font-semibold flex items-center justify-center gap-2">
                         <span>📅</span>
                         {{ app()->getLocale() === 'ar' ? 'احجز موعد' : 'Book Appointment' }}
                     </a>
@@ -159,7 +158,7 @@
                 @endphp
 
                 @foreach($devPlans as $plan)
-                <div class="group bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/8 hover:border-blue-500/30 hover:scale-[1.03] transition-all duration-300 backdrop-blur-sm flex flex-col relative overflow-hidden">
+                <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 flex flex-col relative overflow-hidden">
                     <!-- Background Decorative Icon -->
                     <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.15] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert">
                         @if($plan['icon'] === '🌐')
@@ -173,11 +172,11 @@
                         @endif
                     </div>
                     <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
-                    <h3 class="text-base font-bold text-white">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
-                    <p class="text-white/40 text-xs mt-0.5 mb-4">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
-                    <div class="text-2xl font-black text-white mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-white/40">TND</span></div>
-                    <p class="text-white/30 text-[11px] mb-5">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
-                    <ul class="space-y-2 mb-6 flex-1 text-xs text-white/60">
+                    <h3 class="text-base font-bold text-gray-900">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
+                    <p class="text-gray-500 text-xs mt-0.5 mb-4">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
+                    <div class="text-2xl font-black text-blue-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-400">TND</span></div>
+                    <p class="text-gray-400 text-[11px] mb-5">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
+                    <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-600">
                         @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
                         <li class="flex items-start gap-1.5">
                             <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -185,7 +184,7 @@
                         </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('public.contact') }}" class="block w-full text-center py-2.5 rounded-xl border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all duration-200 text-xs font-semibold">
+                    <a href="{{ route('public.contact') }}" class="block w-full text-center py-2.5 rounded-xl border border-blue-500/30 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white transition-all duration-200 text-xs font-bold">
                         {{ $locale === 'ar' ? 'احجز استشارة' : 'Book a Consultation' }}
                     </a>
                 </div>

@@ -42,8 +42,10 @@ class ProfileController extends Controller
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
+        $assignedLoads = $user->role === 'carrier' ? $user->assignedLoads()->latest()->paginate(10) : collect();
+        $tanks = in_array($user->role, ['farmer', 'mill']) ? $user->tanks()->latest()->get() : collect();
 
-        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl'));
+        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'tanks'));
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
