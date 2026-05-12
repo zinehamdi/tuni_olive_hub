@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('og_type', 'product')
-@section('og_title', app()->getLocale() === 'ar' ? 'زيت زيتون '.($listing->product->variety ?? '') : ($listing->product->variety ?? '').' Olive Oil')
+@section('og_title', app()->getLocale() === 'ar' ? 'زيت زيتون '.($listing->product?->variety ?? '') : ($listing->product?->variety ?? '').' Olive Oil')
 @section('og_description', 'Premium Tunisian Olive Oil. Price: ' . $listing->price . ' TND. Buy directly from producers on ZinToop.')
-@section('og_image', !empty($listing->photos) && is_array($listing->photos) ? asset('storage/' . $listing->photos[0]) : asset('images/zintoop-logo.png'))
+@section('og_image', !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png'))
 
 @push('head')
     <!-- JSON-LD Product Schema for Google & Facebook SEO -->
@@ -10,9 +10,9 @@
     {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
+      "name": "{{ $listing->product?->variety ?? 'Tunisian' }} Olive Oil",
       "image": [
-        "{{ !empty($listing->photos) && is_array($listing->photos) ? asset('storage/' . $listing->photos[0]) : asset('images/zintoop-logo.png') }}"
+        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}"
       ],
       "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
       "brand": {
