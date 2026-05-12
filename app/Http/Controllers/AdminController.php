@@ -238,6 +238,7 @@ class AdminController extends Controller
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
             'media' => ['nullable', 'string'],
+            'new_media.*' => ['nullable', 'image', 'max:5120'],
         ]);
 
         // Map legacy values to DB enum to avoid truncation
@@ -248,13 +249,21 @@ class AdminController extends Controller
         ];
         $data['status'] = $statusMap[$data['status']] ?? $data['status'];
 
-        $mediaArray = null;
-        if (!empty($data['media'])) {
-            $mediaArray = collect(explode(',', $data['media']))
+        $mediaArray = $listing->media ?? [];
+        if ($request->has('media')) {
+            $mediaArray = collect(explode(',', $data['media'] ?? ''))
                 ->map(fn($v) => trim($v))
                 ->filter()
                 ->values()
                 ->all();
+        }
+
+        // Handle new file uploads
+        if ($request->hasFile('new_media')) {
+            foreach ($request->file('new_media') as $file) {
+                $path = $file->store('listings/' . $listing->id, 'public');
+                $mediaArray[] = $path;
+            }
         }
 
         $product = $listing->product;

@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('admin.listings.update', $listing) }}" class="space-y-6">
+            <form method="POST" action="{{ route('admin.listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 @method('PATCH')
 
@@ -97,10 +97,17 @@
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Media (comma separated paths)') }}</label>
-                    <input name="media" value="{{ old('media', $listing->media ? implode(',', $listing->media) : '') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" placeholder="listings/1/img1.webp,listings/1/img2.webp">
-                    <p class="text-xs text-gray-500 mt-1">{{ __('Paste relative storage paths; first item will be used as the primary image.') }}</p>
+                <div class="grid md:grid-cols-2 gap-6 p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('Upload New Media') }}</label>
+                        <input type="file" name="new_media[]" multiple accept="image/*" class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white hover:bg-gray-50 transition cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#6A8F3B]/10 file:text-[#6A8F3B] hover:file:bg-[#6A8F3B]/20">
+                        <p class="text-xs text-gray-500 mt-2">{{ __('Select images to append to the listing. Max 5MB per file.') }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('Existing Media Paths') }}</label>
+                        <input name="media" value="{{ old('media', $listing->media ? implode(',', $listing->media) : '') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 font-mono text-sm bg-white" placeholder="listings/1/img1.webp,listings/1/img2.webp">
+                        <p class="text-xs text-gray-500 mt-2">{{ __('Edit or remove existing paths (comma-separated).') }}</p>
+                    </div>
                 </div>
 
                 @if($errors->any())
