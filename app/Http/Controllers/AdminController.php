@@ -238,7 +238,7 @@ class AdminController extends Controller
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
             'media' => ['nullable', 'string'],
-            'new_media.*' => ['nullable', 'image', 'max:5120'],
+            'new_media.*' => ['nullable', 'image', 'max:51200'],
         ]);
 
         // Map legacy values to DB enum to avoid truncation
@@ -258,10 +258,11 @@ class AdminController extends Controller
                 ->all();
         }
 
-        // Handle new file uploads
+        // Handle new file uploads with optimization
         if ($request->hasFile('new_media')) {
+            $imageOptimizer = new \App\Services\ImageOptimizationService();
             foreach ($request->file('new_media') as $file) {
-                $path = $file->store('listings/' . $listing->id, 'public');
+                $path = $imageOptimizer->optimizeListingImage($file, (string)$listing->id);
                 $mediaArray[] = $path;
             }
         }

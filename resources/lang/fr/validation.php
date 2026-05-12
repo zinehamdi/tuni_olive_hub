@@ -6,4 +6,11 @@ return [
     'offer_out_of_range' => "Le prix de l'offre est hors de la plage autorisée.",
     'pod_missing_photo' => 'Au moins une photo de livraison est requise.',
     'pod_missing_token' => 'Un code PIN signé ou un jeton QR est requis pour vérifier le POD.',
+    'max' => [
+        'file' => 'Le fichier :attribute ne doit pas dépasser :max kilo-octets.',
+    ],
+    'attributes' => [
+        'new_media' => 'nouveaux médias',
+        'images' => 'images',
+    ],
 ];

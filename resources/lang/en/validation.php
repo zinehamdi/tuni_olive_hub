@@ -6,4 +6,11 @@ return [
     'offer_out_of_range' => 'Offer price is outside the allowed range.',
     'pod_missing_photo' => 'At least one drop-off photo is required.',
     'pod_missing_token' => 'Either a signed PIN or a QR token is required to verify POD.',
+    'max' => [
+        'file' => 'The :attribute must not be greater than :max kilobytes.',
+    ],
+    'attributes' => [
+        'new_media' => 'new media',
+        'images' => 'images',
+    ],
 ];

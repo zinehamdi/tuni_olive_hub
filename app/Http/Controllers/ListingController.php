@@ -85,7 +85,7 @@ class ListingController extends Controller
                 'governorate' => 'nullable|string',
                 'delegation' => 'nullable|string',
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
-                'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:8192', // Accept any image format/size, will be optimized
+                'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
             ]);
 
             // Set seller_id to authenticated user if not provided
