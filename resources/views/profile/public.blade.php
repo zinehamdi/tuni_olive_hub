@@ -2,7 +2,7 @@
     $locale = app()->getLocale();
     $isRTL = $locale === 'ar';
     $coverPhotos = ($coverPhotos ?? collect())->filter()->values();
-    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintoop-logo.png');
+    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintooplogo3d.jpg');
 @endphp
 @php
     $isOwner = auth()->check() && auth()->id() === $user->id;
@@ -60,7 +60,7 @@
                                      alt="{{ $user->name }}" 
                                      class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover ring-4 ring-white shadow-2xl bg-white"
                                      loading="lazy"
-                                     onerror="this.src='{{ asset('images/zintoop-logo.png') }}'">
+                                     onerror="this.src='{{ asset('images/zintooplogo3d.jpg') }}'">
                             @else
                                 <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold ring-4 ring-white shadow-2xl">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}

@@ -19,14 +19,14 @@
         <meta property="og:title" content="@yield('og_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
         <meta property="og:description" content="@yield('og_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
+        <meta property="og:image" content="@yield('og_image', asset('images/zintooplogo3d.jpg'))">
         <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
         
         <!-- Twitter Card Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="@yield('twitter_title', __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin'))">
         <meta name="twitter:description" content="@yield('twitter_description', __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor'))">
-        <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
+        <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintooplogo3d.jpg'))">
         
         <!-- Alternate Language Links -->
         <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
@@ -38,8 +38,8 @@
         <link rel="canonical" href="{{ url()->current() }}">
         
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
-        <link rel="apple-touch-icon" href="{{ asset('images/zintoop-logo.png') }}">
+        <link rel="icon" type="image/jpeg" href="{{ asset('images/zintooplogo3d.jpg') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/zintooplogo3d.jpg') }}">
 
         <!-- Scripts -->
         @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))

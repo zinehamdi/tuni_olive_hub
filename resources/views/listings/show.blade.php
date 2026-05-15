@@ -5,7 +5,7 @@
 @endsection
 @section('og_description', 'Premium Tunisian Olive Oil. Price: ' . $listing->price . ' TND. Buy directly from producers on ZinToop.')
 @section('og_image')
-{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}
+{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}
 @endsection
 
 @push('head')
@@ -16,7 +16,7 @@
       "@@type": "Product",
       "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
       "image": [
-        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}"
+        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}"
       ],
       "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
       "brand": {

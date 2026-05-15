@@ -20,7 +20,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', $defaultOgTitle)">
     <meta property="og:description" content="@yield('og_description', __('Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.'))">
-    <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
+    <meta property="og:image" content="@yield('og_image', asset('images/zintooplogo3d.jpg'))">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
     <meta property="fb:app_id" content="{{ env('FB_APP_ID', '') }}">
 
@@ -29,7 +29,7 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="@yield('twitter_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
     <meta name="twitter:description" content="@yield('twitter_description', 'Discover premium Tunisian olive oil directly from producers.')">
-    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintooplogo3d.jpg'))">
 
     <!-- Alternate Language Links for SEO -->
     <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
@@ -41,7 +41,7 @@
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/zintooplogo3d.jpg') }}">
     <link rel="apple-touch-icon" href="/icons/zintoop-192.png">
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="theme-color" content="#6A8F3B">
@@ -595,7 +595,7 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" class="h-10 w-10 rounded-full">
+                    <img src="{{ asset('images/zintooplogo3d.jpg') }}" alt="ZinToop" class="h-10 w-10 rounded-full object-cover">
                     <h3 class="text-xl font-bold">ZinToop</h3>
                 </div>
                 <p class="text-gray-400">{{ __('Platform connecting producers and buyers') }}</p>
