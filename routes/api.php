@@ -108,13 +108,16 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::patch('export/contracts/{contract}/close', [\App\Http\Controllers\Api\V1\ExportWorkflowController::class, 'close']);
     });
 
-    // Mobile carrier aids
-    Route::get('mobile/trips/{trip}', [\App\Http\Controllers\Api\V1\MobileController::class, 'showTrip']);
-    Route::get('mobile/loads/{load}/trip', [\App\Http\Controllers\Api\V1\MobileController::class, 'loadTrip']);
-
+    // Mobile carrier aids (Public tracking links)
+    // Placed below active to avoid route parameter collision
 
     Route::middleware(['auth:sanctum'])->group(function(){
         Route::get('mobile/trips/active', [\App\Http\Controllers\Api\V1\MobileController::class, 'activeTrip']);
+        
+        // These need to be below active to avoid shadowed routes
+        Route::get('mobile/trips/{trip}', [\App\Http\Controllers\Api\V1\MobileController::class, 'showTrip'])->withoutMiddleware('auth:sanctum');
+        Route::get('mobile/loads/{load}/trip', [\App\Http\Controllers\Api\V1\MobileController::class, 'loadTrip'])->withoutMiddleware('auth:sanctum');
+
         Route::get('mobile/loads/pending', [\App\Http\Controllers\Api\V1\MobileController::class, 'pendingLoads']);
         Route::post('mobile/loads/{load}/accept', [\App\Http\Controllers\Api\V1\MobileController::class, 'acceptLoad']);
         Route::post('mobile/loads/{load}/reject', [\App\Http\Controllers\Api\V1\MobileController::class, 'rejectLoad']);
