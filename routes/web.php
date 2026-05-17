@@ -138,6 +138,7 @@ Route::middleware('set.locale')->group(function () {
 // Limit: 60 requests per minute per user
 Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+    Route::get('/analytics/visitors', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'index'])->name('analytics.visitors');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
