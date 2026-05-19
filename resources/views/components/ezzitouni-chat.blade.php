@@ -1,0 +1,178 @@
+<div x-data="ezzitouniChat()" class="fixed bottom-6 left-6 z-[9999]">
+    
+    <!-- Chat Toggle Button (Ezzitouni Avatar) -->
+    <button @click="toggleChat()" 
+            class="relative w-16 h-16 rounded-full bg-white shadow-[0_10px_40px_-10px_rgba(106,143,59,0.5)] border-4 border-white hover:scale-110 transition-transform flex items-center justify-center overflow-hidden z-20 group">
+        <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
+        
+        <!-- Online Indicator -->
+        <span class="absolute bottom-0 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+    </button>
+
+    <!-- Welcome Tooltip (Shows when chat is closed) -->
+    <div x-show="!isOpen && showTooltip" 
+         x-transition.opacity.duration.500ms
+         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border border-gray-100 pointer-events-none origin-bottom-left" style="display: none;">
+        <div class="text-sm text-gray-700 font-bold leading-relaxed">
+            مرحباً! أنا "الزيتوني"، مساعدك الشخصي في ZinToop. كيف يمكنني مساعدتك اليوم في تصدير أو شراء زيت الزيتون؟ 🌿
+        </div>
+        <!-- Decorative arrow -->
+        <div class="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b border-r border-gray-100 transform rotate-45"></div>
+    </div>
+
+    <!-- Chat Window -->
+    <div x-show="isOpen" 
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-10 scale-95"
+         class="absolute bottom-20 left-0 w-[350px] max-w-[calc(100vw-3rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col z-10"
+         style="height: 500px; max-height: calc(100vh - 8rem); display: none;">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] p-4 flex items-center justify-between text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white overflow-hidden p-0.5">
+                    <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover rounded-full">
+                </div>
+                <div>
+                    <h3 class="font-bold leading-tight">الزيتوني (Ezzitouni)</h3>
+                    <p class="text-xs text-white/80">خبير الزيت والتجارة الدولية</p>
+                </div>
+            </div>
+            <button @click="toggleChat()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="ezzitouni-chat-box" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 flex flex-col">
+            <template x-for="(msg, index) in messages" :key="index">
+                <div class="flex w-full" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
+                    <div class="max-w-[85%] rounded-2xl p-3 text-sm shadow-sm"
+                         :class="msg.role === 'user' 
+                            ? 'bg-[#6A8F3B] text-white rounded-br-none' 
+                            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'">
+                        
+                        <div x-html="formatMessage(msg.content)"></div>
+                    </div>
+                </div>
+            </template>
+            
+            <!-- Typing Indicator -->
+            <div x-show="isTyping" class="flex justify-start w-full">
+                <div class="bg-white border border-gray-100 rounded-2xl rounded-bl-none p-4 shadow-sm flex items-center gap-1">
+                    <div class="w-2 h-2 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                    <div class="w-2 h-2 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-2 h-2 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 bg-white border-t border-gray-100">
+            <form @submit.prevent="sendMessage" class="flex gap-2">
+                <input x-model="newMessage" 
+                       type="text" 
+                       placeholder="اكتب رسالتك هنا..." 
+                       class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B]"
+                       :disabled="isTyping"
+                       dir="auto">
+                <button type="submit" 
+                        class="w-10 h-10 rounded-xl bg-[#6A8F3B] text-white flex items-center justify-center hover:bg-[#5a7a2f] transition disabled:opacity-50"
+                        :disabled="!newMessage.trim() || isTyping">
+                    <svg class="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                </button>
+            </form>
+            <div class="text-[10px] text-center text-gray-400 mt-2">
+                مدعوم بالذكاء الاصطناعي. قد تكون الإجابات غير دقيقة أحياناً.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('ezzitouniChat', () => ({
+        isOpen: false,
+        showTooltip: false,
+        isTyping: false,
+        newMessage: '',
+        messages: [
+            { role: 'model', content: 'أهلاً بك! أنا "الزيتوني"، الخبير الخاص بمنصة ZinToop. كيف يمكنني مساعدتك اليوم؟\n\nإذا كنت تبحث عن شراء أو تصدير الزيت، يمكنني توجيهك.' }
+        ],
+
+        init() {
+            // Show tooltip briefly after 5 seconds if chat is closed
+            setTimeout(() => {
+                if (!this.isOpen) this.showTooltip = true;
+                setTimeout(() => this.showTooltip = false, 8000);
+            }, 5000);
+        },
+
+        toggleChat() {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                this.showTooltip = false;
+                this.scrollToBottom();
+            }
+        },
+
+        async sendMessage() {
+            if (!this.newMessage.trim() || this.isTyping) return;
+
+            const userMsg = this.newMessage.trim();
+            this.newMessage = '';
+            
+            // Add user message to UI
+            this.messages.push({ role: 'user', content: userMsg });
+            this.scrollToBottom();
+            
+            this.isTyping = true;
+
+            try {
+                // Send to backend
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        message: userMsg,
+                        history: this.messages.slice(0, -1) // Send previous messages for context
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Add AI reply to UI
+                this.messages.push({ role: 'model', content: data.reply });
+            } catch (error) {
+                this.messages.push({ role: 'model', content: 'عذراً، حدث خطأ في الاتصال. حاول مرة أخرى لاحقاً.' });
+            } finally {
+                this.isTyping = false;
+                this.scrollToBottom();
+            }
+        },
+
+        scrollToBottom() {
+            setTimeout(() => {
+                const box = document.getElementById('ezzitouni-chat-box');
+                if (box) box.scrollTop = box.scrollHeight;
+            }, 50);
+        },
+
+        formatMessage(text) {
+            // Convert simple markdown to HTML (bold, newlines)
+            let formatted = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            return formatted;
+        }
+    }));
+});
+</script>

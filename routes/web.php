@@ -139,6 +139,7 @@ Route::middleware('set.locale')->group(function () {
 Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
     Route::get('/analytics/visitors', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'index'])->name('analytics.visitors');
+    Route::get('/analytics/marketing', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'marketing'])->name('analytics.marketing');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
@@ -268,6 +269,9 @@ Route::middleware('set.locale')->group(function(){
 
     // gulf.catalog now defined above
     Route::post('deals/{deal}/request', [\App\Http\Controllers\DealRequestController::class, 'store'])->name('deals.request.submit');
+
+    // Ezzitouni AI Chatbot Route
+    Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
 });
 
 // Authentication routes

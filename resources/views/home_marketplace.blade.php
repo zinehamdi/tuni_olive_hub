@@ -908,66 +908,7 @@
         </div>
     </div>
 
-    <!-- Zitouni Welcome Message -->
-    <div x-show="showZitouni && !mobileMenuOpen" 
-         x-transition:enter="transition ease-out duration-500"
-         x-transition:enter-start="-translate-x-full opacity-0"
-         x-transition:enter-end="translate-x-0 opacity-100"
-         x-transition:leave="transition ease-in duration-400"
-         x-transition:leave-start="translate-x-0 opacity-100"
-         x-transition:leave-end="-translate-x-full opacity-0"
-         class="fixed top-32 md:top-auto md:bottom-10 left-6 z-[9999] max-w-[calc(100%-3rem)] sm:max-w-sm"
-         x-cloak>
-        
-        <div class="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border-2 border-[#6A8F3B]/20 p-3 md:p-6 relative group">
-            <!-- Close Button -->
-            <button @click="showZitouni = false" class="absolute -top-3 -right-3 w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-[#6A8F3B] transition shadow-lg z-10">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
 
-            <div class="flex items-start gap-3 md:gap-4">
-                <!-- Zitouni Avatar -->
-                <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-[#6A8F3B]/10 to-[#C8A356]/10 flex-shrink-0 overflow-hidden border-2 border-white shadow-sm transform group-hover:scale-110 transition-transform">
-                    <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
-                </div>
-
-                <!-- Message -->
-                <div class="flex-1 overflow-hidden">
-                    <h4 class="font-black text-[#6A8F3B] text-[10px] md:text-sm mb-0.5 md:mb-1 uppercase tracking-wider">{{ __('Zitouni') }}</h4>
-                    <div class="relative h-10 md:h-12">
-                        <template x-for="(msg, index) in zitouniMessages" :key="index">
-                            <p x-show="zitouniIndex === index" 
-                               x-transition:enter="transition ease-out duration-500 delay-200"
-                               x-transition:enter-start="opacity-0 translate-y-4"
-                               x-transition:enter-end="opacity-100 translate-y-0"
-                               x-transition:leave="transition ease-in duration-300 absolute inset-0"
-                               x-transition:leave-start="opacity-100 translate-y-0"
-                               x-transition:leave-end="opacity-0 -translate-y-4"
-                               class="text-gray-700 text-[10px] md:text-xs font-bold leading-tight md:leading-relaxed"
-                               x-text="translate(msg)">
-                            </p>
-                        </template>
-                    </div>
-                    <div class="mt-2 md:mt-3 flex items-center justify-between">
-                        <div class="hidden md:flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('Verified Secure') }}</span>
-                        </div>
-                        <!-- Progress Dots -->
-                        <div class="flex gap-1 ml-auto md:ml-0">
-                            <template x-for="(msg, index) in zitouniMessages" :key="index">
-                                <div class="w-1 h-1 rounded-full transition-all duration-300"
-                                     :class="zitouniIndex === index ? 'bg-[#6A8F3B] w-3' : 'bg-gray-200'"></div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Decorative Element -->
-            <div class="absolute -bottom-2 left-8 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6A8F3B]/20 rotate-45"></div>
-        </div>
-    </div>
 
 </div>
 
@@ -1012,15 +953,7 @@ document.addEventListener('alpine:init', () => {
         dealRequestModalOpen: false,
         currentDeal: { id: null, title: '', type: '' },
         
-        // Zitouni Welcome Message
-        showZitouni: false,
-        zitouniIndex: 0,
-        zitouniMessages: [
-            "This website is secure and does not have redirected links that bother users.",
-            "ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.",
-            "Use the search bar and location filters to find the best quality oil near you.",
-            "Our vision is to digitize the olive oil sector and ensure fair trade for every producer."
-        ],
+
 
         openDealRequest(id, title, type) {
             this.currentDeal = { id, title, type };
@@ -1088,9 +1021,6 @@ document.addEventListener('alpine:init', () => {
             this.$watch('dealRequestModalOpen', value => {
                 if (!value && !this.articleModalOpen) document.body.classList.remove('overflow-hidden');
             });
-
-            // Show Zitouni after delay
-            setTimeout(() => {
                 this.showZitouni = true;
                 // Rotate messages
                 setInterval(() => {

@@ -651,5 +651,6 @@
     </footer>
 
     @stack('scripts')
+    @include('components.ezzitouni-chat')
 </body>
 </html>
