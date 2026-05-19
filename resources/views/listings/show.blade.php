@@ -3,7 +3,7 @@
 @section('og_title')
 {{ app()->getLocale() === 'ar' ? 'زيت زيتون '.($listing->product->variety ?? '') : ($listing->product->variety ?? '').' Olive Oil' }}
 @endsection
-@section('og_description', 'Premium Tunisian Olive Oil. Price: ' . $listing->price . ' TND. Buy directly from producers on ZinToop.')
+@section('og_description', 'Premium Tunisian Olive Oil. Price: ' . $listing->price . ' ' . ($listing->currency ?? 'TND') . '. Buy directly from producers on ZinToop.')
 @section('og_image')
 {{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}
 @endsection
@@ -26,7 +26,7 @@
       "offers": {
         "@@type": "Offer",
         "url": "{{ url()->current() }}",
-        "priceCurrency": "TND",
+        "priceCurrency": "{{ $listing->currency ?? 'TND' }}",
         "price": "{{ $listing->price }}",
         "priceValidUntil": "{{ now()->addDays(30)->format('Y-m-d') }}",
         "itemCondition": "https://schema.org/NewCondition",
@@ -154,7 +154,15 @@
                         <div class="text-sm text-gray-600 mb-2">{{ __('Price') }}</div>
                         <div class="text-5xl font-bold text-[#6A8F3B]">
                             {{ number_format($listing->price, 2) }}
-                            <span class="text-2xl text-gray-600">{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}</span>
+                            <span class="text-2xl text-gray-600">
+                                @if($listing->currency === 'USD')
+                                    $
+                                @elseif($listing->currency === 'EUR')
+                                    €
+                                @else
+                                    {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                @endif
+                            </span>
                         </div>
                                         <!-- Price per Unit -->
                 <div class="text-sm text-gray-600 mt-2">
@@ -378,7 +386,15 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-4">
                                             <div class="flex justify-between items-center text-lg font-bold">
                                                 <span class="text-gray-900">{{ app()->getLocale() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
-                                                <span class="text-[#6A8F3B]"><span x-text="(dealQty * dealPrice).toFixed(2)"></span> {{ __('TND') }}</span>
+                                                <span class="text-[#6A8F3B]"><span x-text="(dealQty * dealPrice).toFixed(2)"></span> 
+                                                    @if($listing->currency === 'USD')
+                                                        $
+                                                    @elseif($listing->currency === 'EUR')
+                                                        €
+                                                    @else
+                                                        {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                                    @endif
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -610,7 +626,14 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                         <div class="p-4">
                             <h3 class="font-bold text-gray-900 mb-2">{{ $relatedVariety }}</h3>
                             <div class="text-lg font-bold text-[#6A8F3B]">
-                                {{ number_format($related->product->price, 2) }} {{ __('TND') }}
+                                {{ number_format($related->product->price, 2) }} 
+                                @if($related->currency === 'USD')
+                                    $
+                                @elseif($related->currency === 'EUR')
+                                    €
+                                @else
+                                    {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                @endif
                             </div>
                         </div>
                     </a>

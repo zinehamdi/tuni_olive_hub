@@ -730,7 +730,7 @@
 
                                 <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
                                     <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                    <span class="text-sm text-gray-600">{{ __('TND') }}</span>
+                                    <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
                                 </div>
 
                                 <div class="space-y-2 text-sm text-gray-600 mb-4">
@@ -824,7 +824,7 @@
                                 <div class="text-center md:text-left">
                                     <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
                                         <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                        <span class="text-sm text-gray-600">{{ __('TND') }}</span>
+                                        <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
                                     </div>
                                     <div class="flex gap-2">
                                         <a :href="'/listings/' + listing.id" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold whitespace-nowrap">

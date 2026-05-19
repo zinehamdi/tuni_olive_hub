@@ -57,10 +57,10 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => $phoneRule,
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            // نسمح بالصور ونحدد حجم أقصى 5MB
-            'profile_picture' => ['nullable', 'image', 'max:5120'],
+            // Allow up to 20MB for initial upload, the ImageOptimizationService will shrink and convert it to WebP
+            'profile_picture' => ['nullable', 'image', 'max:20480'],
             'cover_photos' => ['nullable', 'array', 'max:5'],
-            'cover_photos.*' => ['nullable', 'image', 'max:5120'],
+            'cover_photos.*' => ['nullable', 'image', 'max:20480'],
         ];
 
         if ($role === 'farmer') {
@@ -112,6 +112,13 @@ class RegisteredUserController extends Controller
         $user->save();
 
         event(new Registered($user));
+        
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\WelcomeUser($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
+
         Auth::login($user);
 
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to your dashboard.'));

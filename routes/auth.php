@@ -16,31 +16,31 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
-    // Limit registration to 3 attempts per minute per IP
+    // Limit registration to 30 attempts per minute per IP
     Route::post('register', [RegisteredUserController::class, 'store'])
-        ->middleware('throttle:3,1');
+        ->middleware('throttle:30,1');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    // Limit login attempts to 5 per minute per IP (prevents brute force)
+    // Limit login attempts to 50 per minute per IP
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
-        ->middleware('throttle:5,1');
+        ->middleware('throttle:50,1');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
-    // Limit password reset requests to 3 per hour per IP (prevents abuse)
+    // Limit password reset requests to 30 per minute per IP
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->middleware('throttle:3,60')
+        ->middleware('throttle:30,1')
         ->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
 
-    // Limit password reset submissions to 3 per hour per IP
+    // Limit password reset submissions to 30 per minute per IP
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->middleware('throttle:3,60')
+        ->middleware('throttle:30,1')
         ->name('password.store');
 });
 
