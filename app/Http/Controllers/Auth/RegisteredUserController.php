@@ -119,7 +119,8 @@ class RegisteredUserController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
 
-        Auth::login($user);
+        // Log the user in, and force remember me for non-admins to keep session open
+        Auth::login($user, $user->role !== 'admin');
 
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to your dashboard.'));
     }

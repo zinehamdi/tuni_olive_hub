@@ -43,8 +43,17 @@ class LoginRequest extends FormRequest
 
         // Determine if input is email or phone number
         $credentials = $this->getCredentials();
+        
+        $field = isset($credentials['phone']) ? 'phone' : 'email';
+        $user = \App\Models\User::where($field, $credentials[$field])->first();
+        
+        // Force remember me for non-admins to keep session open long term
+        $remember = $this->boolean('remember');
+        if ($user && $user->role !== 'admin') {
+            $remember = true;
+        }
 
-        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+        if (! Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
