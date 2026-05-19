@@ -1021,14 +1021,7 @@ document.addEventListener('alpine:init', () => {
             this.$watch('dealRequestModalOpen', value => {
                 if (!value && !this.articleModalOpen) document.body.classList.remove('overflow-hidden');
             });
-                this.showZitouni = true;
-                // Rotate messages
-                setInterval(() => {
-                    if (this.showZitouni) {
-                        this.zitouniIndex = (this.zitouniIndex + 1) % this.zitouniMessages.length;
-                    }
-                }, 6000);
-            }, 1000);
+
             
             this.filteredListings = this.listings;
             // Try to get saved location from localStorage
