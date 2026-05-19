@@ -63,8 +63,8 @@ class ChatbotController extends Controller
         ];
 
         try {
-            // Google Gemini API Request - using universally supported gemini-pro
-            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}", [
+            // Google Gemini API Request - using universally supported gemini-1.5-flash
+            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                 'contents' => $contents,
                 'generationConfig' => [
                     'temperature' => 0.7,
