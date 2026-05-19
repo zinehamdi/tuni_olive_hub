@@ -5,10 +5,17 @@
 
 $allowedPrefixes = [
     'api/v1',
+    'api/chat',
     'public',
     '_debug',
     'admin',
     'api/admin',
+    'articles',
+    'broadcasting',
+    'deals',
+    'loads',
+    'notifications',
+    'services',
     'about',
     'contact',
     'terms',

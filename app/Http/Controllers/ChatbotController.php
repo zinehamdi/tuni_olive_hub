@@ -84,8 +84,8 @@ class ChatbotController extends Controller
             $errorBody = $response->body();
             Log::error('Gemini API Error: ' . $errorBody);
             
-            // For debugging: extract exactly what Gemini complained about
-            $geminiError = $response->json('error.message') ?? 'Unknown Error';
+            // For debugging: extract exactly what Gemini complained about, even if it's HTML/text instead of JSON
+            $geminiError = $response->json('error.message') ?? substr(strip_tags($errorBody), 0, 150);
             
             return response()->json([
                 'reply' => "عذراً، الخادم رفض الطلب. (تفاصيل الخطأ: {$geminiError})"
