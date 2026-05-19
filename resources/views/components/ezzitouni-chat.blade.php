@@ -206,11 +206,28 @@ document.addEventListener('alpine:init', () => {
 
         formatMessage(text) {
             if (!text) return '';
-            // Convert simple markdown to HTML (bold, newlines)
-            let formatted = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-            return formatted;
+            
+            // Convert simple markdown to HTML (bold)
+            let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Replace newlines with <br> only when they are outside HTML tags to prevent tag corruption
+            let result = '';
+            let inTag = false;
+            for (let i = 0; i < formatted.length; i++) {
+                let char = formatted[i];
+                if (char === '<') {
+                    inTag = true;
+                } else if (char === '>') {
+                    inTag = false;
+                }
+                
+                if (char === '\n') {
+                    result += inTag ? ' ' : '<br>';
+                } else {
+                    result += char;
+                }
+            }
+            return result;
         }
     }));
 });

@@ -121,25 +121,20 @@ class ChatbotController extends Controller
             $errorBody = $response->body();
             Log::error('Gemini API Error: ' . $errorBody);
             
-            // For debugging: extract exactly what Gemini complained about
-            $geminiError = $response->json('error.message') ?? substr(strip_tags($errorBody), 0, 150);
+            $status = $response->status();
+            $geminiError = $response->json('error.message') ?? '';
             
-            // Try to fetch available models to help the user debug
-            $modelsList = '';
-            try {
-                $modelsResponse = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
-                if ($modelsResponse->successful()) {
-                    $models = collect($modelsResponse->json('models', []))
-                                ->filter(fn($m) => str_contains($m['supportedGenerationMethods'][0] ?? '', 'generateContent'))
-                                ->pluck('name')
-                                ->join(', ');
-                    $modelsList = " | الموديلات المتاحة لمفتاحك: " . ($models ?: 'لا يوجد موديلات مدعومة');
-                }
-            } catch (\Exception $e) {}
+            if ($status === 429 || str_contains(strtolower($geminiError), 'quota') || str_contains(strtolower($geminiError), 'limit')) {
+                $reply = 'عذراً، يبدو أن هناك ضغطاً كبيراً على خدمة الذكاء الاصطناعي حالياً (تجاوز حد الاستخدام المجاني). يرجى الانتظار بضع ثوانٍ ثم المحاولة مجدداً.';
+            } elseif ($status === 401 || $status === 403 || str_contains(strtolower($geminiError), 'key') || str_contains(strtolower($geminiError), 'invalid')) {
+                $reply = 'عذراً، هناك مشكلة في إعدادات الاتصال بخدمة الذكاء الاصطناعي (مفتاح الـ API غير صالح). يرجى مراجعة إدارة المنصة.';
+            } else {
+                $reply = 'عذراً، حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة لاحقاً.';
+            }
             
             return response()->json([
-                'reply' => "عذراً، الخادم رفض الطلب. (الخطأ: {$geminiError}) {$modelsList}"
-            ], 500);
+                'reply' => $reply
+            ], $status);
 
         } catch (\Exception $e) {
             Log::error('Chatbot Exception: ' . $e->getMessage());
