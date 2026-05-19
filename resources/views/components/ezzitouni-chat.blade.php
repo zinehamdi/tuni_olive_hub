@@ -179,12 +179,18 @@ document.addEventListener('alpine:init', () => {
                     })
                 });
 
-                const data = await response.json();
+                if (!response.ok) {
+                    // Try to parse error JSON (Validation, CSRF, or our custom 500 error)
+                    const data = await response.json().catch(() => ({}));
+                    const errorMsg = data.reply || data.message || `حدث خطأ في الخادم (${response.status})`;
+                    this.messages.push({ role: 'model', content: errorMsg });
+                } else {
+                    const data = await response.json();
+                    this.messages.push({ role: 'model', content: data.reply || "عذراً، لم أتمكن من صياغة رد." });
+                }
                 
-                // Add AI reply to UI
-                this.messages.push({ role: 'model', content: data.reply });
             } catch (error) {
-                this.messages.push({ role: 'model', content: 'عذراً، حدث خطأ في الاتصال. حاول مرة أخرى لاحقاً.' });
+                this.messages.push({ role: 'model', content: 'عذراً، حدث خطأ في الاتصال بالخادم. تأكد من اتصالك بالإنترنت.' });
             } finally {
                 this.isTyping = false;
                 this.scrollToBottom();
@@ -199,6 +205,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         formatMessage(text) {
+            if (!text) return '';
             // Convert simple markdown to HTML (bold, newlines)
             let formatted = text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
