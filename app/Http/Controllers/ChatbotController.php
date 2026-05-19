@@ -30,6 +30,8 @@ class ChatbotController extends Controller
         $systemInstruction = config('ezzitouni.system_prompt', 'أنت مساعد ذكي لمنصة ZinToop.');
 
         // Prepare conversation history
+        $history = $request->input('history', []);
+        
         // Prepend System Instructions as a conversation setup for universal model compatibility
         $contents = [];
         $contents[] = [
