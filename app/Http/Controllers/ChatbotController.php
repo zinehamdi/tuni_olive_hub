@@ -43,30 +43,43 @@ class ChatbotController extends Controller
             'parts' => [['text' => "Understood. I am Ezzitouni, ready to assist."]]
         ];
 
+        $rawMessages = [];
+        
         foreach ($history as $index => $msg) {
-            $role = $msg['role'] === 'user' ? 'user' : 'model';
-            $text = $msg['content'] ?? '';
+            if ($index === 0 && $msg['role'] === 'model') continue;
             
-            // Skip empty messages because Gemini API crashes if text is empty string
-            if (empty(trim($text))) {
-                continue;
-            }
+            $text = trim($msg['content'] ?? '');
+            if (empty($text)) continue;
             
-            if ($index === 0 && $role === 'model') {
-                continue;
-            }
-
-            $contents[] = [
-                'role' => $role,
-                'parts' => [['text' => $text]]
+            $rawMessages[] = [
+                'role' => $msg['role'] === 'user' ? 'user' : 'model',
+                'text' => $text
             ];
         }
 
         // Append current message
-        $contents[] = [
+        $rawMessages[] = [
             'role' => 'user',
-            'parts' => [['text' => $request->input('message')]]
+            'text' => trim($request->input('message'))
         ];
+
+        // Ensure alternating roles (Gemini requirement)
+        foreach ($rawMessages as $msg) {
+            $role = $msg['role'];
+            $text = $msg['text'];
+            
+            $lastIndex = count($contents) - 1;
+            if ($lastIndex >= 0 && $contents[$lastIndex]['role'] === $role) {
+                // Merge with previous message of the same role
+                $contents[$lastIndex]['parts'][0]['text'] .= "\n\n" . $text;
+            } else {
+                // Add new message
+                $contents[] = [
+                    'role' => $role,
+                    'parts' => [['text' => $text]]
+                ];
+            }
+        }
 
         try {
             // Google Gemini API Request - using universally supported gemini-flash-latest (2026+ keys)
@@ -82,7 +95,23 @@ class ChatbotController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
-                $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'عذراً، لم أتمكن من فهم ذلك.';
+                
+                // Safely extract the text to prevent PHP ErrorExceptions
+                $reply = data_get($data, 'candidates.0.content.parts.0.text');
+                
+                if (empty($reply)) {
+                    // Handle safety block or finish reason
+                    $blockReason = data_get($data, 'promptFeedback.blockReason');
+                    $finishReason = data_get($data, 'candidates.0.finishReason');
+                    
+                    if ($blockReason) {
+                        $reply = 'عذراً، لا يمكنني مناقشة هذا الموضوع لأسباب تتعلق بسياسات الأمان.';
+                    } else if ($finishReason) {
+                        $reply = 'توقف توليد النص. السبب: ' . $finishReason;
+                    } else {
+                        $reply = 'عذراً، تلقيت استجابة غير مفهومة من الخادم.';
+                    }
+                }
                 
                 return response()->json([
                     'reply' => $reply
