@@ -45,6 +45,12 @@ class ChatbotController extends Controller
 
         foreach ($history as $index => $msg) {
             $role = $msg['role'] === 'user' ? 'user' : 'model';
+            $text = $msg['content'] ?? '';
+            
+            // Skip empty messages because Gemini API crashes if text is empty string
+            if (empty(trim($text))) {
+                continue;
+            }
             
             if ($index === 0 && $role === 'model') {
                 continue;
@@ -52,7 +58,7 @@ class ChatbotController extends Controller
 
             $contents[] = [
                 'role' => $role,
-                'parts' => [['text' => $msg['content']]]
+                'parts' => [['text' => $text]]
             ];
         }
 
