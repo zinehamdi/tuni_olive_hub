@@ -127,10 +127,10 @@ document.addEventListener('alpine:init', () => {
         newMessage: '',
         zitouniIndex: 0,
         zitouniMessages: [
-            "This website is secure and does not have redirected links that bother users.",
-            "ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.",
-            "Use the search bar and location filters to find the best quality oil near you.",
-            "Our vision is to digitize the olive oil sector and ensure fair trade for every producer."
+            "منصة ZinToop آمنة تماماً ولا تحتوي على روابط مزعجة تعطل تجربتك.",
+            "نحن نربط بين منتجي زيت الزيتون التونسي والمشترين مباشرة وبدون وسطاء.",
+            "استخدم شريط البحث والفرز لتجد أفضل جودة زيت قريبة من منطقتك بسهولة.",
+            "رؤيتنا هي رقمنة قطاع الزيتون في تونس لضمان تجارة عادلة لكل فلاح تونسي."
         ],
         messages: [
             { role: 'model', content: 'أهلاً بك! أنا "الزيتوني"، الخبير الخاص بمنصة ZinToop. كيف يمكنني مساعدتك اليوم؟\n\nإذا كنت تبحث عن شراء أو تصدير الزيت، يمكنني توجيهك.' }

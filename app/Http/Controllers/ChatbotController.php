@@ -30,14 +30,20 @@ class ChatbotController extends Controller
         $systemInstruction = config('ezzitouni.system_prompt', 'أنت مساعد ذكي لمنصة ZinToop.');
 
         // Prepare conversation history
-        $history = $request->input('history', []);
+        // Prepend System Instructions as a conversation setup for universal model compatibility
         $contents = [];
+        $contents[] = [
+            'role' => 'user',
+            'parts' => [['text' => "[System Instructions]:\n" . $systemInstruction . "\n\nEnd of instructions. Acknowledge and wait for user."]]
+        ];
+        $contents[] = [
+            'role' => 'model',
+            'parts' => [['text' => "Understood. I am Ezzitouni, ready to assist."]]
+        ];
 
         foreach ($history as $index => $msg) {
             $role = $msg['role'] === 'user' ? 'user' : 'model';
             
-            // Gemini requires the conversation to START with a 'user' role.
-            // If the first message is our automated greeting ('model'), skip it.
             if ($index === 0 && $role === 'model') {
                 continue;
             }
@@ -55,11 +61,8 @@ class ChatbotController extends Controller
         ];
 
         try {
-            // Google Gemini API Request
-            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={$apiKey}", [
-                'system_instruction' => [
-                    'parts' => [['text' => $systemInstruction]]
-                ],
+            // Google Gemini API Request - using universally supported gemini-pro
+            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}", [
                 'contents' => $contents,
                 'generationConfig' => [
                     'temperature' => 0.7,
