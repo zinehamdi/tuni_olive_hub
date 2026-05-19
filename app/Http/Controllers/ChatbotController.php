@@ -33,9 +33,17 @@ class ChatbotController extends Controller
         $history = $request->input('history', []);
         $contents = [];
 
-        foreach ($history as $msg) {
+        foreach ($history as $index => $msg) {
+            $role = $msg['role'] === 'user' ? 'user' : 'model';
+            
+            // Gemini requires the conversation to START with a 'user' role.
+            // If the first message is our automated greeting ('model'), skip it.
+            if ($index === 0 && $role === 'model') {
+                continue;
+            }
+
             $contents[] = [
-                'role' => $msg['role'] === 'user' ? 'user' : 'model',
+                'role' => $role,
                 'parts' => [['text' => $msg['content']]]
             ];
         }
@@ -50,7 +58,6 @@ class ChatbotController extends Controller
             // Google Gemini API Request
             $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                 'systemInstruction' => [
-                    'role' => 'system',
                     'parts' => [['text' => $systemInstruction]]
                 ],
                 'contents' => $contents,
