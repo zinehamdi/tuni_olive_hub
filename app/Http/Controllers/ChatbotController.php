@@ -57,7 +57,7 @@ class ChatbotController extends Controller
         try {
             // Google Gemini API Request
             $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
-                'systemInstruction' => [
+                'system_instruction' => [
                     'parts' => [['text' => $systemInstruction]]
                 ],
                 'contents' => $contents,
@@ -78,9 +78,14 @@ class ChatbotController extends Controller
                 ]);
             }
 
-            Log::error('Gemini API Error: ' . $response->body());
+            $errorBody = $response->body();
+            Log::error('Gemini API Error: ' . $errorBody);
+            
+            // For debugging: extract exactly what Gemini complained about
+            $geminiError = $response->json('error.message') ?? 'Unknown Error';
+            
             return response()->json([
-                'reply' => 'عذراً، أواجه مشكلة تقنية حالياً في التواصل مع الخادم.'
+                'reply' => "عذراً، الخادم رفض الطلب. (تفاصيل الخطأ: {$geminiError})"
             ], 500);
 
         } catch (\Exception $e) {

@@ -10,14 +10,39 @@
     </button>
 
     <!-- Welcome Tooltip (Shows when chat is closed) -->
-    <div x-show="!isOpen && showTooltip" 
+    <div x-show="!isOpen" 
          x-transition.opacity.duration.500ms
-         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border border-gray-100 pointer-events-none origin-bottom-left" style="display: none;">
-        <div class="text-sm text-gray-700 font-bold leading-relaxed">
-            مرحباً! أنا "الزيتوني"، مساعدك الشخصي في ZinToop. كيف يمكنني مساعدتك اليوم في تصدير أو شراء زيت الزيتون؟ 🌿
+         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-none origin-bottom-left" style="display: none;">
+        
+        <div class="flex items-center gap-2 mb-2">
+            <h4 class="font-black text-[#6A8F3B] text-[10px] uppercase tracking-wider">{{ __('Zitouni') }}</h4>
+            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
         </div>
+
+        <div class="relative h-14">
+            <template x-for="(msg, index) in zitouniMessages" :key="index">
+                <p x-show="zitouniIndex === index" 
+                   x-transition:enter="transition ease-out duration-500 delay-200"
+                   x-transition:enter-start="opacity-0 translate-y-4"
+                   x-transition:enter-end="opacity-100 translate-y-0"
+                   x-transition:leave="transition ease-in duration-300 absolute inset-0"
+                   x-transition:leave-start="opacity-100 translate-y-0"
+                   x-transition:leave-end="opacity-0 -translate-y-4"
+                   class="text-[10px] text-gray-700 font-bold leading-relaxed"
+                   x-text="msg">
+                </p>
+            </template>
+        </div>
+
+        <div class="mt-1 flex gap-1">
+            <template x-for="(msg, index) in zitouniMessages" :key="index">
+                <div class="w-1 h-1 rounded-full transition-all duration-300"
+                     :class="zitouniIndex === index ? 'bg-[#6A8F3B] w-3' : 'bg-gray-200'"></div>
+            </template>
+        </div>
+
         <!-- Decorative arrow -->
-        <div class="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b border-r border-gray-100 transform rotate-45"></div>
+        <div class="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6A8F3B]/20 transform rotate-45"></div>
     </div>
 
     <!-- Chat Window -->
@@ -97,25 +122,32 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('ezzitouniChat', () => ({
         isOpen: false,
-        showTooltip: false,
+        isOpen: false,
         isTyping: false,
         newMessage: '',
+        zitouniIndex: 0,
+        zitouniMessages: [
+            "This website is secure and does not have redirected links that bother users.",
+            "ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.",
+            "Use the search bar and location filters to find the best quality oil near you.",
+            "Our vision is to digitize the olive oil sector and ensure fair trade for every producer."
+        ],
         messages: [
             { role: 'model', content: 'أهلاً بك! أنا "الزيتوني"، الخبير الخاص بمنصة ZinToop. كيف يمكنني مساعدتك اليوم؟\n\nإذا كنت تبحث عن شراء أو تصدير الزيت، يمكنني توجيهك.' }
         ],
 
         init() {
-            // Show tooltip briefly after 5 seconds if chat is closed
-            setTimeout(() => {
-                if (!this.isOpen) this.showTooltip = true;
-                setTimeout(() => this.showTooltip = false, 8000);
+            // Rotate messages infinitely
+            setInterval(() => {
+                if (!this.isOpen) {
+                    this.zitouniIndex = (this.zitouniIndex + 1) % this.zitouniMessages.length;
+                }
             }, 5000);
         },
 
         toggleChat() {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
-                this.showTooltip = false;
                 this.scrollToBottom();
             }
         },
