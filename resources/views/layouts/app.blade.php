@@ -140,14 +140,20 @@
              unreadNotificationsCount: 0,
              async fetchUnread() { 
                  try { 
-                     const res = await fetch('/messages/unread-count'); 
+                     const res = await fetch('/messages/unread-count', {
+                         headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                     }); 
+                     if (!res.ok) return;
                      const data = await res.json(); 
                      this.unreadCount = data.count || 0; 
                  } catch(e) {} 
              },
              async fetchNotifications() {
                  try {
-                     const res = await fetch('/notifications');
+                     const res = await fetch('/notifications', {
+                         headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                     });
+                     if (!res.ok) return;
                      const data = await res.json();
                      this.notifications = data;
                      this.unreadNotificationsCount = data.filter(n => !n.read_at).length;
@@ -160,7 +166,8 @@
                          method: 'POST', 
                          headers: { 
                              'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
-                             'Accept': 'application/json'
+                             'Accept': 'application/json',
+                             'X-Requested-With': 'XMLHttpRequest'
                          } 
                      });
                      this.unreadNotificationsCount = 0;
