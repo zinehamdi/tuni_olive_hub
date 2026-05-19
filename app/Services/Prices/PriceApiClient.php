@@ -10,8 +10,8 @@ class PriceApiClient
 {
     public function fetchToday(): array
     {
-        $url = env('PRICES_SOURCE_URL');
-        $key = env('PRICES_API_KEY');
+        $url = config('services.prices.source_url');
+        $key = config('services.prices.api_key');
         if (!$url || !$key) {
             return [];
         }

@@ -47,4 +47,11 @@ return [
         'webhook_secret' => env('D17_WEBHOOK_SECRET', ''),
     ],
 
+    'prices' => [
+        'source_url' => env('PRICES_SOURCE_URL'),
+        'api_key' => env('PRICES_API_KEY'),
+        'source_mode' => env('PRICES_SOURCE_MODE', 'dummy'),
+        'cache_ttl' => (int) env('PRICES_CACHE_TTL', 600),
+    ],
+
 ];

@@ -19,7 +19,7 @@ class PricesController extends ApiController
         DB::enableQueryLog();
         $key = PriceIngestor::cacheKeyToday();
         try {
-            $data = Cache::tags(['prices', 'today'])->remember($key, (int) env('PRICES_CACHE_TTL', 600), function () {
+            $data = Cache::tags(['prices', 'today'])->remember($key, config('services.prices.cache_ttl', 600), function () {
                 $row = PriceDaily::find(now()->toDateString());
                 if (!$row) {
                     $row = app(PriceIngestor::class)->ingestToday();

@@ -12,7 +12,7 @@ class PriceIngestor
 {
     public function ingestToday(): PriceDaily
     {
-        $mode = env('PRICES_SOURCE_MODE', 'dummy');
+        $mode = config('services.prices.source_mode', 'dummy');
         $today = now()->toDateString();
         if ($mode === 'dummy') {
             $seed = crc32($today);
@@ -60,7 +60,7 @@ class PriceIngestor
             $data = [ 'date' => $today ];
         }
         $row = PriceDaily::updateOrCreate(['date' => $today], $data);
-        $ttl = (int) env('PRICES_CACHE_TTL', 600);
+        $ttl = config('services.prices.cache_ttl', 600);
         Cache::put(self::cacheKeyToday(), $row->toArray(), $ttl);
         return $row;
     }
