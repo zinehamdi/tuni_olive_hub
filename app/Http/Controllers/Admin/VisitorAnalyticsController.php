@@ -45,4 +45,23 @@ class VisitorAnalyticsController extends Controller
             'chartData', 'deviceStats', 'totalPeriod', 'period', 'today', 'growth', 'recentVisitors'
         ));
     }
+
+    public function marketing(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $analytics = \App\Models\ServiceAnalytic::with(['user', 'service'])
+            ->latest()
+            ->paginate(30);
+
+        // Calculate aggregate stats
+        $purchasesCount = \App\Models\ServiceAnalytic::where('event_type', 'purchase')->count();
+        $checkoutsCount = \App\Models\ServiceAnalytic::where('event_type', 'checkout_initiated')->count();
+        $addToCartCount = \App\Models\ServiceAnalytic::where('event_type', 'add_to_cart')->count();
+        $totalRevenue = \App\Models\ServiceAnalytic::where('event_type', 'purchase')->sum('value');
+
+        return view('admin.analytics.marketing', compact('analytics', 'purchasesCount', 'checkoutsCount', 'addToCartCount', 'totalRevenue'));
+    }
 }

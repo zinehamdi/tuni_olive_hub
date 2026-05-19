@@ -17,7 +17,7 @@ class MarketingServiceController extends Controller
             'service_id' => $service->id,
             'value' => $service->price_tnd_weekly,
             'currency' => $service->currency,
-            'session_id' => session()->getId(),
+            'session_id' => request()->cookie('zintoop_device_uuid') ?? session()->getId(),
             'user_id' => auth()->id()
         ]);
         
@@ -39,8 +39,8 @@ class MarketingServiceController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'business_info' => 'required|string',
-            'appointment_date' => 'required|date|after:today',
+            'business_info' => 'nullable|string',
+            'appointment_date' => 'nullable|string',
         ]);
         
         $cart = [
@@ -60,7 +60,7 @@ class MarketingServiceController extends Controller
             'service_id' => $service->id,
             'value' => $total,
             'currency' => $service->currency,
-            'session_id' => session()->getId(),
+            'session_id' => request()->cookie('zintoop_device_uuid') ?? session()->getId(),
             'user_id' => auth()->id()
         ]);
         
@@ -69,15 +69,18 @@ class MarketingServiceController extends Controller
             'user_id' => auth()->id(),
             'name' => $request->name,
             'phone' => $request->phone,
-            'business_info' => $request->business_info,
-            'appointment_date' => $request->appointment_date,
+            'business_info' => $request->business_info ?? 'طلب مباشر وسريع',
+            'appointment_date' => $request->appointment_date ?? now()->addDay()->format('Y-m-d H:i'),
             'cart_data' => $cart,
             'total_budget' => $total,
             'status' => 'pending',
         ]);
 
-        // Send notification
-        auth()->user()->notify(new AppointmentBooked($appointment));
+        // Notify the admin about the new lead so it appears in the admin panel instantly
+        $admin = \App\Models\User::where('role', 'admin')->first();
+        if ($admin) {
+            $admin->notify(new AppointmentBooked($appointment));
+        }
         
         // Log purchase completion to keep the metrics functional
         ServiceAnalytic::create([
@@ -85,10 +88,15 @@ class MarketingServiceController extends Controller
             'service_id' => $service->id,
             'value' => $total,
             'currency' => $service->currency,
-            'session_id' => session()->getId(),
+            'session_id' => request()->cookie('zintoop_device_uuid') ?? session()->getId(),
             'user_id' => auth()->id()
         ]);
         
-        return redirect()->route('services.pricing')->with('success', __('Your appointment has been booked successfully! We will contact you soon.'));
+        // Return structured redirect with WhatsApp link pre-filled
+        $packageName = app()->getLocale() === 'ar' ? $service->title_ar : $service->title_en;
+        $waMessage = urlencode("مرحباً منصة الزين، أود الاستفسار عن باقة التسويق: {$packageName} بقيمة {$total} TND.\n\nالاسم: {$request->name}\nالهاتف: {$request->phone}");
+        $waUrl = "https://api.whatsapp.com/send/?phone=21625777926&text={$waMessage}";
+
+        return redirect()->away($waUrl);
     }
 }

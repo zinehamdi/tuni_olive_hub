@@ -18,6 +18,11 @@ class TrackVisitor
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $deviceUuid = $request->cookie('zintoop_device_uuid');
+        if (!$deviceUuid) {
+            $deviceUuid = (string) \Illuminate\Support\Str::uuid();
+        }
+
         // Only track GET requests and ignore api/admin/livewire requests
         if ($request->isMethod('GET') && !$request->expectsJson() && !$request->is('admin*') && !$request->is('livewire*')) {
             $ip = $request->ip();
@@ -26,22 +31,34 @@ class TrackVisitor
             $cacheKey = "visitor_{$ip}_{$date}";
             
             if (!Cache::has($cacheKey)) {
-                $userAgent = $request->header('User-Agent');
-                $device = $this->detectDevice($userAgent);
+                try {
+                    $userAgent = $request->header('User-Agent');
+                    $truncatedUserAgent = $userAgent ? substr($userAgent, 0, 255) : null;
+                    $device = $this->detectDevice($userAgent);
 
-                Visitor::updateOrCreate(
-                    ['ip_address' => $ip, 'visited_date' => $date],
-                    [
-                        'user_agent' => $userAgent,
-                        'device' => $device,
-                    ]
-                )->increment('hits');
+                    Visitor::updateOrCreate(
+                        ['ip_address' => $ip, 'visited_date' => $date],
+                        [
+                            'user_agent' => $truncatedUserAgent,
+                            'device' => $device,
+                        ]
+                    )->increment('hits');
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Visitor tracking failed: " . $e->getMessage());
+                }
                 
                 Cache::put($cacheKey, true, now()->addMinutes(60));
             }
         }
 
-        return $next($request);
+        $response = $next($request);
+
+        // Attach persistent cookie lasting 5 years if not already present
+        if (!$request->hasCookie('zintoop_device_uuid')) {
+            $response->headers->setCookie(cookie()->forever('zintoop_device_uuid', $deviceUuid));
+        }
+
+        return $response;
     }
 
     private function detectDevice($userAgent)

@@ -22,7 +22,10 @@
                 <span class="text-xl group-hover:scale-110 transition">📊</span> {{ __('Dashboard') }}
             </a>
             <a href="{{ route('admin.analytics.visitors') }}" class="flex items-center gap-3 px-4 py-3 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold transition">
-                <span class="text-xl">📈</span> {{ __('Visitor Analytics') }}
+                <span class="text-xl">🌍</span> {{ __('Visitor Analytics') }}
+            </a>
+            <a href="{{ route('admin.analytics.marketing') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
+                <span class="text-xl group-hover:scale-110 transition">📈</span> {{ app()->getLocale() === 'ar' ? 'تحليلات التسويق' : __('Marketing Analytics') }}
             </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">👥</span> {{ __('Manage Users') }}
@@ -92,28 +95,97 @@
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                     <span class="text-2xl">📊</span> {{ __('Visitor Trend') }}
                 </h2>
-                <!-- Simplified bar/chart representation for quick visualization using pure HTML/CSS -->
-                <div class="h-64 flex items-end justify-between gap-1 mt-8">
-                    @php 
-                        $max = $chartData->max() ?: 1; 
-                        // Fill missing days with 0
-                        $dates = [];
-                        for($i = $period - 1; $i >= 0; $i--) {
-                            $d = \Carbon\Carbon::today()->subDays($i)->toDateString();
-                            $dates[$d] = $chartData->get($d, 0);
-                        }
-                    @endphp
-                    @foreach($dates as $date => $count)
-                        @php $height = ($count / $max) * 100; @endphp
-                        <div class="w-full relative group">
-                            <div class="w-full bg-[#6A8F3B]/80 hover:bg-[#6A8F3B] rounded-t-sm transition-all" style="height: {{ $height }}%"></div>
-                            <!-- Tooltip -->
-                            <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap transition-opacity z-10">
-                                {{ $date }}<br>{{ $count }} {{ __('Visits') }}
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                @php 
+                    // Fill missing days with 0 for the chart
+                    $dates = [];
+                    $counts = [];
+                    for($i = $period - 1; $i >= 0; $i--) {
+                        $d = \Carbon\Carbon::today()->subDays($i)->format('M d'); // e.g. May 19
+                        $dates[] = $d;
+                        $counts[] = $chartData->get(\Carbon\Carbon::today()->subDays($i)->toDateString(), 0);
+                    }
+                @endphp
+                <div id="visitorsChart" class="mt-6 w-full min-h-[300px]"></div>
+
+                <!-- Premium ApexCharts Integration -->
+                <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var options = {
+                            series: [{
+                                name: "{{ app()->getLocale() === 'ar' ? 'الزوار' : __('Visitors') }}",
+                                data: @json($counts)
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 320,
+                                fontFamily: 'inherit',
+                                toolbar: { show: false },
+                                zoom: { enabled: false },
+                                animations: {
+                                    enabled: true,
+                                    easing: 'easeinout',
+                                    speed: 800,
+                                    animateGradually: {
+                                        enabled: true,
+                                        delay: 150
+                                    },
+                                    dynamicAnimation: {
+                                        enabled: true,
+                                        speed: 350
+                                    }
+                                }
+                            },
+                            colors: ['#6A8F3B'],
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    shadeIntensity: 1,
+                                    opacityFrom: 0.5,
+                                    opacityTo: 0.05,
+                                    stops: [0, 100]
+                                }
+                            },
+                            dataLabels: { enabled: false },
+                            stroke: {
+                                curve: 'smooth',
+                                width: 4
+                            },
+                            xaxis: {
+                                categories: @json($dates),
+                                tooltip: { enabled: false },
+                                axisBorder: { show: false },
+                                axisTicks: { show: false },
+                                labels: {
+                                    style: { colors: '#9CA3AF', fontWeight: 600 }
+                                }
+                            },
+                            yaxis: {
+                                labels: {
+                                    style: { colors: '#9CA3AF', fontWeight: 600 },
+                                    formatter: function (val) { return Math.round(val); }
+                                }
+                            },
+                            grid: {
+                                borderColor: '#F3F4F6',
+                                strokeDashArray: 5,
+                                yaxis: { lines: { show: true } },
+                                xaxis: { lines: { show: false } },
+                            },
+                            markers: {
+                                size: 0,
+                                colors: ['#fff'],
+                                strokeColors: '#6A8F3B',
+                                strokeWidth: 3,
+                                hover: { size: 6 }
+                            },
+                            theme: { mode: 'light' }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#visitorsChart"), options);
+                        chart.render();
+                    });
+                </script>
             </div>
 
             <!-- Device Stats Area -->

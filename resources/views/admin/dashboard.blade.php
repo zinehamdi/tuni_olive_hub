@@ -21,6 +21,12 @@
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold transition">
                 <span class="text-xl">📊</span> {{ __('Dashboard') }}
             </a>
+            <a href="{{ route('admin.analytics.visitors') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
+                <span class="text-xl group-hover:scale-110 transition">🌍</span> {{ __('Visitor Analytics') }}
+            </a>
+            <a href="{{ route('admin.analytics.marketing') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
+                <span class="text-xl group-hover:scale-110 transition">📈</span> {{ app()->getLocale() === 'ar' ? 'تحليلات التسويق' : __('Marketing Analytics') }}
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">👥</span> {{ __('Manage Users') }}
             </a>
@@ -175,9 +181,14 @@
 
             <!-- Marketing Analytics -->
             <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <span class="text-2xl">📈</span> {{ app()->getLocale() === 'ar' ? 'إحصائيات التسويق' : __('Marketing Analytics') }}
-                </h2>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="text-2xl">📈</span> {{ app()->getLocale() === 'ar' ? 'إحصائيات التسويق' : __('Marketing Analytics') }}
+                    </h2>
+                    <a href="{{ route('admin.analytics.marketing') }}" class="text-xs font-bold text-[#6A8F3B] hover:underline flex items-center gap-1">
+                        {{ app()->getLocale() === 'ar' ? 'عرض التفاصيل ←' : __('View Details →') }}
+                    </a>
+                </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="text-center p-4 bg-emerald-50 rounded-2xl border border-emerald-100 hover:shadow-md transition">
                         <div class="text-3xl font-black text-emerald-600">{{ $stats['marketing_purchases'] }}</div>
