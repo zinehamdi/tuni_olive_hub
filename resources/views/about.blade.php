@@ -81,13 +81,7 @@
                                 {{ __('Professional Summary') }}
                             </h4>
                             <p class="text-gray-700 leading-relaxed">
-                                @if(app()->getLocale() === 'ar')
-                                    مطور ويب متكامل و Scrum Master & Product Owner معتمد مع أساس قوي في PHP و Laravel و Angular وإدارة المشاريع الرشيقة. ماهر في بناء تطبيقات ويب قابلة للتطوير وآمنة، وتطبيق منهجيات إدارة المشاريع، والاستفادة من المعرفة التجارية لتقديم قيمة. خبرة في التطوير المستقل وإدارة العمليات، مع قدرة مثبتة على التكيف والتعلم السريع ودفع المشاريع نحو النجاح.
-                                @elseif(app()->getLocale() === 'fr')
-                                    Développeur Full Stack et Scrum Master & Product Owner certifié avec une solide base en PHP, Laravel, Angular et gestion de projet Agile. Compétent dans la création d'applications web évolutives et sécurisées, l'application de méthodologies de gestion de projet et l'exploitation des connaissances commerciales pour offrir de la valeur. Expérimenté en développement freelance et gestion des opérations, avec une capacité prouvée à s'adapter, apprendre rapidement et mener des projets vers le succès.
-                                @else
-                                    Results-driven Full Stack Web Developer and Certified Scrum Master & Product Owner with a strong foundation in PHP, Laravel, Angular, and Agile project management. Skilled in building scalable, secure web applications, applying project management methodologies, and leveraging business knowledge to deliver value. Experienced in freelance development and operations management, with a proven ability to adapt, learn fast, and drive projects to success.
-                                @endif
+                                {{ __('bio_text') }}
                             </p>
                         </div>
 
@@ -202,13 +196,7 @@
                 </h2>
                 <div class="w-24 h-1 bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] mx-auto mb-6"></div>
                 <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                    @if(app()->getLocale() === 'ar')
-                        منصة تونس لزيت الزيتون (TOOP) هي سوق إلكتروني شامل يربط جميع أطراف سلسلة إنتاج الزيتون في تونس - من المزارعين إلى المعاصر، من الناقلين إلى المعبئين، ومن التجار إلى المستهلكين.
-                    @elseif(app()->getLocale() === 'fr')
-                        La Plateforme Tunisienne de l'Huile d'Olive (TOOP) est une plateforme complète qui connecte tous les acteurs de la chaîne de production d'olives en Tunisie - des agriculteurs aux moulins, des transporteurs aux conditionneurs, et des commerçants aux consommateurs.
-                    @else
-                        Tunisian Olive Oil Platform (TOOP) is a comprehensive marketplace connecting all stakeholders in Tunisia's olive production chain - from farmers to mills, carriers to packers, and traders to consumers.
-                    @endif
+                    {{ __('platform_desc') }}
                 </p>
             </div>
 

@@ -1,61 +1,27 @@
 @extends('layouts.app')
 
 @php
-$title = __('public.how_it_works.title') . ' | ' . config('app.name');
-$description = __('public.how_it_works.description');
-$heading = __('public.how_it_works.heading');
-$body = __('public.how_it_works.body');
-$disclaimer = __('public.common.disclaimer');
-
-$locale = app()->getLocale();
+$title = __('how_it_works_title') . ' | ' . config('app.name');
+$description = __('how_it_works_description');
+$heading = __('how_it_works_heading');
+$body = __('how_it_works_body');
+$disclaimer = __('common_disclaimer');
 
 $roles = [
-	'ar' => [
-		['title' => 'منتج / مزارع', 'desc' => 'ينشر عرضاً مع النوعية، المنشأ، الصور/الفيديو، والسعر أو نطاق السعر.'],
-		['title' => 'معصرة', 'desc' => 'تقدم العصر والخدمات المساندة (تصفية، تخزين) مع شروط واضحة.'],
-		['title' => 'معبئ / علامة خاصة', 'desc' => 'يوفر التعبئة، الوسم الخاص، أو التصدير حسب الطلب.'],
-		['title' => 'مشترٍ / مستورد', 'desc' => 'يبحث، يرشّح حسب الجودة/الموقع، يتواصل ويبرم الاتفاق مباشرة.'],
-		['title' => 'ناقل / لوجستيك', 'desc' => 'ينقل الشحنات محلياً أو للتصدير، مع تتبع وتأكيد التسليم.'],
-	],
-	'fr' => [
-		['title' => 'Producteur / Agriculteur', 'desc' => 'Publie une annonce avec qualité, origine, médias et prix ou fourchette.'],
-		['title' => 'Moulin', 'desc' => 'Propose le pressage et les services associés (filtration, stockage) avec conditions.'],
-		['title' => 'Conditionneur / Marque blanche', 'desc' => 'Gère le conditionnement, l’étiquetage privé ou l’export selon la demande.'],
-		['title' => 'Acheteur / Importateur', 'desc' => 'Recherche, filtre par qualité/localisation, contacte et conclut directement.'],
-		['title' => 'Transporteur / Logistique', 'desc' => 'Assure le transport local ou export avec suivi et preuve de livraison.'],
-	],
-	'en' => [
-		['title' => 'Producer / Farmer', 'desc' => 'Publishes a listing with quality, origin, media, and price or range.'],
-		['title' => 'Mill', 'desc' => 'Provides pressing and adjacent services (filtration, storage) with clear terms.'],
-		['title' => 'Packer / Private Label', 'desc' => 'Handles bottling, private label, or export per request.'],
-		['title' => 'Buyer / Importer', 'desc' => 'Searches, filters by quality/location, contacts and closes directly.'],
-		['title' => 'Carrier / Logistics', 'desc' => 'Moves shipments locally or for export with tracking and proof of delivery.'],
-	],
-][$locale] ?? [];
+	['title' => __('Producer / Farmer'), 'desc' => __('role_producer_desc')],
+	['title' => __('Mill'), 'desc' => __('role_mill_desc')],
+	['title' => __('Packer / Private Label'), 'desc' => __('role_packer_desc')],
+	['title' => __('Buyer / Importer'), 'desc' => __('role_buyer_desc')],
+	['title' => __('Carrier / Logistics'), 'desc' => __('role_carrier_desc')],
+];
 
 $steps = [
-	'ar' => [
-		['title' => 'النشر', 'desc' => 'ينشر البائع العرض مع التفاصيل الدقيقة والوسائط والدُفعات المتاحة.'],
-		['title' => 'الاكتشاف والتصفية', 'desc' => 'يستخدم المشترون البحث والفلاتر (الجودة، السعر، الموقع، النوع).'],
-		['title' => 'التواصل والتفاوض', 'desc' => 'يتم التواصل عبر المنصة ثم الاتفاق المباشر بين الأطراف.'],
-		['title' => 'الخدمة المساندة', 'desc' => 'إضافة عصر/تعبئة/نقل حسب الحاجة، باتفاق واضح على التكلفة والجدول.'],
-		['title' => 'التنفيذ والتسليم', 'desc' => 'يتم التحضير والشحن مع تتبع وإثبات التسليم. المدفوعات والعقود بين الأطراف.'],
-	],
-	'fr' => [
-		['title' => 'Publication', 'desc' => 'Le vendeur publie une annonce détaillée avec médias et modalités de lot.'],
-		['title' => 'Découverte & filtres', 'desc' => 'Les acheteurs utilisent recherche et filtres (qualité, prix, localisation, type).'],
-		['title' => 'Contact & négociation', 'desc' => 'Dialogue via la plateforme puis accord direct entre les parties.'],
-		['title' => 'Services associés', 'desc' => 'Ajout pressage/conditionnement/transport selon besoin, avec coût et planning clairs.'],
-		['title' => 'Exécution & livraison', 'desc' => 'Préparation et expédition avec suivi et preuve de livraison. Paiements et contrats entre les parties.'],
-	],
-	'en' => [
-		['title' => 'Publish', 'desc' => 'Seller posts a detailed listing with media and lot terms.'],
-		['title' => 'Discover & filter', 'desc' => 'Buyers use search and filters (quality, price, location, type).'],
-		['title' => 'Contact & negotiate', 'desc' => 'Conversation happens via the platform, then direct agreement between parties.'],
-		['title' => 'Add services', 'desc' => 'Pressing/packing/shipping added as needed with clear cost and schedule.'],
-		['title' => 'Execute & deliver', 'desc' => 'Prep and ship with tracking and proof of delivery. Payments/contracts stay between parties.'],
-	],
-][$locale] ?? [];
+	['title' => __('Publish'), 'desc' => __('step_publish_desc')],
+	['title' => __('Discover & filter'), 'desc' => __('step_discover_desc')],
+	['title' => __('Contact & negotiate'), 'desc' => __('step_contact_desc')],
+	['title' => __('Add services'), 'desc' => __('step_services_desc')],
+	['title' => __('Execute & deliver'), 'desc' => __('step_execute_desc')],
+];
 @endphp
 
 @section('title', $title)
@@ -70,7 +36,7 @@ $steps = [
 		<div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#ffffff22,transparent_45%)]"></div>
 		<div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,#00000011,transparent_50%)]"></div>
 		<div class="max-w-5xl mx-auto relative z-10 text-center space-y-4">
-			<p class="text-sm uppercase tracking-[0.25em] text-white/80">{{ __('public.how_it_works.title') }}</p>
+			<p class="text-sm uppercase tracking-[0.25em] text-white/80">{{ __('how_it_works_title') }}</p>
 			<h1 class="text-3xl md:text-4xl font-extrabold leading-tight">{{ $heading }}</h1>
 			<p class="text-lg md:text-xl text-white/85">{{ $description }}</p>
 			<p class="text-sm text-white/80">{{ $disclaimer }}</p>
