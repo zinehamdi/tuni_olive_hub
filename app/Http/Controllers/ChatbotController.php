@@ -50,6 +50,7 @@ class ChatbotController extends Controller
             // Google Gemini API Request
             $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                 'systemInstruction' => [
+                    'role' => 'system',
                     'parts' => [['text' => $systemInstruction]]
                 ],
                 'contents' => $contents,
