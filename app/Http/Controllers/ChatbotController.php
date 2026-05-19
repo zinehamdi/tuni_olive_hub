@@ -86,11 +86,24 @@ class ChatbotController extends Controller
             $errorBody = $response->body();
             Log::error('Gemini API Error: ' . $errorBody);
             
-            // For debugging: extract exactly what Gemini complained about, even if it's HTML/text instead of JSON
+            // For debugging: extract exactly what Gemini complained about
             $geminiError = $response->json('error.message') ?? substr(strip_tags($errorBody), 0, 150);
             
+            // Try to fetch available models to help the user debug
+            $modelsList = '';
+            try {
+                $modelsResponse = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
+                if ($modelsResponse->successful()) {
+                    $models = collect($modelsResponse->json('models', []))
+                                ->filter(fn($m) => str_contains($m['supportedGenerationMethods'][0] ?? '', 'generateContent'))
+                                ->pluck('name')
+                                ->join(', ');
+                    $modelsList = " | الموديلات المتاحة لمفتاحك: " . ($models ?: 'لا يوجد موديلات مدعومة');
+                }
+            } catch (\Exception $e) {}
+            
             return response()->json([
-                'reply' => "عذراً، الخادم رفض الطلب. (تفاصيل الخطأ: {$geminiError})"
+                'reply' => "عذراً، الخادم رفض الطلب. (الخطأ: {$geminiError}) {$modelsList}"
             ], 500);
 
         } catch (\Exception $e) {
