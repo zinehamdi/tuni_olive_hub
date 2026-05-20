@@ -170,21 +170,21 @@
                 {{-- Service Card --}}
                 <div class="group relative bg-white border border-gray-100 shadow-xl rounded-3xl p-7 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#6A8F3B]/20 transition-all duration-300 flex flex-col overflow-hidden isolate">
                     <!-- Background Decorative Icon -->
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.06] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 invert z-0">
+                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 invert z-0">
                         <img src="{{ asset('icons/eye-browse-svg.svg') }}" class="w-full h-full object-contain">
                     </div>
                     <div class="relative z-10 flex flex-col flex-1">
                         <div class="mb-4">
                             <span class="text-3xl">{{ $service->icon_url }}</span>
-                            <h3 class="text-lg font-bold text-gray-900 mt-3">
+                            <h3 class="text-lg font-bold text-black mt-3">
                                 {{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}
                             </h3>
                         </div>
                         <div class="mb-6 flex-grow">
-                            <div class="text-3xl font-black text-[#C8A356]">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-gray-500">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
+                            <div class="text-3xl font-black text-[#C8A356]">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-gray-700">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
                             <div class="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <p class="text-sm text-[#6A8F3B] font-semibold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
-                                <p class="text-gray-600 text-xs mt-1 leading-relaxed">
+                                <p class="text-sm text-[#6A8F3B] font-bold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
+                                <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">
                                     {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
                                 </p>
                             </div>
@@ -333,7 +333,7 @@
 
                 @foreach($consultingPlans as $plan)
                 <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 flex flex-col relative overflow-hidden isolate">
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.06] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
+                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
                         @if($plan['icon'] === '🌍')
                             <img src="{{ asset('icons/cloud-acceleration-svg.svg') }}" class="w-full h-full object-contain">
                         @elseif($plan['icon'] === '✍️')
@@ -344,11 +344,11 @@
                     </div>
                     <div class="relative z-10 flex flex-col flex-1">
                         <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
-                        <h3 class="text-base font-bold text-gray-900">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
-                        <p class="text-gray-500 text-xs mt-0.5 mb-4">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
-                        <div class="text-2xl font-black text-emerald-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-400">TND</span></div>
-                        <p class="text-gray-400 text-[11px] mb-5">{{ $locale === 'ar' ? 'سعر الخدمة' : 'service price' }}</p>
-                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-600">
+                        <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
+                        <p class="text-gray-800 text-xs mt-0.5 mb-4 font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
+                        <div class="text-2xl font-black text-emerald-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
+                        <p class="text-gray-505 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر الخدمة' : 'service price' }}</p>
+                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
                             @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
                             <li class="flex items-start gap-1.5">
                                 <svg class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -394,7 +394,7 @@
                 @foreach($devPlans as $plan)
                 <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 flex flex-col relative overflow-hidden isolate">
                     <!-- Background Decorative Icon -->
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.06] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
+                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
                         @if($plan['icon'] === '🌐')
                             <img src="{{ asset('icons/cloud-acceleration-svg.svg') }}" class="w-full h-full object-contain">
                         @elseif($plan['icon'] === '🛒')
@@ -407,11 +407,11 @@
                     </div>
                     <div class="relative z-10 flex flex-col flex-1">
                         <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
-                        <h3 class="text-base font-bold text-gray-900">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
-                        <p class="text-gray-500 text-xs mt-0.5 mb-4">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
-                        <div class="text-2xl font-black text-blue-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-400">TND</span></div>
-                        <p class="text-gray-400 text-[11px] mb-5">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
-                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-600">
+                        <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
+                        <p class="text-gray-800 text-xs mt-0.5 mb-4 font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
+                        <div class="text-2xl font-black text-blue-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
+                        <p class="text-gray-505 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
+                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
                             @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
                             <li class="flex items-start gap-1.5">
                                 <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
