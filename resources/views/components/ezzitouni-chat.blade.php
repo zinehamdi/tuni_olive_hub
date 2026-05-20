@@ -1,22 +1,38 @@
 <div x-data="ezzitouniChat()" class="fixed bottom-6 left-6 z-[9999]">
     
-    <!-- Chat Toggle Button (Ezzitouni Avatar) -->
+    <!-- Chat Toggle Button (Ezzitouni Avatar or Close Icon) -->
     <button @click="toggleChat()" 
             class="relative w-16 h-16 rounded-full bg-white shadow-[0_10px_40px_-10px_rgba(106,143,59,0.5)] border-4 border-white hover:scale-110 transition-transform flex items-center justify-center overflow-hidden z-20 group">
-        <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
+        <!-- Ezzitouni Avatar -->
+        <img x-show="!isOpen" src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
         
-        <!-- Online Indicator -->
-        <span class="absolute bottom-0 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+        <!-- Close (X) Icon when chat is open -->
+        <div x-show="isOpen" class="text-[#6A8F3B]" style="display: none;">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+
+        <!-- Online Indicator (Only show when closed) -->
+        <span x-show="!isOpen" class="absolute bottom-0 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
     </button>
 
     <!-- Welcome Tooltip (Shows when chat is closed) -->
-    <div x-show="!isOpen" 
+    <div x-show="!isOpen && showTooltip" 
          x-transition.opacity.duration.500ms
-         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-none origin-bottom-left" style="display: none;">
+         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-auto origin-bottom-left" style="display: none;">
         
-        <div class="flex items-center gap-2 mb-2">
-            <h4 class="font-black text-[#6A8F3B] text-[10px] uppercase tracking-wider">{{ __('Zitouni') }}</h4>
-            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+        <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+                <h4 class="font-black text-[#6A8F3B] text-[10px] uppercase tracking-wider">{{ __('Zitouni') }}</h4>
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+            </div>
+            <!-- Close Welcome Tooltip -->
+            <button @click.stop="showTooltip = false" class="text-gray-400 hover:text-gray-600 transition p-0.5 rounded-full hover:bg-gray-100 cursor-pointer relative z-30" aria-label="Close tooltip">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         <div class="relative h-14">
@@ -122,7 +138,7 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('ezzitouniChat', () => ({
         isOpen: false,
-        isOpen: false,
+        showTooltip: true,
         isTyping: false,
         newMessage: '',
         zitouniIndex: 0,

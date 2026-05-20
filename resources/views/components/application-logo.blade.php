@@ -1,1 +1,1 @@
-<img src="{{ asset('images/zintooplogo3d.jpg') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }} Logo" class="rounded-full object-cover max-w-full h-10 w-10 sm:h-12 sm:w-12" {{ $attributes }}>
+<img src="{{ asset('images/zintooplogo3d.jpg') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }} Logo" {{ $attributes->merge(['class' => 'rounded-xl object-contain bg-white border border-gray-100 p-1 h-10 w-20 sm:h-12 sm:w-24 shadow-sm']) }}>
