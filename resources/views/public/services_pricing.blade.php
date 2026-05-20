@@ -181,8 +181,11 @@
                             </h3>
                         </div>
                         <div class="mb-6 flex-grow">
-                            <div class="text-3xl font-black text-[#C8A356]">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-gray-700">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
-                            <div class="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="relative z-10 inline-flex flex-col items-center justify-center bg-white/90 bg-[#6A8F3B]/5 border border-[#6A8F3B]/10 backdrop-blur-sm rounded-2xl p-3 mb-4 w-full">
+                                <div class="text-2xl font-black text-[#6A8F3B]">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-xs font-normal text-[#6A8F3B]/80">{{ $service->currency }}</span></div>
+                                <div class="text-[#6A8F3B] text-[11px] font-bold mt-0.5">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</div>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <p class="text-sm text-[#6A8F3B] font-bold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
                                 <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">
                                     {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
@@ -346,8 +349,10 @@
                         <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
                         <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
                         <p class="text-gray-800 text-xs mt-0.5 mb-4 font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
-                        <div class="text-2xl font-black text-emerald-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
-                        <p class="text-gray-505 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر الخدمة' : 'service price' }}</p>
+                        <div class="relative z-10 inline-flex flex-col items-center justify-center bg-white/90 bg-emerald-500/5 border border-emerald-500/10 backdrop-blur-sm rounded-2xl p-3 mb-5 w-full">
+                            <div class="text-2xl font-black text-emerald-700">{{ $plan['price'] }} <span class="text-xs font-normal text-emerald-600/80">TND</span></div>
+                            <div class="text-emerald-800 text-[11px] font-bold mt-0.5">{{ $locale === 'ar' ? 'سعر الخدمة' : 'service price' }}</div>
+                        </div>
                         <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
                             @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
                             <li class="flex items-start gap-1.5">
@@ -409,8 +414,10 @@
                         <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
                         <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
                         <p class="text-gray-800 text-xs mt-0.5 mb-4 font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
-                        <div class="text-2xl font-black text-blue-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
-                        <p class="text-gray-505 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
+                        <div class="relative z-10 inline-flex flex-col items-center justify-center bg-white/90 bg-blue-500/5 border border-blue-500/10 backdrop-blur-sm rounded-2xl p-3 mb-5 w-full">
+                            <div class="text-2xl font-black text-blue-700">{{ $plan['price'] }} <span class="text-xs font-normal text-blue-600/80">TND</span></div>
+                            <div class="text-blue-800 text-[11px] font-bold mt-0.5">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</div>
+                        </div>
                         <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
                             @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
                             <li class="flex items-start gap-1.5">
