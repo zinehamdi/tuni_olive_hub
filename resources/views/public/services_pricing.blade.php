@@ -331,8 +331,14 @@
 
                 @foreach($consultingPlans as $plan)
                 <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 flex flex-col relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.10] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert">
-                        <img src="{{ asset('icons/ddos-protection-svg.svg') }}" class="w-full h-full object-contain">
+                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-700">
+                        @if($plan['icon'] === '🌍')
+                            <img src="{{ asset('icons/cloud-acceleration-svg.svg') }}" class="w-full h-full object-contain">
+                        @elseif($plan['icon'] === '✍️')
+                            <img src="{{ asset('icons/target-svg.svg') }}" class="w-full h-full object-contain">
+                        @else
+                            <img src="{{ asset('icons/interface-control-svggraphscreen.svg') }}" class="w-full h-full object-contain">
+                        @endif
                     </div>
                     <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
                     <h3 class="text-base font-bold text-gray-900">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>

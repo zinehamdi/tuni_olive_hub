@@ -45,6 +45,21 @@ Route::middleware('set.locale')->group(function () {
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
     Route::view('/pricing', 'public.pricing')->name('pricing');
     Route::view('/services/pricing', 'public.services_pricing')->name('services.pricing');
+    Route::get('/services/appointment/consultation', function(\Illuminate\Http\Request $request) {
+        $name = $request->query('name', '');
+        $phone = $request->query('phone', '');
+        
+        $message = "مرحباً منصة الزين، أود حجز موعد استشارة بخصوص تصدير وتجارة زيت الزيتون التونسي.";
+        if ($name) {
+            $message .= "\n\nالاسم: " . $name;
+        }
+        if ($phone) {
+            $message .= "\nالهاتف: " . $phone;
+        }
+        
+        $waUrl = "https://api.whatsapp.com/send/?phone=21625777926&text=" . urlencode($message);
+        return redirect()->away($waUrl);
+    })->name('services.appointment.consultation');
     Route::get('/services/appointment/{service}', [\App\Http\Controllers\MarketingServiceController::class, 'appointmentForm'])->name('services.appointment');
     Route::post('/services/appointment/{service}', [\App\Http\Controllers\MarketingServiceController::class, 'submitAppointment'])->name('services.appointment.submit');
     Route::view('/contact', 'public.contact')->name('public.contact');
