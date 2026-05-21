@@ -279,9 +279,7 @@
                                             <img :src="story.url" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-500">
                                         </template>
                                         <template x-if="story.media_type === 'video'">
-                                            <div class="absolute inset-0 w-full h-full bg-gray-900 flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-white/80 group-hover:scale-110 transition duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                            </div>
+                                            <video :src="story.url" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-500 pointer-events-none"></video>
                                         </template>
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                                         <div class="absolute bottom-2 left-2 right-2 text-left">
