@@ -28,16 +28,14 @@ class StoryController extends Controller
     {
         $stories = Story::where('user_id', $user->id)
             ->where('status', 'active')
-            ->where('expires_at', '>', now())
             ->latest()
             ->get()
             ->map(function (Story $story) {
                 return [
-                    'id' => $story->id,
+                    'id'         => $story->id,
                     'media_type' => $story->media_type,
-                    'caption' => $story->caption,
-                    'expires_at' => $story->expires_at,
-                    'url' => Storage::url($story->media_path),
+                    'caption'    => $story->caption,
+                    'url'        => Storage::url($story->media_path),
                     'created_at' => $story->created_at,
                 ];
             });
@@ -85,20 +83,19 @@ class StoryController extends Controller
         }
 
         $story = Story::create([
-            'user_id' => $user->id,
+            'user_id'    => $user->id,
             'media_path' => $mediaPath,
             'media_type' => $mediaType,
-            'caption' => $request->input('caption'),
-            'expires_at' => now()->addHours(48),
-            'status' => 'active',
+            'caption'    => $request->input('caption'),
+            'expires_at' => now()->addYears(100), // permanent until deleted
+            'status'     => 'active',
         ]);
 
         $payload = [
-            'id' => $story->id,
+            'id'         => $story->id,
             'media_type' => $story->media_type,
-            'caption' => $story->caption,
-            'expires_at' => $story->expires_at,
-            'url' => Storage::url($story->media_path),
+            'caption'    => $story->caption,
+            'url'        => Storage::url($story->media_path),
             'created_at' => $story->created_at,
         ];
 
@@ -107,5 +104,24 @@ class StoryController extends Controller
         }
 
         return redirect()->back()->with('status', __('Story posted'));
+    }
+
+    /**
+     * DELETE /stories/{story} - Owner only
+     */
+    public function destroy(Story $story): JsonResponse
+    {
+        if ($story->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Delete media file from storage
+        if (Storage::exists($story->media_path)) {
+            Storage::delete($story->media_path);
+        }
+
+        $story->delete();
+
+        return response()->json(['success' => true]);
     }
 }

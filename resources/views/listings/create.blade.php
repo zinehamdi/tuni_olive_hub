@@ -86,7 +86,7 @@
           <div class="grid md:grid-cols-3 gap-5">
             <div>
               <label for="available_qty" class="block text-[#C8A356] font-semibold mb-1">الكمية المتاحة <span class="text-red-600">*</span></label>
-              <input id="available_qty" name="available_qty" type="number" step="0.001" min="0" required class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 200">
+              <input id="available_qty" name="available_qty" type="number" step="0.001" min="0" required value="{{ old('available_qty', request('quantity')) }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 200">
             </div>
             <div>
               <label for="qty_unit" class="block text-[#C8A356] font-semibold mb-1">الوحدة <span class="text-red-600">*</span></label>
@@ -100,7 +100,7 @@
           <div class="grid md:grid-cols-3 gap-5">
             <div>
               <label for="price_per_unit" class="block text-[#C8A356] font-semibold mb-1">السعر للوحدة <span class="text-red-600">*</span></label>
-              <input id="price_per_unit" name="price_per_unit" type="number" step="0.001" min="0" required class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 18.5">
+              <input id="price_per_unit" name="price_per_unit" type="number" step="0.001" min="0" required value="{{ old('price_per_unit', request('price')) }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 18.5">
             </div>
             <div>
               <label for="currency" class="block text-[#C8A356] font-semibold mb-1">العملة</label>

@@ -112,6 +112,7 @@ Route::middleware(['auth', 'set.locale'])->post('/user/{user}/toggle-like', [\Ap
 
 Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
+    Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.destroy');
     // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');

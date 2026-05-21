@@ -44,8 +44,9 @@ class ProfileController extends Controller
         $profileCompletion = $this->calculateProfileCompletion($user);
         $assignedLoads = $user->role === 'carrier' ? $user->assignedLoads()->latest()->paginate(10) : collect();
         $tanks = in_array($user->role, ['farmer', 'mill']) ? $user->tanks()->latest()->get() : collect();
+        $myStories = \App\Models\Story::where('user_id', $user->id)->where('status', 'active')->latest()->get();
 
-        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'tanks'));
+        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'tanks', 'myStories'));
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
@@ -217,6 +218,40 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * PATCH /profile/field
+     */
+    public function updateField(Request $request)
+    {
+        $request->validate([
+            'field' => ['required', 'string', 'in:name,phone,email,olive_type,farm_name,farm_location,tree_number,camion_capacity,company_name,mill_name,packer_name'],
+            'value' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user = $request->user();
+        $field = $request->input('field');
+        $value = $request->input('value');
+
+        // Check if the field is actually allowed to be updated through this method
+        $allowedFields = [
+            'name', 'phone', 'email', 'olive_type', 'farm_name', 'farm_location', 
+            'tree_number', 'camion_capacity', 'company_name', 'mill_name', 'packer_name'
+        ];
+
+        if (in_array($field, $allowedFields)) {
+            $user->$field = $value;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('Updated successfully!'),
+                'value' => $value
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => __('Invalid field.')], 400);
     }
 
     /**

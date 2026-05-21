@@ -123,7 +123,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label for="camion_capacity" class="block text-gray-900 font-bold mb-2">سعة الشاحنة (بالطن) <span class="text-red-600">*</span></label>
-                            <input id="camion_capacity" type="number" step="0.1" name="camion_capacity" value="{{ old('camion_capacity') }}" required 
+                            <input id="camion_capacity" type="number" step="0.1" name="camion_capacity" value="{{ old('camion_capacity', request('camion_capacity')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
                                 placeholder="مثال: 5، 10، 20">
                             @error('camion_capacity')

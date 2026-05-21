@@ -126,7 +126,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label for="mill_name" class="block text-gray-900 font-bold mb-2">اسم المعصرة <span class="text-red-600">*</span></label>
-                            <input id="mill_name" type="text" name="mill_name" value="{{ old('mill_name') }}" required 
+                            <input id="mill_name" type="text" name="mill_name" value="{{ old('mill_name', request('mill_name')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#8B4513] focus:ring-4 focus:ring-[#8B4513]/20 transition-all" 
                                 placeholder="أدخل اسم المعصرة">
                             @error('mill_name')

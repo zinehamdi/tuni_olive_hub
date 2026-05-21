@@ -122,7 +122,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="olive_type" class="block text-gray-900 font-bold mb-2">نوع الزيتون <span class="text-red-600">*</span></label>
-                            <input id="olive_type" type="text" name="olive_type" value="{{ old('olive_type') }}" required 
+                            <input id="olive_type" type="text" name="olive_type" value="{{ old('olive_type', request('olive_type')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="مثال: شملالي، شتوي، زرازي">
                             @error('olive_type')
@@ -132,7 +132,7 @@
 
                         <div>
                             <label for="farm_location" class="block text-gray-900 font-bold mb-2">موقع المزرعة <span class="text-red-600">*</span></label>
-                            <input id="farm_location" type="text" name="farm_location" value="{{ old('farm_location') }}" required 
+                            <input id="farm_location" type="text" name="farm_location" value="{{ old('farm_location', request('farm_location')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="المدينة، المحافظة">
                             @error('farm_location')
@@ -142,7 +142,7 @@
 
                         <div class="md:col-span-2">
                             <label for="tree_number" class="block text-gray-900 font-bold mb-2">عدد الأشجار <span class="text-red-600">*</span></label>
-                            <input id="tree_number" type="number" name="tree_number" value="{{ old('tree_number') }}" required 
+                            <input id="tree_number" type="number" name="tree_number" value="{{ old('tree_number', request('tree_number')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="أدخل عدد الأشجار">
                             @error('tree_number')
