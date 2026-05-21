@@ -248,7 +248,7 @@
                          @mouseleave="hideBot()">
                          
                         <!-- Navbar Hover Bot -->
-                        <div class="absolute -bottom-16 transition-all duration-300 ease-out flex flex-col items-center pointer-events-none z-[60] w-max"
+                        <div class="absolute -bottom-16 transition-all duration-300 ease-out flex flex-col items-center pointer-events-none z-[60] w-max opacity-0 translate-y-2 scale-95"
                              :class="showBot ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'"
                              :style="`left: 0; transform: translateX(calc(${botLeft}px - 50%));`">
                              
