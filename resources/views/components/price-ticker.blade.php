@@ -67,7 +67,7 @@
                             @if($price->product_type === 'olive')
                                 ({{ ucfirst($price->variety) }})
                             @else
-                                ({{ app()->getLocale() === 'ar' ? 'زيت' : __('Oil') }})
+                                ({{ __('nav.oil') }})
                             @endif
                         </span>
                         <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
@@ -116,7 +116,7 @@
                             @if($price->product_type === 'olive')
                                 ({{ ucfirst($price->variety) }})
                             @else
-                                ({{ app()->getLocale() === 'ar' ? 'زيت' : __('Oil') }})
+                                ({{ __('nav.oil') }})
                             @endif
                         </span>
                         <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">

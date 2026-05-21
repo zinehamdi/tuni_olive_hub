@@ -265,38 +265,38 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('home') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'اكتشف أحدث العروض والمنتجات القريبة منك 🫒' : 'Discover the latest offers near you 🫒' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('home') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_home') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                             </div>
                             <span>{{ __('nav.home') }}</span>
                         </a>
-                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'تابع أسعار السوق المحلية لحظة بلحظة 📊' : 'Track local market prices in real-time 📊' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_prices') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/30 to-amber-600/30 group-hover:from-amber-400/40 group-hover:to-amber-600/40 flex items-center justify-center transition-all">
                                 <span class="text-base">📊</span>
                             </div>
                             <span>{{ __('nav.prices') }}</span>
                         </a>
-                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'أضف منتجك أو زيتونك للبيع مجاناً الآن! 💰' : 'Add your product or olives for sale free! 💰' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_sell') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6A8F3B]/30 to-[#5a7a2f]/30 group-hover:from-[#6A8F3B]/50 group-hover:to-[#5a7a2f]/50 flex items-center justify-center transition-all">
                                 <span class="text-base">🫒</span>
                             </div>
-                            <span>{{ app()->getLocale() === 'ar' ? 'بيع زيتك/زيتونك' : __('Sell Your Oil') }}</span>
+                            <span>{{ __('nav.sell_your_oil') }}</span>
                         </a>
-                        <a href="{{ route('how-it-works') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'تعرف على كيفية عمل المنصة خطوة بخطوة 📖' : 'Learn how the platform works step by step 📖' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('how-it-works') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_how') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </div>
                             <span>{{ __('nav.how_it_works') }}</span>
                         </a>
-                        <a href="{{ route('about') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'من نحن وما هي رسالتنا لقطاع الزيتون التونسي 🇹🇳' : 'Who we are and our mission for Tunisian olive sector 🇹🇳' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('about') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_about') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                             </div>
                             <span>{{ __('nav.about') }}</span>
                         </a>
                         @auth
-                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, '{{ app()->getLocale() === 'ar' ? 'لوحة التحكم الخاصة بك لإدارة حسابك وعروضك ⚙️' : 'Your dashboard to manage your account and offers ⚙️' }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_dashboard') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C8A356]/30 to-[#b08a3c]/30 group-hover:from-[#C8A356]/40 group-hover:to-[#b08a3c]/40 flex items-center justify-center transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                                 </div>
@@ -423,7 +423,7 @@
                                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                                                 <span x-show="unreadCount > 0" x-cloak class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center" x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
                                             </div>
-                                            <span class="font-medium text-sm">{{ __('Inbox') }}</span>
+                                            <span class="font-medium text-sm">{{ __('nav.inbox') }}</span>
                                             <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                         </a>
                                         <a href="{{ route('profile.edit') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-[#6A8F3B]/10 transition-all duration-200 flex items-center gap-3">
@@ -494,7 +494,7 @@
                         </a>
                         <a href="{{ route('listings.create') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                             <div class="w-9 h-9 rounded-lg bg-[#6A8F3B]/30 flex items-center justify-center"><span class="text-lg">🫒</span></div>
-                            {{ app()->getLocale() === 'ar' ? 'بيع زيتك/زيتونك' : __('Sell Your Oil') }}
+                            {{ __('nav.sell_your_oil') }}
                         </a>
                         <a href="{{ route('how-it-works') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">

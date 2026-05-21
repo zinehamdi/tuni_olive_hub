@@ -29,4 +29,15 @@ return [
     'settings' => 'Settings',
     'my_listings' => 'My Listings',
     'marketplace' => 'Marketplace',
+
+    'sell_your_oil' => 'Sell Your Oil / Olives',
+    'inbox' => 'Inbox',
+    'live_prices' => 'Live Prices from Tunisian Markets',
+    'oil' => 'Oil',
+    'tooltip_home' => 'Discover the latest offers near you 🫒',
+    'tooltip_prices' => 'Track local market prices in real-time 📊',
+    'tooltip_sell' => 'Add your product or olives for sale free! 💰',
+    'tooltip_how' => 'Learn how the platform works step by step 📖',
+    'tooltip_about' => 'Who we are and our mission for Tunisian olive sector 🇹🇳',
+    'tooltip_dashboard' => 'Your dashboard to manage your account and offers ⚙️',
 ];

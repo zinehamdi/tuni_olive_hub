@@ -29,4 +29,15 @@ return [
     'settings' => 'Paramètres',
     'my_listings' => 'Mes annonces',
     'marketplace' => 'Marché',
+
+    'sell_your_oil' => 'Vendez votre huile/olives',
+    'inbox' => 'Boîte de réception',
+    'live_prices' => 'Prix en direct des marchés tunisiens',
+    'oil' => 'Huile',
+    'tooltip_home' => 'Découvrez les dernières offres près de chez vous 🫒',
+    'tooltip_prices' => 'Suivez les prix du marché local en temps réel 📊',
+    'tooltip_sell' => 'Ajoutez votre produit ou vos olives à vendre gratuitement ! 💰',
+    'tooltip_how' => 'Découvrez le fonctionnement de la plateforme étape par étape 📖',
+    'tooltip_about' => 'Qui nous sommes et notre mission pour le secteur oléicole tunisien 🇹🇳',
+    'tooltip_dashboard' => 'Votre tableau de bord pour gérer votre compte et vos offres ⚙️',
 ];
