@@ -634,7 +634,9 @@
                                     <input type="text" x-model="quickPin" placeholder="PIN" class="flex-1 px-2 py-1 border border-amber-200 rounded-lg text-center font-mono text-xs focus:outline-none focus:border-amber-400 min-w-0">
                                     <button @click="finalizeTrip({{ $at->id }},quickPin)" :disabled="!quickPin||saving" class="px-2.5 py-1 bg-green-600 text-white rounded-lg text-xs font-bold disabled:opacity-50">🏁</button>
                                 </div>
-                                @endif@endif@endif
+                                @endif
+                                @endif
+                                @endif
                             </div>
                         </div>
                     </div>
