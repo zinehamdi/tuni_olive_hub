@@ -109,12 +109,14 @@
               </select>
             </div>
             <div>
-              <label for="quality_grade" class="block text-[#C8A356] font-semibold mb-1">الجودة</label>
-              <select id="quality_grade" name="quality_grade" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]">
+              <label for="quality" class="block text-[#C8A356] font-semibold mb-1">الجودة</label>
+              <select id="quality" name="quality" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]">
                 <option value="">— اختر —</option>
-                <option value="extra_virgin">بكر ممتاز (Extra Virgin)</option>
+                <option value="bio">بيولوجي (Bio)</option>
+                <option value="evoo">بكر ممتاز (EVOO)</option>
                 <option value="virgin">بكر (Virgin)</option>
-                <option value="lampante">صناعي (Lampante)</option>
+                <option value="raffinee">مكرر (Raffinée)</option>
+                <option value="pomace">زيت فيتورة (Pomace)</option>
               </select>
             </div>
           </div>

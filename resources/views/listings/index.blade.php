@@ -21,7 +21,25 @@
           <td class="p-3">{{ $listing->id }}</td>
           <td class="p-3">{{ $listing->product->type ?? '-' }}</td>
           <td class="p-3">{{ $listing->product->variety ?? '-' }}</td>
-          <td class="p-3">{{ $listing->product->quality ?? '-' }}</td>
+          <td class="p-3">
+              @if($listing->product->quality)
+                  @if($listing->product->quality === 'bio')
+                      {{ __('بيولوجي (Bio)') }}
+                  @elseif($listing->product->quality === 'evoo')
+                      {{ __('بكر ممتاز (EVOO)') }}
+                  @elseif($listing->product->quality === 'virgin')
+                      {{ __('بكر (Virgin)') }}
+                  @elseif($listing->product->quality === 'raffinee')
+                      {{ __('مكرر (Raffinée)') }}
+                  @elseif($listing->product->quality === 'pomace')
+                      {{ __('زيت فيتورة (Pomace)') }}
+                  @else
+                      {{ $listing->product->quality }}
+                  @endif
+              @else
+                  -
+              @endif
+          </td>
           <td class="p-3">{{ $listing->available_qty ?? '-' }} {{ $listing->qty_unit ?? '' }}</td>
           <td class="p-3">{{ $listing->price_per_unit ?? '-' }} {{ $listing->currency ?? '' }}</td>
           <td class="p-3">{{ $listing->seller->name ?? '-' }}</td>

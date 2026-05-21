@@ -275,12 +275,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span class="px-2 py-1 rounded-full bg-[#6A8F3B] text-white text-xs font-semibold">
-                                        {{ $listing->product->type === 'olive' ? 'زيتون' : 'زيت زيتون' }}
+                                    <span class="px-2 py-1 rounded-full bg-[#6A8F3B] text-white text-xs font-semibold flex items-center gap-1">
+                                        <span>{{ $listing->seller?->role === 'farmer' ? '🌿' : ($listing->seller?->role === 'mill' ? '🏭' : ($listing->seller?->role === 'packer' ? '📦' : '👤')) }}</span>
+                                        <span>{{ $listing->seller?->farm_name ?? $listing->seller?->mill_name ?? $listing->seller?->company_name ?? $listing->seller?->name ?? __('Seller') }}</span>
                                     </span>
                                     @if($listing->product->quality)
                                         <span class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold">
-                                            {{ $listing->product->quality }}
+                                            @if($listing->product->quality === 'bio')
+                                                {{ __('بيولوجي (Bio)') }}
+                                            @elseif($listing->product->quality === 'evoo')
+                                                {{ __('بكر ممتاز (EVOO)') }}
+                                            @elseif($listing->product->quality === 'virgin')
+                                                {{ __('بكر (Virgin)') }}
+                                            @elseif($listing->product->quality === 'raffinee')
+                                                {{ __('مكرر (Raffinée)') }}
+                                            @elseif($listing->product->quality === 'pomace')
+                                                {{ __('زيت فيتورة (Pomace)') }}
+                                            @else
+                                                {{ $listing->product->quality }}
+                                            @endif
                                         </span>
                                     @endif
                                 </div>

@@ -121,7 +121,14 @@
                     <div class="mb-6">
                         @php
                             $productTypeLabel = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil'));
-                            $qualityLabel = $listing->product->quality ? ' ' . $listing->product->quality : '';
+                            $q = $listing->product->quality;
+                            $qualityLabel = '';
+                            if($q === 'bio') $qualityLabel = ' - ' . __('بيولوجي (Bio)');
+                            elseif($q === 'evoo') $qualityLabel = ' - ' . __('بكر ممتاز (EVOO)');
+                            elseif($q === 'virgin') $qualityLabel = ' - ' . __('بكر (Virgin)');
+                            elseif($q === 'raffinee') $qualityLabel = ' - ' . __('مكرر (Raffinée)');
+                            elseif($q === 'pomace') $qualityLabel = ' - ' . __('زيت فيتورة (Pomace)');
+                            elseif($q) $qualityLabel = ' - ' . $q;
                             $cityLabel = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
                             $organicLabel = $listing->product->is_organic ? (app()->getLocale() === 'ar' ? ' عضوي' : ' Organic') : '';
                         @endphp
