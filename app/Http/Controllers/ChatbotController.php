@@ -131,6 +131,14 @@ class ChatbotController extends Controller
                     }
                 }
                 
+                // Force inject the PDF link if the user asked about export or PDF
+                if (preg_match('/(تصدير|ديوانة|export|customs|كراس الشروط|korras|chorout|chourout|cahier des charges|pdf)/ui', $request->input('message'))) {
+                    $pdfLink = '<br><br><a href="/downloads/cahier_des_charges_export.pdf" download="cahier_des_charges_export.pdf" class="bg-[#6A8F3B] text-white p-2 rounded text-sm inline-block text-center w-full hover:bg-[#5a7a2f] shadow-md mt-2">📄 تحميل كراس الشروط (PDF)</a>';
+                    if (strpos($reply, 'cahier_des_charges_export.pdf') === false) {
+                        $reply .= $pdfLink;
+                    }
+                }
+
                 return response()->json([
                     'reply' => $reply
                 ]);
