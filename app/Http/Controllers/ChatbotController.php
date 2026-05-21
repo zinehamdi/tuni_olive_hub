@@ -84,8 +84,8 @@ class ChatbotController extends Controller
         try {
             $model = config('services.gemini.model', 'gemini-2.0-flash');
             
-            // Google Gemini API Request
-            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
+            // Request Payload
+            $payload = [
                 'contents' => $contents,
                 'generationConfig' => [
                     'temperature' => 0.7,
@@ -93,7 +93,23 @@ class ChatbotController extends Controller
                     'topP' => 0.95,
                     'maxOutputTokens' => 1024,
                 ]
-            ]);
+            ];
+
+            // Google Gemini API Request
+            $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", $payload);
+
+            // Fallback for 503 Service Unavailable (Model Overloaded)
+            if ($response->status() === 503) {
+                Log::warning("Gemini API 503 on {$model}, retrying with gemini-2.0-flash-lite");
+                $fallbackModel = 'gemini-2.0-flash-lite-preview-02-05';
+                $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/{$fallbackModel}:generateContent?key={$apiKey}", $payload);
+                
+                // Secondary Fallback to 1.5 flash if 2.0 lite also fails
+                if ($response->status() === 503) {
+                    $fallbackModel = 'gemini-1.5-flash';
+                    $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/{$fallbackModel}:generateContent?key={$apiKey}", $payload);
+                }
+            }
 
             if ($response->successful()) {
                 $data = $response->json();
