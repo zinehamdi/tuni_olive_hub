@@ -44,7 +44,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="block text-gray-900 font-bold mb-2">الاسم الكامل <span class="text-red-600">*</span></label>
-                            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus 
+                            <input id="name" type="text" name="name" value="{{ old('name', request('name')) }}" required autofocus 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="أدخل اسمك الكامل">
                             @error('name')
@@ -74,7 +74,7 @@
 
                         <div>
                             <label for="phone" class="block text-gray-900 font-bold mb-2">رقم الهاتف <span class="text-red-600">*</span></label>
-                            <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required 
+                            <input id="phone" type="tel" name="phone" value="{{ old('phone', request('phone')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="+216 XX XXX XXX">
                             @error('phone')

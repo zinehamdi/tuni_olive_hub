@@ -318,7 +318,7 @@ class ChatbotController extends Controller
         // Export (Tasdir) Intent - Keep as direct link
         if (preg_match('/(تصدير|ديوانة|لبرة|نصدر|tasdir|nsader|lbarra|export|diwana|exporter|exportation|customs|كراس الشروط|كيفاش|الشروط|القوانين|كيفاه|korraset chourout|koraset|chourout|kifech|kiféh|kifeh|cahier des charges|comment|conditions|how|requirements)/ui', $message)) {
             return 'مهتم بالتصدير (Export)؟ عملية التصدير تتطلب الالتزام بكراس الشروط الخاص بالديوانة التونسية.' .
-                   '<br><br><a href="/guides/export" class="bg-[#6A8F3B] text-white p-2 rounded text-sm inline-block text-center w-full hover:bg-[#5a7a2f]">📄 تحميل كراس الشروط للزيت (PDF)</a>';
+                   '<br><br><a href="/downloads/cahier_des_charges_export.pdf" download="cahier_des_charges_export.pdf" class="bg-[#6A8F3B] text-white p-2 rounded text-sm inline-block text-center w-full hover:bg-[#5a7a2f]">📄 تحميل كراس الشروط للزيت (PDF)</a>';
         }
         
         return 'عذراً، الخادم الخاص بالذكاء الاصطناعي مشغول حالياً. يمكنك استخدام الخيارات الأساسية مثل: بيع منتج، تصدير، أو الاتصال بالدعم.';
@@ -358,5 +358,21 @@ class ChatbotController extends Controller
         
         return 'لقد جمعت كل المعلومات المطلوبة! 🎉<br><br>الاستمارة الخاصة بك جاهزة. اضغط على الزر أدناه لإكمال التسجيل وإضافة صورتك:<br>' .
                '<a href="' . $url . '" class="bg-[#6A8F3B] text-white p-3 rounded-xl text-sm font-bold inline-block text-center w-full mt-3 shadow-md hover:bg-[#5a7a2f] transition">إكمال التسجيل واستكمال الاستمارة</a>';
+    }
+
+    private function getDefaultPrompt()
+    {
+        return "أنت اسمك 'الزيتوني' (Ezzitouni)، وأنت المساعد الذكي والخبير التجاري والقانوني لمنصة 'ZinToop' (سوق زيت الزيتون التونسي). 
+أنت خبير في:
+1. أنواع الزيتون التونسي (مثل: الشملالي الذي يتميز بطعمه الخفيف والفاكهي، والشتوي الذي يتميز بطعمه القوي والمرارة المفيدة، والوسلاتي، والزلماطي).
+2. قوانين التجارة الدولية وتصدير زيت الزيتون من تونس إلى العالم (الديوانة، التراخيص، شروط التصدير).
+3. منصة ZinToop: هي منصة مجانية 100% تربط بين الفلاح، صاحب المعصرة، التاجر، والمصدر بدون أي عمولات خفية.
+هدف المنصة: رقمنة قطاع الزيتون في تونس وتسهيل المعاملات.
+دورك:
+- أجب عن أسئلة المستخدمين بلهجة تونسية محترمة أو باللغة العربية الفصحى حسب لغة المستخدم.
+- قدّم نصائح تقنية حول جودة زيت الزيتون (الحموضة، العصر على البارد، البيروكسيد).
+- إذا سأل المستخدم عن التصدير، قدم له هذا الرابط لتحميل كراس الشروط: https://zintoop.com/downloads/cahier_des_charges_export.pdf
+- إذا أبدى المستخدم اهتماماً بشراء أو تصدير كميات كبيرة، شجعه على ملء نموذج التواصل أو حجز موعد (Appointment) عبر المنصة. 
+- كن موجزاً، ذكياً، ودقيقاً. لا تقدم معلومات كاذبة.";
     }
 }
