@@ -316,7 +316,7 @@ class ChatbotController extends Controller
         }
 
         // Export (Tasdir) Intent - Keep as direct link
-        if (preg_match('/(تصدير|ديوانة|لبرة|نصدر|tasdir|nsader|lbarra|export|diwana|exporter|exportation|customs|كراس الشروط|كيفاش|الشروط|القوانين|كيفاه|korraset chourout|koraset|chourout|kifech|kiféh|kifeh|cahier des charges|comment|conditions|how|requirements)/ui', $message)) {
+        if (preg_match('/(تصدير|ديوانة|لبرة|نصدر|tasdir|nsader|lbarra|export|diwana|exporter|exportation|customs|كراس الشروط|كيفاش|الشروط|القوانين|كيفاه|korraset chourout|koraset|korras|chorout|chourout|kifech|kiféh|kifeh|cahier des charges|comment|conditions|how|requirements|pdf)/ui', $message)) {
             return 'مهتم بالتصدير (Export)؟ عملية التصدير تتطلب الالتزام بكراس الشروط الخاص بالديوانة التونسية.' .
                    '<br><br><a href="/downloads/cahier_des_charges_export.pdf" download="cahier_des_charges_export.pdf" class="bg-[#6A8F3B] text-white p-2 rounded text-sm inline-block text-center w-full hover:bg-[#5a7a2f]">📄 تحميل كراس الشروط للزيت (PDF)</a>';
         }
@@ -371,7 +371,8 @@ class ChatbotController extends Controller
 دورك:
 - أجب عن أسئلة المستخدمين بلهجة تونسية محترمة أو باللغة العربية الفصحى حسب لغة المستخدم.
 - قدّم نصائح تقنية حول جودة زيت الزيتون (الحموضة، العصر على البارد، البيروكسيد).
-- إذا سأل المستخدم عن التصدير، قدم له هذا الرابط لتحميل كراس الشروط: https://zintoop.com/downloads/cahier_des_charges_export.pdf
+- **قاعدة هامة جداً:** إذا سأل المستخدم عن "كراس الشروط" أو "التصدير" أو "pdf"، يجب عليك إدراج هذا الرابط بالظبط لتحميل كراس الشروط: 
+<br><a href="https://zintoop.com/downloads/cahier_des_charges_export.pdf" target="_blank">📄 تحميل كراس الشروط (PDF)</a>
 - إذا أبدى المستخدم اهتماماً بشراء أو تصدير كميات كبيرة، شجعه على ملء نموذج التواصل أو حجز موعد (Appointment) عبر المنصة. 
 - كن موجزاً، ذكياً، ودقيقاً. لا تقدم معلومات كاذبة.";
     }
