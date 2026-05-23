@@ -27,6 +27,7 @@ class ListingResource extends JsonResource
                     'variety' => $this->product->variety,
                     'quality' => $this->product->quality,
                     'is_organic' => (bool) $this->product->is_organic,
+                    'media' => $this->product->media,
                 ];
             }),
             'price' => [ 'unit' => 'TND', 'value' => $this->relationLoaded('product') && $this->product ? $this->product->price : null ],
