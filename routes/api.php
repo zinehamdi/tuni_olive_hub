@@ -36,6 +36,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         $articles = \App\Models\Article::where('is_active', true)->latest()->take(10)->get();
         return response()->json(['success' => true, 'data' => $articles]);
     });
+    Route::post('chat', [\App\Http\Controllers\ChatbotController::class, 'chat']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'logout']);
