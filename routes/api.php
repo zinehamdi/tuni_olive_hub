@@ -29,9 +29,22 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::post('login', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'login']);
     Route::post('register', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'register']);
 
+    // Public routes
+    Route::get('listings', [\App\Http\Controllers\Api\V1\ListingController::class, 'index']);
+    Route::get('listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'show']);
+    Route::get('articles', function () {
+        $articles = \App\Models\Article::where('is_active', true)->latest()->take(10)->get();
+        return response()->json(['success' => true, 'data' => $articles]);
+    });
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'logout']);
-        Route::apiResource('listings', \App\Http\Controllers\Api\V1\ListingController::class);
+        
+        // Listings restricted operations
+        Route::post('listings', [\App\Http\Controllers\Api\V1\ListingController::class, 'store']);
+        Route::match(['put', 'patch'], 'listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'update']);
+        Route::delete('listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'destroy']);
+
         Route::apiResource('loads', \App\Http\Controllers\Api\V1\LoadController::class);
 
     // Orders

@@ -27,21 +27,37 @@ class ListingController extends ApiController
         } elseif ($sort === 'newest') {
             $q->orderByDesc('listings.created_at');
         } else { // ranked
-            // Compute score server-side via selectRaw; fallback for sqlite
             $now = now();
-            $q->leftJoin('products', 'products.id', '=', 'listings.product_id')
-              ->leftJoin('users as sellers', 'sellers.id', '=', 'listings.seller_id')
-              ->select('listings.*')
-          ->selectRaw('(0.5 * (COALESCE(sellers.trust_score,0)/100.0)
-                   + 0.3 * (CASE WHEN julianday(?) - julianday(listings.created_at) <= 1 THEN 1
-                             WHEN julianday(?) - julianday(listings.created_at) >= 30 THEN 0
-                             ELSE 1 - ((julianday(?) - julianday(listings.created_at) - 1) / 29.0) END)
-                   + 0.2 * (
-                       CASE WHEN (products.media IS NOT NULL AND json_array_length(products.media) > 0) THEN 1
-                          ELSE 0 END
-                     )) as ranked_score', [$now, $now, $now])
-              ->orderByDesc('ranked_score')
-              ->orderByDesc('listings.created_at');
+            $driver = \DB::connection()->getDriverName();
+            if ($driver === 'sqlite') {
+                $q->leftJoin('products', 'products.id', '=', 'listings.product_id')
+                  ->leftJoin('users as sellers', 'sellers.id', '=', 'listings.seller_id')
+                  ->select('listings.*')
+                  ->selectRaw('(0.5 * (COALESCE(sellers.trust_score,0)/100.0)
+                           + 0.3 * (CASE WHEN julianday(?) - julianday(listings.created_at) <= 1 THEN 1
+                                     WHEN julianday(?) - julianday(listings.created_at) >= 30 THEN 0
+                                     ELSE 1 - ((julianday(?) - julianday(listings.created_at) - 1) / 29.0) END)
+                           + 0.2 * (
+                               CASE WHEN (products.media IS NOT NULL AND json_array_length(products.media) > 0) THEN 1
+                                  ELSE 0 END
+                             )) as ranked_score', [$now, $now, $now])
+                  ->orderByDesc('ranked_score')
+                  ->orderByDesc('listings.created_at');
+            } else {
+                $q->leftJoin('products', 'products.id', '=', 'listings.product_id')
+                  ->leftJoin('users as sellers', 'sellers.id', '=', 'listings.seller_id')
+                  ->select('listings.*')
+                  ->selectRaw('(0.5 * (COALESCE(sellers.trust_score,0)/100.0)
+                           + 0.3 * (CASE WHEN DATEDIFF(?, listings.created_at) <= 1 THEN 1
+                                     WHEN DATEDIFF(?, listings.created_at) >= 30 THEN 0
+                                     ELSE 1 - ((DATEDIFF(?, listings.created_at) - 1) / 29.0) END)
+                           + 0.2 * (
+                               CASE WHEN (products.media IS NOT NULL AND JSON_LENGTH(products.media) > 0) THEN 1
+                                  ELSE 0 END
+                             )) as ranked_score', [$now, $now, $now])
+                  ->orderByDesc('ranked_score')
+                  ->orderByDesc('listings.created_at');
+            }
         }
 
         $per = (int) $request->input('per_page', 15);
