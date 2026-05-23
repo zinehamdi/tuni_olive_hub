@@ -50,6 +50,55 @@ class MessageController extends Controller
     }
 
     /**
+     * Get inbox for API
+     */
+    public function apiInbox(): JsonResponse
+    {
+        $user = auth()->user();
+        
+        $threads = Thread::where('object_type', 'direct_message')
+            ->whereJsonContains('participants', $user->id)
+            ->with(['messages' => function($q) {
+                $q->latest()->limit(1);
+            }])
+            ->get()
+            ->map(function($thread) use ($user) {
+                $otherUserId = collect($thread->participants)->first(fn($id) => $id != $user->id);
+                $otherUser = User::find($otherUserId);
+                
+                $lastMessage = $thread->messages->first();
+                $unreadCount = Message::where('thread_id', $thread->id)
+                    ->where('sender_id', '!=', $user->id)
+                    ->where('is_hidden', false)
+                    ->whereNull('read_at')
+                    ->count();
+                
+                return [
+                    'thread_id' => $thread->id,
+                    'other_user' => [
+                        'id' => $otherUser?->id,
+                        'name' => $otherUser?->name,
+                        'role' => $otherUser?->role,
+                        'profile_picture' => $otherUser?->profile_picture,
+                    ],
+                    'last_message' => $lastMessage ? [
+                        'body' => $lastMessage->body,
+                        'created_at' => $lastMessage->created_at->format('Y-m-d H:i:s'),
+                    ] : null,
+                    'unread_count' => $unreadCount,
+                ];
+            })
+            ->filter(fn($item) => $item['other_user']['id'] !== null)
+            ->sortByDesc(fn($item) => $item['last_message']['created_at'] ?? '')
+            ->values();
+        
+        return response()->json([
+            'success' => true,
+            'threads' => $threads
+        ]);
+    }
+
+    /**
      * Show conversation with a specific user
      */
     public function show(User $user)

@@ -26,7 +26,11 @@ RateLimiter::for('pod-photos', function(Request $request){
 Route::prefix('v1')->name('api.')->group(function () {
     Route::get('/ping', fn() => response()->json(['ok' => true, 'v' => 1]));
 
+    Route::post('login', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'login']);
+    Route::post('register', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'register']);
+
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'logout']);
         Route::apiResource('listings', \App\Http\Controllers\Api\V1\ListingController::class);
         Route::apiResource('loads', \App\Http\Controllers\Api\V1\LoadController::class);
 
@@ -124,6 +128,12 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::post('mobile/trips/{trip}/pod/photo', [\App\Http\Controllers\Api\V1\MobileController::class, 'podPhoto'])->middleware('throttle:pod-photos');
         Route::post('mobile/trips/{trip}/location', [\App\Http\Controllers\Api\V1\MobileController::class, 'updateLocation']);
         Route::get('threads/{thread}/messages', [\App\Http\Controllers\Api\V1\MessagesController::class, 'index']);
+        
+        // Chat endpoints for mobile app
+        Route::get('messages/inbox', [\App\Http\Controllers\MessageController::class, 'apiInbox']);
+        Route::get('messages/unread-count', [\App\Http\Controllers\MessageController::class, 'unreadCount']);
+        Route::get('messages/{user}/get', [\App\Http\Controllers\MessageController::class, 'getMessages']);
+        Route::post('messages/{user}/send', [\App\Http\Controllers\MessageController::class, 'send']);
 
         // Export Shipments
         Route::get('export/shipments', [\App\Http\Controllers\Api\V1\ExportShipmentsController::class, 'index']);
