@@ -91,7 +91,7 @@ window.alpineRegisterForm = function() {
             }
         }
     }
-}
+};
 
 // Service worker is now registered dynamically in layouts/app.blade.php to support subdirectory setups.
 
