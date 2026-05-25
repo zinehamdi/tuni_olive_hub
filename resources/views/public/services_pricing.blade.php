@@ -18,7 +18,7 @@
         this.modalOpen = true;
         
         // Log add_to_cart immediately in the background to capture clicks
-        fetch('/services/appointment/' + id)
+        fetch('{{ url('/services/appointment') }}/' + id)
             .then(res => console.log('Logged add_to_cart'))
             .catch(err => console.error(err));
     }

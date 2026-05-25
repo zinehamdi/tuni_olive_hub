@@ -748,7 +748,7 @@
         </div>
 
         <!-- Messages -->
-        <div class="bg-white rounded-2xl shadow-lg p-4" x-data="{unreadCount:0,init(){this.fetchUnread();setInterval(()=>this.fetchUnread(),30000);},async fetchUnread(){try{const r=await fetch('/messages/unread-count');const d=await r.json();this.unreadCount=d.count;}catch(e){}}}">
+        <div class="bg-white rounded-2xl shadow-lg p-4" x-data="{unreadCount:0,init(){this.fetchUnread();setInterval(()=>this.fetchUnread(),30000);},async fetchUnread(){try{const r=await fetch('{{ route('messages.unread') }}');const d=await r.json();this.unreadCount=d.count;}catch(e){}}}">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="text-xs font-bold text-gray-400 uppercase">{{ __('Messages') }}</h3>
                 <template x-if="unreadCount > 0"><span class="px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse" x-text="unreadCount > 99 ? '99+' : unreadCount"></span></template>

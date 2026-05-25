@@ -719,7 +719,7 @@ document.addEventListener('alpine:init', () => {
             this.makingDeal = true;
             
             try {
-                const res = await fetch('/api/v1/orders', {
+                const res = await fetch('{{ url('/api/v1/orders') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

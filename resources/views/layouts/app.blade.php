@@ -42,8 +42,8 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('images/zintooplogo3d.jpg') }}">
-    <link rel="apple-touch-icon" href="/icons/zintoop-192.png">
-    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="{{ asset('icons/zintoop-192.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#6A8F3B">
     <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
 
@@ -140,7 +140,7 @@
              unreadNotificationsCount: 0,
              async fetchUnread() { 
                  try { 
-                     const res = await fetch('/messages/unread-count', {
+                     const res = await fetch('{{ route('messages.unread') }}', {
                          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
                      }); 
                      if (!res.ok) return;
@@ -150,7 +150,7 @@
              },
              async fetchNotifications() {
                  try {
-                     const res = await fetch('/notifications', {
+                     const res = await fetch('{{ route('notifications.index') }}', {
                          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
                      });
                      if (!res.ok) return;
@@ -162,7 +162,7 @@
              async markNotificationsAsRead() {
                  if (this.unreadNotificationsCount === 0) return;
                  try {
-                     await fetch('/notifications/mark-read', { 
+                     await fetch('{{ route('notifications.mark-read') }}', { 
                          method: 'POST', 
                          headers: { 
                              'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
@@ -652,5 +652,12 @@
 
     @stack('scripts')
     @include('components.ezzitouni-chat')
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{{ asset('service-worker.js') }}').catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>

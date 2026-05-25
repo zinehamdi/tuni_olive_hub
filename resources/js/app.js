@@ -93,12 +93,7 @@ window.alpineRegisterForm = function() {
     }
 }
 
-// PWA install prompt and service worker registration
-if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('/service-worker.js').catch(() => {});
-	});
-}
+// Service worker is now registered dynamically in layouts/app.blade.php to support subdirectory setups.
 
 (() => {
 	let deferredPrompt;

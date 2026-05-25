@@ -824,7 +824,7 @@ document.addEventListener('alpine:init', () => {
                 const data = new FormData();
                 data.append('image', compressedFile);
                 
-                const response = await fetch('/api/v1/ai/yield-estimate', {
+                const response = await fetch('{{ url('/api/v1/ai/yield-estimate') }}', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json'
