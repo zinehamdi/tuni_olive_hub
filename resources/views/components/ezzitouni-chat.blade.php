@@ -79,8 +79,8 @@
                     <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover rounded-full">
                 </div>
                 <div>
-                    <h3 class="font-bold leading-tight">الزيتوني (Ezzitouni)</h3>
-                    <p class="text-xs text-white/80">خبير الزيت والتجارة الدولية</p>
+                    <h3 class="font-bold leading-tight">{{ __('Zitouni (Ezzitouni)') }}</h3>
+                    <p class="text-xs text-white/80">{{ __('Oil Expert & International Trade') }}</p>
                 </div>
             </div>
             <button @click="toggleChat()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition">
@@ -117,7 +117,7 @@
             <form @submit.prevent="sendMessage" class="flex gap-2">
                 <input x-model="newMessage" 
                        type="text" 
-                       placeholder="اكتب رسالتك هنا..." 
+                       placeholder="{{ __('Write your message here...') }}" 
                        class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B]"
                        :disabled="isTyping"
                        dir="auto">
@@ -128,7 +128,7 @@
                 </button>
             </form>
             <div class="text-[10px] text-center text-gray-400 mt-2">
-                مدعوم بالذكاء الاصطناعي. قد تكون الإجابات غير دقيقة أحياناً.
+                {{ __('AI-powered. Answers may be inaccurate.') }}
             </div>
         </div>
     </div>
@@ -143,13 +143,13 @@ document.addEventListener('alpine:init', () => {
         newMessage: '',
         zitouniIndex: 0,
         zitouniMessages: [
-            "منصة ZinToop آمنة تماماً ولا تحتوي على روابط مزعجة تعطل تجربتك.",
-            "نحن نربط بين منتجي زيت الزيتون التونسي والمشترين مباشرة وبدون وسطاء.",
-            "استخدم شريط البحث والفرز لتجد أفضل جودة زيت قريبة من منطقتك بسهولة.",
-            "رؤيتنا هي رقمنة قطاع الزيتون في تونس لضمان تجارة عادلة لكل فلاح تونسي."
+            @json(__('zitouni.message1')),
+            @json(__('zitouni.message2')),
+            @json(__('zitouni.message3')),
+            @json(__('zitouni.message4'))
         ],
         messages: [
-            { role: 'model', content: 'أهلاً بك! أنا "الزيتوني"، الخبير الخاص بمنصة ZinToop. كيف يمكنني مساعدتك اليوم؟\n\nإذا كنت تبحث عن شراء أو تصدير الزيت، يمكنني توجيهك.' }
+            { role: 'model', content: @json(__('zitouni.welcome')) }
         ],
 
         init() {
@@ -182,18 +182,18 @@ document.addEventListener('alpine:init', () => {
 
             try {
                 // Send to backend
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        message: userMsg,
-                        history: this.messages.slice(0, -1) // Send previous messages for context
-                    })
-                });
+                const response = await fetch('{{ route('chatbot.chat') }}', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Accept': 'application/json',
+                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                     },
+                     body: JSON.stringify({
+                         message: userMsg,
+                         history: this.messages.slice(0, -1) // Send previous messages for context
+                     })
+                 });
 
                 if (!response.ok) {
                     // Try to parse error JSON (Validation, CSRF, or our custom 500 error)
@@ -202,11 +202,11 @@ document.addEventListener('alpine:init', () => {
                     this.messages.push({ role: 'model', content: errorMsg });
                 } else {
                     const data = await response.json();
-                    this.messages.push({ role: 'model', content: data.reply || "عذراً، لم أتمكن من صياغة رد." });
+                    this.messages.push({ role: 'model', content: data.reply || @json(__('Sorry, could not generate a response.')) });
                 }
                 
             } catch (error) {
-                this.messages.push({ role: 'model', content: 'عذراً، حدث خطأ في الاتصال بالخادم. تأكد من اتصالك بالإنترنت.' });
+                this.messages.push({ role: 'model', content: @json(__('Sorry, a connection error occurred. Check your internet connection.')) });
             } finally {
                 this.isTyping = false;
                 this.scrollToBottom();
