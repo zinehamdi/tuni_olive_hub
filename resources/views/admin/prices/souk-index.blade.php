@@ -4,9 +4,18 @@
             <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
                 🫒 إدارة أسعار الأسواق التونسية
             </h2>
-            <a href="{{ route('admin.prices.souk.create') }}" class="bg-olive text-white px-6 py-2 rounded-lg hover:bg-olive-dark transition">
-                + إضافة سعر جديد
-            </a>
+            <div class="flex items-center gap-3">
+                <form action="{{ route('admin.prices.souk.refresh-dates') }}" method="POST" class="inline" onsubmit="return confirm('هل أنت متأكد من تحديث تاريخ جميع الأسعار النشطة إلى اليوم؟')">
+                    @csrf
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 font-medium">
+                        <span>🔄</span>
+                        <span>تحديث تواريخ الأسعار اليوم</span>
+                    </button>
+                </form>
+                <a href="{{ route('admin.prices.souk.create') }}" class="bg-olive text-white px-6 py-2 rounded-lg hover:bg-olive-dark transition">
+                    + إضافة سعر جديد
+                </a>
+            </div>
         </div>
     </x-slot>
 

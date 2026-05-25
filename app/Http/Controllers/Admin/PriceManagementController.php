@@ -20,6 +20,18 @@ class PriceManagementController extends Controller
         return view('admin.prices.souk-index', compact('prices'));
     }
 
+    public function refreshSoukDates()
+    {
+        // Update all active souk prices to today
+        SoukPrice::where('is_active', true)->update(['date' => \Illuminate\Support\Carbon::today()]);
+
+        // Clear general application cache to reflect changes immediately
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+
+        return Redirect::route('admin.prices.souk.index')
+            ->with('success', __('تم تحديث تاريخ جميع الأسعار النشطة إلى اليوم بنجاح.'));
+    }
+
     public function createSouk()
     {
         $souks = SoukPrice::getFamousSouks();

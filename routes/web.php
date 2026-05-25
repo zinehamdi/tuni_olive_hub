@@ -179,6 +179,7 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     // Price Management - Souk Prices
     Route::prefix('prices/souk')->name('prices.souk.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'indexSouk'])->name('index');
+        Route::post('/refresh-dates', [\App\Http\Controllers\Admin\PriceManagementController::class, 'refreshSoukDates'])->name('refresh-dates');
         Route::get('/create', [\App\Http\Controllers\Admin\PriceManagementController::class, 'createSouk'])->name('create');
         Route::post('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'storeSouk'])->name('store');
         Route::get('/{price}/edit', [\App\Http\Controllers\Admin\PriceManagementController::class, 'editSouk'])->name('edit');
