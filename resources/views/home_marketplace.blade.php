@@ -700,13 +700,13 @@
                             <!-- Product Image -->
                             <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
                                   <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
-                                     :alt="listing.product.variety"
+                                     :alt="listing.product?.variety || ''"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
                                 <div class="absolute top-3 right-3 flex gap-2">
                                     <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
-                                        :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                        x-text="listing.product.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
+                                        :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                        x-text="listing.product?.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                 </div>
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
@@ -724,7 +724,7 @@
                                 <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span x-show="listing.product.quality" class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
+                                    <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
                                     <span x-show="listing.status === 'active'" class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-semibold">{{ __('Active') }}</span>
                                 </div>
 
@@ -738,13 +738,13 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
-                                        <span x-text="listing.seller.role === 'admin' ? '{{ __('Seller') }}' : listing.seller.name"></span>
+                                        <span x-text="listing.seller?.role === 'admin' ? '{{ __('Seller') }}' : listing.seller?.name || ''"></span>
                                     </div>
-                                    <div x-show="listing.seller.location || listing.seller.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
+                                    <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
-                                        <span x-text="listing.seller.location || listing.seller.farm_location"></span>
+                                        <span x-text="listing.seller?.location || listing.seller?.farm_location || ''"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -776,7 +776,7 @@
                             <!-- Product Image -->
                             <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                                   <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
-                                     :alt="listing.product.variety"
+                                     :alt="listing.product?.variety || ''"
                                      class="w-full h-full object-cover"
                                      loading="lazy">
                                 <!-- Distance Badge -->
@@ -796,22 +796,22 @@
                                     <div class="flex items-center gap-3 mb-2 flex-wrap">
                                             <h3 class="text-2xl font-bold text-gray-900 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                                 <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
-                                                    :class="listing.product.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                                    x-text="listing.product.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
-                                        <span x-show="listing.product.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product.quality"></span>
+                                                    :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                                    x-text="listing.product?.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
+                                        <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                                         <div class="flex items-center gap-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
-                                            <span x-text="listing.seller.role === 'admin' ? '{{ __('Seller') }}' : listing.seller.name"></span>
+                                            <span x-text="listing.seller?.role === 'admin' ? '{{ __('Seller') }}' : listing.seller?.name || ''"></span>
                                         </div>
-                                        <div x-show="listing.seller.location || listing.seller.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
+                                        <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             </svg>
-                                            <span x-text="listing.seller.location || listing.seller.farm_location"></span>
+                                            <span x-text="listing.seller?.location || listing.seller?.farm_location || ''"></span>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1001,8 +1001,8 @@ document.addEventListener('alpine:init', () => {
             const organic = listing.product?.is_organic ? (isAr ? ' عضوي' : ' Organic') : '';
             
             let city = '';
-            if (listing.seller?.addresses && listing.seller.addresses.length > 0 && listing.seller.addresses[0].governorate) {
-                city = (isAr ? ' من ' : ' from ') + listing.seller.addresses[0].governorate;
+            if (listing.seller?.addresses?.length > 0 && listing.seller.addresses[0]?.governorate) {
+                city = (isAr ? ' من ' : ' from ') + (listing.seller.addresses[0]?.governorate || '');
             }
             
             return `${typeLabel} ${variety}${quality}${organic}${city}`;
@@ -1025,11 +1025,16 @@ document.addEventListener('alpine:init', () => {
             
             this.filteredListings = this.listings;
             // Try to get saved location from localStorage
-            const savedLocation = localStorage.getItem('userLocation');
-            if (savedLocation) {
-                this.userLocation = JSON.parse(savedLocation);
-                this.calculateDistances();
-                this.filterListings();
+            try {
+                const savedLocation = localStorage.getItem('userLocation');
+                if (savedLocation && savedLocation !== 'undefined') {
+                    this.userLocation = JSON.parse(savedLocation);
+                    this.calculateDistances();
+                    this.filterListings();
+                }
+            } catch (e) {
+                console.error("Failed to parse userLocation from localStorage:", e);
+                localStorage.removeItem('userLocation');
             }
         },
 
@@ -1072,9 +1077,9 @@ document.addEventListener('alpine:init', () => {
 
             this.listings.forEach(listing => {
                 // Try to get seller's address with coordinates
-                if (listing.seller?.addresses && listing.seller.addresses.length > 0) {
+                if (listing.seller?.addresses?.length > 0) {
                     const address = listing.seller.addresses[0];
-                    if (address.lat && address.lng) {
+                    if (address && address.lat && address.lng) {
                         listing.distance = this.calculateDistance(
                             this.userLocation.lat,
                             this.userLocation.lng,
