@@ -361,7 +361,19 @@
             <button @click="sidebarOpen = true" class="p-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <span class="font-bold text-gray-900 text-sm">{{ Auth::user()->name }}</span>
+            <span class="font-bold text-gray-900 text-sm">
+                @if(Auth::user()->role === 'farmer' && Auth::user()->farm_name)
+                    {{ Auth::user()->farm_name }}
+                @elseif(Auth::user()->role === 'mill' && Auth::user()->mill_name)
+                    {{ Auth::user()->mill_name }}
+                @elseif(Auth::user()->role === 'packer' && Auth::user()->packer_name)
+                    {{ Auth::user()->packer_name }}
+                @elseif(Auth::user()->role === 'carrier' && Auth::user()->company_name)
+                    {{ Auth::user()->company_name }}
+                @else
+                    {{ Auth::user()->name }}
+                @endif
+            </span>
             @if(Auth::user()->role !== 'carrier')
             <a href="{{ route('listings.create') }}" class="p-2 bg-[#6A8F3B] text-white rounded-xl">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
