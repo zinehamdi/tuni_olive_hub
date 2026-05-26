@@ -212,26 +212,6 @@
 
         <!-- Profile block -->
         <div class="p-5 border-b border-gray-100">
-            @php $sidePhotos = array_values(array_filter(Auth::user()->cover_photos ?? [], fn($p) => is_string($p))); @endphp
-            @if(count($sidePhotos) > 0)
-            <div class="relative h-20 rounded-2xl overflow-hidden mb-4 group">
-                <img src="{{ Storage::url($sidePhotos[0]) }}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
-                <label class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer bg-black/30">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    <input type="file" @change="uploadPhoto('cover', $event)" accept="image/*" class="hidden">
-                </label>
-            </div>
-            @else
-            <label class="block relative h-20 rounded-2xl overflow-hidden mb-4 cursor-pointer group">
-                <div class="w-full h-full bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex flex-col items-center justify-center text-white/80 group-hover:text-white transition">
-                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    <span class="text-xs font-bold">{{ __('Add Cover') }}</span>
-                </div>
-                <input type="file" @change="uploadPhoto('cover', $event)" accept="image/*" class="hidden">
-            </label>
-            @endif
-
             <div class="flex items-center gap-3">
                 <div class="relative group cursor-pointer flex-shrink-0" @click="$refs.sideProfileInput.click()">
                     <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-br from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] shadow-lg">
@@ -473,15 +453,15 @@
                             <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full flex items-center justify-center"><div class="w-2 h-2 bg-white rounded-full animate-pulse"></div></div>
                             <input type="file" x-ref="heroProfileInput" @change="uploadPhoto('profile', $event)" accept="image/*" class="hidden">
                         </div>
-                        <div class="flex-1 pb-1 min-w-0">
+                        <div class="flex-1 pb-1 min-w-0 translate-y-4">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <button @click="openEdit('name')" class="group flex items-center gap-1.5">
-                                    <h1 class="text-xl font-bold text-white drop-shadow-lg">{{ Auth::user()->name }}</h1>
-                                    <svg class="w-4 h-4 text-white/70 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    <h1 class="text-xl font-bold text-gray-900">{{ Auth::user()->name }}</h1>
+                                    <svg class="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>
                                 @if(Auth::user()->is_verified)<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-500 text-white rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>{{ __('Verified') }}</span>@endif
                             </div>
-                            <p class="text-white/80 text-sm mt-0.5 drop-shadow">{{ Auth::user()->phone ?: Auth::user()->email }}</p>
+                            <p class="text-gray-500 text-sm mt-0.5">{{ Auth::user()->phone ?: Auth::user()->email }}</p>
                         </div>
                     </div>
                 </div>
