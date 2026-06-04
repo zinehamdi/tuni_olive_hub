@@ -659,5 +659,7 @@
             });
         }
     </script>
+    @include("components.cookie-consent")
+    @include("components.lead-capture")
 </body>
 </html>

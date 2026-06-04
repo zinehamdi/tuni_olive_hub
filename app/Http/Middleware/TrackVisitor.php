@@ -35,12 +35,28 @@ class TrackVisitor
                     $userAgent = $request->header('User-Agent');
                     $truncatedUserAgent = $userAgent ? substr($userAgent, 0, 255) : null;
                     $device = $this->detectDevice($userAgent);
+                    
+                    $country = null;
+                    $city = null;
+                    if ($ip && $ip !== '127.0.0.1' && $ip !== '::1') {
+                        try {
+                            $geoResponse = \Illuminate\Support\Facades\Http::timeout(3)->get("http://ip-api.com/json/{$ip}");
+                            if ($geoResponse->successful() && $geoResponse->json('status') === 'success') {
+                                $country = $geoResponse->json('country');
+                                $city = $geoResponse->json('city');
+                            }
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::warning("Geolocation failed: " . $e->getMessage());
+                        }
+                    }
 
                     Visitor::updateOrCreate(
                         ['ip_address' => $ip, 'visited_date' => $date],
                         [
                             'user_agent' => $truncatedUserAgent,
                             'device' => $device,
+                            'country' => $country,
+                            'city' => $city,
                         ]
                     )->increment('hits');
                 } catch (\Throwable $e) {

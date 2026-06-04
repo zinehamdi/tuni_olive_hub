@@ -156,6 +156,8 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
     Route::get('/analytics/visitors', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'index'])->name('analytics.visitors');
     Route::get('/analytics/marketing', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'marketing'])->name('analytics.marketing');
+    Route::get('/subscribers', [\App\Http\Controllers\Admin\SubscriberController::class, 'index'])->name('subscribers.index');
+    Route::post('/subscribers/bulk-message', [\App\Http\Controllers\Admin\SubscriberController::class, 'bulkMessage'])->name('subscribers.bulk-message');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');

@@ -23,6 +23,9 @@ RateLimiter::for('pod-photos', function(Request $request){
         ->response(fn() => response()->json(['success'=>false,'error'=>'Too Many Requests'], 429));
 });
 
+// Lead capture route
+Route::post('subscribe', [\App\Http\Controllers\Api\SubscriberController::class, 'store']);
+
 Route::prefix('v1')->name('api.')->group(function () {
     Route::get('/ping', fn() => response()->json(['ok' => true, 'v' => 1]));
 
@@ -37,6 +40,8 @@ Route::prefix('v1')->name('api.')->group(function () {
         return response()->json(['success' => true, 'data' => $articles]);
     });
     Route::post('chat', [\App\Http\Controllers\ChatbotController::class, 'chat']);
+
+
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'logout']);
@@ -80,6 +85,8 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::post('ai/yield-estimate', [\App\Http\Controllers\Api\V1\AiYieldController::class, 'estimate']);
 
     // Reviews
+
+
     Route::middleware('auth:sanctum')->group(function(){
         Route::post('reviews', [\App\Http\Controllers\Api\V1\ReviewsController::class, 'store']);
         Route::post('reviews/{review}/reply', [\App\Http\Controllers\Api\V1\ReviewsController::class, 'reply']);

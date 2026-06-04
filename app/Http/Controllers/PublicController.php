@@ -43,8 +43,11 @@ class PublicController extends Controller
 
     public function sitemap()
     {
-        $items = Product::query()->where('is_premium', true)->where('export_ready', true)->latest()->take(500)->get(['id','updated_at']);
-        $xml = view('public.sitemap', ['items' => $items])->render();
+        $listings = \App\Models\Listing::where('status', 'active')->latest()->take(500)->get(['id','updated_at']);
+        $articles = \App\Models\Article::where('is_active', true)->latest()->take(100)->get(['id','updated_at']);
+        $gulfProducts = \App\Models\Product::where('is_premium', true)->where('export_ready', true)->latest()->take(100)->get(['id','updated_at']);
+        
+        $xml = view('public.sitemap', compact('listings', 'articles', 'gulfProducts'))->render();
         return response($xml, 200)->header('Content-Type', 'application/xml; charset=utf-8');
     }
 

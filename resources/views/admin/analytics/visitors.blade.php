@@ -222,6 +222,7 @@
                     <thead>
                         <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                             <th class="px-6 py-4 font-bold">{{ __('IP Address') }}</th>
+                            <th class="px-6 py-4 font-bold">{{ __('Location') }}</th>
                             <th class="px-6 py-4 font-bold">{{ __('Device') }}</th>
                             <th class="px-6 py-4 font-bold">{{ __('Hits') }}</th>
                             <th class="px-6 py-4 font-bold">{{ __('Last Visit') }}</th>
@@ -232,6 +233,15 @@
                         @forelse($recentVisitors as $v)
                         <tr class="hover:bg-gray-50/50 transition">
                             <td class="px-6 py-4 text-gray-900 font-mono">{{ $v->ip_address ?? 'Hidden' }}</td>
+                            <td class="px-6 py-4 text-gray-700">
+                                @if($v->country || $v->city)
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-xs font-bold text-gray-800">{{ $v->city ?? 'Unknown' }}, {{ $v->country ?? 'Unknown' }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-xs text-gray-400">N/A</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-gray-700">{{ $v->device }}</td>
                             <td class="px-6 py-4">
                                 <span class="bg-[#6A8F3B]/10 text-[#6A8F3B] px-2 py-1 rounded-lg font-bold">{{ $v->hits }}</span>
@@ -241,7 +251,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-400 font-bold">
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-400 font-bold">
                                 {{ __('No visitors logged yet.') }}
                             </td>
                         </tr>

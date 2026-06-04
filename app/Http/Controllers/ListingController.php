@@ -191,7 +191,7 @@ class ListingController extends Controller
             ]);
 
             // Redirect to dashboard with success message
-            return Redirect::route('dashboard')->with('success', __('Listing published successfully! 🎉'));
+            return Redirect::route('dashboard')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('❌ Validation Error:', [

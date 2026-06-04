@@ -59,5 +59,6 @@
                 @yield('content')
             </div>
         </div>
-    </body>
+        @include("components.cookie-consent")
+</body>
 </html>
