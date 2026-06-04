@@ -28,7 +28,7 @@
                 <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
             </div>
             <!-- Close Welcome Tooltip -->
-            <button @click.stop="showTooltip = false" class="text-gray-400 hover:text-gray-600 transition p-0.5 rounded-full hover:bg-gray-100 cursor-pointer relative z-30" aria-label="Close tooltip">
+            <button @click.stop="closeTooltip()" class="text-gray-400 hover:text-gray-600 transition p-0.5 rounded-full hover:bg-gray-100 cursor-pointer relative z-30" aria-label="Close tooltip">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -153,12 +153,25 @@ document.addEventListener('alpine:init', () => {
         ],
 
         init() {
+            // Check if user has closed the tooltip in the last 24 hours
+            const closedUntil = localStorage.getItem('zitouni_tooltip_closed_until');
+            if (closedUntil && new Date().getTime() < parseInt(closedUntil)) {
+                this.showTooltip = false;
+            }
+
             // Rotate messages infinitely
             setInterval(() => {
                 if (!this.isOpen) {
                     this.zitouniIndex = (this.zitouniIndex + 1) % this.zitouniMessages.length;
                 }
             }, 5000);
+        },
+
+        closeTooltip() {
+            this.showTooltip = false;
+            // Set for 24 hours from now
+            const until = new Date().getTime() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('zitouni_tooltip_closed_until', until.toString());
         },
 
         toggleChat() {
