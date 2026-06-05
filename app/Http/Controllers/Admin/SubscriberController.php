@@ -55,10 +55,12 @@ class SubscriberController extends Controller
                         $emailQueue++;
                     }
                 } elseif ($type === 'whatsapp') {
-                    // Convert markdown to WhatsApp friendly text
                     $waText = $body;
-                    // Remove markdown images entirely or convert to links. Let's just remove image tags since they don't work in WA.
-                    $waText = preg_replace('/!\[.*?\]\(.*?\)/', '', $waText);
+                    // Convert markdown images ![alt](url) to "alt: url" for WhatsApp
+                    $waText = preg_replace('/!\[(.*?)\]\((.*?)\)/', '$1: $2', $waText);
+                    // Convert standard links [text](url) to "text: url"
+                    $waText = preg_replace('/\[(.*?)\]\((.*?)\)/', '$1: $2', $waText);
+                    
                     // Convert Headers to WhatsApp Bold
                     $waText = preg_replace('/###\s+(.*)/', '*$1*', $waText);
                     $waText = preg_replace('/##\s+(.*)/', '*$1*', $waText);
