@@ -724,8 +724,8 @@
                                 <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
-                                    <span x-show="listing.packaging" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="listing.packaging"></span>
+                                    <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.product?.quality)"></span>
+                                    <span x-show="listing.packaging" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.packaging)"></span>
                                     <span x-show="listing.status === 'active'" class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-semibold">{{ __('Active') }}</span>
                                 </div>
 
@@ -806,8 +806,8 @@
                                                 <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
                                                     :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                                     x-text="listing.product?.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
-                                        <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
-                                        <span x-show="listing.packaging" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="listing.packaging"></span>
+                                        <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.product?.quality)"></span>
+                                        <span x-show="listing.packaging" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.packaging)"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                                         <div class="flex items-center gap-2">
@@ -991,6 +991,16 @@ document.addEventListener('alpine:init', () => {
             'Table Olives': '{{ __("Table Olives") }}',
             // Lowercase keys for direct matches from API/data
             'chemlali': '{{ __("chemlali") }}',
+            'gerboui': '{{ __("gerboui") }}',
+            'بكر ممتاز (evoo)': '{{ __("بكر ممتاز (EVOO)") }}',
+            'بكر (virgin)': '{{ __("بكر (Virgin)") }}',
+            'بكر عادي (ordinary virgin)': '{{ __("بكر عادي (Ordinary Virgin)") }}',
+            'وقاد (lampante)': '{{ __("وقاد (Lampante)") }}',
+            'بيولوجي (organic)': '{{ __("بيولوجي (Organic)") }}',
+            'صبّة (vrac)': '{{ __("صبّة (Vrac)") }}',
+            'معلّب (packaged)': '{{ __("معلّب (Packaged)") }}',
+            'جملة (gros)': '{{ __("جملة (Gros)") }}',
+            'تفصيل (détail)': '{{ __("تفصيل (Détail)") }}',
             'chetoui': '{{ __("chetoui") }}',
             'meski': '{{ __("meski") }}',
             'zalmati': '{{ __("zalmati") }}',

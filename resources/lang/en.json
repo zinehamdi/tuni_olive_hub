@@ -15,5 +15,14 @@
     "Network error. Please try again.": "Network error. Please try again.",
     "Sending...": "Sending...",
     "Choose your preferred method:": "Choose your preferred method:",
-    "or": "or"
+    "or": "or",
+    "بكر ممتاز (EVOO)": "Extra Virgin (EVOO)",
+    "بكر (Virgin)": "Virgin",
+    "بكر عادي (Ordinary Virgin)": "Ordinary Virgin",
+    "وقاد (Lampante)": "Lampante",
+    "بيولوجي (Organic)": "Organic",
+    "صبّة (Vrac)": "Bulk (Vrac)",
+    "معلّب (Packaged)": "Packaged",
+    "جملة (Gros)": "Wholesale",
+    "تفصيل (Détail)": "Retail"
 }
