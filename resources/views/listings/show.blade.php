@@ -126,7 +126,13 @@
                     <!-- Product Name & Badges -->
                     <div class="mb-6">
                         @php
-                            $productTypeLabel = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil'));
+                            $isAr = app()->getLocale() === 'ar';
+                            $isFr = app()->getLocale() === 'fr';
+
+                            $productTypeLabel = $listing->product->type === 'olive' 
+                                ? ($isAr ? 'زيتون' : ($isFr ? 'Olives' : __('Olives'))) 
+                                : ($isAr ? 'زيت زيتون' : ($isFr ? 'Huile d\'Olive' : __('Olive Oil')));
+                            
                             $q = $listing->product->quality;
                             $qualityLabel = '';
                             if($q === 'bio') $qualityLabel = ' - ' . __('بيولوجي (Bio)');
@@ -134,9 +140,16 @@
                             elseif($q === 'virgin') $qualityLabel = ' - ' . __('بكر (Virgin)');
                             elseif($q === 'raffinee') $qualityLabel = ' - ' . __('مكرر (Raffinée)');
                             elseif($q === 'pomace') $qualityLabel = ' - ' . __('زيت فيتورة (Pomace)');
-                            elseif($q) $qualityLabel = ' - ' . $q;
-                            $cityLabel = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
-                            $organicLabel = $listing->product->is_organic ? (app()->getLocale() === 'ar' ? ' عضوي' : ' Organic') : '';
+                            elseif($q) $qualityLabel = ' - ' . __($q); // This will map via ar.json / en.json / fr.json
+
+                            $cityLabel = $listing->seller->addresses->first() 
+                                ? ($isAr ? ' من ' : ($isFr ? ' de ' : ' from ')) . ($listing->seller->addresses->first()->governorate ?? '') 
+                                : '';
+                            
+                            $organicLabel = '';
+                            if ($listing->product->is_organic && $q !== 'بيولوجي (Organic)' && $q !== 'bio') {
+                                $organicLabel = $isAr ? ' عضوي' : ($isFr ? ' Biologique' : ' Organic');
+                            }
                         @endphp
                         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                             {{ $productTypeLabel }} {{ $varietyName }}{{ $qualityLabel }}{{ $organicLabel }}{{ $cityLabel }}
@@ -147,12 +160,12 @@
                             </span>
                             @if($listing->product->quality)
                                 <span class="px-4 py-2 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white font-bold">
-                                    {{ $listing->product->quality }}
+                                    {{ __($listing->product->quality) }}
                                 </span>
                             @endif
                             @if($listing->packaging)
                                 <span class="px-4 py-2 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white font-bold">
-                                    {{ $listing->packaging }}
+                                    {{ __($listing->packaging) }}
                                 </span>
                             @endif
                             @if($listing->status === 'active')

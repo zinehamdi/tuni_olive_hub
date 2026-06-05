@@ -992,15 +992,15 @@ document.addEventListener('alpine:init', () => {
             // Lowercase keys for direct matches from API/data
             'chemlali': '{{ __("chemlali") }}',
             'gerboui': '{{ __("gerboui") }}',
-            'بكر ممتاز (evoo)': '{{ __("بكر ممتاز (EVOO)") }}',
-            'بكر (virgin)': '{{ __("بكر (Virgin)") }}',
-            'بكر عادي (ordinary virgin)': '{{ __("بكر عادي (Ordinary Virgin)") }}',
-            'وقاد (lampante)': '{{ __("وقاد (Lampante)") }}',
-            'بيولوجي (organic)': '{{ __("بيولوجي (Organic)") }}',
-            'صبّة (vrac)': '{{ __("صبّة (Vrac)") }}',
-            'معلّب (packaged)': '{{ __("معلّب (Packaged)") }}',
-            'جملة (gros)': '{{ __("جملة (Gros)") }}',
-            'تفصيل (détail)': '{{ __("تفصيل (Détail)") }}',
+            'بكر ممتاز (evoo)': '{{ app()->getLocale() === "ar" ? "بكر ممتاز (EVOO)" : (app()->getLocale() === "fr" ? "Vierge Extra (EVOO)" : "Extra Virgin (EVOO)") }}',
+            'بكر (virgin)': '{{ app()->getLocale() === "ar" ? "بكر (Virgin)" : (app()->getLocale() === "fr" ? "Vierge" : "Virgin") }}',
+            'بكر عادي (ordinary virgin)': '{{ app()->getLocale() === "ar" ? "بكر عادي (Ordinary Virgin)" : (app()->getLocale() === "fr" ? "Vierge Courante" : "Ordinary Virgin") }}',
+            'وقاد (lampante)': '{{ app()->getLocale() === "ar" ? "وقاد (Lampante)" : "Lampante" }}',
+            'بيولوجي (organic)': '{{ app()->getLocale() === "ar" ? "بيولوجي (Organic)" : (app()->getLocale() === "fr" ? "Biologique (Bio)" : "Organic") }}',
+            'صبّة (vrac)': '{{ app()->getLocale() === "ar" ? "صبّة (Vrac)" : (app()->getLocale() === "fr" ? "En Vrac" : "Bulk (Vrac)") }}',
+            'معلّب (packaged)': '{{ app()->getLocale() === "ar" ? "معلّب (Packaged)" : (app()->getLocale() === "fr" ? "Emballé" : "Packaged") }}',
+            'جملة (gros)': '{{ app()->getLocale() === "ar" ? "جملة (Gros)" : (app()->getLocale() === "fr" ? "En Gros" : "Wholesale") }}',
+            'تفصيل (détail)': '{{ app()->getLocale() === "ar" ? "تفصيل (Détail)" : (app()->getLocale() === "fr" ? "Détail" : "Retail") }}',
             'chetoui': '{{ __("chetoui") }}',
             'meski': '{{ __("meski") }}',
             'zalmati': '{{ __("zalmati") }}',
@@ -1021,14 +1021,26 @@ document.addEventListener('alpine:init', () => {
 
         getEnhancedTitle(listing) {
             const isAr = '{{ app()->getLocale() }}' === 'ar';
-            const typeLabel = listing.product?.type === 'olive' ? (isAr ? 'زيتون' : 'Olives') : (isAr ? 'زيت زيتون' : 'Olive Oil');
+            const isFr = '{{ app()->getLocale() }}' === 'fr';
+            
+            let typeLabel = '';
+            if (listing.product?.type === 'olive') {
+                typeLabel = isAr ? 'زيتون' : (isFr ? 'Olives' : 'Olives');
+            } else {
+                typeLabel = isAr ? 'زيت زيتون' : (isFr ? 'Huile d\'Olive' : 'Olive Oil');
+            }
+
             const variety = this.translate(listing.product?.variety) || '';
-            const quality = listing.product?.quality ? ' ' + listing.product.quality : '';
-            const organic = listing.product?.is_organic ? (isAr ? ' عضوي' : ' Organic') : '';
+            const quality = listing.product?.quality ? ' ' + this.translate(listing.product.quality) : '';
+            
+            let organic = '';
+            if (listing.product?.is_organic && listing.product?.quality !== 'بيولوجي (Organic)') {
+                organic = isAr ? ' عضوي' : (isFr ? ' Biologique' : ' Organic');
+            }
             
             let city = '';
             if (listing.seller?.addresses?.length > 0 && listing.seller.addresses[0]?.governorate) {
-                city = (isAr ? ' من ' : ' from ') + (listing.seller.addresses[0]?.governorate || '');
+                city = (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + (listing.seller.addresses[0]?.governorate || '');
             }
             
             return `${typeLabel} ${variety}${quality}${organic}${city}`;
