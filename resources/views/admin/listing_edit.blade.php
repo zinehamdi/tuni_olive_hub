@@ -35,7 +35,14 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Quality') }}</label>
-                        <input name="quality" value="{{ old('quality', $product->quality) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        <select name="quality" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                            <option value="">{{ __('None') }}</option>
+                            <option value="بكر ممتاز (EVOO)" {{ old('quality', $product->quality) === 'بكر ممتاز (EVOO)' ? 'selected' : '' }}>بكر ممتاز (EVOO)</option>
+                            <option value="بكر (Virgin)" {{ old('quality', $product->quality) === 'بكر (Virgin)' ? 'selected' : '' }}>بكر (Virgin)</option>
+                            <option value="بكر عادي (Ordinary Virgin)" {{ old('quality', $product->quality) === 'بكر عادي (Ordinary Virgin)' ? 'selected' : '' }}>بكر عادي (Ordinary Virgin)</option>
+                            <option value="وقاد (Lampante)" {{ old('quality', $product->quality) === 'وقاد (Lampante)' ? 'selected' : '' }}>وقاد (Lampante)</option>
+                            <option value="بيولوجي (Organic)" {{ old('quality', $product->quality) === 'بيولوجي (Organic)' ? 'selected' : '' }}>بيولوجي (Organic)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -43,6 +50,16 @@
                     <div class="flex items-center gap-2">
                         <input type="checkbox" name="is_organic" value="1" {{ old('is_organic', $product->is_organic) ? 'checked' : '' }} class="h-4 w-4 text-[#6A8F3B] border-gray-300 rounded">
                         <span class="text-sm font-semibold text-gray-800">{{ __('Organic') }}</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Packaging / Condition') }}</label>
+                        <select name="packaging" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                            <option value="">{{ __('None') }}</option>
+                            <option value="صبّة (Vrac)" {{ old('packaging', $listing->packaging) === 'صبّة (Vrac)' ? 'selected' : '' }}>صبّة (Vrac)</option>
+                            <option value="معلّب (Packaged)" {{ old('packaging', $listing->packaging) === 'معلّب (Packaged)' ? 'selected' : '' }}>معلّب (Packaged)</option>
+                            <option value="جملة (Gros)" {{ old('packaging', $listing->packaging) === 'جملة (Gros)' ? 'selected' : '' }}>جملة (Gros)</option>
+                            <option value="تفصيل (Détail)" {{ old('packaging', $listing->packaging) === 'تفصيل (Détail)' ? 'selected' : '' }}>تفصيل (Détail)</option>
+                        </select>
                     </div>
                 </div>
 

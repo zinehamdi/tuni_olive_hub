@@ -240,6 +240,7 @@ class AdminController extends Controller
             'volume_liters' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['nullable', 'numeric', 'min:0'],
             'media' => ['nullable', 'string'],
+            'packaging' => ['nullable', 'string', 'max:255'],
             'new_media.*' => ['nullable', 'image', 'max:51200'],
         ]);
 
@@ -285,6 +286,7 @@ class AdminController extends Controller
             'quantity' => $data['quantity'] ?? $listing->quantity,
             // Force unit based on product type to prevent mismatches
             'unit' => $unit,
+            'packaging' => $data['packaging'] ?? $listing->packaging,
             'min_order' => $data['min_order'] ?? $listing->min_order,
             'status' => $data['status'],
             'media' => $mediaArray ?? $listing->media,
