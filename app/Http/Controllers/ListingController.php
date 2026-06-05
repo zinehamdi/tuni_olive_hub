@@ -70,8 +70,9 @@ class ListingController extends Controller
                 'category' => 'required|in:olive,oil',
                 'variety' => 'required|string|max:64',
                 'quality' => 'nullable|string|max:64',
+                'packaging' => 'nullable|string|max:64',
                 'seller_id' => 'nullable|exists:users,id',
-                'price' => 'required|numeric|min:0',
+                'price' => 'nullable|numeric|min:0',
                 'currency' => 'nullable|string|max:8',
                 'quantity' => 'required|numeric|min:0.001',
                 'unit' => 'nullable|string|max:16',
@@ -91,15 +92,18 @@ class ListingController extends Controller
             // Set seller_id to authenticated user if not provided
             $validated['seller_id'] = $validated['seller_id'] ?? Auth::id();
             
-            // Find or create product based on variety and category
+            // Handle price if null (means upon request)
+            $validated['price'] = $validated['price'] ?? 0;
+            
+            // Find or create product based on variety, category, and quality
             $product = Product::firstOrCreate(
                 [
                     'variety' => $validated['variety'],
                     'type' => $validated['category'],
-                    'seller_id' => $validated['seller_id']
+                    'seller_id' => $validated['seller_id'],
+                    'quality' => $validated['quality'] ?? null
                 ],
                 [
-                    'quality' => $validated['quality'] ?? null,
                     'price' => $validated['price'],
                     'stock' => $validated['quantity'],
                     'description' => $validated['variety'] . ' - ' . ($validated['category'] === 'olive' ? __('Olives') : __('Olive Oil'))
@@ -222,7 +226,7 @@ class ListingController extends Controller
     {
         // Load relationships
         // تحميل العلاقات
-        $listing->load(['product', 'seller']);
+        $listing->load(['product', 'seller.addresses']);
         
         return view('listings.show', compact('listing'));
     }

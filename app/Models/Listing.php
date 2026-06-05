@@ -63,7 +63,7 @@ class Listing extends Model
     protected $fillable = [
         'product_id',
         'seller_id',
-        'status',
+        'status', 'packaging',
         'price',
         'currency',
         'quantity',

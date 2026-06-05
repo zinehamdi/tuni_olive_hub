@@ -724,13 +724,21 @@
                                 <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
                                 
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
+                                    <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
+                                    <span x-show="listing.packaging" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="listing.packaging"></span>
                                     <span x-show="listing.status === 'active'" class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-semibold">{{ __('Active') }}</span>
                                 </div>
 
                                 <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
-                                    <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                    <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
+                                    <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
+                                        <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">السعر عند الطلب</span>
+                                    </template>
+                                    <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
+                                        <div>
+                                            <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
+                                            <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
+                                        </div>
+                                    </template>
                                 </div>
 
                                 <div class="space-y-2 text-sm text-gray-600 mb-4">
@@ -798,7 +806,8 @@
                                                 <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
                                                     :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                                     x-text="listing.product?.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
-                                        <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
+                                        <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="listing.product?.quality"></span>
+                                        <span x-show="listing.packaging" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="listing.packaging"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                                         <div class="flex items-center gap-2">
@@ -823,8 +832,15 @@
                                 </div>
                                 <div class="text-center md:text-left">
                                     <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
-                                        <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                        <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
+                                        <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
+                                            <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">السعر عند الطلب</span>
+                                        </template>
+                                        <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
+                                            <div>
+                                                <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
+                                                <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
+                                            </div>
+                                        </template>
                                     </div>
                                     <div class="flex gap-2">
                                         <a :href="'/listings/' + listing.id" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold whitespace-nowrap">

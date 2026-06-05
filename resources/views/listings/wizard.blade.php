@@ -65,8 +65,9 @@ console.log('[wizard] Variety selection mode - no product database needed');
                 <input type="hidden" name="category" x-model="formData.category">
                 <input type="hidden" name="variety" x-model="formData.variety">
                 <input type="hidden" name="quality" x-model="formData.quality">
+                <input type="hidden" name="packaging" x-model="formData.packaging">
                 <input type="hidden" name="quantity" x-model="formData.quantity">
-                <input type="hidden" name="price" x-model="formData.price">
+                <input type="hidden" name="price" x-model="formData.price_on_request ? 0 : formData.price">
                 <input type="hidden" name="currency" x-model="formData.currency">
                 <input type="hidden" name="unit" x-model="formData.unit">
                 <input type="hidden" name="min_order" x-model="formData.min_order">
@@ -175,6 +176,30 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </p>
                     </div>
 
+                    <!-- Quality (Only for Oil) -->
+                    <div x-show="formData.category === 'oil'" class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6" x-cloak>
+                        <label class="block text-lg font-bold text-[#1B2A1B] mb-4">الجودة / Quality (اختياري)</label>
+                        <select x-model="formData.quality"
+                                class="w-full text-xl rounded-xl border-2 border-gray-300 px-6 py-4 bg-white focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition">
+                            <option value="">— غير محدد / Unspecified —</option>
+                            <option value="بكر ممتاز (EVOO)">بكر ممتاز (Extra Virgin - EVOO)</option>
+                            <option value="بكر (Virgin)">بكر (Virgin)</option>
+                            <option value="بيولوجي (Organic)">زيت زيتون بيولوجي (Organic)</option>
+                            <option value="فيتورة (Pomace)">زيت فيتورة (Pomace)</option>
+                        </select>
+                    </div>
+
+                    <!-- Packaging / Condition -->
+                    <div class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6">
+                        <label class="block text-lg font-bold text-[#1B2A1B] mb-4">حالة التعبئة / Packaging</label>
+                        <select x-model="formData.packaging" required
+                                class="w-full text-xl rounded-xl border-2 border-gray-300 px-6 py-4 bg-white focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition">
+                            <option value="">— اختر حالة التعبئة —</option>
+                            <option value="جملة / صب (Vrac)">جملة / صب (Bulk / Vrac)</option>
+                            <option value="معلّب (Packaged)">معلّب (Packaged / Conditionné)</option>
+                        </select>
+                    </div>
+
                     <!-- AI Smart Yield Estimator -->
                     <div x-show="formData.category === 'olive'" class="mt-8 bg-gradient-to-br from-[#1B2A1B] to-[#6A8F3B] rounded-2xl p-6 shadow-xl text-white relative overflow-hidden" x-cloak>
                         <!-- Decorative Background -->
@@ -263,17 +288,30 @@ console.log('[wizard] Variety selection mode - no product database needed');
                     <p class="text-gray-600 mb-8">حدد سعر البيع للوحدة الواحدة</p>
                     
                     <div class="space-y-6">
-                        <div>
+                        <!-- Price On Request Toggle -->
+                        <label class="flex items-center bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:border-[#6A8F3B] transition cursor-pointer">
+                            <div class="relative">
+                                <input type="checkbox" x-model="formData.price_on_request" class="sr-only">
+                                <div class="block bg-gray-300 w-14 h-8 rounded-full transition" :class="{'bg-[#6A8F3B]': formData.price_on_request}"></div>
+                                <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition" :class="{'transform translate-x-6': formData.price_on_request}"></div>
+                            </div>
+                            <div class="ml-4 mr-4">
+                                <h4 class="font-bold text-[#1B2A1B] text-lg">السعر قابل للتفاوض / حسب الكمية والوجهة</h4>
+                                <p class="text-gray-500 text-sm">سيتم عرض "السعر عند الطلب" للمشترين ولن يتم إلزامك بتحديد سعر ثابت الآن.</p>
+                            </div>
+                        </label>
+
+                        <div x-show="!formData.price_on_request" x-transition>
                             <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">السعر لكل <span x-text="formData.unit || 'وحدة'"></span></label>
                             <div class="relative">
-                                <input type="number" x-model="formData.price" step="0.01" min="0" required
+                                <input type="number" x-model="formData.price" step="0.01" min="0" :required="!formData.price_on_request"
                                     class="w-full text-3xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 pr-24 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition text-right"
                                     placeholder="مثال: 2.50">
                                 <span class="absolute left-6 top-1/2 transform -translate-y-1/2 text-2xl font-bold text-gray-400" x-text="formData.currency"></span>
                             </div>
                         </div>
 
-                        <div>
+                        <div x-show="!formData.price_on_request" x-transition>
                             <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">العملة</label>
                             <div class="grid grid-cols-3 gap-3">
                                 <button type="button" @click="formData.currency = 'TND'"
@@ -738,9 +776,11 @@ document.addEventListener('alpine:init', () => {
             category: '',
             variety: '',
             quality: '',
+            packaging: '',
             quantity: '',
             unit: 'kg',
             price: '',
+            price_on_request: false,
             currency: 'TND',
             min_order: '',
             payment_methods: [],
@@ -932,7 +972,7 @@ document.addEventListener('alpine:init', () => {
                     }
                     break;
                 case 4:
-                    if (!this.formData.price || this.formData.price <= 0) {
+                    if (!this.formData.price_on_request && (!this.formData.price || this.formData.price <= 0)) {
                         alert('الرجاء إدخال السعر');
                         return false;
                     }

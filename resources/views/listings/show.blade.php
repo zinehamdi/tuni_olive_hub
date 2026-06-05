@@ -4,10 +4,10 @@
 @php
     $variety = $listing->product->variety ?? 'زيت زيتون';
     $city = $listing->seller->addresses->first() ? $listing->seller->addresses->first()->governorate : 'تونس';
-    $price = number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND');
     $unit = $listing->unit ? ($listing->unit == 'liter' ? 'لتر' : ($listing->unit == 'kg' ? 'كلغ' : $listing->unit)) : 'لتر';
+    $price = $listing->price == 0 ? 'السعر عند الطلب' : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . $unit);
 @endphp
-{{ $price }}/{{ $unit }} - {{ $variety }} - {{ $city }}
+{{ $price }} - {{ $variety }} - {{ $city }}
 @endsection
 @section('og_description', 'عرض متوفر الآن على منصة الزين! اشترِ زيت الزيتون التونسي مباشرة من المنتج بدون وسطاء.')
 @section('og_image')
@@ -146,8 +146,13 @@
                                 {{ $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil')) }}
                             </span>
                             @if($listing->product->quality)
-                                <span class="px-4 py-2 rounded-full bg-[#C8A356] text-white font-bold">
+                                <span class="px-4 py-2 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white font-bold">
                                     {{ $listing->product->quality }}
+                                </span>
+                            @endif
+                            @if($listing->packaging)
+                                <span class="px-4 py-2 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white font-bold">
+                                    {{ $listing->packaging }}
                                 </span>
                             @endif
                             @if($listing->status === 'active')
@@ -165,33 +170,36 @@
                     <!-- Price -->
                     <div class="mb-6 p-6 bg-gradient-to-r from-[#6A8F3B]/10 to-[#C8A356]/10 rounded-xl">
                         <div class="text-sm text-gray-600 mb-2">{{ __('Price') }}</div>
-                        <div class="text-5xl font-bold text-[#6A8F3B]">
-                            {{ number_format($listing->price, 2) }}
-                            <span class="text-2xl text-gray-600">
-                                @if($listing->currency === 'USD')
-                                    $
-                                @elseif($listing->currency === 'EUR')
-                                    €
-                                @else
-                                    {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
-                                @endif
-                            </span>
+                        <div class="text-5xl font-bold text-[#6A8F3B] flex items-end gap-2 flex-wrap">
+                            @if($listing->price == 0)
+                                <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-3xl animate-pulse">السعر عند الطلب</span>
+                            @else
+                                {{ number_format($listing->price, 2) }}
+                                <span class="text-2xl text-gray-600">
+                                    @if($listing->currency === 'USD')
+                                        $
+                                    @elseif($listing->currency === 'EUR')
+                                        €
+                                    @else
+                                        {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                    @endif
+                                </span>
+                                <span class="text-lg text-gray-500 font-normal">
+                                    / 
+                                    @if($listing->unit === 'kg')
+                                        {{ app()->getLocale() === 'ar' ? 'كلغ' : __('Kilogram') }}
+                                    @elseif($listing->unit === 'ton')
+                                        {{ app()->getLocale() === 'ar' ? 'طن' : __('Ton') }}
+                                    @elseif($listing->unit === 'liter')
+                                        {{ app()->getLocale() === 'ar' ? 'لتر' : __('Liter') }}
+                                    @elseif($listing->unit === 'bottle')
+                                        {{ app()->getLocale() === 'ar' ? 'قارورة' : __('Bottle') }}
+                                    @else
+                                        {{ $listing->unit ?? __('Unit') }}
+                                    @endif
+                                </span>
+                            @endif
                         </div>
-                                        <!-- Price per Unit -->
-                <div class="text-sm text-gray-600 mt-2">
-                    {{ __('Per') }} 
-                    @if($listing->unit === 'kg')
-                        {{ app()->getLocale() === 'ar' ? 'كلغ' : __('Kilogram') }}
-                    @elseif($listing->unit === 'ton')
-                        {{ app()->getLocale() === 'ar' ? 'طن' : __('Ton') }}
-                    @elseif($listing->unit === 'liter')
-                        {{ app()->getLocale() === 'ar' ? 'لتر' : __('Liter') }}
-                    @elseif($listing->unit === 'bottle')
-                        {{ app()->getLocale() === 'ar' ? 'قارورة' : __('Bottle') }}
-                    @else
-                        {{ $listing->unit ?? __('Unit') }}
-                    @endif
-                </div>
                     </div>
 
                     <!-- Seller Info -->
@@ -633,7 +641,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
             <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ __('Similar Products') }}</h2>
             <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @php
-                    $relatedListings = \App\Models\Listing::with(['product', 'seller'])
+                    $relatedListings = \App\Models\Listing::with(['product', 'seller.addresses'])
                         ->where('status', 'active')
                         ->where('id', '!=', $listing->id)
                         ->where(function($query) use ($listing) {
@@ -664,13 +672,17 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                         <div class="p-4">
                             <h3 class="font-bold text-gray-900 mb-2">{{ $relatedVariety }}</h3>
                             <div class="text-lg font-bold text-[#6A8F3B]">
-                                {{ number_format($related->product->price, 2) }} 
-                                @if($related->currency === 'USD')
-                                    $
-                                @elseif($related->currency === 'EUR')
-                                    €
+                                @if($related->price == 0)
+                                    <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-lg animate-pulse">السعر عند الطلب</span>
                                 @else
-                                    {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                    {{ number_format($related->product->price, 2) }} 
+                                    @if($related->currency === 'USD')
+                                        $
+                                    @elseif($related->currency === 'EUR')
+                                        €
+                                    @else
+                                        {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}
+                                    @endif
                                 @endif
                             </div>
                         </div>

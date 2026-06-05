@@ -32,8 +32,9 @@ This document outlines the exact sequence of commands to execute when deploying 
    npm run build
    ```
 
-5. **Clear Laravel Caches**:
+5. **Run Migrations & Clear Laravel Caches**:
    ```bash
+   php artisan migrate --force
    php artisan view:clear
    php artisan config:clear
    php artisan cache:clear
