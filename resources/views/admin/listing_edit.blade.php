@@ -63,14 +63,28 @@
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Price') }} ({{ __('TND') }})</label>
-                        <input type="number" step="0.01" min="0" name="price" value="{{ old('price', $product->price) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
+                <div x-data="{ priceOnRequest: {{ old('price', $product->price) == 0 ? 'true' : 'false' }} }">
+                    <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <div class="relative">
+                                <input type="checkbox" name="price_on_request" x-model="priceOnRequest" class="sr-only">
+                                <div class="block bg-gray-300 w-10 h-6 rounded-full transition" :class="{'bg-[#6A8F3B]': priceOnRequest}"></div>
+                                <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition" :class="{'transform translate-x-4': priceOnRequest}"></div>
+                            </div>
+                            <span class="text-sm font-bold text-gray-800">السعر عند الطلب (إخفاء السعر)</span>
+                        </label>
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Currency') }}</label>
-                        <input name="currency" value="{{ old('currency', $listing->currency ?? 'TND') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div x-show="!priceOnRequest">
+                            <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Price') }} ({{ __('TND') }})</label>
+                            <!-- If priceOnRequest is true, we send a hidden input with 0. If false, we show the number input. -->
+                            <input type="number" step="0.01" min="0" name="price" :value="priceOnRequest ? 0 : '{{ old('price', $product->price) }}'" :required="!priceOnRequest" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        </div>
+                        <div x-show="!priceOnRequest">
+                            <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Currency') }}</label>
+                            <input name="currency" value="{{ old('currency', $listing->currency ?? 'TND') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        </div>
                     </div>
                 </div>
 
