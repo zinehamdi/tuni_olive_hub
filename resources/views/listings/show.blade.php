@@ -216,16 +216,19 @@
                     </div>
 
                     <!-- Seller Info -->
-                    <div class="mb-6 p-6 bg-gray-50 rounded-xl">
-                        <h3 class="text-lg font-bold text-gray-900 mb-3">{{ __('Seller Information') }}</h3>
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-[#6A8F3B] flex items-center justify-center text-white font-bold text-xl">
+                    <div class="mb-6 bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="p-4 border-b border-gray-100">
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider">{{ __('Seller Information') }}</h3>
+                        </div>
+                        <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="flex items-center gap-4 p-5 group transition-all hover:bg-white cursor-pointer relative">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] shadow-inner flex-shrink-0 flex items-center justify-center text-white font-bold text-2xl group-hover:scale-110 transition-transform">
                                 {{ substr($listing->seller->name, 0, 1) }}
                             </div>
-                            <div>
-                                <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
-                                <div class="text-sm text-gray-600">
-                                   <div class="text-sm text-gray-600">
+                            <div class="flex-1">
+                                <div class="font-bold text-gray-900 text-lg group-hover:text-[#6A8F3B] transition-colors">
+                                    {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                </div>
+                                <div class="text-sm text-gray-600 font-medium">
                                       @if($listing->seller->role !== 'admin')
                                           @if($listing->seller->role === 'farmer')
                                               {{ __('Farmer') }}
@@ -239,10 +242,21 @@
                                       @else
                                           {{ __('User') }}
                                       @endif
-                                  </div>
                                 </div>
+                                @if($listing->seller->role !== 'admin')
+                                <div class="text-xs text-[#6A8F3B] mt-1 font-bold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
+                                    <span>{{ __('View Profile') }}</span>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </div>
+                                @endif
                             </div>
-                        </div>
+                            @if($listing->seller->role !== 'admin')
+                            <div class="text-gray-300 group-hover:text-[#6A8F3B] transition-colors absolute right-4 top-1/2 -translate-y-1/2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            @endif
+                        </a>
+                    </div>
                         
                         @if($listing->seller->addresses->first())
                             @php $address = $listing->seller->addresses->first(); @endphp
@@ -463,29 +477,36 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                     
                                     <div class="space-y-4">
                                         <!-- Seller Info -->
-                                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                                            <div class="w-12 h-12 rounded-full bg-[#6A8F3B] flex items-center justify-center text-white font-bold text-xl">
+                                        <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl group hover:bg-white hover:shadow-md transition-all relative cursor-pointer border border-transparent hover:border-gray-200">
+                                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white font-bold text-xl shadow-inner group-hover:scale-110 transition-transform flex-shrink-0">
                                                 {{ substr($listing->seller->name, 0, 1) }}
                                             </div>
-                                            <div>
-                                                <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
+                                            <div class="flex-1">
+                                                <div class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition-colors">
+                                                    {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                                </div>
                                                 <div class="text-sm text-gray-600">
-@if($listing->seller->role !== 'admin')
-                                                    @if($listing->seller->role === 'farmer')
-                                                        {{ __('Farmer') }}
-                                                    @elseif($listing->seller->role === 'carrier')
-                                                        {{ __('Carrier') }}
-                                                    @elseif($listing->seller->role === 'mill')
-                                                        {{ __('Mill') }}
-                                                    @elseif($listing->seller->role === 'packer')
-@endif
-                                                        {{ __('Packer') }}
+                                                    @if($listing->seller->role !== 'admin')
+                                                        @if($listing->seller->role === 'farmer')
+                                                            {{ __('Farmer') }}
+                                                        @elseif($listing->seller->role === 'carrier')
+                                                            {{ __('Carrier') }}
+                                                        @elseif($listing->seller->role === 'mill')
+                                                            {{ __('Mill') }}
+                                                        @elseif($listing->seller->role === 'packer')
+                                                            {{ __('Packer') }}
+                                                        @endif
                                                     @else
                                                         {{ __('User') }}
                                                     @endif
                                                 </div>
                                             </div>
-                                        </div>
+                                            @if($listing->seller->role !== 'admin')
+                                            <div class="text-gray-300 group-hover:text-[#6A8F3B] transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                            </div>
+                                            @endif
+                                        </a>
                                         
                                         <!-- Phone Number -->
                                         @if($listing->seller->phone)
@@ -550,12 +571,14 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                     </div>
                                     
                                     <!-- Seller Info -->
-                                    <div class="mb-4 p-4 bg-gray-50 rounded-xl flex items-center gap-3">
-                                        <div class="w-12 h-12 rounded-full bg-[#6A8F3B] flex items-center justify-center text-white font-bold text-xl">
+                                    <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="mb-4 p-4 bg-gray-50 rounded-xl flex items-center gap-3 group hover:bg-white hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-gray-200">
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white font-bold text-xl shadow-inner group-hover:scale-110 transition-transform flex-shrink-0">
                                             {{ substr($listing->seller->name, 0, 1) }}
                                         </div>
                                         <div class="flex-1">
-                                            <div class="font-bold text-gray-900">@if($listing->seller->role !== 'admin') <a href="{{ route('user.profile', $listing->seller) }}" class="hover:text @else <span class="text-gray-700 font-semibold" @endif-[#6A8F3B] underline-offset-2 hover:underline">{{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}</a></div>
+                                            <div class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition-colors">
+                                                {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                            </div>
                                             <div class="text-sm text-gray-600">
                                                 {{ $listing->seller->addresses->first()->governorate ?? '' }}
                                                 @if($listing->seller->addresses->first()->delegation)
@@ -563,7 +586,12 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
+                                        @if($listing->seller->role !== 'admin')
+                                        <div class="text-gray-300 group-hover:text-[#6A8F3B] transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </div>
+                                        @endif
+                                    </a>
                                     
                                     <!-- Map Container -->
                                     <div id="map" class="w-full h-96 rounded-xl border-2 border-gray-200" style="min-height: 384px; position: relative; z-index: 1;"></div>
