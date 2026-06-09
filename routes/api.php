@@ -81,8 +81,9 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::get('prices/today', [\App\Http\Controllers\Api\V1\PricesController::class, 'today']);
     Route::get('prices/history', [\App\Http\Controllers\Api\V1\PricesController::class, 'history']);
 
-    // AI Smart Yield Estimator
+    // AI Smart Yield & Variety Estimator
     Route::post('ai/yield-estimate', [\App\Http\Controllers\Api\V1\AiYieldController::class, 'estimate']);
+    Route::post('ai/variety-detect', [\App\Http\Controllers\Api\V1\AiYieldController::class, 'detectVariety']);
 
     // Reviews
 

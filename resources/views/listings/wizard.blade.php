@@ -170,6 +170,31 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <!-- مزيج -->
                             <option value="blend">{{ __('blend') }} – Blend (مزيج أصناف متعددة)</option>
                         </select>
+
+                        <!-- AI Variety Recognition Button -->
+                        <div class="mt-6 p-4 bg-white/50 border-2 border-[#C8A356]/30 rounded-xl">
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div class="flex items-center gap-3 w-full sm:w-auto">
+                                    <img src="{{ asset('images/ezzitouni_bot.png') }}" class="w-10 h-10 rounded-full border border-[#C8A356] shadow-sm">
+                                    <div class="text-right">
+                                        <h4 class="font-bold text-sm text-gray-900">التعرف الذكي على الصنف</h4>
+                                        <p class="text-xs text-gray-600">التقط صورة لورقة الزيتون أو حبة الزيتون</p>
+                                    </div>
+                                </div>
+                                <div class="w-full sm:w-auto text-center">
+                                    <input type="file" id="variety_image" accept="image/*" @change="analyzeVarietyImage($event)" class="hidden">
+                                    <label for="variety_image" class="cursor-pointer w-full flex items-center justify-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition text-sm font-bold shadow-md">
+                                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                        تحليل الصورة
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div x-show="isAnalyzingVariety" class="mt-3 flex items-center justify-center p-2 text-sm text-[#6A8F3B]" style="display: none;">
+                                <svg class="animate-spin h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                جاري تحليل الصنف...
+                            </div>
+                        </div>
                         
                         <p class="mt-4 text-sm text-gray-600">
                             💡 <strong>ملاحظة:</strong> اختر الصنف الأساسي لمنتجك. إذا كان مزيج من عدة أصناف، اختر "مزيج".
@@ -771,6 +796,7 @@ document.addEventListener('alpine:init', () => {
         totalSteps: 8,
         isSubmitting: false,
         isAnalyzingOlive: false,
+        isAnalyzingVariety: false,
         errorMessage: '',
         formData: {
             category: '',
@@ -850,6 +876,52 @@ document.addEventListener('alpine:init', () => {
             });
         },
         
+        
+        async analyzeVarietyImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            this.isAnalyzingVariety = true;
+            
+            try {
+                const compressedFile = await this.compressImage(file);
+                const data = new FormData();
+                data.append('image', compressedFile);
+                
+                const response = await fetch('/api/v1/ai/variety-detect', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: data
+                });
+                
+                if (!response.ok) throw new Error('فشل التحليل.');
+                
+                const result = await response.json();
+                if (result.success && result.detected_variety) {
+                    // Extract variety value from localized string, e.g. "شتوي (Chétoui)" -> "chetoui"
+                    const varietyString = result.detected_variety.toLowerCase();
+                    if (varietyString.includes('chemlali')) this.formData.variety = 'chemlali';
+                    else if (varietyString.includes('chetoui')) this.formData.variety = 'chetoui';
+                    else if (varietyString.includes('oueslati')) this.formData.variety = 'oueslati';
+                    else if (varietyString.includes('zalmati')) this.formData.variety = 'zalmati';
+                    else if (varietyString.includes('zarrazi')) this.formData.variety = 'zarrazi';
+                    else if (varietyString.includes('barouni')) this.formData.variety = 'barouni';
+                    else if (varietyString.includes('meski')) this.formData.variety = 'meski';
+                    else this.formData.variety = 'other';
+                    
+                    // Show a toast or small alert
+                    alert(`Ezzitouni Bot 🤖:\nتم التعرف على الصنف: ${result.detected_variety}`);
+                } else {
+                    throw new Error(result.message || 'حدث خطأ غير متوقع');
+                }
+            } catch (error) {
+                alert('عذراً، لم نتمكن من تحليل الصورة: ' + error.message);
+            } finally {
+                this.isAnalyzingVariety = false;
+                event.target.value = ''; // Reset input
+            }
+        },
+
         async analyzeOliveImage(event) {
             const file = event.target.files[0];
             if (!file) return;
