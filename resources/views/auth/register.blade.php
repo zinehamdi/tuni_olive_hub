@@ -88,7 +88,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <div class="font-bold text-gray-900">مستخدم عادي</div>
+                                <div class="font-bold text-gray-900">مشترٍ / مستورد</div>
                                 <div class="text-sm text-gray-500">تصفح وشراء المنتجات</div>
                             </div>
                         </div>
