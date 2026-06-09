@@ -90,8 +90,8 @@
                         
                         <div x-ref="articleScroll" class="flex gap-6 overflow-x-auto pb-6 pt-2 scrollbar-hide snap-x snap-mandatory">
                             @foreach($relatedArticles as $related)
-                            <div class="w-[280px] md:w-[320px] flex-shrink-0 snap-center">
-                                <a href="{{ route('articles.show', $related->id) }}" class="group block bg-gray-50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100">
+                            <div class="w-[280px] md:w-[320px] flex-shrink-0 snap-center py-2">
+                                <a href="{{ route('articles.show', $related->id) }}" class="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border-2 border-gray-200 hover:border-[#6A8F3B]/30">
                                     <div class="aspect-[16/9] bg-gray-200 overflow-hidden relative flex-shrink-0">
                                         <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, 'storage/') ? asset($related->image) : (Storage::disk('public')->exists($related->image) ? Storage::url($related->image) : asset('images/' . $related->image))) }}" 
                                              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" 
