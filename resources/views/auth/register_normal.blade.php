@@ -10,7 +10,7 @@
                         </svg>
                     </div>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">تسجيل كمستخدم</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">تسجيل كمشترٍ / مستورد</h2>
                 <p class="text-gray-600">أكمل البيانات للانضمام إلى المنصة</p>
             </div>
         
@@ -111,6 +111,38 @@
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#3B82F6] focus:ring-4 focus:ring-[#3B82F6]/20 transition-all" 
                                 placeholder="••••••••">
+                        </div>
+
+                        <!-- Interest Field (Full Width) -->
+                        <div class="md:col-span-2">
+                            <label for="interest" class="text-gray-900 font-bold mb-2 flex items-center gap-2">
+                                <span>مجال الاهتمام الأساسي</span>
+                                <span class="text-xs text-[#3B82F6] bg-[#3B82F6]/10 px-2 py-1 rounded-full font-bold">اختياري</span>
+                            </label>
+                            <div class="relative">
+                                <select id="interest" name="interest" 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-white text-gray-900 focus:border-[#3B82F6] focus:ring-4 focus:ring-[#3B82F6]/20 transition-all appearance-none cursor-pointer">
+                                    <option value="" disabled selected>اختر مجال اهتمامك (يمكنك تغييره لاحقاً)</option>
+                                    <option value="explore">مجرد استكشاف (Just Explore)</option>
+                                    <option value="interested">مهتم بزيت الزيتون (Interested in Olive Oil)</option>
+                                    <option value="wholesale">تاجر جملة (Wholesale Trader)</option>
+                                    <option value="importer">مستورد (Importer)</option>
+                                    <option value="expert">خبير / متذوق (Expert / Taster)</option>
+                                </select>
+                                <div class="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none text-gray-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('interest')
+                                <p class="text-red-600 text-sm mt-2 flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
                 </div>

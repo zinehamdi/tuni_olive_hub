@@ -61,6 +61,7 @@ class RegisteredUserController extends Controller
             'profile_picture' => ['nullable', 'image', 'max:20480'],
             'cover_photos' => ['nullable', 'array', 'max:5'],
             'cover_photos.*' => ['nullable', 'image', 'max:20480'],
+            'interest' => ['nullable', 'string', 'max:255'],
         ];
 
         if ($role === 'farmer') {
@@ -107,6 +108,10 @@ class RegisteredUserController extends Controller
                 }
             }
             $user->cover_photos = $coverPhotos;
+        }
+
+        if ($request->has('interest')) {
+            $user->interest = $validated['interest'] ?? $request->input('interest');
         }
 
         $user->save();
