@@ -59,6 +59,67 @@
                     {!! nl2br(e($article->content[app()->getLocale()] ?? '')) !!}
                 </div>
 
+                <!-- Related Articles Section -->
+                @if(isset($relatedArticles) && $relatedArticles->count() > 0)
+                <div class="mt-16 pt-10 border-t border-gray-100">
+                    <h3 class="text-2xl font-black text-gray-900 mb-6">{{ __('Read Also') }}</h3>
+                    
+                    <div class="relative group" 
+                         x-data="{ 
+                            scroll() { 
+                                const el = this.$refs.articleScroll;
+                                if (el.scrollLeft >= (el.scrollWidth - el.clientWidth - 10)) {
+                                    el.scrollLeft = 0;
+                                } else {
+                                    el.scrollLeft += 1;
+                                }
+                            },
+                            interval: null,
+                            startScroll() {
+                                this.interval = setInterval(() => this.scroll(), 30);
+                            },
+                            stopScroll() {
+                                clearInterval(this.interval);
+                            }
+                         }" 
+                         x-init="startScroll()" 
+                         @mouseenter="stopScroll()" 
+                         @mouseleave="startScroll()"
+                         @touchstart="stopScroll()"
+                         @touchend="startScroll()">
+                        
+                        <div x-ref="articleScroll" class="flex gap-6 overflow-x-auto pb-6 pt-2 scrollbar-hide snap-x snap-mandatory">
+                            @foreach($relatedArticles as $related)
+                            <div class="w-[280px] md:w-[320px] flex-shrink-0 snap-center">
+                                <a href="{{ route('articles.show', $related->id) }}" class="group block bg-gray-50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100">
+                                    <div class="aspect-[16/9] bg-gray-200 overflow-hidden relative flex-shrink-0">
+                                        <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, 'storage/') ? asset($related->image) : (Storage::disk('public')->exists($related->image) ? Storage::url($related->image) : asset('images/' . $related->image))) }}" 
+                                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" 
+                                             alt="{{ $related->title[app()->getLocale()] ?? '' }}" 
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        @if(isset($related->category[app()->getLocale()]))
+                                        <div class="absolute top-2 {{ app()->getLocale()==='ar' ? 'right-2' : 'left-2' }} bg-white/95 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold text-[#6A8F3B] shadow-sm">{{ $related->category[app()->getLocale()] }}</div>
+                                        @endif
+                                    </div>
+                                    <div class="p-5 flex flex-col flex-1">
+                                        <h4 class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition-colors line-clamp-2 text-sm leading-snug mb-3 flex-1">{{ $related->title[app()->getLocale()] ?? '' }}</h4>
+                                        <div class="text-[10px] text-gray-400 font-bold mt-auto flex items-center gap-1 border-t border-gray-100 pt-3">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            {{ $related->created_at->format('d M Y') }}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                        
+                        <!-- Shadow Gradients for indication of more items -->
+                        <div class="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white/90 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white/90 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Signature -->
                 <div class="mt-16 pt-10 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-6">
                     <div class="flex items-center gap-4">
