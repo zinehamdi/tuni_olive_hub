@@ -388,7 +388,7 @@
 
                         @auth
                             <!-- User Menu -->
-                            <div class="relative" x-data="{ open: false }">
+                            <div class="relative hidden md:block" x-data="{ open: false }">
                                 <button @click="open = !open" class="group flex items-center gap-2 px-3 py-1.5 bg-white/95 text-[#6A8F3B] rounded-full hover:bg-white transition-all duration-200 font-semibold shadow-lg shadow-black/10 hover:shadow-xl text-sm">
                                     <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white text-xs font-bold">
                                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
@@ -426,11 +426,12 @@
                                             <span class="font-medium text-sm">{{ __('nav.inbox') }}</span>
                                             <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                         </a>
-                                        <a href="{{ route('profile.edit') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-[#6A8F3B]/10 transition-all duration-200 flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 group-hover:bg-[#6A8F3B]/20 flex items-center justify-center transition-all">
-                                                <svg class="w-4 h-4 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+
+                                        <a href="{{ route('profile.edit') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-gray-100 transition-all duration-200 flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center transition-all">
+                                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                             </div>
-                                            <span class="font-medium text-sm">{{ __('nav.profile') }}</span>
+                                            <span class="font-medium text-sm">{{ __('Settings') }}</span>
                                         </a>
                                         @if(Auth::user()->role === 'admin')
                                         <a href="{{ route('admin.dashboard') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-amber-50 transition-all duration-200 flex items-center gap-3">
@@ -456,9 +457,9 @@
                                 </div>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="flex items-center gap-2 px-4 py-2 bg-white/95 text-[#6A8F3B] rounded-full hover:bg-white transition-all duration-200 font-semibold shadow-lg shadow-black/10 hover:shadow-xl text-sm">
+                            <a href="{{ route('login') }}" class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/95 text-[#6A8F3B] rounded-full hover:bg-white transition-all duration-200 font-semibold shadow-lg shadow-black/10 hover:shadow-xl text-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-                                <span class="hidden sm:inline">{{ __('nav.login') }}</span>
+                                <span>{{ __('nav.login') }}</span>
                             </a>
                         @endauth
 
@@ -492,8 +493,8 @@
                             <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center"><span class="text-lg">📊</span></div>
                             {{ __('nav.prices') }}
                         </a>
-                        <a href="{{ route('listings.create') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
-                            <div class="w-9 h-9 rounded-lg bg-[#6A8F3B]/30 flex items-center justify-center"><span class="text-lg">🫒</span></div>
+                        <a href="{{ route('listings.create') }}" class="px-4 py-3 bg-[#C8A356] text-white shadow-lg rounded-xl transition-all duration-200 flex items-center gap-3 font-bold border border-[#C8A356]/50">
+                            <div class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center"><span class="text-lg">🫒</span></div>
                             {{ __('nav.sell_your_oil') }}
                         </a>
                         <a href="{{ route('how-it-works') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
@@ -524,11 +525,12 @@
                                     {{ __('Inbox') }}
                                     <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                 </a>
+
                                 <a href="{{ route('profile.edit') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                                     <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     </div>
-                                    {{ __('nav.profile') }}
+                                    {{ __('Settings') }}
                                 </a>
                                 @if(Auth::user()->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
@@ -551,8 +553,12 @@
                                 </form>
                             </div>
                         @else
-                            <div class="mt-2 pt-2 border-t border-white/20 px-2">
-                                <a href="{{ route('login') }}" class="w-full px-4 py-3 bg-white text-[#6A8F3B] rounded-xl transition-all duration-200 flex items-center justify-center gap-3 font-bold shadow-lg">
+                            <div class="mt-2 pt-2 border-t border-white/20 px-2 flex flex-col gap-2">
+                                <a href="{{ route('register') }}" class="w-full px-4 py-3 bg-[#C8A356] text-white shadow-lg rounded-xl transition-all duration-200 flex items-center justify-center gap-3 font-bold border border-[#C8A356]/50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+                                    {{ __('Register') }}
+                                </a>
+                                <a href="{{ route('login') }}" class="w-full px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-3 font-bold">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
                                     {{ __('nav.login') }}
                                 </a>

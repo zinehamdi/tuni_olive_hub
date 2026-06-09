@@ -358,8 +358,9 @@
     <main class="flex-1 min-w-0 overflow-y-auto">
         <!-- Mobile topbar -->
         <div class="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 shadow-sm">
-            <button @click="sidebarOpen = true" class="p-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200">
+            <button @click="sidebarOpen = true" class="px-3 py-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200 flex items-center gap-2 font-bold text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                {{ __('قائمتي') }}
             </button>
             <span class="font-bold text-gray-900 text-sm">
                 @if(Auth::user()->role === 'farmer' && Auth::user()->farm_name)
@@ -375,8 +376,9 @@
                 @endif
             </span>
             @if(Auth::user()->role !== 'carrier')
-            <a href="{{ route('listings.create') }}" class="p-2 bg-[#6A8F3B] text-white rounded-xl">
+            <a href="{{ route('listings.create') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                {{ __('عرض') }}
             </a>
             @else
             <div class="w-9"></div>
