@@ -32,21 +32,22 @@ class ImageOptimizationService
         
         // Convert to WebP with 85% quality
         $image->toWebp(85)->save($path);
-// Create thumbnail (~360px width)
-$thumbDir = $dir . "/thumbs";
-if (!file_exists($thumbDir)) mkdir($thumbDir, 0755, true);
-$thumbName = pathinfo($filename, PATHINFO_FILENAME) . "_sm.webp";
-$thumbPath = $thumbDir . "/" . $thumbName;
 
-try {
-    $thumb = \Intervention\Image\Laravel\Facades\Image::read($file);
-    if (method_exists($thumb, "scaleDown")) $thumb->scaleDown(width: 360);
-    else $thumb->scale(width: 360, height: 360);
-    $thumb->toWebp(80)->save($thumbPath);
-    \Illuminate\Support\Facades\Log::info("Thumbnail saved", ["path" => "profile-pictures/thumbs/" . $thumbName]);
-} catch (\Throwable $e) {
-    \Illuminate\Support\Facades\Log::warning("Thumbnail generation failed", ["error" => $e->getMessage()]);
-}
+        // Create thumbnail (~360px width)
+        $thumbDir = $dir . "/thumbs";
+        if (!file_exists($thumbDir)) mkdir($thumbDir, 0755, true);
+        $thumbName = pathinfo($filename, PATHINFO_FILENAME) . "_sm.webp";
+        $thumbPath = $thumbDir . "/" . $thumbName;
+
+        try {
+            // Re-use the already loaded and downscaled $image object
+            if (method_exists($image, "scaleDown")) $image->scaleDown(width: 360);
+            else $image->scale(width: 360, height: 360);
+            $image->toWebp(80)->save($thumbPath);
+            \Illuminate\Support\Facades\Log::info("Thumbnail saved", ["path" => "profile-pictures/thumbs/" . $thumbName]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("Thumbnail generation failed", ["error" => $e->getMessage()]);
+        }
 
         return 'profile-pictures/' . $filename;
     }
@@ -108,16 +109,17 @@ try {
         
         // Resize to max 1200px width (maintains aspect ratio)
         // This is optimal for product cards and detail pages
-        $image->scaleDown(width: 1200);
+        if (method_exists($image, "scaleDown")) $image->scaleDown(width: 1200);
+        else $image->scale(width: 1200);
         
         // Convert to WebP with 85% quality (good balance of quality vs size)
         $image->toWebp(85)->save($path);
         
         // Also create a thumbnail for faster grid loading (400px)
         $thumbPath = $directory . '/thumb_' . $filename;
-        $thumbnail = Image::read($file);
-        $thumbnail->scaleDown(width: 400);
-        $thumbnail->toWebp(80)->save($thumbPath);
+        if (method_exists($image, "scaleDown")) $image->scaleDown(width: 400);
+        else $image->scale(width: 400);
+        $image->toWebp(80)->save($thumbPath);
 
         return 'listings/' . $listingId . '/' . $filename;
     }
