@@ -117,14 +117,12 @@ class RegisteredUserController extends Controller
         $user->save();
 
         event(new Registered($user));
-        // Send welcome email after the response is sent to the user to prevent lag
-        app()->terminating(function () use ($user) {
-            try {
-                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\WelcomeUser($user));
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Failed to send welcome email: ' . $e->getMessage());
-            }
-        });
+        // Queue the welcome email to be sent 1 minute after registration
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->later(now()->addMinute(), new \App\Mail\WelcomeUser($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to queue welcome email: ' . $e->getMessage());
+        }
 
         // Log the user in, and force remember me for non-admins to keep session open
         Auth::login($user, $user->role !== 'admin');
