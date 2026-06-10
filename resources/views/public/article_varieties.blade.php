@@ -4,6 +4,7 @@
 @section('description', __('varieties_article.intro'))
 @section('og_title', __('varieties_article.title'))
 @section('og_description', __('varieties_article.intro'))
+@section('og_image', asset('images/chetoui_leaf.png'))
 
 @section('content')
 <main class="pt-24 pb-16 bg-gray-50">
@@ -71,49 +72,63 @@
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.oueslati_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/zalmati_leaf.png') }}" alt="Zalmati" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الزلماتي</td>
                             <td class="p-4 text-gray-600">Zalmati</td>
                             <td class="p-4 text-gray-600">Zalmati</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.zalmati_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/zarazi_leaf.png') }}" alt="Zarazi" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الزرازي</td>
                             <td class="p-4 text-gray-600">Zarazi</td>
                             <td class="p-4 text-gray-600">Zarazi</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.zarazi_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/barouni_leaf.png') }}" alt="Barouni" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الباروني</td>
                             <td class="p-4 text-gray-600">Barouni</td>
                             <td class="p-4 text-gray-600">Barouni</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.barouni_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/meski_leaf.png') }}" alt="Meski" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">مسكي</td>
                             <td class="p-4 text-gray-600">Meski</td>
                             <td class="p-4 text-gray-600">Meski</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.meski_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/chemchali_leaf.png') }}" alt="Chemchali" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الشمشالي</td>
                             <td class="p-4 text-gray-600">Chemchali</td>
                             <td class="p-4 text-gray-600">Chemchali</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.chemchali_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/gerboui_leaf.png') }}" alt="Gerboui" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الجربوعي</td>
                             <td class="p-4 text-gray-600">Gerboui</td>
                             <td class="p-4 text-gray-600">Gerboui</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.gerboui_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/sayali_leaf.png') }}" alt="Sayali" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">السيالي</td>
                             <td class="p-4 text-gray-600">Sayali</td>
                             <td class="p-4 text-gray-600">Sayali</td>
