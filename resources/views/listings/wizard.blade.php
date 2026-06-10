@@ -150,6 +150,11 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                 <option value="chemchali">{{ __('chemchali') }} – Chemchali (جنوب – متوسط، مرارة خفيفة)</option>
                                 <option value="gerboui">{{ __('gerboui') }} – Gerboui (شمال غربي – متوازن، إنتاج محدود)</option>
                                 <option value="sayali">{{ __('sayali') }} – Sayali (شمال – طري، ذهبي)</option>
+                                <option value="sahli">{{ __('sahli') }} – Sahli (ساحلي – إنتاج وفير، متأقلم)</option>
+                                <option value="fakhari">{{ __('fakhari') }} – Fakhari (فخاري – زيت كثيف ونكهة مميزة)</option>
+                                <option value="tounsi">{{ __('tounsi') }} – Tounsi (تونسي – صنف تقليدي)</option>
+                                <option value="neb_jmel">{{ __('neb_jmel') }} – Neb Jmel (ناب الجمل – ثمرة طويلة للمائدة)</option>
+                                <option value="rkhami">{{ __('rkhami') }} – Rkhami (رخامي – إنتاج مزدوج)</option>
                             </optgroup>
                             
                             <!-- أصناف دخيلة -->

@@ -243,6 +243,11 @@
                                 <option value="chemchali">شمشالي – Chemchali (جنوب – متوسط، مرارة خفيفة)</option>
                                 <option value="gerboui">جربوي – Gerboui (شمال غربي – متوازن، إنتاج محدود)</option>
                                 <option value="sayali">سيالي – Sayali (شمال – طري، ذهبي)</option>
+                                <option value="sahli">ساحلي – Sahli (ساحلي – إنتاج وفير، متأقلم)</option>
+                                <option value="fakhari">فخاري – Fakhari (فخاري – زيت كثيف ونكهة مميزة)</option>
+                                <option value="tounsi">تونسي – Tounsi (تونسي – صنف تقليدي)</option>
+                                <option value="neb_jmel">ناب الجمل – Neb Jmel (ناب الجمل – ثمرة طويلة للمائدة)</option>
+                                <option value="rkhami">رخامي – Rkhami (رخامي – إنتاج مزدوج)</option>
                             </optgroup>
                             
                             <!-- أصناف دخيلة -->

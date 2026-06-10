@@ -70,6 +70,9 @@ Route::middleware('set.locale')->group(function () {
         $relatedArticles = \App\Models\Article::where('is_active', true)->where('id', '!=', $id)->latest()->get();
         return view('public.article', compact('article', 'relatedArticles'));
     })->name('articles.show');
+    
+    // Dedicated SEO Articles
+    Route::view('/olive-varieties', 'public.article_varieties')->name('article.varieties');
     Route::post('/contact', function(Request $request){
         $data = $request->validate([
             'name' => 'required|string|max:255',

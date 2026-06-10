@@ -153,8 +153,9 @@
                     }
                 </style>
                 
-                <!-- Browse Products Shortcut -->
-                <div class="flex justify-center mb-8">
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <!-- Browse Products Shortcut -->
                     <button @click="document.getElementById('products').scrollIntoView({ behavior: 'smooth' })" 
                             class="group flex items-center gap-3 px-6 py-3 bg-[#C8A356] text-white rounded-full border-2 border-white/20 hover:bg-[#b08a3c] transition-all shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(200,163,86,0.5)] transform hover:-translate-y-1 active:scale-95">
                         <span class="font-black uppercase tracking-widest text-[10px]">{{ __('Browse Products') }}</span>
@@ -164,6 +165,17 @@
                             </svg>
                         </div>
                     </button>
+
+                    <!-- Olive Varieties Article Shortcut -->
+                    <a href="{{ route('article.varieties') }}" 
+                       class="group flex items-center gap-3 px-6 py-3 bg-[#6A8F3B] text-white rounded-full border-2 border-white/20 hover:bg-[#5a7a2f] transition-all shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(106,143,59,0.5)] transform hover:-translate-y-1 active:scale-95">
+                        <span class="font-black uppercase tracking-widest text-[10px]">تعرف على سلالات الزيتون التونسي</span>
+                        <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/40 transition">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                    </a>
                 </div>
             </div>
 
