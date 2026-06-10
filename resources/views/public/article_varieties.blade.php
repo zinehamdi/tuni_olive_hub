@@ -135,35 +135,45 @@
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.sayali_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/sahli_leaf.png') }}" alt="Sahli" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الساحلي</td>
                             <td class="p-4 text-gray-600">Sahli</td>
                             <td class="p-4 text-gray-600">Sahli</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.sahli_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/fakhari_leaf.png') }}" alt="Fakhari" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الفخاري</td>
                             <td class="p-4 text-gray-600">Fakhari</td>
                             <td class="p-4 text-gray-600">Fakhari</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.fakhari_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/tounsi_leaf.png') }}" alt="Tounsi" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">التونسي</td>
                             <td class="p-4 text-gray-600">Tounsi</td>
                             <td class="p-4 text-gray-600">Tounsi</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.tounsi_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition bg-gray-50/50">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/neb_jmel_leaf.png') }}" alt="Neb Jmel" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">ناب الجمل</td>
                             <td class="p-4 text-gray-600">Neb Jmel</td>
                             <td class="p-4 text-gray-600">Neb Jmel</td>
                             <td class="p-4 text-sm text-gray-700">{{ __('varieties_article.neb_jmel_features') }}</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="p-4 align-middle text-center text-gray-400">{{ __('varieties_article.no_image') }}</td>
+                            <td class="p-4 align-middle">
+                                <img src="{{ asset('images/rkhami_leaf.png') }}" alt="Rkhami" class="w-16 h-16 object-cover rounded-full border-2 border-[#C8A356]">
+                            </td>
                             <td class="p-4 font-bold text-gray-900">الرخامي</td>
                             <td class="p-4 text-gray-600">Rkhami</td>
                             <td class="p-4 text-gray-600">Rkhami</td>
