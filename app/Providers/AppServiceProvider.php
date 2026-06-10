@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Fix for Livewire update route CORS issues on Hostinger
+        \Livewire\Livewire::setUpdateRoute(function ($handle) {
+            return \Illuminate\Support\Facades\Route::post('/livewire/update', $handle);
+        });
+
         \Illuminate\Support\Facades\Gate::define('viewPulse', function ($user) {
             return $user->role === 'admin';
         });
