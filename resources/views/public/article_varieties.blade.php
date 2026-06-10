@@ -32,8 +32,31 @@
             <h2 class="text-2xl font-bold text-[#6A8F3B] mt-10 mb-6 {{ app()->getLocale() == 'ar' ? 'border-r-4 pr-4' : 'border-l-4 pl-4' }} border-[#C8A356]">{{ __('varieties_article.famous_varieties') }}</h2>
 
             <!-- Varieties Table -->
-            <div class="overflow-x-auto my-8">
-                <table class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} border-collapse bg-white rounded-xl overflow-hidden shadow-sm">
+            <style>
+                @media (max-width: 768px) {
+                    .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+                    .responsive-table thead { display: none; }
+                    .responsive-table tr {
+                        margin-bottom: 1.5rem; border: 1px solid #e5e7eb; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                    }
+                    .responsive-table td {
+                        display: flex; flex-direction: column; padding: 1rem; border-bottom: 1px solid #f3f4f6; text-align: right; gap: 0.5rem;
+                    }
+                    [dir="ltr"] .responsive-table td { text-align: left; }
+                    .responsive-table td:last-child { border-bottom: none; }
+                    
+                    .responsive-table td::before { font-weight: bold; color: #6A8F3B; font-size: 0.875rem; }
+                    
+                    .responsive-table td:nth-child(1) { align-items: center; background: #f9fafb; }
+                    .responsive-table td:nth-child(1)::before { content: "{{ __('varieties_article.table_image') }}"; display: none; }
+                    .responsive-table td:nth-child(2)::before { content: "{{ __('varieties_article.table_name_ar') }}"; }
+                    .responsive-table td:nth-child(3)::before { content: "{{ __('varieties_article.table_name_en') }}"; }
+                    .responsive-table td:nth-child(4)::before { content: "{{ __('varieties_article.table_name_fr') }}"; }
+                    .responsive-table td:nth-child(5)::before { content: "{{ __('varieties_article.table_features') }}"; }
+                }
+            </style>
+            <div class="my-8">
+                <table class="responsive-table w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} border-collapse bg-white rounded-xl overflow-hidden shadow-sm">
                     <thead class="bg-[#6A8F3B] text-white">
                         <tr>
                             <th class="p-4 font-bold">{{ __('varieties_article.table_image') }}</th>
