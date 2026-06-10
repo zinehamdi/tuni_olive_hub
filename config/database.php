@@ -43,6 +43,13 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
+        'pulse' => [
+            'driver' => 'sqlite',
+            'database' => database_path('pulse.sqlite'),
+            'prefix' => '',
+            'foreign_key_constraints' => true,
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
