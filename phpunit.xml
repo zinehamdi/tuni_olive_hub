@@ -26,7 +26,10 @@
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="BROADCAST_CONNECTION" value="log"/>
+        <env name="BROADCAST_DRIVER" value="log"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="PULSE_DB_DATABASE" value=":memory:"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

@@ -44,8 +44,8 @@ return [
         ],
 
         'pulse' => [
-            'driver' => 'sqlite',
-            'database' => database_path('pulse.sqlite'),
+            'driver' => env('PULSE_DB_DRIVER', 'sqlite'),
+            'database' => env('PULSE_DB_DATABASE', database_path('pulse.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => true,
         ],
