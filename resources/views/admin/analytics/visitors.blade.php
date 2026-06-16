@@ -188,24 +188,48 @@
                 </script>
             </div>
 
-            <!-- Device Stats Area -->
-            <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <span class="text-2xl">📱</span> {{ __('Devices') }}
-                </h2>
-                <div class="space-y-4">
-                    @php $totalDevices = $deviceStats->sum() ?: 1; @endphp
-                    @foreach($deviceStats as $device => $count)
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center justify-between text-sm font-bold">
-                            <span class="text-gray-700">{{ $device ?: 'Unknown' }}</span>
-                            <span class="text-gray-900">{{ number_format(($count / $totalDevices) * 100, 1) }}% ({{ $count }})</span>
+            <!-- Side Stats Area -->
+            <div class="flex flex-col gap-8">
+                <!-- Device Stats Area -->
+                <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="text-2xl">📱</span> {{ __('Devices') }}
+                    </h2>
+                    <div class="space-y-4">
+                        @php $totalDevices = $deviceStats->sum() ?: 1; @endphp
+                        @foreach($deviceStats as $device => $count)
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center justify-between text-sm font-bold">
+                                <span class="text-gray-700">{{ $device ?: __('Unknown') }}</span>
+                                <span class="text-gray-900">{{ number_format(($count / $totalDevices) * 100, 1) }}% ({{ $count }})</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full" style="width: {{ ($count / $totalDevices) * 100 }}%"></div>
+                            </div>
                         </div>
-                        <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full" style="width: {{ ($count / $totalDevices) * 100 }}%"></div>
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                </div>
+
+                <!-- Country Stats Area -->
+                <div class="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6 sm:p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="text-2xl">🌍</span> {{ __('Countries') }}
+                    </h2>
+                    <div class="space-y-4">
+                        @php $totalCountries = $countryStats->sum() ?: 1; @endphp
+                        @foreach($countryStats as $country => $count)
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center justify-between text-sm font-bold">
+                                <span class="text-gray-700">{{ $country ?: __('Unknown') }}</span>
+                                <span class="text-gray-900">{{ number_format(($count / $totalCountries) * 100, 1) }}% ({{ $count }})</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full" style="width: {{ ($count / $totalCountries) * 100 }}%"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>

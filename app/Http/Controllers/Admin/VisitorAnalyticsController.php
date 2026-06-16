@@ -30,6 +30,11 @@ class VisitorAnalyticsController extends Controller
             return $group->count();
         });
 
+        // Country stats
+        $countryStats = $visitors->groupBy('country')->map(function ($group) {
+            return $group->count();
+        })->sortDesc()->take(10); // Show top 10 countries
+
         // Total for period
         $totalPeriod = $visitors->count();
         
@@ -42,7 +47,7 @@ class VisitorAnalyticsController extends Controller
         $recentVisitors = Visitor::orderBy('updated_at', 'desc')->take(20)->get();
 
         return view('admin.analytics.visitors', compact(
-            'chartData', 'deviceStats', 'totalPeriod', 'period', 'today', 'growth', 'recentVisitors'
+            'chartData', 'deviceStats', 'countryStats', 'totalPeriod', 'period', 'today', 'growth', 'recentVisitors'
         ));
     }
 
