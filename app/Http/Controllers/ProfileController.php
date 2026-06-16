@@ -255,6 +255,57 @@ class ProfileController extends Controller
     }
 
     /**
+     * POST /profile/photo
+     */
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'type' => ['required', 'string', 'in:profile,cover'],
+            'photo' => ['required', 'image', 'max:5120'], // 5MB max
+        ]);
+
+        $user = $request->user();
+        $type = $request->input('type');
+        $photo = $request->file('photo');
+
+        try {
+            if ($type === 'profile') {
+                $path = $this->imageService->optimizeProfilePicture($photo);
+                $user->profile_picture = $path;
+                $user->save();
+            } elseif ($type === 'cover') {
+                $path = $this->imageService->optimizeCoverPhoto($photo);
+                
+                $covers = $user->cover_photos ?? [];
+                if (!is_array($covers)) {
+                    $covers = [];
+                }
+                
+                // Add new cover, keeping max 5
+                if (count($covers) >= 5) {
+                    array_shift($covers); // remove oldest
+                }
+                $covers[] = $path;
+                
+                $user->cover_photos = $covers;
+                $user->save();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Photo uploaded successfully!'),
+                'path' => $path
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Photo upload failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to upload photo. Please try again.')
+            ], 500);
+        }
+    }
+
+    /**
      * نسبة اكتمال البروفايل
      */
     private function calculateProfileCompletion(User $user): int
