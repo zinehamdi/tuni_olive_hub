@@ -18,9 +18,39 @@ class SocialLoginController extends Controller
     public function callback()
     {
         try {
-            $facebookUser = Socialite::driver('facebook')->user();
+            $facebookUser = Socialite::driver('facebook')
+                ->fields(['name', 'email', 'picture.width(800).height(800)', 'cover'])
+                ->user();
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['email' => __('Facebook login failed. Please try again.')]);
+        }
+
+        // Try to download profile picture and cover
+        $profilePicturePath = null;
+        $coverPhotosPath = null;
+        
+        $avatarUrl = $facebookUser->avatar_original ?? $facebookUser->avatar ?? $facebookUser->user['picture']['data']['url'] ?? null;
+        if ($avatarUrl) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::get($avatarUrl);
+                if ($response->successful()) {
+                    $filename = 'profile-pictures/' . Str::random(40) . '.jpg';
+                    \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $response->body());
+                    $profilePicturePath = $filename;
+                }
+            } catch (\Exception $e) {}
+        }
+
+        $coverUrl = $facebookUser->user['cover']['source'] ?? null;
+        if ($coverUrl) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::get($coverUrl);
+                if ($response->successful()) {
+                    $filename = 'cover-photos/' . Str::random(40) . '.jpg';
+                    \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $response->body());
+                    $coverPhotosPath = [$filename];
+                }
+            } catch (\Exception $e) {}
         }
 
         // Find existing user by facebook_id or email
@@ -31,12 +61,25 @@ class SocialLoginController extends Controller
         }
 
         if ($user) {
+            $updates = [];
             // Update facebook_id if it was matched by email
             if (!$user->facebook_id) {
-                $user->update([
-                    'facebook_id' => $facebookUser->id,
-                    'meta_data' => array_merge($user->meta_data ?? [], ['facebook' => $facebookUser->user]),
-                ]);
+                $updates['facebook_id'] = $facebookUser->id;
+                $updates['meta_data'] = array_merge($user->meta_data ?? [], ['facebook' => $facebookUser->user]);
+            }
+            
+            // Update profile picture if missing
+            if (!$user->profile_picture && $profilePicturePath) {
+                $updates['profile_picture'] = $profilePicturePath;
+            }
+            
+            // Update cover photo if missing
+            if (empty($user->cover_photos) && $coverPhotosPath) {
+                $updates['cover_photos'] = $coverPhotosPath;
+            }
+            
+            if (!empty($updates)) {
+                $user->update($updates);
             }
         } else {
             // Create a new user silently
@@ -47,6 +90,8 @@ class SocialLoginController extends Controller
                 'password' => bcrypt(Str::random(24)),
                 'meta_data' => ['facebook' => $facebookUser->user],
                 'phone' => '', // This bypasses the SQL error and forces the user into the onboarding flow
+                'profile_picture' => $profilePicturePath,
+                'cover_photos' => $coverPhotosPath,
                 // role is empty by default, enforced by middleware
             ]);
         }
