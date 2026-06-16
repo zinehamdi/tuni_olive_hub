@@ -669,9 +669,13 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                 {{ __('Share on Facebook') }}
                             </a>
                         </div>
-                        <div class="mt-3 text-center text-xs text-gray-500 font-medium">
-                            أضف رقم هاتفك باش يتواصلوا بيك مباشرة
-                        </div>
+                        @auth
+                            @if(auth()->id() === $listing->seller_id && empty(auth()->user()->phone))
+                                <div class="mt-3 text-center text-xs text-amber-600 font-medium">
+                                    <a href="{{ route('profile.edit') }}" class="hover:underline">{{ __('Add your phone number so buyers can contact you directly') }}</a>
+                                </div>
+                            @endif
+                        @endauth
                     </div>
                 </div>
             </div>
