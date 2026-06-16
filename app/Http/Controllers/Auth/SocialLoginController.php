@@ -21,6 +21,8 @@ class SocialLoginController extends Controller
             $facebookUser = Socialite::driver('facebook')
                 ->fields(['name', 'email', 'picture.width(800).height(800)', 'cover'])
                 ->user();
+                
+            \Illuminate\Support\Facades\Log::info('Facebook User Data:', $facebookUser->user);
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['email' => __('Facebook login failed. Please try again.')]);
         }
