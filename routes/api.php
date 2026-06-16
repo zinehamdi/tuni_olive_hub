@@ -29,6 +29,10 @@ Route::post('subscribe', [\App\Http\Controllers\Api\SubscriberController::class,
 Route::prefix('v1')->name('api.')->group(function () {
     Route::get('/ping', fn() => response()->json(['ok' => true, 'v' => 1]));
 
+    // Meta Webhooks
+    Route::get('webhooks/messenger', [\App\Http\Controllers\Api\V1\MetaWebhookController::class, 'verify']);
+    Route::post('webhooks/messenger', [\App\Http\Controllers\Api\V1\MetaWebhookController::class, 'handle']);
+
     Route::post('login', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'login']);
     Route::post('register', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'register']);
 

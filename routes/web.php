@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
-// Onboarding dispatcher
-// Route::middleware('auth')->get('/onboarding', [\App\Http\Controllers\ProfileController::class, 'onboarding'])->name('onboarding');
-// Route::middleware('auth')->post('/onboarding/{role}', [\App\Http\Controllers\ProfileController::class, 'submitOnboarding'])->name('onboarding.submit');
+// Progressive Profiling & Onboarding
+Route::middleware('auth')->get('/onboarding/complete', [\App\Http\Controllers\Auth\OnboardingController::class, 'show'])->name('onboarding.complete');
+Route::middleware('auth')->post('/onboarding/complete', [\App\Http\Controllers\Auth\OnboardingController::class, 'store'])->name('onboarding.store');
+
+// Facebook Login Routes
+Route::get('/auth/facebook/redirect', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirect'])->name('auth.facebook');
+Route::get('/auth/facebook/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'callback']);
 
 // Language switcher - must be outside middleware groups and available globally
 Route::get('/lang/{locale}', function (string $locale) {
@@ -104,7 +108,7 @@ Route::middleware('set.locale')->group(function () {
     Route::get('/user/{user}/stories', [StoryController::class, 'index'])->name('user.stories');
 });
 
-Route::middleware(['auth', 'set.locale'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
+Route::middleware(['auth', 'set.locale', 'onboarding'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
 
 // Public user profile - accessible to anyone (view seller/publisher profiles)
 Route::middleware('set.locale')->get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
@@ -241,27 +245,27 @@ Route::group([], function(){
 Route::middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
     Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
-        ->middleware('auth')
+        ->middleware(['auth', 'onboarding'])
         ->name('listings.create');
     
     // Limit listing creation to 10 per hour per user (prevents spam)
     Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])
-        ->middleware(['auth', 'throttle:10,60'])
+        ->middleware(['auth', 'onboarding', 'throttle:10,60'])
         ->name('listings.store');
     
     // Add routes for edit and delete
     Route::get('listings/{listing}/edit', [\App\Http\Controllers\ListingController::class, 'edit'])
-        ->middleware('auth')
+        ->middleware(['auth', 'onboarding'])
         ->name('listings.edit');
     
     // Limit updates to 20 per hour per user
     Route::put('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'update'])
-        ->middleware(['auth', 'throttle:20,60'])
+        ->middleware(['auth', 'onboarding', 'throttle:20,60'])
         ->name('listings.update');
     
     // Limit deletes to 10 per hour per user
     Route::delete('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'destroy'])
-        ->middleware(['auth', 'throttle:10,60'])
+        ->middleware(['auth', 'onboarding', 'throttle:10,60'])
         ->name('listings.destroy');
     
     // Add route for viewing single listing

@@ -62,6 +62,29 @@
     </div>
 </div>
 
+<!-- Facebook Messenger Banner (Segment A) -->
+<div id="messengerBanner" class="fixed bottom-4 right-4 z-[100] hidden">
+    <div class="bg-white rounded-2xl shadow-2xl p-4 w-72 border border-[#1877F2]/20 relative transform transition-all duration-300">
+        <button id="closeMessengerBanner" class="absolute -top-2 -right-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex items-start gap-3">
+            <div class="bg-[#1877F2]/10 p-2 rounded-full text-[#1877F2] shrink-0">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.915 1.488 5.49 3.796 7.157v3.585l3.473-1.905c.87.239 1.786.363 2.731.363 5.523 0 10-4.145 10-9.258S17.523 2 12 2zm1.094 12.336l-2.825-3.013-5.518 3.013 6.071-6.438 2.894 3.013 5.449-3.013-6.071 6.438z"/>
+                </svg>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-900 text-sm leading-tight">{{ __('Welcome from Facebook!') }}</h4>
+                <p class="text-xs text-gray-600 mt-1 mb-3">{{ __('Talk to our AI Assistant to get your free guide instantly.') }}</p>
+                <a href="https://m.me/YourPageID?ref=website_khadhara" target="_blank" class="block w-full text-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-bold py-2 rounded-lg shadow-sm transition">
+                    {{ __('Chat in Messenger') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('leadCaptureModal');
@@ -84,35 +107,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if user already saw or subscribed
     const hasSeenLeadCapture = localStorage.getItem('zintoop_lead_capture_seen');
-
-    if (!hasSeenLeadCapture && !window.location.pathname.includes('/register') && !window.location.pathname.includes('/login')) {
-        // Trigger logic
-        let modalTriggered = false;
-
-        const showModal = () => {
-            if (modalTriggered) return;
-            modalTriggered = true;
-            
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.remove('scale-95', 'opacity-0');
-            
-            // Mark as seen so we don't annoy them for 30 days
-            const thirtyDays = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-            localStorage.setItem('zintoop_lead_capture_seen', thirtyDays);
-        };
-
-        // 1. Time-based trigger (15 seconds)
-        const timeTrigger = setTimeout(showModal, 15000);
-
-        // 2. Scroll-based trigger (50% of page)
-        window.addEventListener('scroll', () => {
-            if (modalTriggered) return;
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            if (scrollPercent > 50) {
-                showModal();
-                clearTimeout(timeTrigger);
-            }
+    const hasSeenMessengerBanner = sessionStorage.getItem('zintoop_messenger_banner_seen');
+    
+    // Segment Logic
+    const isFacebookTraffic = document.referrer.includes('facebook.com') || window.location.search.includes('utm_source=facebook') || window.location.search.includes('fbclid=');
+    
+    const messengerBanner = document.getElementById('messengerBanner');
+    const closeMessengerBanner = document.getElementById('closeMessengerBanner');
+    
+    if (closeMessengerBanner) {
+        closeMessengerBanner.addEventListener('click', () => {
+            messengerBanner.classList.add('translate-y-full', 'opacity-0');
+            setTimeout(() => messengerBanner.classList.add('hidden'), 300);
+            sessionStorage.setItem('zintoop_messenger_banner_seen', 'true');
         });
+    }
+
+    if (!window.location.pathname.includes('/register') && !window.location.pathname.includes('/login')) {
+        
+        if (isFacebookTraffic) {
+            // SEGMENT A: Facebook Traffic
+            if (!hasSeenMessengerBanner && messengerBanner) {
+                setTimeout(() => {
+                    messengerBanner.classList.remove('hidden');
+                    // Small delay to allow display:block to apply before animating opacity/transform
+                    setTimeout(() => messengerBanner.classList.remove('translate-y-full', 'opacity-0'), 50);
+                }, 2000); // Show after 2 seconds
+            }
+        } else {
+            // SEGMENT B: Standard Traffic
+            if (!hasSeenLeadCapture) {
+                let modalTriggered = false;
+
+                const showModal = () => {
+                    if (modalTriggered) return;
+                    modalTriggered = true;
+                    
+                    modal.classList.remove('opacity-0', 'pointer-events-none');
+                    content.classList.remove('scale-95', 'opacity-0');
+                    
+                    // Mark as seen so we don't annoy them for 30 days
+                    const thirtyDays = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+                    localStorage.setItem('zintoop_lead_capture_seen', thirtyDays);
+                };
+
+                // 1. Time-based trigger (15 seconds)
+                const timeTrigger = setTimeout(showModal, 15000);
+
+                // 2. Scroll-based trigger (50% of page)
+                window.addEventListener('scroll', () => {
+                    if (modalTriggered) return;
+                    const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                    if (scrollPercent > 50) {
+                        showModal();
+                        clearTimeout(timeTrigger);
+                    }
+                });
+            }
+        }
     }
 
     const hideModal = () => {

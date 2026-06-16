@@ -20,6 +20,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'facebook_id',
+        'meta_data',
         'name',
         'email',
         'password',
@@ -51,6 +53,7 @@ class User extends Authenticatable
         'cover_photos' => 'array',
         'show_contact_info' => 'boolean',
         'show_address' => 'boolean',
+        'meta_data' => 'array',
     ];
 
     /**
