@@ -12,9 +12,7 @@ class SocialLoginController extends Controller
 {
     public function redirect()
     {
-        return Socialite::driver('facebook')
-            ->setScopes(['public_profile'])
-            ->redirect();
+        return Socialite::driver('facebook')->redirect();
     }
 
     public function callback()
