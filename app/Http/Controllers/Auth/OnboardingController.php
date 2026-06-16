@@ -28,10 +28,9 @@ class OnboardingController extends Controller
         ]);
 
         $user = Auth::user();
-        $user->update([
-            'phone' => $request->phone,
-            'role' => $request->role,
-        ]);
+        $user->phone = $request->phone;
+        $user->role = $request->role;
+        $user->save();
 
         return redirect()->route('dashboard')->with('status', __('Onboarding completed successfully!'));
     }
