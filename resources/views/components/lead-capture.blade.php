@@ -77,7 +77,7 @@
             <div>
                 <h4 class="font-bold text-gray-900 text-sm leading-tight">{{ __('Welcome from Facebook!') }}</h4>
                 <p class="text-xs text-gray-600 mt-1 mb-3">{{ __('Talk to our AI Assistant to get your free guide instantly.') }}</p>
-                <a href="https://m.me/YourPageID?ref=website_khadhara" target="_blank" class="block w-full text-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-bold py-2 rounded-lg shadow-sm transition">
+                <a href="https://m.me/828942590302317?ref=website_khadhara" target="_blank" class="block w-full text-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-bold py-2 rounded-lg shadow-sm transition">
                     {{ __('Chat in Messenger') }}
                 </a>
             </div>

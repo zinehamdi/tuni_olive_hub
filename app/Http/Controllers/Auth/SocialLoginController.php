@@ -12,7 +12,9 @@ class SocialLoginController extends Controller
 {
     public function redirect()
     {
-        return Socialite::driver('facebook')->redirect();
+        return Socialite::driver('facebook')
+            ->scopes(['public_profile'])
+            ->redirect();
     }
 
     public function callback()
@@ -24,9 +26,11 @@ class SocialLoginController extends Controller
         }
 
         // Find existing user by facebook_id or email
-        $user = User::where('facebook_id', $facebookUser->id)
-                    ->orWhere('email', $facebookUser->email)
-                    ->first();
+        $user = User::where('facebook_id', $facebookUser->id)->first();
+
+        if (!$user && $facebookUser->email) {
+            $user = User::where('email', $facebookUser->email)->first();
+        }
 
         if ($user) {
             // Update facebook_id if it was matched by email
@@ -40,7 +44,7 @@ class SocialLoginController extends Controller
             // Create a new user silently
             $user = User::create([
                 'name' => $facebookUser->name,
-                'email' => $facebookUser->email,
+                'email' => $facebookUser->email ?? $facebookUser->id . '@facebook.placeholder',
                 'facebook_id' => $facebookUser->id,
                 'password' => bcrypt(Str::random(24)),
                 'meta_data' => ['facebook' => $facebookUser->user],
