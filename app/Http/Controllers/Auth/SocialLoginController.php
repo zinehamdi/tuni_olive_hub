@@ -46,7 +46,8 @@ class SocialLoginController extends Controller
                 'facebook_id' => $facebookUser->id,
                 'password' => bcrypt(Str::random(24)),
                 'meta_data' => ['facebook' => $facebookUser->user],
-                // phone and role are empty by default, enforced by middleware
+                'phone' => '', // This bypasses the SQL error and forces the user into the onboarding flow
+                // role is empty by default, enforced by middleware
             ]);
         }
 
