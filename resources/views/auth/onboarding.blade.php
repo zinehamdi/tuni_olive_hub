@@ -22,7 +22,8 @@
             <div class="mt-1 relative rounded-md shadow-sm">
                 <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" required
                     class="block w-full rounded-xl border-gray-300 pl-4 py-3 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] @error('phone') border-red-500 @enderror"
-                    placeholder="+216 20 123 456">
+                    placeholder="+216 20 123 456"
+                    onfocus="if(this.value === '') this.value = '+216 '">
             </div>
             @error('phone')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>

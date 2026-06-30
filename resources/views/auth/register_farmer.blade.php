@@ -76,7 +76,8 @@
                             <label for="phone" class="block text-gray-900 font-bold mb-2">رقم الهاتف <span class="text-red-600">*</span></label>
                             <input id="phone" type="tel" name="phone" value="{{ old('phone', request('phone')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                                placeholder="+216 XX XXX XXX">
+                                placeholder="+216 XX XXX XXX"
+                                onfocus="if(this.value === '') this.value = '+216 '">
                             @error('phone')
                                 <p class="text-red-600 text-sm mt-2 flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
