@@ -18,7 +18,7 @@ class VisitorAnalyticsController extends Controller
         $period = $request->get('period', '7'); // default 7 days
         $startDate = Carbon::now()->subDays($period)->toDateString();
 
-        $visitors = Visitor::where('visited_date', '>=', $startDate)->get();
+        $visitors = Visitor::where('visited_date', '>=', $startDate)->where('is_bot', false)->get();
 
         // Prepare data for charts
         $chartData = $visitors->groupBy('visited_date')->map(function ($group) {
@@ -39,12 +39,12 @@ class VisitorAnalyticsController extends Controller
         $totalPeriod = $visitors->count();
         
         // Today vs Yesterday
-        $today = Visitor::where('visited_date', Carbon::today()->toDateString())->count();
-        $yesterday = Visitor::where('visited_date', Carbon::yesterday()->toDateString())->count();
+        $today = Visitor::where('visited_date', Carbon::today()->toDateString())->where('is_bot', false)->count();
+        $yesterday = Visitor::where('visited_date', Carbon::yesterday()->toDateString())->where('is_bot', false)->count();
         $growth = $yesterday > 0 ? (($today - $yesterday) / $yesterday) * 100 : 0;
 
         // Recent visitors list
-        $recentVisitors = Visitor::orderBy('updated_at', 'desc')->take(20)->get();
+        $recentVisitors = Visitor::where('is_bot', false)->orderBy('updated_at', 'desc')->take(20)->get();
 
         return view('admin.analytics.visitors', compact(
             'chartData', 'deviceStats', 'countryStats', 'totalPeriod', 'period', 'today', 'growth', 'recentVisitors'

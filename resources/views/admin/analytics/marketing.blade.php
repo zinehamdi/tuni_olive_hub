@@ -8,7 +8,7 @@
 
     <!-- Sidebar -->
     <aside :class="sidebarOpen ? 'translate-x-0' : (document.documentElement.dir === 'rtl' ? 'translate-x-full' : '-translate-x-full')" 
-           class="fixed md:sticky top-0 md:top-[72px] h-[calc(100vh)] md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 md:translate-x-0">
+           class="fixed md:sticky top-0 md:top-[72px] bottom-0 md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 md:translate-x-0">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <span class="text-[#6A8F3B]">🛡️</span> {{ __('Admin Panel') }}

@@ -35,15 +35,30 @@ class TrackVisitor
                     $userAgent = $request->header('User-Agent');
                     $truncatedUserAgent = $userAgent ? substr($userAgent, 0, 255) : null;
                     $device = $this->detectDevice($userAgent);
+                    $isBot = $this->detectBot($userAgent);
                     
                     $country = null;
                     $city = null;
-                    if ($ip && $ip !== '127.0.0.1' && $ip !== '::1') {
+                    
+                    // Only fetch GeoIP for real users to save server resources and API limits
+                    if (!$isBot && $ip && $ip !== '127.0.0.1' && $ip !== '::1') {
                         try {
-                            $geoResponse = \Illuminate\Support\Facades\Http::timeout(3)->get("http://ip-api.com/json/{$ip}");
-                            if ($geoResponse->successful() && $geoResponse->json('status') === 'success') {
-                                $country = $geoResponse->json('country');
-                                $city = $geoResponse->json('city');
+                            // Check if GeoIP is already cached for this IP to prevent duplicate calls
+                            $geoCacheKey = "geoip_{$ip}";
+                            $geoData = Cache::remember($geoCacheKey, now()->addHours(24), function () use ($ip) {
+                                $geoResponse = \Illuminate\Support\Facades\Http::timeout(3)->get("http://ip-api.com/json/{$ip}");
+                                if ($geoResponse->successful() && $geoResponse->json('status') === 'success') {
+                                    return [
+                                        'country' => $geoResponse->json('country'),
+                                        'city' => $geoResponse->json('city')
+                                    ];
+                                }
+                                return null;
+                            });
+
+                            if ($geoData) {
+                                $country = $geoData['country'];
+                                $city = $geoData['city'];
                             }
                         } catch (\Exception $e) {
                             \Illuminate\Support\Facades\Log::warning("Geolocation failed: " . $e->getMessage());
@@ -57,6 +72,7 @@ class TrackVisitor
                             'device' => $device,
                             'country' => $country,
                             'city' => $city,
+                            'is_bot' => $isBot,
                         ]
                     )->increment('hits');
                 } catch (\Throwable $e) {
@@ -83,5 +99,13 @@ class TrackVisitor
         
         $isMobile = preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $userAgent);
         return $isMobile ? 'Mobile' : 'Desktop';
+    }
+
+    private function detectBot($userAgent)
+    {
+        if (!$userAgent) return false;
+        
+        $botPatterns = '/(bot|crawler|spider|slurp|facebook|whatsapp|telegram|twitter|linkedin|slack|discord|skype|viber|applebot|bingbot|googlebot|yandex|yahoo)/i';
+        return (bool) preg_match($botPatterns, $userAgent);
     }
 }

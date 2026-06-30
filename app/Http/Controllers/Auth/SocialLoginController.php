@@ -15,6 +15,11 @@ class SocialLoginController extends Controller
         return Socialite::driver('facebook')->redirect();
     }
 
+    public function redirectGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
     public function callback()
     {
         try {
@@ -102,6 +107,75 @@ class SocialLoginController extends Controller
 
         // Redirect handled by EnsureOnboardingIsComplete middleware automatically
         // but we can be explicit if we want:
+        if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
+            return redirect()->route('onboarding.complete');
+        }
+
+        return redirect()->intended('/dashboard');
+    }
+
+    public function callbackGoogle()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            \Illuminate\Support\Facades\Log::info('Google User Data:', (array) $googleUser);
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors(['email' => __('Google login failed. Please try again.')]);
+        }
+
+        // Try to download profile picture
+        $profilePicturePath = null;
+        $avatarUrl = $googleUser->avatar ?? $googleUser->avatar_original ?? null;
+        
+        if ($avatarUrl) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::get($avatarUrl);
+                if ($response->successful()) {
+                    $filename = 'profile-pictures/' . Str::random(40) . '.jpg';
+                    \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $response->body());
+                    $profilePicturePath = $filename;
+                }
+            } catch (\Exception $e) {}
+        }
+
+        // Find existing user by google_id or email
+        $user = User::where('google_id', $googleUser->id)->first();
+
+        if (!$user && $googleUser->email) {
+            $user = User::where('email', $googleUser->email)->first();
+        }
+
+        if ($user) {
+            $updates = [];
+            // Update google_id if it was matched by email
+            if (!$user->google_id) {
+                $updates['google_id'] = $googleUser->id;
+                $updates['meta_data'] = array_merge($user->meta_data ?? [], ['google' => $googleUser->user]);
+            }
+            
+            // Update profile picture if missing
+            if (!$user->profile_picture && $profilePicturePath) {
+                $updates['profile_picture'] = $profilePicturePath;
+            }
+            
+            if (!empty($updates)) {
+                $user->update($updates);
+            }
+        } else {
+            // Create a new user silently
+            $user = User::create([
+                'name' => $googleUser->name,
+                'email' => $googleUser->email ?? $googleUser->id . '@google.placeholder',
+                'google_id' => $googleUser->id,
+                'password' => bcrypt(Str::random(24)),
+                'meta_data' => ['google' => $googleUser->user],
+                'phone' => '', // This bypasses the SQL error and forces the user into the onboarding flow
+                'profile_picture' => $profilePicturePath,
+            ]);
+        }
+
+        Auth::login($user, true);
+
         if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
             return redirect()->route('onboarding.complete');
         }

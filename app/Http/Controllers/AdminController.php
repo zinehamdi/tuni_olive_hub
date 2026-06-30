@@ -45,8 +45,8 @@ class AdminController extends Controller
             'active_listings' => Listing::where('status', 'active')->count(),
             'pending_listings' => Listing::where('status', 'pending')->count(),
             'total_products' => Product::count(),
-            'total_visitors' => \App\Models\Visitor::count(),
-            'today_visitors' => \App\Models\Visitor::where('visited_date', now()->toDateString())->count(),
+            'total_visitors' => \App\Models\Visitor::where('is_bot', false)->count(),
+            'today_visitors' => \App\Models\Visitor::where('visited_date', now()->toDateString())->where('is_bot', false)->count(),
             
             // Users by role
             'farmers' => User::where('role', 'farmer')->count(),

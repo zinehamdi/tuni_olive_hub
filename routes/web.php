@@ -15,6 +15,26 @@ Route::middleware('auth')->post('/onboarding/complete', [\App\Http\Controllers\A
 Route::get('/auth/facebook/redirect', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirect'])->name('auth.facebook');
 Route::get('/auth/facebook/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'callback']);
 
+// Google Login Routes
+Route::get('/auth/google/redirect', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirectGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'callbackGoogle']);
+
+// Token Login Bridge for Native App WebViews
+Route::get('/auth/token-login', function (\Illuminate\Http\Request $request) {
+    $token = $request->query('token');
+    $redirect = $request->query('redirect', '/');
+    
+    if ($token) {
+        // Find token in personal_access_tokens
+        $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
+        if ($tokenModel && $tokenModel->tokenable) {
+            Auth::login($tokenModel->tokenable, true);
+        }
+    }
+    
+    return redirect($redirect);
+})->name('auth.token-login');
+
 // Language switcher - must be outside middleware groups and available globally
 Route::get('/lang/{locale}', function (string $locale) {
     $supported = ['ar','fr','en'];
@@ -32,14 +52,20 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::middleware('set.locale')->group(function () {
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering
-        $featuredListings = \App\Models\Listing::with(['product', 'seller.addresses'])
-            ->where('status', 'active')
-            ->latest()
-            ->get();
+        $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(10), function () {
+            return \App\Models\Listing::with(['product', 'seller.addresses'])
+                ->where('status', 'active')
+                ->latest()
+                ->get();
+        });
             
-        $articles = \App\Models\Article::where('is_active', true)->latest()->take(3)->get();
+        $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(30), function () {
+            return \App\Models\Article::where('is_active', true)->latest()->take(3)->get();
+        });
         
-        $deals = \App\Models\Deal::with('user')->active()->latest()->take(6)->get();
+        $deals = \Illuminate\Support\Facades\Cache::remember('home_deals', now()->addMinutes(10), function () {
+            return \App\Models\Deal::with('user')->active()->latest()->take(6)->get();
+        });
         
         return view('home_marketplace', compact('featuredListings', 'articles', 'deals'));
     })->name('home');

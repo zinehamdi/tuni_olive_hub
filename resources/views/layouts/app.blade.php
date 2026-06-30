@@ -7,19 +7,24 @@
 
     <!-- SEO Meta Tags -->
     @php
-        $defaultBrandName = app()->getLocale() === 'ar' ? __('brand.name_ar') : __('brand.name_latin');
-        $defaultOgTitle = $defaultBrandName . ' | Tunisian Olive Oil Marketplace';
+        $defaultBrandName = app()->getLocale() === 'ar' ? 'زين توب' : 'ZinToop';
+        $isArabic = app()->getLocale() === 'ar';
+        $defaultTitle = $isArabic ? 'زين توب | السوق التونسي الأول لزيت الزيتون' : 'ZinToop | Tunisian Olive Oil Marketplace';
+        $defaultDesc = $isArabic 
+            ? 'زين توب - السوق التونسي الأول لزيت الزيتون. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.'
+            : 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills. No commissions.';
     @endphp
-    <title>{{ config('app.name') }} - @yield('title', $defaultBrandName)</title>
-    <meta name="description" content="@yield('description', 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills.')">
+    <title>{{ config('app.name') }} - @yield('title', $defaultTitle)</title>
+    <meta name="description" content="@yield('description', $defaultDesc)">
+    <meta name="keywords" content="زيت زيتون, تونس, فلاح, معصرة, زيتون, زيت بكر ممتاز, سوق الزيتون, tunisian olive oil, olive oil marketplace, extra virgin, zintoop">
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ config('app.name', 'ZinToop') }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', $defaultOgTitle)">
-    <meta property="og:description" content="@yield('og_description', __('Discover premium Tunisian olive oil directly from producers. No commissions, just pure quality.'))">
+    <meta property="og:title" content="@yield('og_title', $defaultTitle)">
+    <meta property="og:description" content="@yield('og_description', $defaultDesc)">
     <meta property="og:image" content="@yield('og_image', asset('images/zintooplogo3d.jpg'))">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
     <meta property="fb:app_id" content="{{ env('FB_APP_ID', '') }}">
@@ -27,9 +32,34 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
-    <meta name="twitter:title" content="@yield('twitter_title', 'ZinToop | Tunisian Olive Oil Marketplace')">
-    <meta name="twitter:description" content="@yield('twitter_description', 'Discover premium Tunisian olive oil directly from producers.')">
+    <meta name="twitter:title" content="@yield('twitter_title', $defaultTitle)">
+    <meta name="twitter:description" content="@yield('twitter_description', $defaultDesc)">
     <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintooplogo3d.jpg'))">
+
+    <!-- JSON-LD Schema (Structured Data for Google) -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebSite",
+      "name": "ZinToop - زين توب",
+      "url": "https://zintoop.com/",
+      "description": "السوق التونسي الأول لزيت الزيتون والزيتون",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://zintoop.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "Organization",
+      "name": "ZinToop",
+      "url": "https://zintoop.com",
+      "logo": "{{ asset('images/zintooplogo3d.jpg') }}"
+    }
+    </script>
 
     <!-- Alternate Language Links for SEO -->
     <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
@@ -481,8 +511,8 @@
                      x-transition:leave="transition ease-in duration-200" 
                      x-transition:leave-start="opacity-100" 
                      x-transition:leave-end="opacity-0" 
-                     class="md:hidden py-4 border-t border-white/20 bg-gradient-to-b from-transparent to-black/10">
-                    <div class="flex flex-col gap-1 px-2">
+                     class="md:hidden py-4 border-t border-white/20 bg-[#1B2A1B] shadow-2xl relative z-[60]">
+                    <div class="flex flex-col gap-1 px-2 relative z-10 bg-[#1B2A1B]">
                         <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
@@ -598,7 +628,7 @@
     @endisset
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="{{ request()->routeIs('admin.*') ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6' }}">
         {{ $slot ?? '' }}
         @yield('content')
     </main>
