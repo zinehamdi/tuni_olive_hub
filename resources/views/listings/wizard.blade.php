@@ -1119,39 +1119,64 @@ document.addEventListener('alpine:init', () => {
                 (error) => {
                     console.warn('High accuracy location failed. Retrying with low accuracy...', error.message);
                     
-                    // Fallback attempt: Try with Low Accuracy (Wi-Fi / Cellular / IP)
+                    // Fallback attempt 1: Try with Low Accuracy (Wi-Fi / Cellular)
                     navigator.geolocation.getCurrentPosition(
                         successCallback,
                         (fallbackError) => {
-                            if (button) {
-                                button.disabled = false;
-                                button.innerHTML = originalHTML;
-                            }
+                            console.warn('Low accuracy location failed. Retrying with IP Geolocation...', fallbackError.message);
                             
-                            switch(fallbackError.code) {
-                                case fallbackError.PERMISSION_DENIED:
-                                    this.locationError = 'تم رفض الإذن بالوصول إلى الموقع. الرجاء السماح للمتصفح بالوصول إلى موقعك.';
-                                    break;
-                                case fallbackError.POSITION_UNAVAILABLE:
-                                    this.locationError = 'معلومات الموقع غير متوفرة.';
-                                    break;
-                                case fallbackError.TIMEOUT:
-                                    this.locationError = 'انتهت مهلة طلب الموقع.';
-                                    break;
-                                default:
-                                    this.locationError = 'حدث خطأ غير معروف في تحديد الموقع.';
-                            }
+                            // Fallback attempt 2 (Last resort): IP-based Geolocation via API
+                            fetch('https://ipapi.co/json/')
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.latitude && data.longitude) {
+                                        this.formData.latitude = Number(data.latitude).toFixed(6);
+                                        this.formData.longitude = Number(data.longitude).toFixed(6);
+                                        this.locationSuccess = true;
+                                        this.locationError = '';
+                                        if (button) {
+                                            button.disabled = false;
+                                            button.innerHTML = '✓ تم تحديد الموقع بنجاح';
+                                            setTimeout(() => {
+                                                button.innerHTML = originalHTML;
+                                            }, 2000);
+                                        }
+                                    } else {
+                                        throw new Error('Invalid IP location data');
+                                    }
+                                })
+                                .catch(ipError => {
+                                    console.error('IP Geolocation failed:', ipError);
+                                    if (button) {
+                                        button.disabled = false;
+                                        button.innerHTML = originalHTML;
+                                    }
+                                    
+                                    switch(fallbackError.code) {
+                                        case fallbackError.PERMISSION_DENIED:
+                                            this.locationError = 'تم رفض الإذن بالوصول إلى الموقع. الرجاء السماح للمتصفح بالوصول إلى موقعك.';
+                                            break;
+                                        case fallbackError.POSITION_UNAVAILABLE:
+                                            this.locationError = 'معلومات الموقع غير متوفرة.';
+                                            break;
+                                        case fallbackError.TIMEOUT:
+                                            this.locationError = 'انتهت مهلة طلب الموقع.';
+                                            break;
+                                        default:
+                                            this.locationError = 'حدث خطأ غير معروف في تحديد الموقع.';
+                                    }
+                                });
                         },
                         {
                             enableHighAccuracy: false,
-                            timeout: 10000,
+                            timeout: 5000, // Timeout low accuracy after 5 seconds to switch to IP quickly
                             maximumAge: 60000
                         }
                     );
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 6000, // Wait max 6 seconds for GPS signal before falling back
+                    timeout: 4000, // Timeout high accuracy after 4 seconds
                     maximumAge: 0
                 }
             );
