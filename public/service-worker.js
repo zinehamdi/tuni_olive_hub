@@ -1,10 +1,10 @@
-const CACHE_NAME = 'zintoop-cache-v2';
+const CACHE_NAME = 'zintoop-cache-v3';
 const STATIC_ASSETS = [
-  '/manifest.webmanifest',
-  '/icons/zintoop-192.png',
-  '/icons/zintoop-512.png',
-  '/images/zintoop-logo.png',
-  '/images/oliveoiltandefault.jpg'
+  'manifest.webmanifest',
+  'icons/zintoop-192.png',
+  'icons/zintoop-512.png',
+  'images/zintooplogo3d.jpg',
+  'images/oliveoiltandefault.jpg'
 ];
 
 self.addEventListener('install', (event) => {

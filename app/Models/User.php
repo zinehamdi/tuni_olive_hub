@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use NotificationChannels\WebPush\HasPushSubscriptions;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +20,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'facebook_id',
+        'meta_data',
         'name',
         'email',
         'password',
@@ -26,6 +30,7 @@ class User extends Authenticatable
         'profile_picture',
         'show_contact_info',
         'show_address',
+        'interest',
     ];
 
     /**
@@ -48,6 +53,7 @@ class User extends Authenticatable
         'cover_photos' => 'array',
         'show_contact_info' => 'boolean',
         'show_address' => 'boolean',
+        'meta_data' => 'array',
     ];
 
     /**
@@ -72,6 +78,14 @@ class User extends Authenticatable
     public function listings()
     {
         return $this->hasMany(Listing::class, 'seller_id');
+    }
+
+    /**
+     * Get the loads assigned to this user (as carrier).
+     */
+    public function assignedLoads()
+    {
+        return $this->hasMany(Load::class, 'carrier_id');
     }
 
     /**
@@ -144,5 +158,13 @@ class User extends Authenticatable
     public function getLikesCountAttribute(): int
     {
         return $this->likers()->count();
+    }
+
+    /**
+     * Get the user's tanks (inventories).
+     */
+    public function tanks()
+    {
+        return $this->hasMany(Tank::class);
     }
 }
