@@ -85,6 +85,14 @@ class ListingController extends ApiController
     {
         $this->authorize('create', Listing::class);
         $listing = Listing::create($request->validated());
+
+        // Send success email to seller
+        try {
+            \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send listing creation email (API): ' . $e->getMessage());
+        }
+
         $this->audit('listing.created', 'listing', $listing->id);
     return $this->ok(new ListingResource($listing->load(['product','seller'])), 201);
     }

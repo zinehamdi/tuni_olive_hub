@@ -11,29 +11,8 @@ window.Alpine = Alpine;
 // Register wizard component BEFORE starting Alpine
 registerWizardComponent(Alpine);
 
-// Global Toast Store
-Alpine.store('toast', {
-    show: false,
-    message: '',
-    type: 'success',
-    showToast(message, type = 'success') {
-        this.message = message;
-        this.type = type;
-        this.show = true;
-        setTimeout(() => { this.show = false; }, 4000);
-    }
-});
-
-// Global Chat Store for state sharing between modals
-Alpine.store('chat', {
-    assigning: false,
-    selectedOrder: null
-});
-
 // Start Alpine
 Alpine.start();
-
-console.log('Alpine started with stores:', Object.keys(Alpine.store('toast') || {}));
 
 console.log('Alpine started');
 
@@ -91,9 +70,14 @@ window.alpineRegisterForm = function() {
             }
         }
     }
-};
+}
 
-// Service worker is now registered dynamically in layouts/app.blade.php to support subdirectory setups.
+// PWA install prompt and service worker registration
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+		navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+	});
+}
 
 (() => {
 	let deferredPrompt;

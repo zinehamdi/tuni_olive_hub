@@ -119,7 +119,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         // Queue the welcome email to be sent 1 minute after registration
         try {
-            \Illuminate\Support\Facades\Mail::to($user->email)->later(now()->addMinute(), new \App\Mail\WelcomeUser($user));
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\WelcomeUser($user));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to queue welcome email: ' . $e->getMessage());
         }

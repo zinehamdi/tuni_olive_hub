@@ -7,33 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
-// Progressive Profiling & Onboarding
-Route::middleware('auth')->get('/onboarding/complete', [\App\Http\Controllers\Auth\OnboardingController::class, 'show'])->name('onboarding.complete');
-Route::middleware('auth')->post('/onboarding/complete', [\App\Http\Controllers\Auth\OnboardingController::class, 'store'])->name('onboarding.store');
-
-// Facebook Login Routes
-Route::get('/auth/facebook/redirect', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirect'])->name('auth.facebook');
-Route::get('/auth/facebook/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'callback']);
-
-// Google Login Routes
-Route::get('/auth/google/redirect', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirectGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'callbackGoogle']);
-
-// Token Login Bridge for Native App WebViews
-Route::get('/auth/token-login', function (\Illuminate\Http\Request $request) {
-    $token = $request->query('token');
-    $redirect = $request->query('redirect', '/');
-    
-    if ($token) {
-        // Find token in personal_access_tokens
-        $tokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
-        if ($tokenModel && $tokenModel->tokenable) {
-            Auth::login($tokenModel->tokenable, true);
-        }
-    }
-    
-    return redirect($redirect);
-})->name('auth.token-login');
+// Onboarding dispatcher
+// Route::middleware('auth')->get('/onboarding', [\App\Http\Controllers\ProfileController::class, 'onboarding'])->name('onboarding');
+// Route::middleware('auth')->post('/onboarding/{role}', [\App\Http\Controllers\ProfileController::class, 'submitOnboarding'])->name('onboarding.submit');
 
 // Language switcher - must be outside middleware groups and available globally
 Route::get('/lang/{locale}', function (string $locale) {
@@ -52,57 +28,19 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::middleware('set.locale')->group(function () {
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering
-        $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(10), function () {
-            return \App\Models\Listing::with(['product', 'seller.addresses'])
-                ->where('status', 'active')
-                ->latest()
-                ->get();
-        });
-            
-        $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(30), function () {
-            return \App\Models\Article::where('is_active', true)->latest()->take(3)->get();
-        });
+        $featuredListings = \App\Models\Listing::with(['product', 'seller.addresses'])
+            ->where('status', 'active')
+            ->latest()
+            ->get();
         
-        $deals = \Illuminate\Support\Facades\Cache::remember('home_deals', now()->addMinutes(10), function () {
-            return \App\Models\Deal::with('user')->active()->latest()->take(6)->get();
-        });
-        
-        return view('home_marketplace', compact('featuredListings', 'articles', 'deals'));
+        return view('home_marketplace', compact('featuredListings'));
     })->name('home');
     
     // Public & legal pages
     Route::view('/about', 'public.about')->name('about');
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
     Route::view('/pricing', 'public.pricing')->name('pricing');
-    Route::view('/services/pricing', 'public.services_pricing')->name('services.pricing');
-    Route::get('/services/appointment/consultation', function(\Illuminate\Http\Request $request) {
-        $name = $request->query('name', '');
-        $phone = $request->query('phone', '');
-        
-        $message = "مرحباً منصة الزين، أود حجز موعد استشارة بخصوص تصدير وتجارة زيت الزيتون التونسي.";
-        if ($name) {
-            $message .= "\n\nالاسم: " . $name;
-        }
-        if ($phone) {
-            $message .= "\nالهاتف: " . $phone;
-        }
-        
-        $waUrl = "https://api.whatsapp.com/send/?phone=21625777926&text=" . urlencode($message);
-        return redirect()->away($waUrl);
-    })->name('services.appointment.consultation');
-    Route::get('/services/appointment/{service}', [\App\Http\Controllers\MarketingServiceController::class, 'appointmentForm'])->name('services.appointment');
-    Route::post('/services/appointment/{service}', [\App\Http\Controllers\MarketingServiceController::class, 'submitAppointment'])->name('services.appointment.submit');
     Route::view('/contact', 'public.contact')->name('public.contact');
-    
-    // Articles
-    Route::get('/articles/{id}', function($id) {
-        $article = \App\Models\Article::where('is_active', true)->findOrFail($id);
-        $relatedArticles = \App\Models\Article::where('is_active', true)->where('id', '!=', $id)->latest()->get();
-        return view('public.article', compact('article', 'relatedArticles'));
-    })->name('articles.show');
-    
-    // Dedicated SEO Articles
-    Route::view('/olive-varieties', 'public.article_varieties')->name('article.varieties');
     Route::post('/contact', function(Request $request){
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -134,7 +72,7 @@ Route::middleware('set.locale')->group(function () {
     Route::get('/user/{user}/stories', [StoryController::class, 'index'])->name('user.stories');
 });
 
-Route::middleware(['auth', 'set.locale', 'onboarding'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
+Route::middleware(['auth', 'set.locale'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
 
 // Public user profile - accessible to anyone (view seller/publisher profiles)
 Route::middleware('set.locale')->get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
@@ -146,17 +84,6 @@ Route::middleware(['auth', 'set.locale'])->post('/user/{user}/toggle-like', [\Ap
 
 Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
-    Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.destroy');
-    // Notifications
-    Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
-        Route::post('/mark-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('mark-read');
-        Route::post('/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markOneAsRead'])->name('read');
-    });
-
-    // Load / Transport routes
-    Route::post('/loads/summon', [\App\Http\Controllers\LoadController::class, 'summon'])->name('loads.summon');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -188,10 +115,6 @@ Route::middleware('set.locale')->group(function () {
 // Limit: 60 requests per minute per user
 Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
-    Route::get('/analytics/visitors', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'index'])->name('analytics.visitors');
-    Route::get('/analytics/marketing', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'marketing'])->name('analytics.marketing');
-    Route::get('/subscribers', [\App\Http\Controllers\Admin\SubscriberController::class, 'index'])->name('subscribers.index');
-    Route::post('/subscribers/bulk-message', [\App\Http\Controllers\Admin\SubscriberController::class, 'bulkMessage'])->name('subscribers.bulk-message');
     Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}/edit', [\App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
@@ -203,34 +126,15 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::post('/listings/{listing}/approve', [\App\Http\Controllers\AdminController::class, 'approveListing'])->name('listings.approve');
     Route::post('/listings/{listing}/reject', [\App\Http\Controllers\AdminController::class, 'rejectListing'])->name('listings.reject');
     
-    // Marketing Appointments Management
-    Route::prefix('marketing-appointments')->name('marketing.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\MarketingAppointmentController::class, 'index'])->name('index');
-        Route::get('/{appointment}/edit', [\App\Http\Controllers\Admin\MarketingAppointmentController::class, 'edit'])->name('edit');
-        Route::patch('/{appointment}', [\App\Http\Controllers\Admin\MarketingAppointmentController::class, 'update'])->name('update');
-        Route::patch('/{appointment}/status', [\App\Http\Controllers\Admin\MarketingAppointmentController::class, 'updateStatus'])->name('update-status');
-        Route::delete('/{appointment}', [\App\Http\Controllers\Admin\MarketingAppointmentController::class, 'destroy'])->name('destroy');
-    });
-
     // Price Management - Souk Prices
     Route::prefix('prices/souk')->name('prices.souk.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'indexSouk'])->name('index');
-        Route::post('/refresh-dates', [\App\Http\Controllers\Admin\PriceManagementController::class, 'refreshSoukDates'])->name('refresh-dates');
         Route::get('/create', [\App\Http\Controllers\Admin\PriceManagementController::class, 'createSouk'])->name('create');
         Route::post('/', [\App\Http\Controllers\Admin\PriceManagementController::class, 'storeSouk'])->name('store');
         Route::get('/{price}/edit', [\App\Http\Controllers\Admin\PriceManagementController::class, 'editSouk'])->name('edit');
         Route::put('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'updateSouk'])->name('update');
         Route::delete('/{price}', [\App\Http\Controllers\Admin\PriceManagementController::class, 'destroySouk'])->name('destroy');
     });
-
-    // Articles Management
-    Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class)->except(['show']);
-    
-    // Deals Management
-    Route::resource('deals', \App\Http\Controllers\Admin\DealController::class)->except(['show']);
-    Route::get('deal-requests', [\App\Http\Controllers\Admin\DealRequestController::class, 'index'])->name('deals.requests.index');
-    Route::patch('deal-requests/{dealRequest}/status', [\App\Http\Controllers\Admin\DealRequestController::class, 'updateStatus'])->name('deals.requests.status');
-    Route::delete('deal-requests/{dealRequest}', [\App\Http\Controllers\Admin\DealRequestController::class, 'destroy'])->name('deals.requests.destroy');
     
     // Price Management - World Prices
     Route::prefix('prices/world')->name('prices.world.')->group(function () {
@@ -251,8 +155,6 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
 
 require __DIR__.'/auth.php';
 
-\Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['web']]);
-
 // Public storefront + SEO
 Route::group([], function(){
     Route::get('landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
@@ -271,27 +173,27 @@ Route::group([], function(){
 Route::middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
     Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
-        ->middleware(['auth', 'onboarding'])
+        ->middleware('auth')
         ->name('listings.create');
     
     // Limit listing creation to 10 per hour per user (prevents spam)
     Route::post('listings/store', [\App\Http\Controllers\ListingController::class, 'store'])
-        ->middleware(['auth', 'onboarding', 'throttle:10,60'])
+        ->middleware(['auth', 'throttle:10,60'])
         ->name('listings.store');
     
     // Add routes for edit and delete
     Route::get('listings/{listing}/edit', [\App\Http\Controllers\ListingController::class, 'edit'])
-        ->middleware(['auth', 'onboarding'])
+        ->middleware('auth')
         ->name('listings.edit');
     
     // Limit updates to 20 per hour per user
     Route::put('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'update'])
-        ->middleware(['auth', 'onboarding', 'throttle:20,60'])
+        ->middleware(['auth', 'throttle:20,60'])
         ->name('listings.update');
     
     // Limit deletes to 10 per hour per user
     Route::delete('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'destroy'])
-        ->middleware(['auth', 'onboarding', 'throttle:10,60'])
+        ->middleware(['auth', 'throttle:10,60'])
         ->name('listings.destroy');
     
     // Add route for viewing single listing
@@ -321,10 +223,6 @@ Route::middleware('set.locale')->group(function(){
     })->name('mobile.trip');
 
     // gulf.catalog now defined above
-    Route::post('deals/{deal}/request', [\App\Http\Controllers\DealRequestController::class, 'store'])->name('deals.request.submit');
-
-    // Ezzitouni AI Chatbot Route
-    Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
 });
 
 // Authentication routes
@@ -341,3 +239,39 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
 })->name('register.role');
 Route::get('/healthz', function(){ return 'OK'; });
 
+Route::get("/_debug", function(\Illuminate\Http\Request $r){ \Illuminate\Support\Facades\Log::info("DEBUG: /_debug", ["auth" => \Illuminate\Support\Facades\Auth::check(), "user_id" => optional($r->user())->id]); return "ok"; });
+Route::middleware("auth")->get("/_debug/auth", function(\Illuminate\Http\Request $r){ \Illuminate\Support\Facades\Log::info("DEBUG: /_debug/auth", ["auth" => \Illuminate\Support\Facades\Auth::check(), "user_id" => optional($r->user())->id]); return "ok auth"; });
+Route::get('/_debug/session-set', function (\Illuminate\Http\Request $r) {
+    session(['ping' => 'pong', 'set_at' => now()->toDateTimeString()]);
+    \Illuminate\Support\Facades\Log::info('DEBUG: session-set', ['sid' => session()->getId()]);
+    return response()->json(['ok' => true, 'sid' => session()->getId()]);
+});
+
+Route::get('/_debug/session-get', function (\Illuminate\Http\Request $r) {
+    $data = ['ping' => session('ping'), 'set_at' => session('set_at'), 'sid' => session()->getId()];
+    \Illuminate\Support\Facades\Log::info('DEBUG: session-get', $data);
+    return response()->json($data);
+});
+
+Route::get('/_debug/auth', function (\Illuminate\Http\Request $r) {
+    $data = [
+        'auth'   => \Illuminate\Support\Facades\Auth::check(),
+        'user'   => optional(\Illuminate\Support\Facades\Auth::user())->only('id','email','role'),
+        'sid'    => session()->getId(),
+    ];
+    \Illuminate\Support\Facades\Log::info('DEBUG: /_debug/auth', $data);
+    return response()->json($data);
+});
+Route::middleware('web')->get('/_whoami', function (\Illuminate\Http\Request $r) {
+    \Log::info('WHOAMI', [
+        'auth' => \Illuminate\Support\Facades\Auth::check(),
+        'user_id' => optional(\Illuminate\Support\Facades\Auth::user())->id,
+        'sid' => $r->session()->getId(),
+        'has_session_cookie' => $r->hasSession()
+    ]);
+    return response()->json([
+        'auth' => \Illuminate\Support\Facades\Auth::check(),
+        'user_id' => optional(\Illuminate\Support\Facades\Auth::user())->id,
+        'sid' => $r->session()->getId(),
+    ]);
+});
