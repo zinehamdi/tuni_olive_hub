@@ -1126,10 +1126,10 @@ document.addEventListener('alpine:init', () => {
                             console.warn('Low accuracy location failed. Retrying with IP Geolocation...', fallbackError.message);
                             
                             // Fallback attempt 2 (Last resort): IP-based Geolocation via API
-                            fetch('https://ipapi.co/json/')
+                            fetch('https://ipwho.is/')
                                 .then(response => response.json())
                                 .then(data => {
-                                    if (data.latitude && data.longitude) {
+                                    if (data.success && data.latitude && data.longitude) {
                                         this.formData.latitude = Number(data.latitude).toFixed(6);
                                         this.formData.longitude = Number(data.longitude).toFixed(6);
                                         this.locationSuccess = true;
