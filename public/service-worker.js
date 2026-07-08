@@ -1,10 +1,10 @@
-const CACHE_NAME = 'zintoop-cache-v3';
+const CACHE_NAME = 'zintoop-cache-v2';
 const STATIC_ASSETS = [
-  'manifest.webmanifest',
-  'icons/zintoop-192.png',
-  'icons/zintoop-512.png',
-  'images/zintooplogo3d.jpg',
-  'images/oliveoiltandefault.jpg'
+  '/manifest.webmanifest',
+  '/icons/zintoop-192.png',
+  '/icons/zintoop-512.png',
+  '/images/zintoop-logo.png',
+  '/images/oliveoiltandefault.jpg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -25,6 +25,9 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
+  
+  // Bypass service worker for external/cross-origin requests
+  if (url.origin !== self.location.origin) return;
   
   // For HTML pages (no extension or .php), use network-first to preserve auth state
   const isHtmlRequest = event.request.headers.get('accept')?.includes('text/html') ||
