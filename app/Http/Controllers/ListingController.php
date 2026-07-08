@@ -194,6 +194,13 @@ class ListingController extends Controller
                 'status' => $listing->status
             ]);
 
+            // Send success email to seller
+            try {
+                \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+            } catch (\Exception $e) {
+                Log::error('Failed to send listing creation email: ' . $e->getMessage());
+            }
+
             // Redirect to dashboard with success message
             return Redirect::route('dashboard')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
             

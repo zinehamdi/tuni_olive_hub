@@ -2,25 +2,25 @@
 
 namespace App\Mail;
 
+use App\Models\Listing;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeUser extends Mailable
+class ListingCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $listing;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct(Listing $listing)
     {
-        $this->user = $user;
+        $this->listing = $listing;
     }
 
     /**
@@ -29,7 +29,7 @@ class WelcomeUser extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'مرحباً بك في منصة الزين! - Bienvenue sur ZinToop',
+            subject: 'تم نشر عرضك بنجاح! - Votre annonce a été publiée avec succès',
             replyTo: [
                 new \Illuminate\Mail\Mailables\Address('contact@zintoop.com', 'ZinToop Support'),
             ],
@@ -42,9 +42,9 @@ class WelcomeUser extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.welcome',
+            markdown: 'emails.listing_created',
             with: [
-                'user' => $this->user,
+                'listing' => $this->listing,
             ],
         );
     }
