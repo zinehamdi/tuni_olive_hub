@@ -1098,45 +1098,61 @@ document.addEventListener('alpine:init', () => {
                 button.disabled = true;
                 button.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             }
-            
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    this.formData.latitude = position.coords.latitude.toFixed(6);
-                    this.formData.longitude = position.coords.longitude.toFixed(6);
-                    this.locationSuccess = true;
-                    this.locationError = '';
-                    if (button) {
-                        button.disabled = false;
-                        button.innerHTML = '✓ تم تحديد الموقع بنجاح';
-                        setTimeout(() => {
-                            button.innerHTML = originalHTML;
-                        }, 2000);
-                    }
-                },
-                (error) => {
-                    if (button) {
-                        button.disabled = false;
+
+            const successCallback = (position) => {
+                this.formData.latitude = position.coords.latitude.toFixed(6);
+                this.formData.longitude = position.coords.longitude.toFixed(6);
+                this.locationSuccess = true;
+                this.locationError = '';
+                if (button) {
+                    button.disabled = false;
+                    button.innerHTML = '✓ تم تحديد الموقع بنجاح';
+                    setTimeout(() => {
                         button.innerHTML = originalHTML;
-                    }
+                    }, 2000);
+                }
+            };
+            
+            // First attempt: Try with High Accuracy (GPS)
+            navigator.geolocation.getCurrentPosition(
+                successCallback,
+                (error) => {
+                    console.warn('High accuracy location failed. Retrying with low accuracy...', error.message);
                     
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            this.locationError = 'تم رفض الإذن بالوصول إلى الموقع. الرجاء السماح للمتصفح بالوصول إلى موقعك.';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            this.locationError = 'معلومات الموقع غير متوفرة.';
-                            break;
-                        case error.TIMEOUT:
-                            this.locationError = 'انتهت مهلة طلب الموقع.';
-                            break;
-                        default:
-                            this.locationError = 'حدث خطأ غير معروف في تحديد الموقع.';
-                    }
+                    // Fallback attempt: Try with Low Accuracy (Wi-Fi / Cellular / IP)
+                    navigator.geolocation.getCurrentPosition(
+                        successCallback,
+                        (fallbackError) => {
+                            if (button) {
+                                button.disabled = false;
+                                button.innerHTML = originalHTML;
+                            }
+                            
+                            switch(fallbackError.code) {
+                                case fallbackError.PERMISSION_DENIED:
+                                    this.locationError = 'تم رفض الإذن بالوصول إلى الموقع. الرجاء السماح للمتصفح بالوصول إلى موقعك.';
+                                    break;
+                                case fallbackError.POSITION_UNAVAILABLE:
+                                    this.locationError = 'معلومات الموقع غير متوفرة.';
+                                    break;
+                                case fallbackError.TIMEOUT:
+                                    this.locationError = 'انتهت مهلة طلب الموقع.';
+                                    break;
+                                default:
+                                    this.locationError = 'حدث خطأ غير معروف في تحديد الموقع.';
+                            }
+                        },
+                        {
+                            enableHighAccuracy: false,
+                            timeout: 10000,
+                            maximumAge: 60000
+                        }
+                    );
                 },
                 {
-                    enableHighAccuracy: false,
-                    timeout: 15000,
-                    maximumAge: 60000
+                    enableHighAccuracy: true,
+                    timeout: 6000, // Wait max 6 seconds for GPS signal before falling back
+                    maximumAge: 0
                 }
             );
         },
