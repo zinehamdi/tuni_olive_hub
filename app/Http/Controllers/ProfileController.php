@@ -42,11 +42,8 @@ class ProfileController extends Controller
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
-        $assignedLoads = $user->role === 'carrier' ? $user->assignedLoads()->latest()->paginate(10) : collect();
-        $tanks = in_array($user->role, ['farmer', 'mill']) ? $user->tanks()->latest()->get() : collect();
-        $myStories = \App\Models\Story::where('user_id', $user->id)->where('status', 'active')->latest()->get();
 
-        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'tanks', 'myStories'));
+        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl'));
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
@@ -212,97 +209,21 @@ class ProfileController extends Controller
 
         Auth::logout();
 
+        // Manually cascade delete associated listings, products, and addresses
+        try {
+            $user->listings()->delete();
+            $user->products()->delete();
+            $user->addresses()->delete();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to clean up user records during profile deletion: ' . $e->getMessage());
+        }
+
         $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
-    }
-
-    /**
-     * PATCH /profile/field
-     */
-    public function updateField(Request $request)
-    {
-        $request->validate([
-            'field' => ['required', 'string', 'in:name,phone,email,olive_type,farm_name,farm_location,tree_number,camion_capacity,company_name,mill_name,packer_name'],
-            'value' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        $user = $request->user();
-        $field = $request->input('field');
-        $value = $request->input('value');
-
-        // Check if the field is actually allowed to be updated through this method
-        $allowedFields = [
-            'name', 'phone', 'email', 'olive_type', 'farm_name', 'farm_location', 
-            'tree_number', 'camion_capacity', 'company_name', 'mill_name', 'packer_name'
-        ];
-
-        if (in_array($field, $allowedFields)) {
-            $user->$field = $value;
-            $user->save();
-            
-            return response()->json([
-                'success' => true,
-                'message' => __('Updated successfully!'),
-                'value' => $value
-            ]);
-        }
-
-        return response()->json(['success' => false, 'message' => __('Invalid field.')], 400);
-    }
-
-    /**
-     * POST /profile/photo
-     */
-    public function uploadPhoto(Request $request)
-    {
-        $request->validate([
-            'type' => ['required', 'string', 'in:profile,cover'],
-            'photo' => ['required', 'image', 'max:5120'], // 5MB max
-        ]);
-
-        $user = $request->user();
-        $type = $request->input('type');
-        $photo = $request->file('photo');
-
-        try {
-            if ($type === 'profile') {
-                $path = $this->imageService->optimizeProfilePicture($photo);
-                $user->profile_picture = $path;
-                $user->save();
-            } elseif ($type === 'cover') {
-                $path = $this->imageService->optimizeCoverPhoto($photo);
-                
-                $covers = $user->cover_photos ?? [];
-                if (!is_array($covers)) {
-                    $covers = [];
-                }
-                
-                // Add new cover, keeping max 5
-                if (count($covers) >= 5) {
-                    array_shift($covers); // remove oldest
-                }
-                $covers[] = $path;
-                
-                $user->cover_photos = $covers;
-                $user->save();
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => __('Photo uploaded successfully!'),
-                'path' => $path
-            ]);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Photo upload failed: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => __('Failed to upload photo. Please try again.')
-            ], 500);
-        }
     }
 
     /**

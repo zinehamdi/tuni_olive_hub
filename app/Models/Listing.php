@@ -53,6 +53,17 @@ use Illuminate\Database\Eloquent\Model;
 class Listing extends Model
 {
     use HasFactory;
+
+    protected static function booted()
+    {
+        static::saved(function ($listing) {
+            \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+        });
+
+        static::deleted(function ($listing) {
+            \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+        });
+    }
     
     /**
      * The attributes that are mass assignable.
