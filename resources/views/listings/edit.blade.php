@@ -19,7 +19,7 @@
         <h2 class="text-2xl font-extrabold text-[#1B2A1B]">تعديل العرض الحالي</h2>
         <p class="text-sm text-gray-600">عدل تفاصيل عرضك للحفاظ على دقة معلومات البيع والشحن.</p>
         
-        <form id="listingForm" class="space-y-6" onsubmit="return submitListing(event)" enctype="multipart/form-data">
+        <form id="listingForm" class="space-y-6" enctype="multipart/form-data">
           @csrf
           <input type="hidden" name="seller_id" value="{{ auth()->id() }}" />
           
@@ -80,11 +80,9 @@
                   $pm = is_array($listing->payment_methods) ? $listing->payment_methods : json_decode($listing->payment_methods ?? '[]', true);
                   $pm = is_array($pm) ? $pm : [];
                 @endphp
-                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="cod" {{ in_array('cod', $pm) ? 'checked' : '' }}> دفع عند التسليم (COD)</label>
-                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="flouci" {{ in_array('flouci', $pm) ? 'checked' : '' }}> Flouci</label>
-                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="d17" {{ in_array('d17', $pm) ? 'checked' : '' }}> D17</label>
-                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="stripe" {{ in_array('stripe', $pm) ? 'checked' : '' }}> بطاقة بنكية</label>
-                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="bank_lc" {{ in_array('bank_lc', $pm) ? 'checked' : '' }}> اعتماد مستندي (LC)</label>
+                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="cash" {{ in_array('cash', $pm) ? 'checked' : '' }}> نقداً</label>
+                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="bank_transfer" {{ in_array('bank_transfer', $pm) ? 'checked' : '' }}> تحويل بنكي</label>
+                <label class="flex items-center gap-2"><input type="checkbox" name="payment_methods[]" value="check" {{ in_array('check', $pm) ? 'checked' : '' }}> شيك</label>
               </div>
             </div>
 
@@ -196,7 +194,7 @@
 
           <div class="sticky bottom-4 flex justify-end gap-3 z-10 bg-[#F8F4EC]/85 p-3 rounded-2xl backdrop-blur-sm border">
             <button type="button" onclick="window.history.back()" class="min-h-[44px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#9B6A4A] to-[#F8F4EC] text-gray-900 shadow-md hover:shadow-lg hover:scale-105 transition">إلغاء</button>
-            <button class="min-h-[44px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] text-white font-bold shadow-md hover:shadow-lg hover:scale-105 transition focus:ring-2 focus:ring-[#C8A356]">حفظ التعديلات</button>
+            <button type="submit" class="min-h-[44px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] text-white font-bold shadow-md hover:shadow-lg hover:scale-105 transition focus:ring-2 focus:ring-[#C8A356]">حفظ التعديلات</button>
           </div>
         </form>
       </div>
@@ -336,30 +334,40 @@ document.getElementById('newImages').addEventListener('change', function(e) {
   }
 });
 
-async function submitListing(e){
+document.getElementById('listingForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const form = e.target;
   const fd = new FormData(form);
   fd.append('_method', 'PUT'); // Force Laravel to route as PUT
   
   const url = '{{ $apiBase }}/listings/{{ $listing->id }}';
-  const res = await fetch(url, {
-    method: 'POST', // Submit multipart forms with files via POST containing _method PUT
-    headers: {
-      'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-      'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    },
-    body: fd
-  });
   
-  const out = document.getElementById('listingErrors');
-  out.textContent = '';
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn ? submitBtn.textContent : 'حفظ التعديلات';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الحفظ...';
+  }
+
   try {
+    const res = await fetch(url, {
+      method: 'POST', // Submit multipart forms with files via POST containing _method PUT
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: fd
+    });
+    
+    const out = document.getElementById('listingErrors');
+    out.textContent = '';
+    out.classList.add('hidden');
+
     const json = await res.json();
     if (res.ok && json.success){
       window.location.href = '{{ route('dashboard') }}';
-      return false;
+      return;
     }
     
     // Parse list of errors
@@ -374,10 +382,16 @@ async function submitListing(e){
     }
     out.classList.remove('hidden');
   } catch (err){
+    console.error(err);
+    const out = document.getElementById('listingErrors');
     out.textContent = 'حصل خطأ غير متوقع أثناء حفظ التعديلات.';
     out.classList.remove('hidden');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
   }
-  return false;
-}
+});
 </script>
 @endsection
