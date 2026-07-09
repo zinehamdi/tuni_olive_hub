@@ -271,22 +271,94 @@ class ListingController extends Controller
     public function update(Request $request, Listing $listing)
     {
         // Check if user owns this listing
-        // التحقق من أن المستخدم يملك هذا العرض
         if ($listing->seller_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
         // Validate the request
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'category' => 'required|string|in:oil,olive',
+            'variety' => 'required|string|max:255',
+            'quality' => 'nullable|string|max:255',
+            'quantity' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'min_order' => 'nullable|numeric|min:0',
             'status' => 'nullable|string',
             'payment_methods' => 'nullable|array',
             'delivery_options' => 'nullable|array',
+            'location_text' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'governorate' => 'nullable|string|max:255',
+            'delegation' => 'nullable|string|max:255',
+            'images.*' => 'nullable|image|max:10240', // 10MB max per image
         ]);
 
-        // Update the listing
-        $listing->update($validated);
+        // Find or create the product associated with this listing/seller
+        $product = Product::updateOrCreate(
+            [
+                'variety' => $validated['variety'],
+                'type' => $validated['category'],
+                'seller_id' => $listing->seller_id,
+                'quality' => $validated['quality'] ?? null
+            ],
+            [
+                'price' => $validated['price'],
+                'stock' => $validated['quantity'],
+                'description' => $validated['variety'] . ' - ' . ($validated['category'] === 'olive' ? __('Olives') : __('Olive Oil'))
+            ]
+        );
+
+        // Update basic listing fields
+        $listingData = [
+            'product_id' => $product->id,
+            'price' => $validated['price'],
+            'quantity' => $validated['quantity'],
+            'min_order' => $validated['min_order'] ?? 0,
+            'status' => $validated['status'] ?? 'active',
+            'payment_methods' => $validated['payment_methods'] ?? [],
+            'delivery_options' => $validated['delivery_options'] ?? [],
+        ];
+        
+        $listing->update($listingData);
+
+        // Create or update the seller's address if location data provided
+        if ($request->has('latitude') && $request->has('longitude') && $request->latitude && $request->longitude) {
+            $user = Auth::user();
+            $address = $user->addresses()->first();
+            
+            if ($address) {
+                $address->update([
+                    'lat' => $request->latitude,
+                    'lng' => $request->longitude,
+                    'governorate' => $request->governorate,
+                    'delegation' => $request->delegation,
+                    'label' => $request->location_text ?? 'موقع المنتج',
+                ]);
+            } else {
+                $user->addresses()->create([
+                    'lat' => $request->latitude,
+                    'lng' => $request->longitude,
+                    'governorate' => $request->governorate,
+                    'delegation' => $request->delegation,
+                    'label' => $request->location_text ?? 'موقع المنتج',
+                ]);
+            }
+        }
+
+        // Handle image uploads with optimization
+        if ($request->hasFile('images')) {
+            $imageOptimizer = new ImageOptimizationService();
+            $imagePaths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $imageOptimizer->optimizeListingImage($image, (string)$listing->id);
+                $imagePaths[] = $path;
+            }
+            $listing->update(['media' => $imagePaths]);
+        }
+
+        // Bust homepage cache
+        \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
 
         // Redirect to dashboard with success message
         return Redirect::route('dashboard')->with('success', __('Listing updated successfully!'));
