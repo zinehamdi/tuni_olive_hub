@@ -223,10 +223,10 @@ class AdminController extends Controller
         }
 
         $listing->load('product');
-        $unit = $listing->product->type === 'oil' ? 'liter' : 'kg';
         $allowedStatuses = ['draft','active','paused','sold','out'];
 
         $data = $request->validate([
+            'category' => ['required', 'string', 'in:oil,olive'],
             'variety' => ['required', 'string', 'max:64'],
             'quality' => ['nullable', 'string', 'max:64'],
             'is_organic' => ['sometimes', 'boolean'],
@@ -271,6 +271,7 @@ class AdminController extends Controller
         }
 
         $product = $listing->product;
+        $product->type = $data['category']; // Update category type (oil vs olive)
         $product->variety = $data['variety'];
         $product->quality = $data['quality'] ?? null;
         $product->is_organic = $request->boolean('is_organic');
@@ -279,6 +280,8 @@ class AdminController extends Controller
         $product->weight_kg = $data['weight_kg'] ?? null;
         $product->volume_liters = $data['volume_liters'] ?? null;
         $product->save();
+
+        $unit = $product->type === 'oil' ? 'liter' : 'kg';
 
         $listing->update([
             'price' => $data['price'],

@@ -28,7 +28,14 @@
                 @csrf
                 @method('PATCH')
 
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">نوع المنتج (Category)</label>
+                        <select id="categorySelect" name="category" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
+                            <option value="oil" {{ old('category', $product->type) === 'oil' ? 'selected' : '' }}>زيت زيتون (Olive Oil)</option>
+                            <option value="olive" {{ old('category', $product->type) === 'olive' ? 'selected' : '' }}>زيتون (Olives)</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Variety') }}</label>
                         <input name="variety" value="{{ old('variety', $product->variety) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
@@ -91,12 +98,12 @@
                 <div class="grid md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Quantity') }}</label>
-                        <input type="number" step="0.01" min="0" name="quantity" value="{{ old('quantity', $listing->quantity) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" placeholder="{{ $product->type === 'oil' ? __('Liters') : __('Kilograms') }}">
+                        <input type="number" step="0.01" min="0" name="quantity" value="{{ old('quantity', $listing->quantity) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Unit') }}</label>
-                        <input value="{{ $product->type === 'oil' ? __('Liter (fixed)') : __('Kilogram (fixed)') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-700" readonly>
-                        <input type="hidden" name="unit" value="{{ $product->type === 'oil' ? 'liter' : 'kg' }}">
+                        <input id="unitDisplay" value="{{ $product->type === 'oil' ? 'لتر (Liter)' : 'كغ (Kilogram)' }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-700" readonly>
+                        <input id="unitHidden" type="hidden" name="unit" value="{{ $product->type === 'oil' ? 'liter' : 'kg' }}">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Min order') }}</label>
@@ -160,4 +167,26 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('categorySelect');
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            const val = this.value;
+            const display = document.getElementById('unitDisplay');
+            const hidden = document.getElementById('unitHidden');
+            if (display && hidden) {
+                if (val === 'oil') {
+                    display.value = 'لتر (Liter)';
+                    hidden.value = 'liter';
+                } else {
+                    display.value = 'كغ (Kilogram)';
+                    hidden.value = 'kg';
+                }
+            }
+        });
+    }
+});
+</script>
 @endsection
