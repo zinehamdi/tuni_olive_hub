@@ -19,8 +19,9 @@
         <h2 class="text-2xl font-extrabold text-[#1B2A1B]">تعديل العرض الحالي</h2>
         <p class="text-sm text-gray-600">عدل تفاصيل عرضك للحفاظ على دقة معلومات البيع والشحن.</p>
         
-        <form id="listingForm" class="space-y-6" enctype="multipart/form-data">
+        <form id="listingForm" method="POST" action="{{ route('listings.update', $listing->id) }}" class="space-y-6" enctype="multipart/form-data">
           @csrf
+          @method('PUT')
           <input type="hidden" name="seller_id" value="{{ auth()->id() }}" />
           
           <!-- Category & Product Info -->
@@ -190,7 +191,15 @@
             </div>
           </div>
 
-          <div id="listingErrors" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl p-3 hidden" role="alert" aria-live="assertive"></div>
+          @if($errors->any())
+            <div class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl p-3" role="alert">
+              <ul class="list-disc list-inside space-y-1 font-bold">
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
 
           <div class="sticky bottom-4 flex justify-end gap-3 z-10 bg-[#F8F4EC]/85 p-3 rounded-2xl backdrop-blur-sm border">
             <button type="button" onclick="window.history.back()" class="min-h-[44px] px-5 py-3 rounded-xl bg-gradient-to-r from-[#9B6A4A] to-[#F8F4EC] text-gray-900 shadow-md hover:shadow-lg hover:scale-105 transition">إلغاء</button>
@@ -334,63 +343,11 @@ document.getElementById('newImages').addEventListener('change', function(e) {
   }
 });
 
-document.getElementById('listingForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const form = e.target;
-  const fd = new FormData(form);
-  fd.append('_method', 'PUT'); // Force Laravel to route as PUT
-  
-  const url = '{{ $apiBase }}/listings/{{ $listing->id }}';
-  
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const originalText = submitBtn ? submitBtn.textContent : 'حفظ التعديلات';
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'جاري الحفظ...';
-  }
-
-  try {
-    const res = await fetch(url, {
-      method: 'POST', // Submit multipart forms with files via POST containing _method PUT
-      headers: {
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      body: fd
-    });
-    
-    const out = document.getElementById('listingErrors');
-    out.textContent = '';
-    out.classList.add('hidden');
-
-    const json = await res.json();
-    if (res.ok && json.success){
-      window.location.href = '{{ route('dashboard') }}';
-      return;
-    }
-    
-    // Parse list of errors
-    if (json.errors) {
-      let errStr = '';
-      for (const [key, val] of Object.entries(json.errors)) {
-        errStr += `${val.join(', ')}\n`;
-      }
-      out.textContent = errStr;
-    } else {
-      out.textContent = json.message || JSON.stringify(json);
-    }
-    out.classList.remove('hidden');
-  } catch (err){
-    console.error(err);
-    const out = document.getElementById('listingErrors');
-    out.textContent = 'حصل خطأ غير متوقع أثناء حفظ التعديلات.';
-    out.classList.remove('hidden');
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-    }
+document.getElementById('listingForm').addEventListener('submit', function(e) {
+  const btn = this.querySelector('button[type="submit"]');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'جاري الحفظ...';
   }
 });
 </script>
