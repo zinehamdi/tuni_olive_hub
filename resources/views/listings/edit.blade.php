@@ -46,13 +46,22 @@
               <input id="quality" name="quality" type="text" value="{{ optional($listing->product)->quality }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" placeholder="مثال: بكر ممتاز (Extra Virgin)"/>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label for="quantity" class="block text-[#C8A356] font-semibold mb-1">الكمية المتوفرة</label>
                 <input id="quantity" name="quantity" type="number" step="0.01" value="{{ $listing->quantity }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required/>
               </div>
               <div>
-                <label for="price" class="block text-[#C8A356] font-semibold mb-1">السعر (لكل كغ)</label>
+                <label for="unit" class="block text-[#C8A356] font-semibold mb-1">الوحدة (Unit)</label>
+                <select id="unit" name="unit" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required>
+                  <option value="kg" {{ ($listing->unit === 'kg' || $listing->unit === 'كيلو' || !$listing->unit) ? 'selected' : '' }}>كيلو جرام (kg)</option>
+                  <option value="liter" {{ ($listing->unit === 'liter' || $listing->unit === 'لتر') ? 'selected' : '' }}>لتر (liter)</option>
+                  <option value="ton" {{ ($listing->unit === 'ton' || $listing->unit === 'طن') ? 'selected' : '' }}>طن (ton)</option>
+                  <option value="bottle" {{ ($listing->unit === 'bottle' || $listing->unit === 'قارورة') ? 'selected' : '' }}>قارورة (bottle)</option>
+                </select>
+              </div>
+              <div>
+                <label for="price" class="block text-[#C8A356] font-semibold mb-1">السعر (لكل وحدة)</label>
                 <input id="price" name="price" type="number" step="0.01" value="{{ $listing->price }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required/>
               </div>
             </div>
