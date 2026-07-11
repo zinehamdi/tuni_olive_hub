@@ -257,9 +257,6 @@
 <ol>
   <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
   <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
-</ol>
-<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="تعديل العروض" style="max-width: 100%; border-radius: 8px;" /></p>
-<ol start="3">
   <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
   <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
 </ol>
@@ -284,15 +281,12 @@
 <ol>
     <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
     <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
-</ol>
-<p><img src="/images/guide/submit-deals.png" alt="Modifier l'annonce" style="max-width: 100%; border-radius: 8px;" /></p>
-<ol start="3">
     <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
   <li>Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</li>
 </ol>
 <hr>
-<p>Accédez à votre tableau de bord maintenant pour corriger vos annonces :<br><br>
-<a href="https://zintoop.com/dashboard" style="background-color: #6A8F3B; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">Accéder au Tableau de bord ➔</a></p>
+<p>Accédez à votre tableau de bord maintenant pour corriger vos annonces :<br>
+<a href="https://zintoop.com/dashboard">Accéder au Tableau de bord</a></p>
 <br>
 <p>Cordialement,<br>
 L'équipe ZinToop.</p>
