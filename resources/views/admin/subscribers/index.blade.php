@@ -1,5 +1,28 @@
 @extends('layouts.app')
 
+@push('head')
+<!-- Quill Rich Text Editor CDN -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<style>
+    .ql-editor {
+        min-height: 250px;
+        direction: rtl;
+        text-align: right;
+    }
+    .ql-toolbar {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        background-color: #f9fafb;
+    }
+    #editorContainer {
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        min-height: 250px;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-8">
     <div class="max-w-7xl mx-auto px-4">
@@ -14,12 +37,34 @@
             </a>
         </div>
 
+        <!-- Filters & Summary -->
+        <div class="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="flex items-center gap-3">
+                <label for="roleFilter" class="font-bold text-gray-700">تصفية حسب الدور (Filter by Role):</label>
+                <select id="roleFilter" class="rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" onchange="filterByRole(this.value)">
+                    <option value="all" {{ $role === 'all' ? 'selected' : '' }}>الكل (All Contacts)</option>
+                    <option value="subscriber" {{ $role === 'subscriber' ? 'selected' : '' }}>زوار النشرة البريدية (Newsletter Leads)</option>
+                    <option value="has_listings" {{ $role === 'has_listings' ? 'selected' : '' }}>مستخدمون لديهم عروض (Has Listings)</option>
+                    <option value="farmer" {{ $role === 'farmer' ? 'selected' : '' }}>فلاح (Farmer)</option>
+                    <option value="mill" {{ $role === 'mill' ? 'selected' : '' }}>معصرة (Mill)</option>
+                    <option value="packer" {{ $role === 'packer' ? 'selected' : '' }}>مُعلِّب (Packer)</option>
+                    <option value="carrier" {{ $role === 'carrier' ? 'selected' : '' }}>ناقل (Carrier)</option>
+                    <option value="normal" {{ $role === 'normal' ? 'selected' : '' }}>عادي (Normal/Consumer)</option>
+                    <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>مسؤول (Admin)</option>
+                </select>
+            </div>
+            
+            <div class="text-sm font-bold text-gray-600">
+                إجمالي جهات الاتصال في هذا الفلتر: <span class="text-green-600 text-lg">{{ $totalContacts }}</span>
+            </div>
+        </div>
+
         <form action="{{ route('admin.subscribers.bulk-message') }}" method="POST" id="bulkForm">
             @csrf
             
             <div class="flex justify-between items-center mb-4">
                 <div class="flex gap-2">
-                    <button type="button" onclick="openBulkModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-bold shadow disabled:opacity-50" id="btnBulkMessage" disabled>
+                    <button type="button" onclick="openBulkModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-bold shadow disabled:opacity-50" id="btnBulkMessage" {{ $totalContacts > 0 ? '' : 'disabled' }}>
                         <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                         {{ __('Send Bulk Message') }}
                     </button>
@@ -49,7 +94,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($contact->source === 'user')
-                                        <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold">{{ __('Registered User') }}</span>
+                                        <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold">{{ __('Registered User') }} ({{ $contact->role }})</span>
                                     @else
                                         <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-bold">{{ __('Lead (Visitor)') }}</span>
                                     @endif
@@ -95,7 +140,7 @@
 
             <!-- Bulk Modal -->
             <div id="bulkModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-                <div class="fixed inset-0 bg-black opacity-50 transition-opacity" onclick="closeBulkModal()"></div>
+                <div class="fixed inset-0 bg-black/60 transition-opacity" onclick="closeBulkModal()"></div>
                 
                 <div class="bg-white rounded-2xl shadow-2xl z-10 w-full max-w-3xl mx-4 overflow-hidden transform transition-all">
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -105,15 +150,33 @@
                         </button>
                     </div>
                     
-                    <div class="p-6">
-                        <div class="mb-4 text-sm text-gray-600 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                            <strong class="font-bold text-blue-800">{{ __('Note:') }}</strong> {{ __('Emails will be sent automatically in the background. For WhatsApp, you will be given a queue to manually send each message via the WhatsApp app to comply with limits.') }}
+                    <div class="p-6 max-h-[80vh] overflow-y-auto">
+                        <div class="mb-4 text-sm text-gray-600 p-4 bg-blue-50 rounded-lg border border-blue-100 text-right" dir="rtl">
+                            <strong class="font-bold text-blue-800">{{ __('Note:') }}</strong> سيتم إرسال رسائل البريد الإلكتروني تلقائياً في الخلفية. بالنسبة لرسائل الواتساب، سيتم تجميعها وتسهيل إرسالها تتابعياً عبر تطبيق واتساب.
+                        </div>
+
+                        <!-- Recipient Scope Selector -->
+                        <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-3 text-right" dir="rtl">
+                            <label class="block text-sm font-bold text-gray-850 mb-1">المستلمون (Recipients)</label>
+                            <div class="flex flex-col gap-2">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="recipient_scope" value="selected" checked onchange="toggleRecipientScope()" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm font-semibold text-gray-700">الجهات المحددة يدوياً فقط (<span id="selectedCountDisplay" class="font-bold text-green-600">0</span> جهة)</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="recipient_scope" value="all_filtered" onchange="toggleRecipientScope()" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm font-semibold text-gray-700">إرسال لجميع الجهات في هذا الفلتر ({{ $totalContacts }} جهة)</span>
+                                </label>
+                            </div>
+                            <input type="hidden" name="role_filter" value="{{ $role }}">
                         </div>
 
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Select Template (Optional)') }}</label>
                             <select id="templateSelector" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" onchange="loadTemplate()">
                                 <option value="">-- Custom Message --</option>
+                                <option value="fix_listings_ar">تنبيه: مراجعة وتعديل العروض (العربية) 🫒</option>
+                                <option value="fix_listings_fr">Correction d'annonces et guide (Français) 🫒</option>
                                 <option value="welcome">{{ __('Welcome to Zintoop') }}</option>
                                 <option value="update">{{ __('Weekly Update / News') }}</option>
                                 <option value="deal">{{ __('New Deals Available') }}</option>
@@ -128,7 +191,9 @@
 
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Message Body') }}</label>
-                            <textarea name="message_body" id="msgBody" rows="8" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" placeholder="Type your message here..."></textarea>
+                            <!-- Hidden input containing HTML output from Quill -->
+                            <input type="hidden" name="message_body" id="msgBody">
+                            <div id="editorContainer"></div>
                         </div>
                     </div>
                     
@@ -167,31 +232,180 @@
 
 <script>
     const templates = {
+        'fix_listings_ar': {
+            subject: 'تنبيه هام: الرجاء مراجعة وتحديث عروض زيت الزيتون الخاصة بكم على منصة الزين 🫒',
+            body: `
+<p>أهلاً بك شريكنا العزيز،</p>
+<p>لقد لاحظنا وجود بعض الأخطاء الشائعة في بعض العروض المنشورة مؤخراً على منصة الزين (Zintoop)، ونود مساعدتك على تصحيحها لضمان جذب أكبر عدد من المشترين:</p>
+<h3>⚠️ الأخطاء الشائعة التي يجب إصلاحها:</h3>
+<ul>
+  <li><strong>عدم إضافة صور:</strong> العروض التي لا تحتوي على صور حقيقية للمنتج لا تحظى بنسب مشاهدة عالية.</li>
+  <li><strong>الخلط بين نوع المنتج:</strong> يرجى التأكد من اختيار <strong>زيت زيتون</strong> وليس <strong>زيتون</strong> إذا كنت تبيع زيتاً.</li>
+</ul>
+<hr>
+<h3>🛠️ كيف تقوم بتعديل عرضك وإضافة الصور؟</h3>
+<p>لقد قمنا بتسهيل وتحديث عملية التعديل بالكامل:</p>
+<ol>
+  <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
+  <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
+</ol>
+<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="تعديل العرض" style="max-width: 100%; border-radius: 8px;" /></p>
+<ol start="3">
+  <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
+  <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
+</ol>
+<hr>
+<p>تفضل بزيارة لوحة التحكم الآن لتحديث عروضك:<br><br>
+<a href="https://zintoop.com/dashboard" style="background-color: #6A8F3B; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">رابط لوحة التحكم ➔</a></p>
+<br>
+<p>مع تحيات فريق عمل منصة الزين (Zintoop).</p>
+`
+        },
+        'fix_listings_fr': {
+            subject: 'Important: Veuillez vérifier et mettre à jour vos annonces d\'huile d\'olive sur ZinToop 🫒',
+            body: `
+<p>Bonjour,</p>
+<p>Nous avons constaté quelques erreurs courantes sur certaines annonces récemment publiées sur la plateforme ZinToop, et nous aimerions vous aider à les corriger pour maximiser vos ventes :</p>
+<h3>⚠️ Erreurs courantes à corriger :</h3>
+<ul>
+  <li><strong>Absence d'images :</strong> Les annonces sans photos réelles reçoivent très peu d'intérêt de la part des acheteurs.</li>
+  <li><strong>Confusion de catégorie :</strong> Veuillez vérifier que vous avez sélectionné <strong>Huile d'olive</strong> et non <strong>Olives</strong> si vous vendez de l'huile.</li>
+</ul>
+<hr>
+<h3>🛠️ Comment modifier votre annonce et ajouter des photos ?</h3>
+<p>Nous avons entièrement simplifié le processus de modification :</p>
+<ol>
+  <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
+  <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
+</ol>
+<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="Modifier l'annonce" style="max-width: 100%; border-radius: 8px;" /></p>
+<ol start="3">
+  <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
+  <li>Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</li>
+</ol>
+<hr>
+<p>Accédez à votre tableau de bord maintenant pour corriger vos annonces :<br><br>
+<a href="https://zintoop.com/dashboard" style="background-color: #6A8F3B; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">Accéder au Tableau de bord ➔</a></p>
+<br>
+<p>Cordialement,<br>
+L'équipe ZinToop.</p>
+`
+        },
         'welcome': {
             subject: 'مرحباً بك في منصة الزين Zintoop!',
-            body: "مرحباً،\n\nنحن سعداء بانضمامك لمنصة الزين Zintoop، أكبر سوق لزيت الزيتون.\nيمكنك الآن استكشاف أحدث العروض والطلبات.\n\nتفضل بزيارة المنصة: https://zintoop.com\n\nفريق الزين."
+            body: "<p>مرحباً،</p><p>نحن سعداء بانضمامك لمنصة الزين Zintoop، أكبر سوق لزيت الزيتون.<br>يمكنك الآن استكشاف أحدث العروض والطلبات.</p><p>تفضل بزيارة المنصة: <a href='https://zintoop.com'>https://zintoop.com</a></p><p>فريق الزين.</p>"
         },
         'update': {
             subject: 'نشرة أخبار الزين Zintoop',
-            body: "مرحباً،\n\nإليك أحدث الأخبار وتحديثات الأسعار لهذا الأسبوع في منصة الزين.\n\nتفضل بزيارة المنصة لمعرفة المزيد: https://zintoop.com/prices\n\nفريق الزين."
+            body: "<p>مرحباً،</p><p>إليك أحدث الأخبار وتحديثات الأسعار لهذا الأسبوع في منصة الزين.</p><p>تفضل بزيارة المنصة لمعرفة المزيد: <a href='https://zintoop.com/prices'>https://zintoop.com/prices</a></p><p>فريق الزين.</p>"
         },
         'deal': {
             subject: 'عروض جديدة متاحة الآن!',
-            body: "مرحباً،\n\nهناك عروض جديدة لزيت الزيتون بانتظارك على منصة الزين. لا تفوت الفرصة!\n\nتصفح العروض الآن: https://zintoop.com/market\n\nفريق الزين."
+            body: "<p>مرحباً،</p><p>هناك عروض جديدة لزيت الزيتون بانتظارك على منصة الزين. لا تفوت الفرصة!</p><p>تصفح العروض الآن: <a href='https://zintoop.com/market'>https://zintoop.com/market</a></p><p>فريق الزين.</p>"
         },
         'guide': {
             subject: 'دليلك الشامل لاستخدام منصة الزين Zintoop',
-            body: "مرحباً بك في منصة الزين Zintoop!\n\nإليك كيف يمكنك الاستفادة القصوى من منصتنا:\n\n### 1. كيفية التسجيل\nقم بزيارة صفحة التسجيل، اختر دورك (فلاح، معصرة، ناقل...) واملأ بياناتك.\n\n### 2. كيفية إضافة وطلب العروض (Deals)\nيمكنك تقديم العروض وتصفح الأسعار مباشرة من لوحة التحكم الخاصة بك.\n\n### 3. كيفية المحادثة (الدردشة)\nتوفر منصة الزين نظام دردشة متكامل للتواصل المباشر مع الأعضاء.\n\n### 4. تتبع الناقلين (Transporters)\nتابع مسار شحنتك بكل سهولة وتأكد من وصول زيتك بأمان.\n\nإذا كان لديك أي استفسار، لا تتردد في التواصل معنا.\n\nفريق الزين."
+            body: `
+<p>مرحباً بك في منصة الزين Zintoop!</p>
+<p>إليك كيف يمكنك الاستفادة القصوى من منصتنا:</p>
+<h3>1. كيفية التسجيل</h3>
+<p>قم بزيارة صفحة التسجيل، اختر دورك (فلاح، معصرة، ناقل...) واملأ بياناتك.</p>
+<h3>2. كيفية إضافة وطلب العروض (Deals)</h3>
+<p>يمكنك تقديم العروض وتصفح الأسعار مباشرة من لوحة التحكم الخاصة بك.</p>
+<h3>3. كيفية المحادثة (الدردشة)</h3>
+<p>توفر منصة الزين نظام دردشة متكامل للتواصل المباشر مع الأعضاء.</p>
+<h3>4. تتبع الناقلين (Transporters)</h3>
+<p>تابع مسار شحنتك بكل سهولة وتأكد من وصول زيتك بأمان.</p>
+<p>إذا كان لديك أي استفسار، لا تتردد في التواصل معنا.</p>
+<p>فريق الزين.</p>
+`
         }
     };
 
     const selectAllCheckbox = document.getElementById('selectAll');
     const contactCheckboxes = document.querySelectorAll('.contact-checkbox');
     const btnBulkMessage = document.getElementById('btnBulkMessage');
+    let quill;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Quill Rich Text Editor
+        quill = new Quill('#editorContainer', {
+            theme: 'snow',
+            modules: {
+                toolbar: {
+                    container: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'clean'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image']
+                    ],
+                    handlers: {
+                        image: imageHandler
+                    }
+                }
+            }
+        });
+
+        // Sync editor output HTML to hidden input
+        quill.on('text-change', function() {
+            document.getElementById('msgBody').value = quill.root.innerHTML;
+        });
+
+        updateBulkButton();
+    });
+
+    // Custom image handler for uploading directly to server
+    function imageHandler() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+
+            const range = quill.getSelection(true);
+            quill.insertText(range.index, '[Uploading image...]');
+
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            try {
+                const res = await fetch('{{ route('admin.subscribers.upload-image') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const json = await res.json();
+                
+                quill.deleteText(range.index, '[Uploading image...]'.length);
+
+                if (res.ok && json.url) {
+                    quill.insertEmbed(range.index, 'image', json.url);
+                } else {
+                    alert('Error: ' + (json.error || 'Failed to upload image'));
+                }
+            } catch (err) {
+                quill.deleteText(range.index, '[Uploading image...]'.length);
+                alert('Image upload failed.');
+            }
+        };
+    }
 
     function updateBulkButton() {
-        const anyChecked = Array.from(contactCheckboxes).some(cb => cb.checked);
-        btnBulkMessage.disabled = !anyChecked;
+        const checkedBoxes = Array.from(contactCheckboxes).filter(cb => cb.checked);
+        document.getElementById('selectedCountDisplay').innerText = checkedBoxes.length;
+        
+        const totalMatching = {{ $totalContacts }};
+        if (totalMatching > 0) {
+            btnBulkMessage.disabled = false;
+        } else {
+            btnBulkMessage.disabled = checkedBoxes.length === 0;
+        }
     }
 
     selectAllCheckbox.addEventListener('change', function() {
@@ -203,8 +417,19 @@
         cb.addEventListener('change', updateBulkButton);
     });
 
+    function filterByRole(role) {
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}`;
+    }
+
+    function toggleRecipientScope() {
+        const scope = document.querySelector('input[name="recipient_scope"]:checked').value;
+        const selectAll = document.getElementById('selectAll');
+        // No action needed, input handles selection
+    }
+
     function openBulkModal() {
         document.getElementById('bulkModal').classList.remove('hidden');
+        updateBulkButton();
     }
 
     function closeBulkModal() {
@@ -215,9 +440,11 @@
         const val = document.getElementById('templateSelector').value;
         if(val && templates[val]) {
             document.getElementById('msgSubject').value = templates[val].subject;
+            quill.root.innerHTML = templates[val].body;
             document.getElementById('msgBody').value = templates[val].body;
         } else {
             document.getElementById('msgSubject').value = '';
+            quill.root.innerHTML = '';
             document.getElementById('msgBody').value = '';
         }
     }
@@ -229,17 +456,26 @@
     document.getElementById('bulkForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        const formData = new FormData(this);
+        const scope = formData.get('recipient_scope');
+        const checkedCount = Array.from(contactCheckboxes).filter(cb => cb.checked).length;
+
+        if (scope === 'selected' && checkedCount === 0) {
+            alert('الرجاء تحديد مستلم واحد على الأقل أو اختيار الإرسال للجميع.');
+            return;
+        }
+
         const btn = document.getElementById('btnSubmitBulk');
         btn.disabled = true;
         btn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
 
         try {
-            const formData = new FormData(this);
             const response = await fetch(this.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             });
             
@@ -248,7 +484,6 @@
             if (result.success) {
                 closeBulkModal();
                 
-                // Show success message for emails
                 if (result.emails_queued > 0) {
                     alert(`${result.emails_queued} emails queued for delivery.`);
                 }
