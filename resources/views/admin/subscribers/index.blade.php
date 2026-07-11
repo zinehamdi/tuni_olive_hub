@@ -246,13 +246,12 @@
 <h3>🛠️ كيف تقوم بتعديل عرضك وإضافة الصور؟</h3>
 <p>لقد قمنا بتسهيل وتحديث عملية التعديل بالكامل:</p>
 <ol>
-  <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
-  <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
+    <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
+    <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
 </ol>
-<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="تعديل العرض" style="max-width: 100%; border-radius: 8px;" /></p>
 <ol start="3">
-  <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
-  <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
+    <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
+    <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
 </ol>
 <hr>
 <p>تفضل بزيارة لوحة التحكم الآن لتحديث عروضك:<br><br>
@@ -275,12 +274,11 @@
 <h3>🛠️ Comment modifier votre annonce et ajouter des photos ?</h3>
 <p>Nous avons entièrement simplifié le processus de modification :</p>
 <ol>
-  <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
-  <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
+    <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
+    <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
 </ol>
-<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="Modifier l'annonce" style="max-width: 100%; border-radius: 8px;" /></p>
 <ol start="3">
-  <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
+    <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
   <li>Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</li>
 </ol>
 <hr>
