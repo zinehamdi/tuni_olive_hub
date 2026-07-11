@@ -246,20 +246,16 @@
             body: `
 <p>أهلاً بك شريكنا العزيز،</p>
 <p>لقد لاحظنا وجود بعض الأخطاء الشائعة في بعض العروض المنشورة مؤخراً على منصة الزين (Zintoop)، ونود مساعدتك على تصحيحها لضمان جذب أكبر عدد من المشترين:</p>
-<h3>⚠️ الأخطاء الشائعة التي يجب إصلاحها:</h3>
-<ol>
-  <li><strong>عدم إضافة صور:</strong> العروض التي لا تحتوي على صور حقيقية للمنتج لا تحظى بنسب مشاهدة عالية.</li>
-  <li><strong>الخلط بين نوع المنتج:</strong> يرجى التأكد من اختيار <strong>زيت زيتون</strong> وليس <strong>زيتون</strong> إذا كنت تبيع زيتاً.</li>
-</ol>
+<p><strong>⚠️ الأخطاء الشائعة التي يجب إصلاحها:</strong></p>
+<p>1. <strong>عدم إضافة صور:</strong> العروض التي لا تحتوي على صور حقيقية للمنتج لا تحظى بنسب مشاهدة عالية.</p>
+<p>2. <strong>الخلط بين نوع المنتج:</strong> يرجى التأكد من اختيار <strong>زيت زيتون</strong> وليس <strong>زيتون</strong> إذا كنت تبيع زيتاً.</p>
 <hr>
-<h3>🛠️ كيف تقوم بتعديل عرضك وإضافة الصور؟</h3>
+<p><strong>🛠️ كيف تقوم بتعديل عرضك وإضافة الصور؟</strong></p>
 <p>لقد قمنا بتسهيل وتحديث عملية التعديل بالكامل:</p>
-<ol>
-  <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
-  <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
-  <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
-  <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
-</ol>
+<p>1. قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</p>
+<p>2. توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</p>
+<p>3. قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</p>
+<p>4. اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</p>
 <p>تفضل بزيارة لوحة التحكم الآن لتحديث عروضك:<br>
 <a href="https://zintoop.com/dashboard">رابط لوحة التحكم</a></p>
 <p>مع تحيات فريق عمل منصة الزين (Zintoop).</p>
@@ -270,20 +266,16 @@
             body: `
 <p>Bonjour,</p>
 <p>Nous avons constaté quelques erreurs courantes sur certaines annonces récemment publiées sur la plateforme ZinToop, et nous aimerions vous aider à les corriger pour maximiser vos ventes :</p>
-<h3>⚠️ Erreurs courantes à corriger :</h3>
-<ul>
-  <li><strong>Absence d'images :</strong> Les annonces sans photos réelles reçoivent très peu d'intérêt de la part des acheteurs.</li>
-  <li><strong>Confusion de catégorie :</strong> Veuillez vérifier que vous avez sélectionné <strong>Huile d'olive</strong> et non <strong>Olives</strong> si vous vendez de l'huile.</li>
-</ul>
+<p><strong>⚠️ Erreurs courantes à corriger :</strong></p>
+<p>1. <strong>Absence d'images :</strong> Les annonces sans photos réelles reçoivent très peu d'intérêt de la part des acheteurs.</p>
+<p>2. <strong>Confusion de catégorie :</strong> Veuillez vérifier que vous avez sélectionné <strong>Huile d'olive</strong> et non <strong>Olives</strong> si vous vendez de l'huile.</p>
 <hr>
-<h3>🛠️ Comment modifier votre annonce et ajouter des photos ?</h3>
+<p><strong>🛠️ Comment modifier votre annonce et ajouter des photos ?</strong></p>
 <p>Nous avons entièrement simplifié le processus de modification :</p>
-<ol>
-    <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
-    <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
-    <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
-  <li>Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</li>
-</ol>
+<p>1. Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</p>
+<p>2. Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</p>
+<p>3. Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</p>
+<p>4. Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</p>
 <hr>
 <p>Accédez à votre tableau de bord maintenant pour corriger vos annonces :<br>
 <a href="https://zintoop.com/dashboard">Accéder au Tableau de bord</a></p>
