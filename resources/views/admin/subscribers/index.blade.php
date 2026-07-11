@@ -41,7 +41,7 @@
         <div class="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div class="flex flex-col md:flex-row gap-4 items-center w-full lg:w-auto">
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <label for="roleFilter" class="font-bold text-gray-700 whitespace-nowrap">تصفية الدور:</label>
+                    <label for="roleFilter" class="font-bold text-gray-700 whitespace-nowrap">الدور:</label>
                     <select id="roleFilter" class="rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 w-full md:w-auto" onchange="filterByRole(this.value)">
                         <option value="all" {{ $role === 'all' ? 'selected' : '' }}>الكل (All Contacts)</option>
                         <option value="subscriber" {{ $role === 'subscriber' ? 'selected' : '' }}>زوار النشرة البريدية (Newsletter Leads)</option>
@@ -52,6 +52,15 @@
                         <option value="carrier" {{ $role === 'carrier' ? 'selected' : '' }}>ناقل (Carrier)</option>
                         <option value="normal" {{ $role === 'normal' ? 'selected' : '' }}>عادي (Normal/Consumer)</option>
                         <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>مسؤول (Admin)</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <label for="typeFilter" class="font-bold text-gray-700 whitespace-nowrap">النوع:</label>
+                    <select id="typeFilter" class="rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 w-full md:w-auto" onchange="filterByType(this.value)">
+                        <option value="all" {{ $type === 'all' ? 'selected' : '' }}>الكل (All)</option>
+                        <option value="email" {{ $type === 'email' ? 'selected' : '' }}>البريد الإلكتروني فقط (Email Only)</option>
+                        <option value="whatsapp" {{ $type === 'whatsapp' ? 'selected' : '' }}>الواتساب فقط (WhatsApp Only)</option>
                     </select>
                 </div>
                 
@@ -178,6 +187,7 @@
                                 </label>
                             </div>
                             <input type="hidden" name="role_filter" value="{{ $role }}">
+                            <input type="hidden" name="type_filter" value="{{ $type }}">
                         </div>
 
                         <div class="mb-4">
@@ -412,8 +422,9 @@ L'équipe ZinToop.</p>
 
     function performSearch() {
         const role = document.getElementById('roleFilter').value;
+        const type = document.getElementById('typeFilter').value;
         const search = document.getElementById('searchInput').value;
-        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&search=${encodeURIComponent(search)}`;
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&type=${type}&search=${encodeURIComponent(search)}`;
     }
 
     // Trigger search on enter key press
@@ -424,8 +435,15 @@ L'équipe ZinToop.</p>
     });
 
     function filterByRole(role) {
+        const type = document.getElementById('typeFilter').value;
         const search = document.getElementById('searchInput').value;
-        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&search=${encodeURIComponent(search)}`;
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&type=${type}&search=${encodeURIComponent(search)}`;
+    }
+
+    function filterByType(type) {
+        const role = document.getElementById('roleFilter').value;
+        const search = document.getElementById('searchInput').value;
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&type=${type}&search=${encodeURIComponent(search)}`;
     }
 
     function toggleRecipientScope() {

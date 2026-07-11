@@ -16,6 +16,7 @@ class SubscriberController extends Controller
     public function index(Request $request)
     {
         $role = $request->query('role', 'all');
+        $type = $request->query('type', 'all');
 
         $subscribersQuery = null;
         $usersQuery = null;
@@ -24,7 +25,7 @@ class SubscriberController extends Controller
         $search = $request->query('search');
 
         // 1. Guest newsletter subscribers
-        if ($role === 'all' || $role === 'subscriber') {
+        if (($role === 'all' || $role === 'subscriber') && ($type === 'all' || $type === 'email')) {
             $subscribersQuery = DB::table('subscribers')
                 ->select(
                     'id',
@@ -35,6 +36,9 @@ class SubscriberController extends Controller
                     DB::raw("'subscriber' as source"),
                     DB::raw("'subscriber' as role")
                 );
+            if ($type === 'email') {
+                $subscribersQuery->where('type', 'email');
+            }
             if ($search) {
                 $subscribersQuery->where('contact_value', 'like', "%{$search}%");
             }
@@ -44,84 +48,97 @@ class SubscriberController extends Controller
         if ($role !== 'subscriber') {
             if ($role === 'has_listings') {
                 // only users who have created a listing
-                $usersQuery = DB::table('users')
-                    ->join('listings', 'users.id', '=', 'listings.seller_id')
-                    ->select(
-                        'users.id',
-                        DB::raw("'email' as type"),
-                        'users.email as contact_value',
-                        DB::raw("NULL as ip_address"),
-                        'users.created_at',
-                        DB::raw("'user' as source"),
-                        DB::raw("'has_listings' as role")
-                    )
-                    ->distinct();
+                if ($type === 'all' || $type === 'email') {
+                    $usersQuery = DB::table('users')
+                        ->join('listings', 'users.id', '=', 'listings.seller_id')
+                        ->select(
+                            'users.id',
+                            DB::raw("'email' as type"),
+                            'users.email as contact_value',
+                            DB::raw("NULL as ip_address"),
+                            'users.created_at',
+                            DB::raw("'user' as source"),
+                            DB::raw("'has_listings' as role")
+                        )
+                        ->distinct();
+                    
+                    if ($search) {
+                        $usersQuery->where(function($q) use ($search) {
+                            $q->where('users.email', 'like', "%{$search}%")
+                              ->orWhere('users.name', 'like', "%{$search}%");
+                        });
+                    }
+                }
 
-                $usersWithPhoneQuery = DB::table('users')
-                    ->join('listings', 'users.id', '=', 'listings.seller_id')
-                    ->whereNotNull('users.phone')
-                    ->where('users.phone', '!=', '')
-                    ->select(
-                        'users.id',
-                        DB::raw("'whatsapp' as type"),
-                        'users.phone as contact_value',
-                        DB::raw("NULL as ip_address"),
-                        'users.created_at',
-                        DB::raw("'user' as source"),
-                        DB::raw("'has_listings' as role")
-                    )
-                    ->distinct();
+                if ($type === 'all' || $type === 'whatsapp') {
+                    $usersWithPhoneQuery = DB::table('users')
+                        ->join('listings', 'users.id', '=', 'listings.seller_id')
+                        ->whereNotNull('users.phone')
+                        ->where('users.phone', '!=', '')
+                        ->select(
+                            'users.id',
+                            DB::raw("'whatsapp' as type"),
+                            'users.phone as contact_value',
+                            DB::raw("NULL as ip_address"),
+                            'users.created_at',
+                            DB::raw("'user' as source"),
+                            DB::raw("'has_listings' as role")
+                        )
+                        ->distinct();
 
-                if ($search) {
-                    $usersQuery->where(function($q) use ($search) {
-                        $q->where('users.email', 'like', "%{$search}%")
-                          ->orWhere('users.name', 'like', "%{$search}%");
-                    });
-                    $usersWithPhoneQuery->where(function($q) use ($search) {
-                        $q->where('users.phone', 'like', "%{$search}%")
-                          ->orWhere('users.name', 'like', "%{$search}%");
-                    });
+                    if ($search) {
+                        $usersWithPhoneQuery->where(function($q) use ($search) {
+                            $q->where('users.phone', 'like', "%{$search}%")
+                              ->orWhere('users.name', 'like', "%{$search}%");
+                        });
+                    }
                 }
             } else {
                 // normal role filtering
-                $usersQuery = DB::table('users')
-                    ->select(
-                        'id',
-                        DB::raw("'email' as type"),
-                        'email as contact_value',
-                        DB::raw("NULL as ip_address"),
-                        'created_at',
-                        DB::raw("'user' as source"),
-                        'role'
-                    );
-
-                $usersWithPhoneQuery = DB::table('users')
-                    ->whereNotNull('phone')
-                    ->where('phone', '!=', '')
-                    ->select(
-                        'id',
-                        DB::raw("'whatsapp' as type"),
-                        'phone as contact_value',
-                        DB::raw("NULL as ip_address"),
-                        'created_at',
-                        DB::raw("'user' as source"),
-                        'role'
-                    );
-
-                if ($role !== 'all') {
-                    $usersQuery->where('role', $role);
-                    $usersWithPhoneQuery->where('role', $role);
+                if ($type === 'all' || $type === 'email') {
+                    $usersQuery = DB::table('users')
+                        ->select(
+                            'id',
+                            DB::raw("'email' as type"),
+                            'email as contact_value',
+                            DB::raw("NULL as ip_address"),
+                            'created_at',
+                            DB::raw("'user' as source"),
+                            'role'
+                        );
+                    if ($role !== 'all') {
+                        $usersQuery->where('role', $role);
+                    }
+                    if ($search) {
+                        $usersQuery->where(function($q) use ($search) {
+                            $q->where('email', 'like', "%{$search}%")
+                              ->orWhere('name', 'like', "%{$search}%");
+                        });
+                    }
                 }
 
-                if ($search) {
-                    $usersQuery->where(function($q) use ($search) {
-                        $q->where('email', 'like', "%{$search}%")
-                          ->orWhere('name', 'like', "%{$search}%");
-                    });
-                    $usersWithPhoneQuery->where(function($q) use ($search) {
-                        $q->where('phone', 'like', "%{$search}%")
-                          ->orWhere('name', 'like', "%{$search}%");
-                    });
+                if ($type === 'all' || $type === 'whatsapp') {
+                    $usersWithPhoneQuery = DB::table('users')
+                        ->whereNotNull('phone')
+                        ->where('phone', '!=', '')
+                        ->select(
+                            'id',
+                            DB::raw("'whatsapp' as type"),
+                            'phone as contact_value',
+                            DB::raw("NULL as ip_address"),
+                            'created_at',
+                            DB::raw("'user' as source"),
+                            'role'
+                        );
+                    if ($role !== 'all') {
+                        $usersWithPhoneQuery->where('role', $role);
+                    }
+                    if ($search) {
+                        $usersWithPhoneQuery->where(function($q) use ($search) {
+                            $q->where('phone', 'like', "%{$search}%")
+                              ->orWhere('name', 'like', "%{$search}%");
+                        });
+                    }
                 }
             }
         }
@@ -149,7 +166,7 @@ class SubscriberController extends Controller
             $contacts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 50);
         }
 
-        return view('admin.subscribers.index', compact('contacts', 'role', 'totalContacts'));
+        return view('admin.subscribers.index', compact('contacts', 'role', 'type', 'totalContacts'));
     }
 
     public function bulkMessage(Request $request)
@@ -162,6 +179,7 @@ class SubscriberController extends Controller
         $body = $request->input('message_body');
         $scope = $request->input('recipient_scope', 'selected');
         $role = $request->input('role_filter', 'all');
+        $type = $request->input('type_filter', 'all');
 
         $contacts = [];
 
@@ -171,36 +189,48 @@ class SubscriberController extends Controller
             $usersQuery = null;
             $usersWithPhoneQuery = null;
 
-            if ($role === 'all' || $role === 'subscriber') {
+            if (($role === 'all' || $role === 'subscriber') && ($type === 'all' || $type === 'email')) {
                 $subscribersQuery = DB::table('subscribers')
                     ->select('type', 'contact_value', DB::raw("'subscriber' as source"));
+                if ($type === 'email') {
+                    $subscribersQuery->where('type', 'email');
+                }
             }
 
             if ($role !== 'subscriber') {
                 if ($role === 'has_listings') {
-                    $usersQuery = DB::table('users')
-                        ->join('listings', 'users.id', '=', 'listings.seller_id')
-                        ->select(DB::raw("'email' as type"), 'users.email as contact_value', DB::raw("'user' as source"))
-                        ->distinct();
+                    if ($type === 'all' || $type === 'email') {
+                        $usersQuery = DB::table('users')
+                            ->join('listings', 'users.id', '=', 'listings.seller_id')
+                            ->select(DB::raw("'email' as type"), 'users.email as contact_value', DB::raw("'user' as source"))
+                            ->distinct();
+                    }
 
-                    $usersWithPhoneQuery = DB::table('users')
-                        ->join('listings', 'users.id', '=', 'listings.seller_id')
-                        ->whereNotNull('users.phone')
-                        ->where('users.phone', '!=', '')
-                        ->select(DB::raw("'whatsapp' as type"), 'users.phone as contact_value', DB::raw("'user' as source"))
-                        ->distinct();
+                    if ($type === 'all' || $type === 'whatsapp') {
+                        $usersWithPhoneQuery = DB::table('users')
+                            ->join('listings', 'users.id', '=', 'listings.seller_id')
+                            ->whereNotNull('users.phone')
+                            ->where('users.phone', '!=', '')
+                            ->select(DB::raw("'whatsapp' as type"), 'users.phone as contact_value', DB::raw("'user' as source"))
+                            ->distinct();
+                    }
                 } else {
-                    $usersQuery = DB::table('users')
-                        ->select(DB::raw("'email' as type"), 'email as contact_value', DB::raw("'user' as source"));
+                    if ($type === 'all' || $type === 'email') {
+                        $usersQuery = DB::table('users')
+                            ->select(DB::raw("'email' as type"), 'email as contact_value', DB::raw("'user' as source"));
+                        if ($role !== 'all') {
+                            $usersQuery->where('role', $role);
+                        }
+                    }
 
-                    $usersWithPhoneQuery = DB::table('users')
-                        ->whereNotNull('phone')
-                        ->where('phone', '!=', '')
-                        ->select(DB::raw("'whatsapp' as type"), 'phone as contact_value', DB::raw("'user' as source"));
-
-                    if ($role !== 'all') {
-                        $usersQuery->where('role', $role);
-                        $usersWithPhoneQuery->where('role', $role);
+                    if ($type === 'all' || $type === 'whatsapp') {
+                        $usersWithPhoneQuery = DB::table('users')
+                            ->whereNotNull('phone')
+                            ->where('phone', '!=', '')
+                            ->select(DB::raw("'whatsapp' as type"), 'phone as contact_value', DB::raw("'user' as source"));
+                        if ($role !== 'all') {
+                            $usersWithPhoneQuery->where('role', $role);
+                        }
                     }
                 }
             }
