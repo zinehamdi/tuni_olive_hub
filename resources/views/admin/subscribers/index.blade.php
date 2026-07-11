@@ -38,20 +38,29 @@
         </div>
 
         <!-- Filters & Summary -->
-        <div class="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div class="flex items-center gap-3">
-                <label for="roleFilter" class="font-bold text-gray-700">تصفية حسب الدور (Filter by Role):</label>
-                <select id="roleFilter" class="rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" onchange="filterByRole(this.value)">
-                    <option value="all" {{ $role === 'all' ? 'selected' : '' }}>الكل (All Contacts)</option>
-                    <option value="subscriber" {{ $role === 'subscriber' ? 'selected' : '' }}>زوار النشرة البريدية (Newsletter Leads)</option>
-                    <option value="has_listings" {{ $role === 'has_listings' ? 'selected' : '' }}>مستخدمون لديهم عروض (Has Listings)</option>
-                    <option value="farmer" {{ $role === 'farmer' ? 'selected' : '' }}>فلاح (Farmer)</option>
-                    <option value="mill" {{ $role === 'mill' ? 'selected' : '' }}>معصرة (Mill)</option>
-                    <option value="packer" {{ $role === 'packer' ? 'selected' : '' }}>مُعلِّب (Packer)</option>
-                    <option value="carrier" {{ $role === 'carrier' ? 'selected' : '' }}>ناقل (Carrier)</option>
-                    <option value="normal" {{ $role === 'normal' ? 'selected' : '' }}>عادي (Normal/Consumer)</option>
-                    <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>مسؤول (Admin)</option>
-                </select>
+        <div class="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-col lg:flex-row gap-4 items-center justify-between">
+            <div class="flex flex-col md:flex-row gap-4 items-center w-full lg:w-auto">
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <label for="roleFilter" class="font-bold text-gray-700 whitespace-nowrap">تصفية الدور:</label>
+                    <select id="roleFilter" class="rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 w-full md:w-auto" onchange="filterByRole(this.value)">
+                        <option value="all" {{ $role === 'all' ? 'selected' : '' }}>الكل (All Contacts)</option>
+                        <option value="subscriber" {{ $role === 'subscriber' ? 'selected' : '' }}>زوار النشرة البريدية (Newsletter Leads)</option>
+                        <option value="has_listings" {{ $role === 'has_listings' ? 'selected' : '' }}>مستخدمون لديهم عروض (Has Listings)</option>
+                        <option value="farmer" {{ $role === 'farmer' ? 'selected' : '' }}>فلاح (Farmer)</option>
+                        <option value="mill" {{ $role === 'mill' ? 'selected' : '' }}>معصرة (Mill)</option>
+                        <option value="packer" {{ $role === 'packer' ? 'selected' : '' }}>مُعلِّب (Packer)</option>
+                        <option value="carrier" {{ $role === 'carrier' ? 'selected' : '' }}>ناقل (Carrier)</option>
+                        <option value="normal" {{ $role === 'normal' ? 'selected' : '' }}>عادي (Normal/Consumer)</option>
+                        <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>مسؤول (Admin)</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center gap-2 w-full md:w-80">
+                    <input type="text" id="searchInput" placeholder="بحث بالبريد، الاسم أو الهاتف..." value="{{ request('search') }}" class="w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200">
+                    <button type="button" onclick="performSearch()" class="px-4 py-2 bg-[#6A8F3B] hover:bg-[#5b7c32] text-white rounded-xl font-bold transition shadow whitespace-nowrap">
+                        بحث
+                    </button>
+                </div>
             </div>
             
             <div class="text-sm font-bold text-gray-600">
@@ -415,8 +424,22 @@ L'équipe ZinToop.</p>
         cb.addEventListener('change', updateBulkButton);
     });
 
+    function performSearch() {
+        const role = document.getElementById('roleFilter').value;
+        const search = document.getElementById('searchInput').value;
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&search=${encodeURIComponent(search)}`;
+    }
+
+    // Trigger search on enter key press
+    document.getElementById('searchInput').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+
     function filterByRole(role) {
-        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}`;
+        const search = document.getElementById('searchInput').value;
+        window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&search=${encodeURIComponent(search)}`;
     }
 
     function toggleRecipientScope() {

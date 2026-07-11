@@ -21,6 +21,8 @@ class SubscriberController extends Controller
         $usersQuery = null;
         $usersWithPhoneQuery = null;
 
+        $search = $request->query('search');
+
         // 1. Guest newsletter subscribers
         if ($role === 'all' || $role === 'subscriber') {
             $subscribersQuery = DB::table('subscribers')
@@ -33,6 +35,9 @@ class SubscriberController extends Controller
                     DB::raw("'subscriber' as source"),
                     DB::raw("'subscriber' as role")
                 );
+            if ($search) {
+                $subscribersQuery->where('contact_value', 'like', "%{$search}%");
+            }
         }
 
         // 2. Registered users
@@ -66,6 +71,17 @@ class SubscriberController extends Controller
                         DB::raw("'has_listings' as role")
                     )
                     ->distinct();
+
+                if ($search) {
+                    $usersQuery->where(function($q) use ($search) {
+                        $q->where('users.email', 'like', "%{$search}%")
+                          ->orWhere('users.name', 'like', "%{$search}%");
+                    });
+                    $usersWithPhoneQuery->where(function($q) use ($search) {
+                        $q->where('users.phone', 'like', "%{$search}%")
+                          ->orWhere('users.name', 'like', "%{$search}%");
+                    });
+                }
             } else {
                 // normal role filtering
                 $usersQuery = DB::table('users')
@@ -95,6 +111,17 @@ class SubscriberController extends Controller
                 if ($role !== 'all') {
                     $usersQuery->where('role', $role);
                     $usersWithPhoneQuery->where('role', $role);
+                }
+
+                if ($search) {
+                    $usersQuery->where(function($q) use ($search) {
+                        $q->where('email', 'like', "%{$search}%")
+                          ->orWhere('name', 'like', "%{$search}%");
+                    });
+                    $usersWithPhoneQuery->where(function($q) use ($search) {
+                        $q->where('phone', 'like', "%{$search}%")
+                          ->orWhere('name', 'like', "%{$search}%");
+                    });
                 }
             }
         }
