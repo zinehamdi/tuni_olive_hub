@@ -258,6 +258,7 @@
     <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
     <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
 </ol>
+<p><img src="/images/guide/submit-deals.png" alt="تعديل العرض" style="max-width: 100%; border-radius: 8px;" /></p>
 <ol start="3">
     <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
     <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
@@ -286,6 +287,7 @@
     <li>Connectez-vous à votre <strong>Tableau de bord (Dashboard)</strong>.</li>
     <li>Repérez l'annonce concernée et cliquez sur <strong>Modifier l'annonce</strong>.</li>
 </ol>
+<p><img src="/images/guide/submit-deals.png" alt="Modifier l'annonce" style="max-width: 100%; border-radius: 8px;" /></p>
 <ol start="3">
     <li>Modifiez la catégorie (Huile d'olive / Olives), la quantité et le prix.</li>
   <li>Allez dans la section <strong>Photos du produit</strong> pour importer de nouvelles images et cliquez sur <strong>Enregistrer</strong>.</li>
