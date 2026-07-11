@@ -247,26 +247,24 @@
 <p>أهلاً بك شريكنا العزيز،</p>
 <p>لقد لاحظنا وجود بعض الأخطاء الشائعة في بعض العروض المنشورة مؤخراً على منصة الزين (Zintoop)، ونود مساعدتك على تصحيحها لضمان جذب أكبر عدد من المشترين:</p>
 <h3>⚠️ الأخطاء الشائعة التي يجب إصلاحها:</h3>
-<ul>
+<ol>
   <li><strong>عدم إضافة صور:</strong> العروض التي لا تحتوي على صور حقيقية للمنتج لا تحظى بنسب مشاهدة عالية.</li>
   <li><strong>الخلط بين نوع المنتج:</strong> يرجى التأكد من اختيار <strong>زيت زيتون</strong> وليس <strong>زيتون</strong> إذا كنت تبيع زيتاً.</li>
-</ul>
+</ol>
 <hr>
 <h3>🛠️ كيف تقوم بتعديل عرضك وإضافة الصور؟</h3>
 <p>لقد قمنا بتسهيل وتحديث عملية التعديل بالكامل:</p>
 <ol>
-    <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
-    <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
+  <li>قم بزيارة <strong>لوحة التحكم (Dashboard)</strong> الخاصة بك.</li>
+  <li>توجه إلى العرض المعني واضغط على زر <strong>تعديل العرض</strong>.</li>
 </ol>
-<p><img src="/images/guide/submit-deals.png" alt="تعديل العرض" style="max-width: 100%; border-radius: 8px;" /></p>
+<p><img src="https://zintoop.com/images/guide/submit-deals.png" alt="تعديل العروض" style="max-width: 100%; border-radius: 8px;" /></p>
 <ol start="3">
-    <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
-    <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
+  <li>قم بتعديل نوع المنتج (زيت زيتون / زيتون) وتحديث الكمية والسعر.</li>
+  <li>اضغط على قسم <strong>صور المنتج</strong> لرفع صور جديدة وحفظ التعديلات.</li>
 </ol>
-<hr>
-<p>تفضل بزيارة لوحة التحكم الآن لتحديث عروضك:<br><br>
-<a href="https://zintoop.com/dashboard" style="background-color: #6A8F3B; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">رابط لوحة التحكم ➔</a></p>
-<br>
+<p>تفضل بزيارة لوحة التحكم الآن لتحديث عروضك:<br>
+<a href="https://zintoop.com/dashboard">رابط لوحة التحكم</a></p>
 <p>مع تحيات فريق عمل منصة الزين (Zintoop).</p>
 `
         },
