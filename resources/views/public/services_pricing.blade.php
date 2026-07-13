@@ -162,13 +162,13 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                 $marketingServices = \App\Models\MarketingService::all();
                 @endphp
                 @foreach($marketingServices as $service)
                 {{-- Service Card --}}
-                <div class="group relative bg-white border border-gray-100 shadow-xl rounded-3xl p-7 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#6A8F3B]/20 transition-all duration-300 flex flex-col overflow-hidden isolate w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(20%-20px)]">
+                <div class="group relative bg-white border border-gray-100 shadow-xl rounded-3xl p-7 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#6A8F3B]/20 transition-all duration-300 flex flex-col overflow-hidden isolate">
                     <!-- Background Decorative Icon -->
                     <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 invert z-0">
                         <img src="{{ asset('icons/eye-browse-svg.svg') }}" class="w-full h-full object-contain">
