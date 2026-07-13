@@ -56,5 +56,17 @@ class MarketingServicesSeeder extends Seeder
             'results_en' => '1000 site visits / 20 confirmed sales.',
             'results_fr' => '1000 visites du site / 20 ventes confirmées.',
         ]);
+
+        MarketingService::updateOrCreate(['id' => 5], [
+            'title_ar' => 'تصميم علامة تجارية وملصق (Brand & Label)',
+            'title_en' => 'Brand & Label Design',
+            'title_fr' => 'Design de marque & étiquette',
+            'price_tnd_weekly' => 300.00,
+            'currency' => 'TND',
+            'icon_url' => '🎨',
+            'results_ar' => 'هوية بصرية كاملة وملصق جاهز للطباعة.',
+            'results_en' => 'Complete visual identity and print-ready label.',
+            'results_fr' => 'Identité visuelle complète et étiquette prête à imprimer.',
+        ]);
     }
 }

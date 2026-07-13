@@ -56,7 +56,11 @@
                 </div>
 
                 <div class="prose prose-xl prose-green max-w-none text-gray-700 leading-relaxed font-serif">
-                    {!! nl2br(e($article->content[app()->getLocale()] ?? '')) !!}
+                    {!! preg_replace(
+                        '~(https?://[^\s<]+)~i',
+                        '<a href="$1" target="_blank" class="text-[#6A8F3B] underline hover:text-[#5b7c32] break-all">$1</a>',
+                        nl2br(e($article->content[app()->getLocale()] ?? ''))
+                    ) !!}
                 </div>
 
                 <!-- Related Articles Section -->

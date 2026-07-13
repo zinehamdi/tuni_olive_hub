@@ -54,6 +54,9 @@ class ArticleController extends Controller
 
         Article::create($data);
 
+        // Clear home page articles cache
+        \Illuminate\Support\Facades\Cache::forget('home_articles');
+
         return redirect()->route('admin.articles.index')->with('success', __('Article created successfully.'));
     }
 
@@ -93,6 +96,9 @@ class ArticleController extends Controller
 
         $article->update($data);
 
+        // Clear home page articles cache
+        \Illuminate\Support\Facades\Cache::forget('home_articles');
+
         return redirect()->route('admin.articles.index')->with('success', __('Article updated successfully.'));
     }
 
@@ -105,6 +111,9 @@ class ArticleController extends Controller
             }
         }
         $article->delete();
+
+        // Clear home page articles cache
+        \Illuminate\Support\Facades\Cache::forget('home_articles');
 
         return redirect()->route('admin.articles.index')->with('success', __('Article deleted successfully.'));
     }

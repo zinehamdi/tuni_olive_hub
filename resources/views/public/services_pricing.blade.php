@@ -183,7 +183,17 @@
                             </div>
                         </div>
                         <div class="mb-6 flex-grow">
-                            <div class="text-3xl font-black text-[#C8A356] mb-4">{{ number_format($service->price_tnd_weekly, 0) }} <span class="text-base font-normal text-gray-700">{{ $service->currency }}<span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span></span></div>
+                            <div class="text-3xl font-black text-[#C8A356] mb-4">
+                                {{ number_format($service->price_tnd_weekly, 0) }} 
+                                <span class="text-base font-normal text-gray-700">
+                                    {{ $service->currency }}
+                                    @if($service->id == 5)
+                                        <span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'خدمة' : (app()->getLocale() === 'fr' ? 'service' : 'service') }}</span>
+                                    @else
+                                        <span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span>
+                                    @endif
+                                </span>
+                            </div>
                             <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <p class="text-sm text-[#6A8F3B] font-bold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
                                 <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">
