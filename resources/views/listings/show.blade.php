@@ -1,40 +1,15 @@
 @extends('layouts.app')
+@section('og_type', 'product')
+@section('og_title')
 @php
     $variety = $listing->product->variety ?? 'زيت زيتون';
     $city = $listing->seller->addresses->first() ? $listing->seller->addresses->first()->governorate : 'تونس';
-    
-    $isArabic = app()->getLocale() === 'ar';
-    $isFrench = app()->getLocale() === 'fr';
-
-    $priceFormatted = $listing->price == 0 
-        ? ($isArabic ? 'السعر عند الطلب' : ($isFrench ? 'Prix sur demande' : 'Price on request'))
-        : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . ($isArabic ? ($listing->unit == 'liter' ? 'لتر' : 'كلغ') : ($isFrench ? ($listing->unit == 'liter' ? 'litre' : 'kg') : ($listing->unit == 'liter' ? 'liter' : 'kg'))));
-
-    $titleText = $isArabic 
-        ? "زيت زيتون {$variety} من {$city} ({$priceFormatted}) - سوق زيت الزيتون"
-        : ($isFrench 
-            ? "Huile d'olive {$variety} de {$city} ({$priceFormatted}) - ZinToop B2B"
-            : "Tunisian {$variety} Olive Oil from {$city} ({$priceFormatted}) - ZinToop B2B");
-
-    $descText = $isArabic 
-        ? "تفاصيل عرض زيت زيتون {$variety} من {$city}. جودة ممتازة مباشرة من المنتج. الكمية المتوفرة: " . ($listing->quantity ?? 'غير محددة') . "."
-        : ($isFrench 
-            ? "Détails de l'offre d'huile d'olive {$variety} de {$city}. Qualité supérieure en direct du producteur. Quantité: " . ($listing->quantity ?? 'non spécifiée') . "."
-            : "Buy {$variety} olive oil from {$city} directly from producers. Wholesale export-ready. Quantity: " . ($listing->quantity ?? 'unspecified') . ".");
-
-    $keywordsText = $isArabic
-        ? "زيت زيتون {$variety}, زيت زيتون {$city}, تصدير زيت الزيتون التونسي, بيع زيت زيتون بالجملة"
-        : ($isFrench
-            ? "huile d'olive {$variety}, grossiste huile d'olive {$city}, huile d'olive tunisienne vrac, exportateur"
-            : "tunisian olive oil {$variety}, bulk olive oil {$city}, wholesale olive oil exporter, buy olive oil");
+    $unit = $listing->unit ? ($listing->unit == 'liter' ? 'لتر' : ($listing->unit == 'kg' ? 'كلغ' : $listing->unit)) : 'لتر';
+    $price = $listing->price == 0 ? 'السعر عند الطلب' : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . $unit);
 @endphp
-
-@section('title', $titleText)
-@section('description', $descText)
-@section('keywords', $keywordsText)
-@section('og_type', 'product')
-@section('og_title', $titleText)
-@section('og_description', $descText)
+{{ $price }} - {{ $variety }} - {{ $city }}
+@endsection
+@section('og_description', 'عرض متوفر الآن على منصة الزين! اشترِ زيت الزيتون التونسي مباشرة من المنتج بدون وسطاء.')
 @section('og_image')
 {{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}
 @endsection
