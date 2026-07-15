@@ -1,9 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'سوق زيت الزيتون التونسي | Tunisian Olive Oil Marketplace')
-@section('description', 'اكتشف أفضل منتجات زيت الزيتون التونسي من المزارعين والمعاصر والمعبئين. جودة عالية، أسعار تنافسية، توصيل سريع. Discover premium Tunisian olive oil products from farmers, mills and packers.')
-@section('og_title', 'سوق زيت الزيتون التونسي - جودة أصلية من المزارع إلى منزلك')
-@section('og_description', 'تسوق زيت الزيتون التونسي الأصلي بجودة عالية من المزارعين والمعاصر مباشرة')
+@php
+    $isArabic = app()->getLocale() === 'ar';
+    $isFrench = app()->getLocale() === 'fr';
+
+    $title = $isArabic 
+        ? 'سوق زيت الزيتون التونسي للجملة والتصدير' 
+        : ($isFrench 
+            ? 'Marché de l\'Huile d\'Olive Tunisienne - Vrac & Export' 
+            : 'Tunisian Olive Oil B2B Marketplace - Bulk & Export');
+
+    $description = $isArabic 
+        ? 'اكتشف أفضل منتجات زيت الزيتون التونسي من المزارعين والمعاصر مباشرة. أسعار الجملة، شحن وتصدير مضمون بدون وسطاء وبدون عمولات.' 
+        : ($isFrench 
+            ? 'Découvrez les meilleures huiles d\'olive tunisiennes directement des producteurs et moulins. Vente en gros, export sécurisé, sans intermédiaire et sans commission.' 
+            : 'Discover premium Tunisian olive oil products directly from farmers and mills. Wholesale pricing, verified B2B exporters, commission-free trading.');
+            
+    $keywords = $isArabic
+        ? 'زيت زيتون تونسي بالجملة, تصدير زيت الزيتون, مستوردين زيت زيتون, معاصر زيتون تونس, سوق زيت الزيتون'
+        : ($isFrench
+            ? 'huile d\'olive tunisienne en vrac, exportateur huile d\'olive, importateur grossiste huile d\'olive, producteur huile d\'olive tunisie'
+            : 'tunisian olive oil wholesale, buy olive oil bulk, olive oil exporters tunisia, bulk extra virgin olive oil B2B');
+@endphp
+
+@section('title', $title)
+@section('description', $description)
+@section('keywords', $keywords)
+@section('og_title', $title)
+@section('og_description', $description)
 
 @section('content')
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" 
@@ -445,6 +469,144 @@
         </div>
     </section>
     @endif
+
+    <!-- Services Carousel Section -->
+    <section class="max-w-7xl mx-auto px-4 py-12 border-t border-gray-100" x-data="{
+        scrollLeft() {
+            this.$refs.carousel.scrollBy({ left: -300, behavior: 'smooth' });
+        },
+        scrollRight() {
+            this.$refs.carousel.scrollBy({ left: 300, behavior: 'smooth' });
+        }
+    }">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-black text-gray-900 flex items-center gap-2">
+                    <span>🛠️</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'فضاء الخدمات الفلاحية والتجارية' : 'Agricultural & Trade Services' }}</span>
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">
+                    {{ app()->getLocale() === 'ar' ? 'اكتشف خدمات تنمية الصادرات والتسويق، ومزودي الخدمات من نقل ومعاصر ومعدات فلاحية' : 'Explore export & marketing services, and local providers for transport, mills & machinery' }}
+                </p>
+            </div>
+            
+            <div class="flex gap-2">
+                <button @click="scrollLeft" class="w-10 h-10 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center text-gray-600 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button @click="scrollRight" class="w-10 h-10 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center text-gray-600 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative">
+            <!-- Carousel Container -->
+            <div x-ref="carousel" class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none pb-4" style="-ms-overflow-style: none; scrollbar-width: none;">
+                
+                <!-- Zintoop Services Card (Mini) -->
+                <div class="snap-start shrink-0 w-72 bg-gradient-to-br from-[#0c180d] to-[#122413] text-white rounded-3xl p-6 border border-white/10 flex flex-col justify-between hover:shadow-xl hover:shadow-[#6A8F3B]/10 transition-all duration-300">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-[#6A8F3B]/20 border border-[#6A8F3B]/40 flex items-center justify-center text-2xl mb-4">🚀</div>
+                        <h3 class="font-black text-lg leading-tight">{{ app()->getLocale() === 'ar' ? 'خدمات منصة الزين الرقمية' : 'Zintoop Digital Services' }}</h3>
+                        <p class="text-xs text-white/60 mt-2 leading-relaxed">
+                            {{ app()->getLocale() === 'ar' ? 'تنمية الصفحات، حملات المراسلات، مكالمات المبيعات، وتصميم الهوية التجارية للشركات والمصدرين.' : 'Social growth, messaging, sales calls, and branding services for exporters.' }}
+                        </p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-[#C8A356] font-black text-sm">{{ app()->getLocale() === 'ar' ? 'خدمات مباشرة' : 'Platform Services' }}</span>
+                        <a href="{{ route('services.index') }}" class="px-4 py-2 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold rounded-xl text-xs transition duration-200">
+                            {{ app()->getLocale() === 'ar' ? 'احجز الآن' : 'Book Now' }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- External Service Providers (Mini Cards) -->
+                @if(isset($serviceProviders))
+                    @foreach($serviceProviders as $provider)
+                    @php
+                        $priceType = $provider->meta_data['price_type'] ?? 'quote';
+                        $price = $provider->meta_data['service_price'] ?? null;
+                        
+                        $roleLabels = [
+                            'carrier' => ['ar' => 'ناقل بري وبحري', 'icon' => '🚛', 'bg' => 'bg-amber-100 text-amber-800'],
+                            'mill' => ['ar' => 'معصرة زيتون', 'icon' => '🏢', 'bg' => 'bg-amber-800/10 text-amber-900'],
+                            'packer' => ['ar' => 'تعبئة وتغليف', 'icon' => '📦', 'bg' => 'bg-purple-100 text-purple-800'],
+                            'transiteur' => ['ar' => 'مخلص جمركي', 'icon' => '🛃', 'bg' => 'bg-blue-100 text-blue-800'],
+                            'comptable' => ['ar' => 'محاسب', 'icon' => '📊', 'bg' => 'bg-emerald-100 text-emerald-800'],
+                            'service_bureau' => ['ar' => 'مكتب خدمات', 'icon' => '📝', 'bg' => 'bg-indigo-100 text-indigo-800'],
+                            'agri_equipment' => ['ar' => 'معدات فلاحية', 'icon' => '🚜', 'bg' => 'bg-rose-100 text-rose-800'],
+                            'agri_materials' => ['ar' => 'مواد فلاحية', 'icon' => '🌱', 'bg' => 'bg-green-100 text-green-800'],
+                        ];
+                        $roleData = $roleLabels[$provider->role] ?? ['ar' => 'مزود خدمة', 'icon' => '👥', 'bg' => 'bg-gray-100 text-gray-800'];
+                    @endphp
+                    <div class="snap-start shrink-0 w-72 bg-white border border-gray-100 rounded-3xl p-5 hover:shadow-xl hover:shadow-[#6A8F3B]/5 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            @php
+                                $validPhotos = array_values(array_filter($provider->cover_photos ?? [], fn($p) => is_string($p) && !empty($p)));
+                            @endphp
+                            <div class="w-full h-32 rounded-2xl overflow-hidden mb-4 relative bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                                @if(count($validPhotos) > 0)
+                                    <img src="{{ asset($validPhotos[0]) }}" class="w-full h-full object-cover">
+                                @else
+                                    <span class="text-4xl filter grayscale opacity-20">{{ $roleData['icon'] }}</span>
+                                @endif
+                                <!-- Floating Role Badge -->
+                                <span class="absolute top-3 left-3 px-2 py-0.5 rounded-lg {{ $roleData['bg'] }} text-[9px] font-bold shadow-sm">
+                                    {{ $roleData['icon'] }} {{ $roleData['ar'] }}
+                                </span>
+                            </div>
+
+                            <!-- Provider Name & Avatar -->
+                            <div class="flex items-center gap-2.5 mb-2">
+                                @if($provider->profile_picture)
+                                    <img src="{{ asset($provider->profile_picture) }}" class="w-8 h-8 rounded-full object-cover border border-gray-100">
+                                @else
+                                    <div class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                                        {{ $roleData['icon'] }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-sm leading-tight line-clamp-1">{{ $provider->name }}</h4>
+                                    <p class="text-[10px] text-gray-500">📍 {{ $provider->addresses->first()->governorate ?? 'تونس' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Short Description -->
+                            <p class="text-gray-500 text-[11px] leading-relaxed line-clamp-2 mt-1">
+                                {{ $provider->meta_data['service_description'] ?? '' }}
+                            </p>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between">
+                            <span class="text-xs font-bold text-gray-800">
+                                @if($priceType === 'fixed' && !empty($price))
+                                    {{ number_format($price, 0) }} TND
+                                @else
+                                    {{ app()->getLocale() === 'ar' ? 'السعر عند الطلب' : 'Request Quote' }}
+                                @endif
+                            </span>
+                            <a href="{{ route('services.index') }}?type={{ $provider->role }}#directory" class="text-xs font-bold text-[#6A8F3B] hover:underline flex items-center gap-0.5">
+                                <span>{{ app()->getLocale() === 'ar' ? 'التفاصيل' : 'Details' }}</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ app()->getLocale()==='ar' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7' }}" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
+
+            </div>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="{{ route('services.index') }}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white border border-[#6A8F3B]/20 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white font-bold rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 text-sm cursor-pointer">
+                <span>🔍</span>
+                <span>{{ app()->getLocale() === 'ar' ? 'تصفح جميع الخدمات ومقدمي الخدمات' : 'Browse All Services & Providers' }}</span>
+            </a>
+        </div>
+    </section>
 
     <!-- Main Content -->
     <section id="products" class="max-w-7xl mx-auto px-4 py-12">
