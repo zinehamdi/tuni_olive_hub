@@ -9,29 +9,14 @@
     @php
         $defaultBrandName = app()->getLocale() === 'ar' ? 'زين توب' : 'ZinToop';
         $isArabic = app()->getLocale() === 'ar';
-        $isFrench = app()->getLocale() === 'fr';
-        
-        $defaultTitle = $isArabic 
-            ? 'زين توب | سوق زيت الزيتون التونسي للجملة والتصدير' 
-            : ($isFrench 
-                ? 'ZinToop | Marché de l\'Huile d\'Olive Tunisienne pour Vrac & Export' 
-                : 'ZinToop | Tunisian Olive Oil B2B Marketplace for Bulk & Export');
-                
+        $defaultTitle = $isArabic ? 'زين توب | السوق التونسي الأول لزيت الزيتون' : 'ZinToop | Tunisian Olive Oil Marketplace';
         $defaultDesc = $isArabic 
-            ? 'زين توب - المنصة الأولى لزيت الزيتون التونسي. صلة وصل مباشرة بين المنتجين والفلاحين والمعاصر والمستوردين والموردين حول العالم لشراء وبيع زيت الزيتون بالجملة.'
-            : ($isFrench 
-                ? 'ZinToop - La première plateforme B2B pour l\'huile d\'olive tunisienne. Connectez-vous avec les producteurs, exportateurs et importateurs mondiaux pour l\'achat en gros.'
-                : 'ZinToop - The leading Tunisian Olive Oil B2B Marketplace. Connect directly with wholesale suppliers, mills, exporters, and global importers for bulk trade.');
-                
-        $defaultKeywords = $isArabic 
-            ? 'زيت زيتون تونسي, تصدير زيت الزيتون, مستوردين زيت الزيتون, بيع زيت زيتون بالجملة, معصرة زيتون تونس, منتجين زيت الزيتون, تجارة زيت الزيتون'
-            : ($isFrench 
-                ? 'huile d\'olive tunisienne, grossiste huile d\'olive, importateur huile d\'olive, exportateur huile d\'olive tunisie, huile d\'olive en vrac, fournisseur huile d\'olive, commerce de gros'
-                : 'tunisian olive oil bulk, buy olive oil wholesale, olive oil importers, olive oil exporters, tunisian olive oil suppliers, bulk extra virgin olive oil, olive oil trade marketplace');
+            ? 'زين توب - السوق التونسي الأول لزيت الزيتون. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.'
+            : 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills. No commissions.';
     @endphp
     <title>{{ config('app.name') }} - @yield('title', $defaultTitle)</title>
     <meta name="description" content="@yield('description', $defaultDesc)">
-    <meta name="keywords" content="@yield('keywords', $defaultKeywords)">
+    <meta name="keywords" content="زيت زيتون, تونس, فلاح, معصرة, زيتون, زيت بكر ممتاز, سوق الزيتون, tunisian olive oil, olive oil marketplace, extra virgin, zintoop">
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
     <!-- Open Graph / Facebook -->
@@ -625,15 +610,14 @@
     <!-- Spacer for fixed navbar -->
     <div class="h-16 sm:h-[72px]"></div>
 
+    <!-- Price Ticker - Fixed below navbar -->
     <div class="fixed top-16 sm:top-[72px] left-0 right-0 z-40 shadow-md">
         @include('components.price-ticker')
-        @if(!request()->routeIs('home'))
-            @include('components.ads-ticker')
-        @endif
+        @include('components.ads-ticker')
     </div>
 
     <!-- Spacer for both tickers (price ~50px + ads ~38px) -->
-    <div class="{{ request()->routeIs('home') ? 'h-[72px] sm:h-20' : 'h-24' }}"></div>
+    <div class="h-24"></div>
 
     @isset($header)
     <header class="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-100">
