@@ -126,14 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.location.pathname.includes('/register') && !window.location.pathname.includes('/login')) {
         
         if (isFacebookTraffic) {
-            // SEGMENT A: Facebook Traffic
-            if (!hasSeenMessengerBanner && messengerBanner) {
-                setTimeout(() => {
-                    messengerBanner.classList.remove('hidden');
-                    // Small delay to allow display:block to apply before animating opacity/transform
-                    setTimeout(() => messengerBanner.classList.remove('translate-y-full', 'opacity-0'), 50);
-                }, 2000); // Show after 2 seconds
-            }
+            // Facebook Messenger Banner has been deactivated
         } else {
             // SEGMENT B: Standard Traffic
             if (!hasSeenLeadCapture) {
