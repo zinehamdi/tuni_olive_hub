@@ -1,9 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'سوق زيت الزيتون التونسي | Tunisian Olive Oil Marketplace')
-@section('description', 'اكتشف أفضل منتجات زيت الزيتون التونسي من المزارعين والمعاصر والمعبئين. جودة عالية، أسعار تنافسية، توصيل سريع. Discover premium Tunisian olive oil products from farmers, mills and packers.')
-@section('og_title', 'سوق زيت الزيتون التونسي - جودة أصلية من المزارع إلى منزلك')
-@section('og_description', 'تسوق زيت الزيتون التونسي الأصلي بجودة عالية من المزارعين والمعاصر مباشرة')
+@php
+    $isArabic = app()->getLocale() === 'ar';
+    $isFrench = app()->getLocale() === 'fr';
+
+    $title = $isArabic 
+        ? 'سوق زيت الزيتون التونسي للجملة والتصدير' 
+        : ($isFrench 
+            ? 'Marché de l\'Huile d\'Olive Tunisienne - Vrac & Export' 
+            : 'Tunisian Olive Oil B2B Marketplace - Bulk & Export');
+
+    $description = $isArabic 
+        ? 'اكتشف أفضل منتجات زيت الزيتون التونسي من المزارعين والمعاصر مباشرة. أسعار الجملة، شحن وتصدير مضمون بدون وسطاء وبدون عمولات.' 
+        : ($isFrench 
+            ? 'Découvrez les meilleures huiles d\'olive tunisiennes directement des producteurs et moulins. Vente en gros, export sécurisé, sans intermédiaire et sans commission.' 
+            : 'Discover premium Tunisian olive oil products directly from farmers and mills. Wholesale pricing, verified B2B exporters, commission-free trading.');
+            
+    $keywords = $isArabic
+        ? 'زيت زيتون تونسي بالجملة, تصدير زيت الزيتون, مستوردين زيت زيتون, معاصر زيتون تونس, سوق زيت الزيتون'
+        : ($isFrench
+            ? 'huile d\'olive tunisienne en vrac, exportateur huile d\'olive, importateur grossiste huile d\'olive, producteur huile d\'olive tunisie'
+            : 'tunisian olive oil wholesale, buy olive oil bulk, olive oil exporters tunisia, bulk extra virgin olive oil B2B');
+@endphp
+
+@section('title', $title)
+@section('description', $description)
+@section('keywords', $keywords)
+@section('og_title', $title)
+@section('og_description', $description)
 
 @section('content')
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" 
