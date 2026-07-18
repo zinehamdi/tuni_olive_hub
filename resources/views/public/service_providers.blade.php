@@ -335,7 +335,7 @@
                              @if(!empty($card['image']))
                                 <img src="{{ asset($card['image']) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             @elseif($provider->profile_picture)
-                                <img src="{{ Storage::url($provider->profile_picture) }}" class="w-12 h-12 rounded-full object-cover">
+                                <img src="{{ Storage::url($provider->profile_picture) }}" class="w-12 h-12 rounded-full object-cover" onerror="this.onerror=null; this.src='{{ asset('images/zintoop-logo.png') }}';">
                             @else
                                 <span class="text-3xl">{{ $roleData['icon'] }}</span>
                             @endif
@@ -425,7 +425,7 @@
                                 </div>
                                 <!-- Profile Pic -->
                                 <template x-if="activeProvider && activeProvider.profile_picture">
-                                    <img :src="activeProvider.profile_picture" class="w-14 h-14 rounded-full object-cover border-2 border-[#6A8F3B]/20">
+                                    <img :src="activeProvider.profile_picture" class="w-14 h-14 rounded-full object-cover border-2 border-[#6A8F3B]/20" onerror="this.onerror=null; this.src='{{ asset('images/zintoop-logo.png') }}';">
                                 </template>
                                 <template x-if="activeProvider && !activeProvider.profile_picture">
                                     <div class="w-14 h-14 rounded-full bg-[#6A8F3B]/10 text-[#6A8F3B] flex items-center justify-center text-2xl font-bold">
