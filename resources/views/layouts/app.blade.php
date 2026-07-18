@@ -663,7 +663,7 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" class="h-10 w-20 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" style="height: 40px; width: 80px;" class="h-10 w-20 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
                     <h3 class="text-xl font-bold">ZinToop</h3>
                 </div>
                 <p class="text-gray-400">{{ __('Platform connecting producers and buyers') }}</p>
