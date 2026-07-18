@@ -19,4 +19,6 @@ html, body {
 	background-attachment: fixed;
 }
 
-/* Deploy-V2-Clean */
+.deploy-v3-dummy {
+    content: "Deploy V3 Ads";
+}

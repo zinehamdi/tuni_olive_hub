@@ -13,7 +13,6 @@
                 $dbProviders = \App\Models\User::whereIn('role', [
                         'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
                     ])
-                    ->whereNotNull('meta_data->service_description')
                     ->latest()
                     ->take(15)
                     ->get();
@@ -36,16 +35,39 @@
                     'agri_study_office' => '📐',
                 ];
 
+                $defaultDescs = [
+                    'carrier' => 'ناقل بري ولوجستي لنقل الزيتون والزيت بين الولايات التونسية',
+                    'mill' => 'معصرة زيتون مجهزة بأحدث آليات العصر لإنتاج زيت رفيع',
+                    'packer' => 'وحدة تعليب وتغليف متكاملة لمنتجات زيت الزيتون والزيتون',
+                    'transiteur' => 'خدمات تخليص جمركي وتصدير زيت الزيتون لكافة دول العالم',
+                    'comptable' => 'محاسبة واستشارات مالية وإدارية للشركات والتعاونيات الفلاحية',
+                    'service_bureau' => 'مكتب خدمات إدارية وتسهيل المعاملات والملفات القانونية',
+                    'agri_equipment' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون',
+                    'agri_materials' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية',
+                    'agri_study_office' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع',
+                ];
+
                 $providerAds = [];
                 foreach ($dbProviders as $p) {
                     $icon = $roleIcons[$p->role] ?? '👥';
-                    $desc = $p->meta_data['service_description'] ?? '';
+                    
+                    $desc = null;
+                    if (is_array($p->meta_data)) {
+                        $desc = $p->meta_data['service_description'] ?? null;
+                    } elseif (is_object($p->meta_data)) {
+                        $desc = $p->meta_data->service_description ?? null;
+                    }
+                    
+                    if (empty($desc)) {
+                        $desc = $defaultDescs[$p->role] ?? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا';
+                    }
+
                     $descShort = \Illuminate\Support\Str::limit($desc, 60);
                     $logoUrl = ($p->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($p->profile_picture)) ? Storage::url($p->profile_picture) : null;
                     
                     $providerAds[] = [
                         'icon' => $icon,
-                        'logo' => $logoUrl,
+                        'logo' => $logoUrl ?: asset('images/zintoop-logo.png'),
                         'name' => $p->name,
                         'desc' => $descShort,
                         'text' => $p->name . ' (' . $icon . '): ' . $descShort,
