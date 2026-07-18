@@ -52,53 +52,7 @@
         </div>
     </div>
 
-    {{-- ─── FREE DIGITAL SHOP OFFER (LEAD MAGNET) ─── --}}
-    <div class="max-w-4xl mx-auto px-4 mb-12">
-        <div class="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-r from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] shadow-2xl">
-            <div class="bg-gradient-to-br from-[#0f2010] to-[#122413] rounded-3xl p-6 md:p-8 relative">
-                <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-[#6A8F3B]/10 rounded-full blur-3xl"></div>
-                <div class="relative z-10 flex flex-col lg:flex-row items-center gap-6 justify-between">
-                    <div class="text-right max-w-xl">
-                        <span class="px-3 py-1 rounded-full bg-[#C8A356] text-black text-[10px] font-black tracking-wider uppercase mb-3 inline-block">🚀 عرض محدود مجاني</span>
-                        <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
-                            {{ app()->getLocale() === 'ar' ? 'أطلق متجرك الموثق على ZinToop مجاناً!' : 'Launch your Verified ZinToop Shop for FREE!' }}
-                        </h2>
-                        <p class="text-white/70 text-sm mt-2 leading-relaxed">
-                            {{ app()->getLocale() === 'ar'
-                                ? 'احصل على صفحة احترافية وموقع رقمي متكامل لمعصرتك أو مزرعتك لعرض منتجاتك وجذب المشترين. سنقوم بإعداد كل شيء لك خلال 24 ساعة بدون أي تكلفة!'
-                                : 'Get a premium digital storefront for your mill or farm to attract global buyers. We will set up everything for you in 24 hours at zero cost!' }}
-                        </p>
-                    </div>
-                    
-                    {{-- Quick WhatsApp Lead Form --}}
-                    <div x-data="{ name: '', type: 'farmer', phone: '' }" class="w-full lg:w-80 bg-white/5 border border-white/15 p-5 rounded-2xl backdrop-blur-md">
-                        <div class="space-y-3">
-                            <div>
-                                <input type="text" x-model="name" placeholder="{{ app()->getLocale() === 'ar' ? 'الاسم أو اسم النشاط التجارية...' : 'Business Name...' }}" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs placeholder-white/40 focus:outline-none focus:border-[#6A8F3B]">
-                            </div>
-                            <div>
-                                <select x-model="type" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs focus:outline-none focus:border-[#6A8F3B]">
-                                    <option value="farmer" class="bg-[#122413]">{{ app()->getLocale() === 'ar' ? 'مزرعة زيتون' : 'Olive Farm' }}</option>
-                                    <option value="mill" class="bg-[#122413]">{{ app()->getLocale() === 'ar' ? 'معصرة زيت زيتون' : 'Olive Mill' }}</option>
-                                    <option value="packer" class="bg-[#122413]">{{ app()->getLocale() === 'ar' ? 'شركة تعبئة / علامة تجارية' : 'Bottler / Private Label' }}</option>
-                                </select>
-                            </div>
-                            <div>
-                                <input type="text" x-model="phone" placeholder="{{ app()->getLocale() === 'ar' ? 'رقم الهاتف (واتساب)...' : 'WhatsApp Phone...' }}" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs placeholder-white/40 focus:outline-none focus:border-[#6A8F3B]">
-                            </div>
-                            <a :href="'https://wa.me/21625777926?text=' + encodeURIComponent('{{ app()->getLocale() === 'ar' ? 'مرحباً ZinToop، أريد الحصول على متجري الموثق مجاناً! الاسم: ' : 'Hi ZinToop, I want my free storefront! Name: ' }}' + name + ' | {{ app()->getLocale() === 'ar' ? 'النشاط: ' : 'Type: ' }}' + type + ' | {{ app()->getLocale() === 'ar' ? 'الهاتف: ' : 'Phone: ' }}' + phone)"
-                               target="_blank"
-                               @click="if(!name || !phone) { alert('{{ app()->getLocale() === 'ar' ? 'يرجى ملء جميع الحقول!' : 'Please fill all fields!' }}'); $event.preventDefault(); }"
-                               class="w-full py-3 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white text-xs font-bold rounded-xl hover:scale-102 transition-all duration-200 shadow-md flex items-center justify-center gap-2 no-underline cursor-pointer">
-                                <span>💬</span>
-                                {{ app()->getLocale() === 'ar' ? 'أرسل الطلب عبر واتساب' : 'Apply via WhatsApp' }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     {{-- ─── BILLING TOGGLE ─── --}}
     @if(session('success'))
@@ -222,12 +176,12 @@
                         <div class="text-center mb-8">
                             <span class="text-4xl">🧮</span>
                             <h2 class="text-2xl md:text-3xl font-black text-white mt-2">
-                                {{ app()->getLocale() === 'ar' ? 'حاسبة عصر وإنتاج زيت الزيتون التونسي' : 'Tunisian Olive Oil Yield & Profit Calculator' }}
+                                {{ app()->getLocale() === 'ar' ? 'حاسبة ربح التبويز' : 'Tunisian Tabouiz Profit Calculator' }}
                             </h2>
                             <p class="text-white/60 text-xs md:text-sm mt-2 max-w-xl mx-auto">
                                 {{ app()->getLocale() === 'ar'
                                     ? 'أدخل وزن الزيتون ونسبة استخلاص معصرتك لتقدير إنتاجك من الزيت والأرباح الصافية المتوقعة فوراً!'
-                                    : 'Estimate your oil yield in liters and your projected net profit based on standard milling parameters.' }}
+                                    : 'Estimate your oil yield in kg/liters and your projected tabouiz profit based on standard milling parameters.' }}
                             </p>
                         </div>
 
@@ -236,18 +190,25 @@
                             oliveWeight: 2000,
                             yieldPct: 18,
                             oilPrice: 15,
-                            millingCostPerKg: 0.150,
-                            get oilLiters() {
+                            olivePricePerKg: 1.5,
+                            millingCostPerKg: 0.250,
+                            get oilKg() {
                                 return (this.oliveWeight * (this.yieldPct / 100)).toFixed(0);
                             },
+                            get oilLiters() {
+                                return (this.oilKg / 0.916).toFixed(0);
+                            },
                             get totalValue() {
-                                return (this.oilLiters * this.oilPrice).toFixed(0);
+                                return (this.oilKg * this.oilPrice).toFixed(0);
                             },
                             get totalMilling() {
                                 return (this.oliveWeight * this.millingCostPerKg).toFixed(0);
                             },
+                            get totalOliveCost() {
+                                return (this.oliveWeight * this.olivePricePerKg).toFixed(0);
+                            },
                             get netProfit() {
-                                return (this.totalValue - this.totalMilling).toFixed(0);
+                                return (this.totalValue - this.totalMilling - this.totalOliveCost).toFixed(0);
                             }
                         }" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             
@@ -271,13 +232,32 @@
                                     <input type="range" min="10" max="30" step="1" x-model="yieldPct" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
                                 </div>
 
-                                {{-- Input 3: Price per Liter --}}
+                                {{-- Input 3: Price per Kg --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'سعر لتر الزيت (د.ت):' : 'Oil Price per Liter (TND):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'سعر كيلوجرام الزيت (د.ت):' : 'Oil Price per kg (TND):' }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="oilPrice + ' د.ت'"></span>
                                     </div>
                                     <input type="range" min="10" max="30" step="0.5" x-model="oilPrice" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
+                                </div>
+
+                                {{-- Input 4: Olive Purchase Price per kg --}}
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'سعر شراء كيلو الزيتون (د.ت):' : 'Olive Purchase Price per kg (TND):' }}</label>
+                                        <span class="text-[#a8d060] font-black text-sm" x-text="olivePricePerKg + ' د.ت'"></span>
+                                    </div>
+                                    <input type="range" min="0" max="5" step="0.1" x-model="olivePricePerKg" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
+                                    <p class="text-white/40 text-[10px] mt-1">{{ app()->getLocale() === 'ar' ? 'اجعلها 0 إذا كنت تنتج الزيتون الخاص بك دون شرائه' : 'Set to 0 if you grow your own olives' }}</p>
+                                </div>
+
+                                {{-- Input 5: Milling Cost per kg --}}
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة عصر الكيلو (د.ت):' : 'Milling Cost per kg (TND):' }}</label>
+                                        <span class="text-[#a8d060] font-black text-sm" x-text="parseFloat(millingCostPerKg).toFixed(3) + ' د.ت'"></span>
+                                    </div>
+                                    <input type="range" min="0.100" max="0.500" step="0.010" x-model="millingCostPerKg" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
                                 </div>
                             </div>
 
@@ -285,15 +265,23 @@
                             <div class="bg-[#172d19] border border-[#6A8F3B]/30 rounded-2xl p-6 flex flex-col justify-between">
                                 <div class="space-y-4">
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت:' : 'Estimated Oil Yield:' }}</span>
-                                        <span class="text-white font-black text-lg" x-text="oilLiters + ' لتر'"></span>
+                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
+                                        <span class="text-white font-black text-lg" x-text="oilKg + ' كجم'"></span>
+                                    </div>
+                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
+                                        <span class="text-white/70 font-semibold text-base" x-text="oilLiters + ' لتر'"></span>
                                     </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
                                         <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
                                         <span class="text-white font-black text-lg" x-text="totalValue + ' د.ت'"></span>
                                     </div>
+                                    <div class="flex justify-between items-center border-b border-white/5 pb-2" x-show="olivePricePerKg > 0">
+                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
+                                        <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalOliveCost + ' د.ت'"></span>
+                                    </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر المقدرة (0.150 د.ت/كجم):' : 'Estimated Milling Cost:' }}</span>
+                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
                                         <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalMilling + ' د.ت'"></span>
                                     </div>
                                     <div class="flex justify-between items-center bg-[#C8A356]/10 p-3 rounded-xl border border-[#C8A356]/20">
@@ -305,7 +293,7 @@
                                 {{-- Social WhatsApp Share Loop --}}
                                 <div class="mt-6">
                                     <button @click="
-                                        const msg = encodeURIComponent('{{ app()->getLocale() === 'ar' ? 'لقد قمت بحساب أرباحي المتوقعة لعصر زيت الزيتون عبر حاسبة ZinToop! الوزن: ' : 'Calculated my olive oil profit using ZinToop Calculator! Olives: ' }}' + oliveWeight + ' kg | {{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع: ' : 'Yield: ' }}' + oilLiters + ' Liters | {{ app()->getLocale() === 'ar' ? 'الأرباح الصافية المقدرة: ' : 'Net profit: ' }}' + netProfit + ' TND. {{ app()->getLocale() === 'ar' ? 'احسب أرباحك الآن مجاناً عبر الرابط: ' : 'Calculate yours free: ' }}' + window.location.href);
+                                        const msg = encodeURIComponent('{{ app()->getLocale() === 'ar' ? 'لقد قمت بحساب أرباحي المتوقعة عبر حاسبة ربح التبويز من ZinToop! الوزن: ' : 'Calculated my tabouiz profit using ZinToop Calculator! Olives: ' }}' + oliveWeight + ' kg | {{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع: ' : 'Yield: ' }}' + oilKg + ' kg (approx. ' + oilLiters + ' Liters) | {{ app()->getLocale() === 'ar' ? 'الأرباح الصافية المقدرة: ' : 'Net profit: ' }}' + netProfit + ' TND. {{ app()->getLocale() === 'ar' ? 'احسب أرباحك الآن مجاناً عبر الرابط: ' : 'Calculate yours free: ' }}' + window.location.href);
                                         window.open('https://wa.me/?text=' + msg, '_blank');
                                     " class="w-full py-3.5 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-sm shadow-lg shadow-green-600/30">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>

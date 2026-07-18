@@ -1,29 +1,99 @@
 {{-- ─── Ads Ticker Bar ─── --}}
-<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20" style="min-height:48px;">
+<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20 ads-ticker-bar flex items-center">
 
-    <div class="relative z-10 w-full h-full flex items-center py-1.5">
+    <div class="relative z-10 w-full h-full flex items-center py-1">
         <div class="ads-ticker-wrapper">
             <div class="ads-ticker-content">
 
                 @php
                 $locale = app()->getLocale();
                 $pricingUrl = route('services.pricing');
-                $ads = [
-                    ['icon'=>'📣','text_ar'=>'خدمات التسويق الرقمي لزيت الزيتون التونسي — اكتشف باقاتنا','text_en'=>'Digital Marketing for Tunisian Olive Oil — Explore our plans','text_fr'=>'Marketing Digital pour l\'huile d\'olive — Découvrez nos offres'],
-                    ['icon'=>'🌐','text_ar'=>'هل تريد موقعاً احترافياً؟ نبني لك حضوراً رقمياً قوياً','text_en'=>'Need a professional website? We build powerful digital presences','text_fr'=>'Besoin d\'un site pro? Nous créons votre présence digitale'],
-                    ['icon'=>'📱','text_ar'=>'تطوير تطبيقات الموبايل iOS & Android — أسعار تنافسية','text_en'=>'Mobile App Development iOS & Android — Competitive pricing','text_fr'=>'Développement d\'apps mobiles iOS & Android — Prix compétitifs'],
-                    ['icon'=>'🚀','text_ar'=>'حملات إعلانية على ميتا وجوجل للمنتجين والمصدرين','text_en'=>'Meta & Google ad campaigns for olive oil producers & exporters','text_fr'=>'Campagnes Meta & Google pour producteurs d\'huile d\'olive'],
-                    ['icon'=>'🛒','text_ar'=>'إنشاء متجر إلكتروني متكامل بنظام دفع آمن','text_en'=>'Full e-commerce store with secure payment gateway','text_fr'=>'Boutique en ligne complète avec paiement sécurisé'],
-                    ['icon'=>'📊','text_ar'=>'تقارير تحليلية وإدارة محتوى السوشيال ميديا باحترافية','text_en'=>'Analytics reports & professional social media management','text_fr'=>'Rapports analytiques & gestion réseaux sociaux pro'],
+
+                // Fetch active registered service providers
+                $dbProviders = \App\Models\User::whereIn('role', [
+                        'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
+                    ])
+                    ->whereNotNull('meta_data->service_description')
+                    ->latest()
+                    ->take(15)
+                    ->get();
+
+                $platformAds = [
+                    ['icon' => '🌐', 'text_ar' => 'هل تريد موقعاً احترافياً؟ نبني لك حضوراً رقمياً قوياً', 'text_en' => 'Need a professional website? We build powerful digital presences', 'text_fr' => 'Besoin d\'un site pro? Nous créons votre présence digitale', 'url' => $pricingUrl],
+                    ['icon' => '📱', 'text_ar' => 'تطوير تطبيقات الموبايل iOS & Android — أسعار تنافسية', 'text_en' => 'Mobile App Development iOS & Android — Competitive pricing', 'text_fr' => 'Développement d\'apps mobiles iOS & Android — Prix compétitifs', 'url' => $pricingUrl],
+                    ['icon' => '🚀', 'text_ar' => 'حملات إعلانية على ميتا وجوجل للمنتجين والمصدرين', 'text_en' => 'Meta & Google ad campaigns for olive oil producers & exporters', 'text_fr' => 'Campagnes Meta & Google pour producteurs d\'huile d\'olive', 'url' => $pricingUrl],
                 ];
+
+                $roleIcons = [
+                    'carrier' => '🚛',
+                    'mill' => '🏢',
+                    'packer' => '📦',
+                    'transiteur' => '🛃',
+                    'comptable' => '📊',
+                    'service_bureau' => '📝',
+                    'agri_equipment' => '🚜',
+                    'agri_materials' => '🌱',
+                    'agri_study_office' => '📐',
+                ];
+
+                $providerAds = [];
+                foreach ($dbProviders as $p) {
+                    $icon = $roleIcons[$p->role] ?? '👥';
+                    $desc = $p->meta_data['service_description'] ?? '';
+                    $descShort = \Illuminate\Support\Str::limit($desc, 60);
+                    $logoUrl = ($p->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($p->profile_picture)) ? Storage::url($p->profile_picture) : null;
+                    
+                    $providerAds[] = [
+                        'icon' => $icon,
+                        'logo' => $logoUrl,
+                        'name' => $p->name,
+                        'desc' => $descShort,
+                        'text' => $p->name . ' (' . $icon . '): ' . $descShort,
+                        'url' => route('services.index') . '#directory'
+                    ];
+                }
+
+                $mergedAds = [];
+                $max = max(count($platformAds), count($providerAds));
+                for ($i = 0; $i < $max; $i++) {
+                    if (isset($platformAds[$i])) {
+                        $ad = $platformAds[$i];
+                        $text = $locale === 'ar' ? $ad['text_ar'] : ($locale === 'fr' ? $ad['text_fr'] : $ad['text_en']);
+                        $mergedAds[] = [
+                            'icon' => $ad['icon'],
+                            'logo' => asset('images/zintooplogo3d.jpg'),
+                            'name' => $locale === 'ar' ? 'منصة الزين' : 'ZinToop',
+                            'desc' => $text,
+                            'text' => $text,
+                            'url' => $ad['url']
+                        ];
+                    }
+                    if (isset($providerAds[$i])) {
+                        $mergedAds[] = $providerAds[$i];
+                    }
+                }
+
+                $displayAds = array_merge($mergedAds, $mergedAds);
+                if (count($displayAds) < 8) {
+                    $displayAds = array_merge($displayAds, $displayAds);
+                }
                 @endphp
 
-                @foreach(array_merge($ads, $ads) as $ad)
-                <a href="{{ $pricingUrl }}" class="ads-ticker-item group">
-                    <span class="text-base">{{ $ad['icon'] }}</span>
-                    <span class="text-sm md:text-base font-semibold text-[#a8d060] group-hover:text-white transition-colors duration-200 whitespace-nowrap">
-                        {{ $locale === 'ar' ? $ad['text_ar'] : ($locale === 'fr' ? $ad['text_fr'] : $ad['text_en']) }}
-                    </span>
+                @foreach($displayAds as $ad)
+                <a href="{{ $ad['url'] }}" class="ads-ticker-item group">
+                    @if(!empty($ad['logo']))
+                        <img src="{{ $ad['logo'] }}" class="ads-ticker-logo border border-black/10 object-cover rounded-full" alt="logo">
+                    @else
+                        <span class="ads-ticker-icon">{{ $ad['icon'] }}</span>
+                    @endif
+                    <div class="ads-ticker-text-wrapper flex flex-col text-right justify-center leading-none">
+                        <span class="ads-ticker-title font-black text-black leading-tight">
+                            {{ $ad['name'] ?? '' }}
+                        </span>
+                        <span class="ads-ticker-desc text-black/80 font-medium line-clamp-2">
+                            {{ $ad['desc'] ?? $ad['text'] }}
+                        </span>
+                    </div>
                 </a>
                 <span class="ads-ticker-sep">✦</span>
                 @endforeach
@@ -33,7 +103,7 @@
 
         {{-- CTA button pinned right --}}
         <a href="{{ route('services.pricing') }}"
-           class="absolute right-0 top-0 bottom-0 flex items-center gap-1.5 px-4 bg-gradient-to-l from-[#6A8F3B] via-[#5a7a2f] to-transparent hover:from-[#5a7a2f] text-white text-xs md:text-sm font-bold transition-all duration-200 z-20 whitespace-nowrap">
+           class="absolute right-0 top-0 bottom-0 flex items-center gap-1.5 bg-gradient-to-l from-[#6A8F3B] via-[#5a7a2f] to-transparent hover:from-[#5a7a2f] text-white font-bold transition-all duration-200 z-20 whitespace-nowrap ads-ticker-cta">
             <span class="hidden sm:inline">{{ $locale === 'ar' ? 'عروضنا' : 'Our Plans' }}</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -43,6 +113,93 @@
 </div>
 
 <style>
+    .ads-ticker-bar {
+        min-height: 48px;
+    }
+    .ads-ticker-logo {
+        width: 26px;
+        height: 26px;
+    }
+    .ads-ticker-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0;
+        text-decoration: none;
+        background-color: #C6E1A5;
+        color: #000000 !important;
+        border-radius: 9999px;
+        padding: 0.3rem 0.8rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        transition: all 0.2s;
+    }
+    .ads-ticker-item:hover {
+        background-color: #b5d691;
+        transform: translateY(-1px);
+    }
+    .ads-ticker-text-wrapper {
+        white-space: normal;
+        max-width: 190px;
+    }
+    .ads-ticker-title {
+        font-size: 0.68rem;
+    }
+    .ads-ticker-desc {
+        font-size: 0.6rem;
+        margin-top: 1px;
+    }
+    .ads-ticker-icon {
+        font-size: 1rem;
+    }
+    .ads-ticker-sep {
+        font-size: 0.6rem;
+        color: rgba(106,143,59,0.35);
+        flex-shrink: 0;
+    }
+    .ads-ticker-cta {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 0.7rem;
+    }
+
+    @media (min-width: 768px) {
+        .ads-ticker-bar {
+            min-height: 80px;
+        }
+        .ads-ticker-logo {
+            width: 42px;
+            height: 42px;
+        }
+        .ads-ticker-item {
+            gap: 0.6rem;
+            padding: 0.45rem 1.25rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        .ads-ticker-text-wrapper {
+            max-width: 360px;
+        }
+        .ads-ticker-title {
+            font-size: 0.95rem;
+            line-height: 1.1;
+        }
+        .ads-ticker-desc {
+            font-size: 0.78rem;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+        .ads-ticker-icon {
+            font-size: 1.5rem;
+        }
+        .ads-ticker-sep {
+            font-size: 1rem;
+        }
+        .ads-ticker-cta {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+            font-size: 0.875rem;
+        }
+    }
+
     .ads-ticker-wrapper {
         width: 100%;
         overflow: hidden;
@@ -64,11 +221,6 @@
         gap: 0.4rem;
         flex-shrink: 0;
         text-decoration: none;
-    }
-    .ads-ticker-sep {
-        color: rgba(106,143,59,0.35);
-        font-size: 0.6rem;
-        flex-shrink: 0;
     }
     @keyframes ads-scroll-ltr {
         0%   { transform: translateX(0); }

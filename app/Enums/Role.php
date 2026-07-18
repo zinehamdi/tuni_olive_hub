@@ -15,4 +15,10 @@ enum Role: string
     case Consumer = 'consumer';
     case Exporter = 'exporter';
     case Admin = 'admin';
+    case Transiteur = 'transiteur';
+    case Comptable = 'comptable';
+    case ServiceBureau = 'service_bureau';
+    case AgriEquipment = 'agri_equipment';
+    case AgriMaterials = 'agri_materials';
+    case AgriStudyOffice = 'agri_study_office';
 }

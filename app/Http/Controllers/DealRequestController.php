@@ -21,7 +21,20 @@ class DealRequestController extends Controller
         $data['deal_id'] = $deal->id;
         $data['status'] = 'new';
 
-        DealRequest::create($data);
+        $dealRequest = DealRequest::create($data);
+
+        // Send notifications
+        if ($deal->user) {
+            $deal->user->notify(new \App\Notifications\NewDealRequest($dealRequest));
+        }
+
+        // Also notify all admins
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            if (!$deal->user || $admin->id !== $deal->user->id) {
+                $admin->notify(new \App\Notifications\NewDealRequest($dealRequest));
+            }
+        }
 
         return back()->with('status', __('Your request has been sent successfully. We will contact you soon.'));
     }

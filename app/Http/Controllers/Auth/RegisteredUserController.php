@@ -54,7 +54,17 @@ class RegisteredUserController extends Controller
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [
+                'required', 'string', 'email', 'max:255', 'unique:users',
+                function ($attribute, $value, $fail) {
+                    if (app()->environment('production')) {
+                        $domain = substr(strrchr($value, "@"), 1);
+                        if ($domain && !checkdnsrr($domain, 'MX') && !checkdnsrr($domain, 'A')) {
+                            $fail(__('الرجاء إدخال بريد إلكتروني حقيقي وصالح.'));
+                        }
+                    }
+                }
+            ],
             'phone' => $phoneRule,
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             // Allow up to 20MB for initial upload, the ImageOptimizationService will shrink and convert it to WebP

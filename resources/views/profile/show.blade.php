@@ -37,7 +37,7 @@
             <div class="bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl shadow-xl p-6">
                 <h1 class="text-2xl font-bold text-center mb-6 text-[#C8A356]">الملف الشخصي</h1>
                 <div class="flex flex-col items-center mb-6">
-                    @if($user->profile_picture)
+                    @if($user->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_picture))
                         <img src="{{ Storage::url($user->profile_picture) }}" alt="Profile" class="w-32 h-32 rounded-full object-cover translate-y-4 border-4 border-[#C8A356] mb-2">
                     @else
                         <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-4xl text-gray-400 mb-2">

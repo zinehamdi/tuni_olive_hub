@@ -57,7 +57,23 @@
                                 @elseif($user->role === 'packer' && $user->packer_name)
                                     📦 {{ $user->packer_name }}
                                 @else
-                                    {{ $user->role === 'farmer' ? __('Olive grower') : ($user->role === 'mill' ? __('Oil mill') : ($user->role === 'carrier' ? __('Transporter') : ($user->role === 'packer' ? __('Packaging') : __('Member')))) }}
+                                    @php
+                                        $roleNames = [
+                                            'farmer' => ['ar' => 'مزارع زيتون', 'en' => 'Olive grower'],
+                                            'carrier' => ['ar' => 'ناقل بري وبحري', 'en' => 'Transporter'],
+                                            'mill' => ['ar' => 'معصرة زيتون', 'en' => 'Oil mill'],
+                                            'packer' => ['ar' => 'وحدة تعبئة وتغليف', 'en' => 'Packaging Facility'],
+                                            'transiteur' => ['ar' => 'مخلص جمركي', 'en' => 'Customs Broker'],
+                                            'comptable' => ['ar' => 'محاسب', 'en' => 'Accountant'],
+                                            'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'en' => 'Service Bureau'],
+                                            'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'en' => 'Agri-Equipment'],
+                                            'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'en' => 'Agri-Materials'],
+                                            'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'en' => 'Agri-Study Office'],
+                                        ];
+                                        $locale = app()->getLocale();
+                                        $roleName = $roleNames[$user->role][$locale === 'ar' ? 'ar' : 'en'] ?? ($locale === 'ar' ? 'عضو' : 'Member');
+                                    @endphp
+                                    {{ $roleName }}
                                 @endif
                             </div>
                         </div>
@@ -162,6 +178,98 @@
 
                 <!-- MIDDLE COLUMN: PRODUCTS (LISTINGS) -->
                 <main class="flex-1 min-w-0 w-full order-2 xl:order-2">
+                    @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                        <div class="px-5 py-4 border-b border-gray-100 bg-[#6A8F3B]/5">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <span class="text-xl">💼</span>
+                                {{ app()->getLocale() === 'ar' ? 'الخدمات والعروض المتوفرة' : 'Services & Solutions Offered' }}
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6 space-y-6">
+                            @php
+                                $desc = $user->meta_data['service_description'] ?? '';
+                                $priceType = $user->meta_data['price_type'] ?? 'quote';
+                                $price = $user->meta_data['service_price'] ?? null;
+                                $providerType = $user->meta_data['provider_type'] ?? '';
+                                
+                                $providerTypeLabels = [
+                                    'freelancer' => ['ar' => 'مستقل / Freelancer', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                                    'bureau' => ['ar' => 'مكتب / Bureau', 'color' => 'bg-sky-50 text-sky-700 border-sky-200'],
+                                    'societe' => ['ar' => 'شركة / Société', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
+                                ];
+                                $typeData = $providerTypeLabels[$providerType] ?? null;
+                            @endphp
+
+                            <div class="flex flex-wrap items-center gap-3">
+                                @if($typeData)
+                                    <span class="px-3 py-1 rounded-lg border text-xs font-bold {{ $typeData['color'] }}">
+                                        {{ $typeData['ar'] }}
+                                    </span>
+                                @endif
+                                <span class="px-3 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold">
+                                    💰 {{ $priceType === 'fixed' && !empty($price) ? number_format($price, 0) . ' TND' : (app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : 'Price Upon Request') }}
+                                </span>
+                            </div>
+
+                            @if($desc)
+                            <div class="prose max-w-none text-gray-700 text-sm leading-relaxed whitespace-pre-line bg-gray-50 rounded-2xl p-5 border border-gray-100 font-medium">
+                                {{ $desc }}
+                            </div>
+                            @endif
+
+                            @php
+                                $servicesList = $user->meta_data['services'] ?? [];
+                            @endphp
+
+                            @if(!empty($servicesList))
+                            <div class="mt-6 pt-6 border-t border-gray-100">
+                                <h3 class="text-sm font-bold text-gray-900 mb-4">{{ app()->getLocale() === 'ar' ? 'الخدمات المتوفرة والأسعار' : 'Services Offered & Prices' }}</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @foreach($servicesList as $srv)
+                                    <div class="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md hover:border-indigo-100 transition duration-300 text-right">
+                                        <div class="space-y-2">
+                                            @if(!empty($srv['image']))
+                                            <div class="w-full h-36 rounded-xl overflow-hidden mb-3 relative bg-gray-50 border border-gray-100">
+                                                <img src="{{ asset($srv['image']) }}" class="w-full h-full object-cover">
+                                            </div>
+                                            @endif
+                                            <h4 class="font-bold text-gray-900 text-sm">{{ $srv['title'] }}</h4>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">
+                                                    @if(($srv['price_type'] ?? 'fixed') === 'fixed')
+                                                        {{ number_format($srv['price'] ?? 0, 0) }} TND
+                                                    @else
+                                                        {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            @if(!empty($srv['description']))
+                                            <p class="text-xs text-gray-600 leading-relaxed">{{ $srv['description'] }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+
+                            <div class="pt-4 border-t border-gray-100 flex flex-wrap gap-4">
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $user->phone) }}" target="_blank" class="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center gap-2 transition">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
+                                    {{ app()->getLocale() === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' }}
+                                </a>
+                                @if($user->email)
+                                <a href="mailto:{{ $user->email }}" class="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm flex items-center gap-2 transition">
+                                    ✉️ {{ $user->email }}
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
                         <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                             <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -355,12 +463,12 @@
                 toggleLike() {
                     this.loading = true;
                     fetch(`/user/${this.userId}/toggle-like`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                    .then(res => res.json()).then(data => { if (data.success) { this.liked = data.liked; this.likeCount = data.likes_count; } else { alert(data.message || '{{ __('An error occurred') }}'); } }).catch(err => alert('{{ __('An error occurred') }}')).finally(() => this.loading = false);
+                    .then(res => res.json()).then(data => { if (data.success) { this.liked = data.liked; this.likeCount = data.likes_count; } else { showToast(data.message || '{{ __('An error occurred') }}', 'error'); } }).catch(err => showToast('{{ __('An error occurred') }}', 'error')).finally(() => this.loading = false);
                 },
                 toggleFollow() {
                     this.loading = true;
                     fetch(`/user/${this.userId}/toggle-follow`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                    .then(res => res.json()).then(data => { if (data.success) { this.followed = data.followed; this.followerCount = data.followers_count; } else { alert(data.message || '{{ __('An error occurred') }}'); } }).catch(err => alert('{{ __('An error occurred') }}')).finally(() => this.loading = false);
+                    .then(res => res.json()).then(data => { if (data.success) { this.followed = data.followed; this.followerCount = data.followers_count; } else { showToast(data.message || '{{ __('An error occurred') }}', 'error'); } }).catch(err => showToast('{{ __('An error occurred') }}', 'error')).finally(() => this.loading = false);
                 }
             };
         }

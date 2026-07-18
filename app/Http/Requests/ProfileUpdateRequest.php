@@ -19,6 +19,10 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
+            'provider_type' => ['nullable', 'in:freelancer,bureau,societe'],
+            'service_description' => ['nullable', 'string', 'max:1000'],
+            'price_type' => ['nullable', 'in:fixed,quote'],
+            'service_price' => ['nullable', 'numeric', 'min:0'],
             'email' => [
                 'required',
                 'string',
@@ -30,6 +34,7 @@ class ProfileUpdateRequest extends FormRequest
             'profile_picture' => ['nullable', 'image'], // Accept any image format/size
             'cover_photos.*' => ['nullable', 'image'], // Accept any image format/size
             'remove_cover_photos' => ['nullable', 'string'],
+            'services' => ['nullable', 'string'],
             'show_contact_info' => ['sometimes', 'boolean'],
             'show_address' => ['sometimes', 'boolean'],
             

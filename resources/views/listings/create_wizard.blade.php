@@ -60,21 +60,21 @@
     validateStep() {
         if (this.currentStep === 1) {
             if (!this.productType) {
-                alert('الرجاء اختيار نوع المنتج');
+                showToast('الرجاء اختيار نوع المنتج', 'error');
                 return false;
             }
             if (!this.productId) {
-                alert('الرجاء اختيار المنتج');
+                showToast('الرجاء اختيار المنتج', 'error');
                 return false;
             }
         }
         if (this.currentStep === 3) {
             if (!this.quantity || this.quantity <= 0) {
-                alert('الرجاء إدخال الكمية المتاحة');
+                showToast('الرجاء إدخال الكمية المتاحة', 'error');
                 return false;
             }
             if (!this.price || this.price <= 0) {
-                alert('الرجاء إدخال السعر');
+                showToast('الرجاء إدخال السعر', 'error');
                 return false;
             }
         }

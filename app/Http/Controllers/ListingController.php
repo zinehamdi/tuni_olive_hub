@@ -133,6 +133,15 @@ class ListingController extends Controller
                 $validated['delivery_options'] = json_decode($validated['delivery_options'], true);
             }
 
+            // Update user phone number if provided
+            if ($request->filled('contact_phone')) {
+                $user = Auth::user();
+                if ($user->phone !== $request->input('contact_phone')) {
+                    $user->phone = $request->input('contact_phone');
+                    $user->save();
+                }
+            }
+
             // Create or update the seller's address if location data provided
             if ($request->has('latitude') && $request->has('longitude')) {
                 $user = Auth::user();

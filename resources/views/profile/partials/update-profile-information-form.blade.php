@@ -506,6 +506,159 @@
             </div>
         @endif
 
+        @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            <!-- Service Provider Settings -->
+            <div class="bg-gradient-to-br from-indigo-50 to-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-indigo-100 hover:border-indigo-300 transition-all duration-300">
+                <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{{ app()->getLocale() === 'ar' ? 'إعدادات مزود الخدمة' : __('Service Provider Settings') }}</h3>
+                        <p class="text-sm sm:text-base text-gray-600 mt-1">{{ app()->getLocale() === 'ar' ? 'إدارة معلومات الخدمة B2B والتسعير والوصف لبيانات دليل الخدمات.' : __('Manage your B2B service info, pricing, and description for the Service Hub directory.') }}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                     <!-- Provider Type Dropdown -->
+                    <div>
+                        <x-input-label for="provider_type" :value="app()->getLocale() === 'ar' ? 'نوع الكيان / الهيكل' : __('Structure Type / Entity Type')" class="font-bold text-gray-700 text-sm mb-2" />
+                        <select id="provider_type" name="provider_type" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-sm appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%234a5568%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                            <option value="freelancer" {{ old('provider_type', $user->meta_data['provider_type'] ?? '') === 'freelancer' ? 'selected' : '' }}>👤 مستقل (Freelancer)</option>
+                            <option value="bureau" {{ old('provider_type', $user->meta_data['provider_type'] ?? '') === 'bureau' ? 'selected' : '' }}>🏢 مكتب (Bureau / Cabinet)</option>
+                            <option value="societe" {{ old('provider_type', $user->meta_data['provider_type'] ?? '') === 'societe' ? 'selected' : '' }}>🏢 شركة (Société)</option>
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('provider_type')" />
+                    </div>
+
+                    <!-- Pricing Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="{ priceType: '{{ old('price_type', $user->meta_data['price_type'] ?? 'quote') }}' }">
+                        <div>
+                            <x-input-label for="price_type" :value="app()->getLocale() === 'ar' ? 'نموذج التسعير' : __('Pricing Model')" class="font-bold text-gray-700 text-sm mb-2" />
+                            <select id="price_type" name="price_type" x-model="priceType" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-sm appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%234a5568%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                                <option value="quote">💬 اتصل للحصول على تسعيرة / السعر حسب الطلب</option>
+                                <option value="fixed">💰 سعر محدد (يبدأ من...)</option>
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('price_type')" />
+                        </div>
+
+                        <div x-show="priceType === 'fixed'" x-transition>
+                            <x-input-label for="service_price" :value="app()->getLocale() === 'ar' ? 'السعر التقريبي (د.ت)' : __('Approximate Price (TND)')" class="font-bold text-gray-700 text-sm mb-2" />
+                            <input type="number" id="service_price" name="service_price" min="0" value="{{ old('service_price', $user->meta_data['service_price'] ?? '') }}" placeholder="150" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-sm">
+                            <x-input-error class="mt-2" :messages="$errors->get('service_price')" />
+                        </div>
+                    </div>
+
+                    <!-- Service Description -->
+                    <div>
+                        <x-input-label for="service_description" :value="app()->getLocale() === 'ar' ? 'نبذة عن خدماتك وقدراتك' : __('About your service, equipment, and capabilities')" class="font-bold text-gray-700 text-sm mb-2" />
+                        <textarea id="service_description" name="service_description" rows="4" placeholder="{{ app()->getLocale() === 'ar' ? 'صف بالتفصيل ما تقدمه من خدمات...' : __('Describe your service details...') }}" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-sm">{{ old('service_description', $user->meta_data['service_description'] ?? '') }}</textarea>
+                        <x-input-error class="mt-2" :messages="$errors->get('service_description')" />
+                    </div>
+
+                    <!-- Interactive Services List Manager -->
+                    <div class="mt-8 pt-8 border-t border-indigo-100" x-data="{
+                        services: @js($user->meta_data['services'] ?? []),
+                        newTitle: '',
+                        newPrice: '',
+                        newPriceType: 'fixed',
+                        newDesc: '',
+                        addService() {
+                            if (!this.newTitle.trim()) {
+                                showToast('{{ app()->getLocale() === "ar" ? "يرجى إدخال اسم الخدمة!" : "Please enter a service name!" }}', 'error');
+                                return;
+                            }
+                            this.services.push({
+                                title: this.newTitle.trim(),
+                                price: this.newPrice ? parseFloat(this.newPrice) : null,
+                                price_type: this.newPriceType,
+                                description: this.newDesc.trim()
+                            });
+                            this.newTitle = '';
+                            this.newPrice = '';
+                            this.newPriceType = 'fixed';
+                            this.newDesc = '';
+                        },
+                        removeService(index) {
+                            if (confirm('{{ app()->getLocale() === "ar" ? "هل أنت متأكد من حذف هذه الخدمة؟" : "Are you sure you want to delete this service?" }}')) {
+                                this.services.splice(index, 1);
+                            }
+                        }
+                    }">
+                        <input type="hidden" name="services" :value="JSON.stringify(services)">
+
+                        <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-2">🛠️ {{ app()->getLocale() === 'ar' ? 'بطاقات الخدمات التفصيلية' : 'Detailed Service Cards' }}</h4>
+                        <p class="text-xs sm:text-sm text-gray-500 mb-4">{{ app()->getLocale() === 'ar' ? 'أضف خدمات محددة مثل (عقد تصدير 150 د.ت، فحص جودة 50 د.ت) لتظهر كبطاقات مستقلة للزبائن.' : 'Add specific services (e.g., Export Contract 150 TND, Quality Inspection 50 TND) to display them as individual cards.' }}</p>
+
+                        <!-- Services Cards List -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <template x-for="(srv, index) in services" :key="index">
+                                <div class="bg-white border-2 border-indigo-50 hover:border-indigo-200 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between group">
+                                    <button type="button" @click="removeService(index)" class="absolute top-2 left-2 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full w-8 h-8 flex items-center justify-center transition">
+                                        🗑️
+                                    </button>
+                                    <div class="space-y-2 text-right">
+                                        <template x-if="srv.image">
+                                            <div class="w-full h-24 rounded-xl overflow-hidden relative border border-gray-100 bg-gray-50 mb-2">
+                                                <img :src="'/' + srv.image" class="w-full h-full object-cover">
+                                            </div>
+                                        </template>
+                                        <h5 class="font-bold text-gray-800 text-sm" x-text="srv.title"></h5>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg">
+                                                <span x-show="srv.price_type === 'fixed'"><span x-text="srv.price"></span> TND</span>
+                                                <span x-show="srv.price_type === 'quote'">{{ app()->getLocale() === 'ar' ? 'طلب تسعيرة' : 'Get Quote' }}</span>
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 line-clamp-2" x-text="srv.description"></p>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="services.length === 0">
+                                <div class="col-span-full border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center text-gray-400 text-xs">
+                                    {{ app()->getLocale() === 'ar' ? 'لا توجد خدمات تفصيلية مضافة بعد. يمكنك إضافتها أدناه.' : 'No detailed services added yet. You can add them below.' }}
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Form to Add New Service Card -->
+                        <div class="bg-white border-2 border-dashed border-indigo-100 rounded-2xl p-4 sm:p-5 space-y-4">
+                            <h5 class="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'إضافة بطاقة خدمة جديدة' : 'Add New Service Card' }}</h5>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة' : 'Service Title' }} <span class="text-red-500">*</span></label>
+                                    <input type="text" x-model="newTitle" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير' : 'e.g. Export Contract' }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                    <select x-model="newPriceType" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%234a5568%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1rem_1rem] bg-no-repeat rtl:bg-[left_0.75rem_center] ltr:bg-[right_0.75rem_center] rtl:pl-8 ltr:pr-8">
+                                        <option value="fixed">{{ app()->getLocale() === 'ar' ? '💰 سعر محدد' : 'Fixed Price' }}</option>
+                                        <option value="quote">{{ app()->getLocale() === 'ar' ? '💬 سعر عند الطلب' : 'Quote Needed' }}</option>
+                                    </select>
+                                </div>
+                                <div x-show="newPriceType === 'fixed'">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'السعر (د.ت)' : 'Price (TND)' }}</label>
+                                    <input type="number" x-model="newPrice" placeholder="150" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'وصف تفصيلي للخدمة' : 'Service Description' }}</label>
+                                <textarea x-model="newDesc" rows="2" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب وصفاً موجزاً لما تتضمنه الخدمة...' : 'Briefly describe what this service includes...' }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                            </div>
+                            
+                            <button type="button" @click="addService()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition">
+                                ➕ {{ app()->getLocale() === 'ar' ? 'إضافة الخدمة إلى القائمة' : 'Add Service to List' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Save Button Section -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pt-4 sm:pt-6 border-t-2 border-gray-100">
             <button type="submit" class="w-full sm:w-auto group relative px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl sm:rounded-2xl hover:shadow-2xl hover:shadow-[#6A8F3B]/30 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 overflow-hidden">

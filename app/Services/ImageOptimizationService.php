@@ -178,4 +178,27 @@ class ImageOptimizationService
 
         return 'articles/' . $filename;
     }
+
+    /**
+     * Optimize and save service card photo
+     * Converts to WebP, resizes to max 800px width, quality 85%
+     */
+    public function optimizeServicePhoto(UploadedFile $file): string
+    {
+        $filename = Str::uuid() . '.webp';
+        $directory = storage_path('app/public/service-cards');
+        $path = $directory . '/' . $filename;
+        
+        // Ensure directory exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Read, resize, and optimize image
+        $image = Image::read($file);
+        $image->scale(width: 800);
+        $image->toWebp(85)->save($path);
+
+        return 'service-cards/' . $filename;
+    }
 }

@@ -23,6 +23,9 @@ Alpine.store('toast', {
         setTimeout(() => { this.show = false; }, 4000);
     }
 });
+window.showToast = (message, type = 'success') => {
+    Alpine.store('toast').showToast(message, type);
+};
 
 // Global Chat Store for state sharing between modals
 Alpine.store('chat', {

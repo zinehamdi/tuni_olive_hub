@@ -89,7 +89,17 @@ class ApiAuthController extends ApiController
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [
+                'required', 'string', 'email', 'max:255', 'unique:users',
+                function ($attribute, $value, $fail) {
+                    if (app()->environment('production')) {
+                        $domain = substr(strrchr($value, "@"), 1);
+                        if ($domain && !checkdnsrr($domain, 'MX') && !checkdnsrr($domain, 'A')) {
+                            $fail(__('الرجاء إدخال بريد إلكتروني حقيقي وصالح.'));
+                        }
+                    }
+                }
+            ],
             'phone' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'profile_picture' => ['nullable', 'image', 'max:20480'],

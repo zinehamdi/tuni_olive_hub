@@ -279,7 +279,7 @@
                 @foreach($deals as $deal)
                 <div class="min-w-[320px] md:min-w-[420px] snap-center">
                     <!-- Main Card (Shrunk) -->
-                    <div class="h-full bg-white rounded-[1.5rem] border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 p-5 flex flex-col hover:-translate-y-1 relative overflow-hidden">
+                    <div class="h-full bg-gradient-to-br from-[#1b381c] to-[#0d1f0e] rounded-[1.5rem] border border-[#6A8F3B]/30 hover:border-[#6A8F3B]/60 shadow-md hover:shadow-xl transition-all duration-300 p-5 flex flex-col hover:-translate-y-1 relative overflow-hidden">
                         
                         <!-- Color Stripe -->
                         <div class="absolute top-0 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} bottom-0 w-1.5 
@@ -287,26 +287,26 @@
 
                         <!-- Header -->
                         <div class="flex items-center justify-between mb-3">
-                            <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest 
-                                {{ $deal->type === 'demand' ? 'text-amber-700 bg-amber-50' : ($deal->type === 'service' ? 'text-blue-700 bg-blue-50' : 'text-emerald-700 bg-emerald-50') }}">
+                            <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border 
+                                {{ $deal->type === 'demand' ? 'text-amber-300 bg-amber-400/10 border-amber-400/20' : ($deal->type === 'service' ? 'text-blue-300 bg-blue-400/10 border-blue-400/20' : 'text-emerald-300 bg-emerald-400/10 border-emerald-400/20') }}">
                                 {{ __($deal->type) }}
                             </span>
-                            <span class="text-[10px] font-bold text-gray-400">{{ $deal->created_at->diffForHumans() }}</span>
+                            <span class="text-[10px] font-bold text-white/40">{{ $deal->created_at->diffForHumans() }}</span>
                         </div>
 
                         <!-- Title (Smaller) -->
-                        <h3 class="text-base font-bold text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] leading-snug">
+                        <h3 class="text-base font-bold text-white mb-2 line-clamp-2 min-h-[2.5rem] leading-snug group-hover:text-[#a8d060] transition-colors">
                             {{ $deal->title[app()->getLocale()] ?? $deal->title['ar'] ?? 'N/A' }}
                         </h3>
 
                         <!-- Description (Smaller) -->
-                        <p class="text-gray-500 text-xs leading-relaxed mb-4 flex-1 line-clamp-2">
+                        <p class="text-white/70 text-xs leading-relaxed mb-4 flex-1 line-clamp-2 font-medium">
                             {{ $deal->description[app()->getLocale()] ?? $deal->description['ar'] ?? '' }}
                         </p>
 
                         <!-- Action Button (Smaller) -->
                         <button @click="openDealRequest({{ $deal->id }}, '{{ addslashes($deal->title[app()->getLocale()] ?? $deal->title['ar']) }}', '{{ $deal->type }}')" 
-                                class="w-full py-2.5 bg-gray-900 text-white rounded-xl font-bold text-[11px] hover:bg-[#6A8F3B] transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                                class="w-full py-2.5 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4a6425] text-white rounded-xl font-bold text-[11px] transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-md shadow-[#6A8F3B]/10 hover:shadow-[#6A8F3B]/20">
                             <span>{{ __('Interested? Send Request') }}</span>
                         </button>
                     </div>

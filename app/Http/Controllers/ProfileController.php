@@ -190,6 +190,31 @@ class ProfileController extends Controller
         $user->show_contact_info = $data['show_contact_info'];
         $user->show_address = $data['show_address'];
 
+        if (in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
+            $services = [];
+            if ($request->filled('services')) {
+                $decoded = json_decode($request->input('services'), true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $item) {
+                        $services[] = [
+                            'title' => strip_tags((string)($item['title'] ?? '')),
+                            'price' => isset($item['price']) && is_numeric($item['price']) ? (float)$item['price'] : null,
+                            'price_type' => in_array($item['price_type'] ?? 'fixed', ['fixed', 'quote']) ? $item['price_type'] : 'fixed',
+                            'description' => strip_tags((string)($item['description'] ?? '')),
+                            'image' => $item['image'] ?? null,
+                        ];
+                    }
+                }
+            }
+            $user->meta_data = array_merge($user->meta_data ?? [], [
+                'provider_type' => $request->input('provider_type'),
+                'service_description' => $request->input('service_description'),
+                'price_type' => $request->input('price_type'),
+                'service_price' => $request->input('service_price'),
+                'services' => $services,
+            ]);
+        }
+
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
@@ -312,6 +337,99 @@ class ProfileController extends Controller
                 'message' => __('Failed to upload photo. Please try again.')
             ], 500);
         }
+    }
+    /**
+     * POST /profile/service-card
+     */
+    public function addServiceCard(Request $request)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'price_type' => ['required', 'string', 'in:fixed,quote'],
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'max:5120'], // Max 5MB
+        ]);
+
+        $user = $request->user();
+        
+        if (!in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
+            return back()->with('error', __('Only service providers can add services.'));
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            try {
+                $imagePath = 'storage/' . $this->imageService->optimizeServicePhoto($request->file('image'));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Service card image upload failed: ' . $e->getMessage());
+            }
+        }
+
+        $meta = $user->meta_data ?? [];
+        $services = $meta['services'] ?? [];
+
+        $services[] = [
+            'title' => strip_tags((string)$request->input('title')),
+            'price' => $request->input('price_type') === 'fixed' && $request->filled('price') ? (float)$request->input('price') : null,
+            'price_type' => $request->input('price_type'),
+            'description' => strip_tags((string)$request->input('description', '')),
+            'image' => $imagePath,
+        ];
+
+        $meta['services'] = $services;
+        $user->meta_data = $meta;
+        $user->save();
+
+        return back()->with('success', __('Service card added successfully!'));
+    }
+
+    /**
+     * POST /profile/service-card/update
+     */
+    public function updateServiceCard(Request $request)
+    {
+        $request->validate([
+            'index' => ['required', 'integer', 'min:0'],
+            'title' => ['required', 'string', 'max:255'],
+            'price_type' => ['required', 'string', 'in:fixed,quote'],
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        $user = $request->user();
+        $index = (int)$request->input('index');
+
+        $meta = $user->meta_data ?? [];
+        $services = $meta['services'] ?? [];
+
+        if (!isset($services[$index])) {
+            return back()->with('error', __('Service not found.'));
+        }
+
+        $imagePath = $services[$index]['image'] ?? null;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            try {
+                $imagePath = 'storage/' . $this->imageService->optimizeServicePhoto($request->file('image'));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Service card image upload failed: ' . $e->getMessage());
+            }
+        }
+
+        $services[$index] = [
+            'title' => strip_tags((string)$request->input('title')),
+            'price' => $request->input('price_type') === 'fixed' && $request->filled('price') ? (float)$request->input('price') : null,
+            'price_type' => $request->input('price_type'),
+            'description' => strip_tags((string)$request->input('description', '')),
+            'image' => $imagePath,
+        ];
+
+        $meta['services'] = $services;
+        $user->meta_data = $meta;
+        $user->save();
+
+        return back()->with('success', __('Service card updated successfully!'));
     }
 
     /**

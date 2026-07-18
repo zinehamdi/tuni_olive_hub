@@ -203,6 +203,23 @@
                      this.unreadNotificationsCount = 0;
                      this.notifications.forEach(n => n.read_at = n.read_at || new Date().toISOString());
                  } catch(e) {}
+             },
+             async markOneAsRead(notificationId) {
+                 const notification = this.notifications.find(n => n.id === notificationId);
+                 if (notification && !notification.read_at) {
+                     notification.read_at = new Date().toISOString();
+                     this.unreadNotificationsCount = Math.max(0, this.unreadNotificationsCount - 1);
+                     try {
+                         await fetch(`/notifications/${notificationId}/read`, {
+                             method: 'POST',
+                             headers: {
+                                 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                 'Accept': 'application/json',
+                                 'X-Requested-With': 'XMLHttpRequest'
+                             }
+                         });
+                     } catch(e) {}
+                 }
              }
          }" 
          x-init="@auth 
@@ -219,6 +236,10 @@
                              created_at: new Date().toISOString()
                          });
                          this.unreadNotificationsCount++;
+                         
+                         // Trigger modern visual toast alert!
+                         const msg = notification.body || notification.message || '{{ __('New notification') }}';
+                         showToast(msg, 'success');
                      });
              }
          @endauth" 
@@ -341,7 +362,7 @@
                         <!-- Notification Bell -->
                         @auth
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open; if(open) markNotificationsAsRead()" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition relative">
+                            <button @click="open = !open" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition relative">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
@@ -355,15 +376,19 @@
                                  class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden">
                                 <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
                                     <h3 class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</h3>
-                                    <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{{ __('Recent') }}</span>
+                                    <button @click="markNotificationsAsRead()" class="text-[10px] text-[#6A8F3B] hover:text-[#5a7a2f] hover:underline font-bold transition">
+                                        {{ __('Mark all as read') }}
+                                    </button>
                                 </div>
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-for="n in notifications" :key="n.id">
                                         <a :href="(n.data.type === 'transport_deal' && n.data.load_id) ? '/mobile/trip?id=' + n.data.load_id : (n.data.url || (n.data.type === 'message' ? '/messages' : '/dashboard'))" 
-                                           class="block px-4 py-3 hover:bg-gray-50 transition border-b border-gray-50 last:border-0 relative group">
+                                           @click="markOneAsRead(n.id)"
+                                           :class="!n.read_at ? 'bg-green-100 hover:bg-green-200/60 font-bold {{ app()->getLocale() === "ar" ? "border-r-4 border-r-[#6A8F3B]" : "border-l-4 border-l-[#6A8F3B]" }}' : 'bg-white hover:bg-gray-50 {{ app()->getLocale() === "ar" ? "border-r-4 border-r-transparent" : "border-l-4 border-l-transparent" }}'"
+                                           class="block px-4 py-3 transition border-b border-gray-50 last:border-0 relative group">
                                             <div class="flex gap-3">
-                                                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                                                    <span x-text="n.data.type === 'message' ? '💬' : '🔔'"></span>
+                                                <div :class="n.data.type === 'message' ? 'bg-blue-50' : (n.data.type === 'deal_request' ? 'bg-amber-50' : 'bg-emerald-50')" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                                                    <span x-text="n.data.type === 'message' ? '💬' : (n.data.type === 'deal_request' ? '🤝' : '🔔')"></span>
                                                 </div>
                                                 <div class="min-w-0">
                                                     <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="
@@ -387,7 +412,7 @@
                                                     <p class="text-[10px] text-gray-400 mt-1" x-text="new Date(n.created_at).toLocaleString()"></p>
                                                 </div>
                                             </div>
-                                            <div x-show="!n.read_at" class="absolute top-1/2 -translate-y-1/2 {{ app()->getLocale()==='ar' ? 'left-2' : 'right-2' }} w-2 h-2 bg-blue-500 rounded-full"></div>
+                                             <div x-show="!n.read_at" class="absolute top-1/2 -translate-y-1/2 {{ app()->getLocale()==='ar' ? 'left-3' : 'right-3' }} w-2.5 h-2.5 bg-[#6A8F3B] rounded-full shadow-sm shadow-[#6A8F3B]/30"></div>
                                         </a>
                                     </template>
                                     <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-400 italic text-sm">
@@ -697,5 +722,47 @@
     </script>
     @include("components.cookie-consent")
     @include("components.lead-capture")
+
+    {{-- Global Toast Component --}}
+    <div x-data="{ 
+            init() {
+                @if(session('success'))
+                    setTimeout(() => { window.showToast('{{ addslashes(session('success')) }}', 'success'); }, 200);
+                @endif
+                @if(session('error'))
+                    setTimeout(() => { window.showToast('{{ addslashes(session('error')) }}', 'error'); }, 200);
+                @endif
+                @if(session('status'))
+                    setTimeout(() => { window.showToast('{{ addslashes(session('status')) }}', 'success'); }, 200);
+                @endif
+            }
+         }"
+         x-show="$store.toast.show" 
+         x-transition:enter="transition ease-out duration-300 transform" 
+         x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-4" 
+         x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0" 
+         x-transition:leave="transition ease-in duration-200" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0" 
+         class="fixed bottom-5 right-5 z-[9999] max-w-md w-full sm:w-auto p-4" 
+         style="display: none;">
+        
+        <div :class="$store.toast.type === 'success' ? 'bg-[#6A8F3B]' : 'bg-rose-600'" 
+             class="flex items-center gap-3 px-5 py-4 rounded-2xl text-white shadow-2xl backdrop-blur-md">
+            
+            <div class="flex-shrink-0">
+                <svg x-show="$store.toast.type === 'success'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg x-show="$store.toast.type === 'error'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            
+            <div class="flex-1">
+                <p class="font-bold text-sm text-right leading-tight" x-text="$store.toast.message"></p>
+            </div>
+            
+            <button @click="$store.toast.show = false" class="p-1 hover:bg-white/10 rounded-lg transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    </div>
 </body>
 </html>

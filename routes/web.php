@@ -66,15 +66,29 @@ Route::middleware('set.locale')->group(function () {
         $deals = \Illuminate\Support\Facades\Cache::remember('home_deals', now()->addMinutes(10), function () {
             return \App\Models\Deal::with('user')->active()->latest()->take(6)->get();
         });
+
+        $serviceProviders = \Illuminate\Support\Facades\Cache::remember('home_service_providers', now()->addMinutes(10), function () {
+            return \App\Models\User::with('addresses')
+                ->whereIn('role', [
+                    'carrier', 'mill', 'packer', 'transiteur', 
+                    'comptable', 'service_bureau', 'agri_equipment', 'agri_materials'
+                ])
+                ->latest()
+                ->take(8)
+                ->get();
+        });
         
-        return view('home_marketplace', compact('featuredListings', 'articles', 'deals'));
+        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders'));
     })->name('home');
     
     // Public & legal pages
     Route::view('/about', 'public.about')->name('about');
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
     Route::view('/pricing', 'public.pricing')->name('pricing');
+    Route::get('/servicehub', [\App\Http\Controllers\ServiceProviderController::class, 'index'])->name('services.index');
     Route::view('/services/pricing', 'public.services_pricing')->name('services.pricing');
+    Route::get('/services/register', [\App\Http\Controllers\Auth\ServiceProviderRegisterController::class, 'create'])->name('services.register')->middleware('guest');
+    Route::post('/services/register', [\App\Http\Controllers\Auth\ServiceProviderRegisterController::class, 'store'])->name('services.register.store')->middleware(['guest', 'throttle:30,1']);
     Route::get('/services/appointment/consultation', function(\Illuminate\Http\Request $request) {
         $name = $request->query('name', '');
         $phone = $request->query('phone', '');
@@ -168,6 +182,8 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
     // Inline profile field updates (AJAX)
     Route::patch('/profile/field', [ProfileController::class, 'updateField'])->name('profile.update.field');
     Route::post('/profile/photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload.photo');
+    Route::post('/profile/service-card', [ProfileController::class, 'addServiceCard'])->name('profile.add.service-card');
+    Route::post('/profile/service-card/update', [ProfileController::class, 'updateServiceCard'])->name('profile.update.service-card');
     
     // Messaging routes
     Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'inbox'])->name('messages.inbox');

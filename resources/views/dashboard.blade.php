@@ -216,7 +216,7 @@
                 <div class="relative group cursor-pointer flex-shrink-0" @click="$refs.sideProfileInput.click()">
                     <div class="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-br from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] shadow-lg">
                         <div class="w-full h-full rounded-xl overflow-hidden bg-white">
-                            @if(Auth::user()->profile_picture)
+                            @if(Auth::user()->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists(Auth::user()->profile_picture))
                                 <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center">
@@ -233,17 +233,26 @@
                         <span id="display-name" class="font-bold text-gray-900 text-sm truncate max-w-[140px]">{{ Auth::user()->name }}</span>
                         <svg class="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                     </button>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold mt-0.5
-                        @if(Auth::user()->role === 'farmer') bg-green-100 text-green-700
-                        @elseif(Auth::user()->role === 'carrier') bg-blue-100 text-blue-700
-                        @elseif(Auth::user()->role === 'mill') bg-amber-100 text-amber-700
-                        @elseif(Auth::user()->role === 'packer') bg-purple-100 text-purple-700
-                        @else bg-gray-100 text-gray-700 @endif">
-                        @if(Auth::user()->role === 'farmer') 🌱 {{ __('Farmer') }}
-                        @elseif(Auth::user()->role === 'carrier') 🚚 {{ __('Carrier') }}
-                        @elseif(Auth::user()->role === 'mill') ⚙️ {{ __('Mill') }}
-                        @elseif(Auth::user()->role === 'packer') 📦 {{ __('Packer') }}
-                        @else 👤 {{ __('User') }} @endif
+                    @php
+                        $roleNames = [
+                            'farmer' => ['ar' => 'مزارع زيتون', 'en' => 'Farmer', 'icon' => '🌿', 'color' => 'bg-green-100 text-green-700'],
+                            'carrier' => ['ar' => 'ناقل بري وبحري', 'en' => 'Carrier', 'icon' => '🚚', 'color' => 'bg-blue-100 text-blue-700'],
+                            'mill' => ['ar' => 'معصرة زيتون', 'en' => 'Mill', 'icon' => '⚙️', 'color' => 'bg-amber-100 text-amber-700'],
+                            'packer' => ['ar' => 'تعبئة وتغليف', 'en' => 'Packer', 'icon' => '📦', 'color' => 'bg-purple-100 text-purple-700'],
+                            'transiteur' => ['ar' => 'مخلص جمركي', 'en' => 'Customs Broker', 'icon' => '🛃', 'color' => 'bg-indigo-100 text-indigo-700'],
+                            'comptable' => ['ar' => 'محاسب', 'en' => 'Accountant', 'icon' => '📊', 'color' => 'bg-rose-100 text-rose-700'],
+                            'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'en' => 'Service Bureau', 'icon' => '📝', 'color' => 'bg-cyan-100 text-cyan-700'],
+                            'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'en' => 'Agri-Equipment', 'icon' => '🚜', 'color' => 'bg-orange-100 text-orange-700'],
+                            'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'en' => 'Agri-Materials', 'icon' => '🌱', 'color' => 'bg-emerald-100 text-emerald-700'],
+                            'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'en' => 'Agri-Study Office', 'icon' => '📐', 'color' => 'bg-teal-100 text-teal-700'],
+                        ];
+                        $userRole = Auth::user()->role;
+                        $roleData = $roleNames[$userRole] ?? ['ar' => 'مستخدم', 'en' => 'User', 'icon' => '👤', 'color' => 'bg-gray-100 text-gray-700'];
+                        $locale = app()->getLocale();
+                        $roleName = $roleData[$locale === 'ar' ? 'ar' : 'en'];
+                    @endphp
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold mt-0.5 {{ $roleData['color'] }}">
+                        {{ $roleData['icon'] }} {{ $roleName }}
                     </span>
                 </div>
             </div>
@@ -314,42 +323,47 @@
         <nav class="p-3 space-y-0.5 flex-1">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                {{ __('Dashboard') }}
+                {{ app()->getLocale() === 'ar' ? 'لوحة التحكم' : __('Dashboard') }}
             </a>
-            @if(Auth::user()->role !== 'carrier')
+            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                {{ app()->getLocale() === 'ar' ? 'تعديل الخدمات' : __('Manage Services') }}
+            </a>
+            @else
             <a href="{{ route('listings.create') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                {{ __('Add Product') }}
+                {{ app()->getLocale() === 'ar' ? 'إضافة منتج' : __('Add Product') }}
             </a>
             @endif
             @if(in_array(Auth::user()->role, ['farmer','mill']))
             <a href="#inventory-section" @click="sidebarOpen=false" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <span>{{ Auth::user()->role === 'mill' ? '🛢️' : '🌿' }}</span>
-                {{ Auth::user()->role === 'mill' ? __('Tanks & Stock') : __('My Batches') }}
+                {{ Auth::user()->role === 'mill' ? (app()->getLocale() === 'ar' ? 'الخزانات والمخزون' : __('Tanks & Stock')) : (app()->getLocale() === 'ar' ? 'محاصيلي' : __('My Batches')) }}
             </a>
             @endif
             @if(Auth::user()->role === 'carrier')
             <a href="#assigned-tasks" @click="sidebarOpen=false" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
-                <span>🚚</span>{{ __('Transport Tasks') }}
+                <span>🚚</span>{{ app()->getLocale() === 'ar' ? 'مهام النقل' : __('Transport Tasks') }}
             </a>
             @endif
             <a href="{{ route('messages.inbox') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                {{ __('Messages') }}
+                {{ app()->getLocale() === 'ar' ? 'الرسائل' : __('Messages') }}
             </a>
             <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                {{ __('Marketplace') }}
+                {{ app()->getLocale() === 'ar' ? 'سوق الزيتون' : __('Marketplace') }}
             </a>
             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                {{ __('Settings') }}
+                {{ app()->getLocale() === 'ar' ? 'الإعدادات' : __('Settings') }}
             </a>
         </nav>
         <div class="p-4 border-t border-gray-100">
             <button @click="openEdit('more')" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl hover:shadow-lg transition text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                {{ __('More Settings') }}
+                {{ app()->getLocale() === 'ar' ? 'إعدادات إضافية' : __('More Settings') }}
             </button>
         </div>
     </aside>
@@ -375,13 +389,15 @@
                     {{ Auth::user()->name }}
                 @endif
             </span>
-            @if(Auth::user()->role !== 'carrier')
+            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            <a href="{{ route('profile.edit') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm">
+                {{ __('الخدمات') }}
+            </a>
+            @else
             <a href="{{ route('listings.create') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 {{ __('عرض') }}
             </a>
-            @else
-            <div class="w-9"></div>
             @endif
         </div>
 
@@ -509,7 +525,7 @@
                         <div class="relative group cursor-pointer flex-shrink-0" @click="$refs.heroProfileInput.click()">
                             <div class="w-20 h-20 rounded-2xl p-0.5 bg-gradient-to-br from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] shadow-2xl">
                                 <div class="w-full h-full rounded-xl overflow-hidden bg-white">
-                                    @if(Auth::user()->profile_picture)
+                                    @if(Auth::user()->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists(Auth::user()->profile_picture))
                                     <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" class="w-full h-full object-cover">
                                     @else
                                     <div class="w-full h-full bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center">
@@ -602,7 +618,197 @@
                 </div>
             </div>
 
-            <!-- Photo Gallery -->
+            <!-- Offered Services & Products / Photo Gallery -->
+            @if(in_array(Auth::user()->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            <!-- B2B Service Cards (In place of Photo Gallery) -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" x-data="{ showAddCardModal: false, showEditCardModal: false, editService: {}, editIndex: -1 }">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-50 bg-gradient-to-r from-indigo-50 to-white">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🛠️</span>
+                        <div>
+                            <h2 class="font-bold text-gray-900 text-sm">
+                                {{ app()->getLocale() === 'ar' ? 'العروض والخدمات المقدمة' : __('Offered Services & Products') }}
+                            </h2>
+                            <p class="text-[11px] text-gray-400">
+                                {{ app()->getLocale() === 'ar' ? 'الخدمات النشطة التي تظهر للزبائن في الدليل' : __('Active services displayed to clients in directory') }}
+                            </p>
+                        </div>
+                    </div>
+                    <button @click="showAddCardModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1 cursor-pointer">
+                        ➕ {{ app()->getLocale() === 'ar' ? 'إضافة عرض / خدمة' : 'Add Card' }}
+                    </button>
+                </div>
+                
+                <div class="p-5">
+                    @php
+                        $servicesList = Auth::user()->meta_data['services'] ?? [];
+                    @endphp
+                    @if(!empty($servicesList))
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        @foreach($servicesList as $index => $srv)
+                        <div class="bg-gradient-to-br from-indigo-50/20 to-white border border-indigo-100/60 rounded-2xl p-5 hover:border-indigo-400 hover:shadow-md transition-all flex flex-col justify-between relative group text-right">
+                            
+                            <div class="mb-4">
+                                @if(!empty($srv['image']))
+                                <div class="w-full h-32 rounded-xl overflow-hidden mb-3 relative bg-gray-50 border border-gray-100">
+                                    <img src="{{ asset($srv['image']) }}" class="w-full h-full object-cover">
+                                </div>
+                                @endif
+
+                                <h3 class="font-bold text-gray-900 text-sm mb-1.5">{{ $srv['title'] }}</h3>
+                                @if(!empty($srv['description']))
+                                <p class="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">{{ $srv['description'] }}</p>
+                                @endif
+                                
+                                <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 px-2 py-0.5 rounded-lg inline-block">
+                                    @if(($srv['price_type'] ?? 'fixed') === 'fixed')
+                                        {{ number_format($srv['price'] ?? 0, 0) }} TND
+                                    @else
+                                        {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Upon Request' }}
+                                    @endif
+                                </span>
+                            </div>
+
+                            <!-- Buttons at the Bottom -->
+                            <div class="flex gap-2 pt-3 border-t border-gray-50">
+                                <!-- Edit Button -->
+                                <button type="button" @click="editService = @js($srv); editIndex = {{ $index }}; showEditCardModal = true"
+                                    class="flex-1 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
+                                    ✏️ {{ app()->getLocale() === 'ar' ? 'تعديل' : 'Edit' }}
+                                </button>
+                                
+                                <!-- Delete Button -->
+                                <form action="{{ route('profile.update') }}" method="POST" class="flex-1">
+                                    @csrf
+                                    @method('PATCH')
+                                    @php
+                                        $newServices = $servicesList;
+                                        unset($newServices[$index]);
+                                        $newServices = array_values($newServices);
+                                    @endphp
+                                    <input type="hidden" name="services" value="{{ json_encode($newServices) }}">
+                                    <button type="submit" onclick="return confirm('{{ app()->getLocale() === 'ar' ? 'هل أنت متأكد من حذف هذه الخدمة؟' : 'Are you sure you want to delete this service?' }}')"
+                                        class="w-full py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
+                                        🗑️ {{ app()->getLocale() === 'ar' ? 'حذف' : 'Delete' }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="bg-amber-50/50 border border-dashed border-amber-200 rounded-2xl p-8 text-center text-xs text-amber-800">
+                        <span class="text-2xl block mb-2">📋</span>
+                        <p class="font-medium mb-2">{{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة بطاقات عروض أو خدمات بعد.' : 'No service or product cards added yet.' }}</p>
+                        <button @click="showAddCardModal = true" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition cursor-pointer">
+                            ➕ {{ app()->getLocale() === 'ar' ? 'أضف عرضك الأول الآن' : 'Add Your First Card' }}
+                        </button>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Modal Inside This Block -->
+                <div x-show="showAddCardModal" x-cloak class="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showAddCardModal = false">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
+                            <button @click="showAddCardModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>➕</span>{{ app()->getLocale() === 'ar' ? 'إضافة خدمة أو منتج جديد' : 'Add New Service/Product' }}</h3>
+                        </div>
+                        <form action="{{ route('profile.add.service-card') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service/Product Name' }} <span class="text-red-500">*</span></label>
+                                <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير زيت زيتون، استشارة محاسبية' : 'e.g. Export Contract' }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                            </div>
+                            <div x-data="{ priceType: 'fixed' }">
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                <select name="price_type" x-model="priceType" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
+                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                </select>
+                                <div x-show="priceType === 'fixed'" class="mt-3" x-transition>
+                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}</label>
+                                    <input type="number" name="price" min="0" placeholder="0" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                </div>
+                            </div>
+                            <!-- Service/Product Image -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                </label>
+                                <input type="file" name="image" accept="image/*"
+                                    class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description' }}</label>
+                                <textarea name="description" rows="3" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل الخدمة أو المنتج وما الذي يتضمنه العرض...' : 'e.g. description' }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
+                            </div>
+                            <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                                <button type="button" @click="showAddCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إضافة العرض' : 'Add Card' }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit Service/Product Modal -->
+                <div x-show="showEditCardModal" x-cloak class="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showEditCardModal = false">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
+                            <button @click="showEditCardModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>✏️</span>{{ app()->getLocale() === 'ar' ? 'تعديل الخدمة أو المنتج' : 'Edit Service/Product' }}</h3>
+                        </div>
+                        <form action="{{ route('profile.update.service-card') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            <input type="hidden" name="index" :value="editIndex">
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service/Product Name' }} <span class="text-red-500">*</span></label>
+                                <input type="text" name="title" required x-model="editService.title" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                <select name="price_type" x-model="editService.price_type" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
+                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                </select>
+                                <div x-show="editService.price_type === 'fixed'" class="mt-3" x-transition>
+                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}</label>
+                                    <input type="number" name="price" min="0" x-model="editService.price" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                </label>
+                                <template x-if="editService.image">
+                                    <div class="mb-2">
+                                        <img :src="'/' + editService.image" class="w-24 h-16 object-cover rounded-lg border border-gray-200">
+                                    </div>
+                                </template>
+                                <input type="file" name="image" accept="image/*"
+                                    class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB ({{ app()->getLocale() === 'ar' ? 'اتركه فارغاً للحفاظ على الصورة القديمة' : 'Leave empty to keep current image' }})</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description' }}</label>
+                                <textarea name="description" rows="3" x-model="editService.description" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
+                            </div>
+                            <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                                <button type="button" @click="showEditCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'حفظ التغييرات' : 'Save Changes' }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @else
+            <!-- Photo Gallery (Only for non-B2B normal users/farmers/mills/packers) -->
             @php $galleryPhotos = array_values(array_filter(Auth::user()->cover_photos ?? [], fn($p) => is_string($p) && !empty($p))); @endphp
             @if(count($galleryPhotos) > 0)
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden" x-data="{
@@ -633,6 +839,7 @@
                     <button x-show="photos.length>1" @click="next()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white z-20"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
                 </div>
             </div>
+            @endif
             @endif
 
             <!-- Inventory (farmer/mill) -->
@@ -699,6 +906,185 @@
             </div>
             @endif
 
+             @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            <!-- My B2B Services Profile Card -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6 border border-gray-100" x-data="{ showAddModal: false }">
+                <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-indigo-600 to-indigo-800">
+                    <h2 class="font-bold text-white flex items-center gap-2">
+                        <span class="text-xl">💼</span>
+                        {{ __('My Services Profile') }}
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <button @click="showAddModal = true" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                            ➕ {{ app()->getLocale() === 'ar' ? 'إضافة خدمة / منتج' : 'Add Service/Product' }}
+                        </button>
+                        <a href="{{ route('profile.edit') }}" class="bg-white text-indigo-700 px-4 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            {{ __('Edit Services') }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Add Service/Product Modal -->
+                <div x-show="showAddModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showAddModal = false">
+                        
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
+                            <button @click="showAddModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                <span>➕</span>
+                                {{ app()->getLocale() === 'ar' ? 'إضافة خدمة أو منتج جديد' : 'Add New Service or Product' }}
+                            </h3>
+                        </div>
+
+                        <form action="{{ route('profile.add.service-card') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            
+                            <!-- Title -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service / Product Name' }} <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير زيت زيتون، استشارة محاسبية' : 'e.g. Olive Oil Export Contract' }}"
+                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                            </div>
+
+                            <!-- Pricing Model -->
+                            <div x-data="{ priceType: 'fixed' }">
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}
+                                </label>
+                                <select name="price_type" x-model="priceType" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
+                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                </select>
+
+                                <!-- Price input -->
+                                <div x-show="priceType === 'fixed'" class="mt-3" x-transition>
+                                    <label class="block text-xs font-bold text-gray-700 mb-2">
+                                        {{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}
+                                    </label>
+                                    <input type="number" name="price" min="0" placeholder="0"
+                                        class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                </div>
+                            </div>
+
+                            <!-- Service/Product Image -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                </label>
+                                <input type="file" name="image" accept="image/*"
+                                    class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB</p>
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">
+                                    {{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description / What is included' }}
+                                </label>
+                                <textarea name="description" rows="3" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل الخدمة أو المنتج وما الذي يتضمنه العرض...' : 'Briefly describe what this service/product includes...' }}"
+                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                                <button type="button" @click="showAddModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">
+                                    {{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}
+                                </button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">
+                                    {{ app()->getLocale() === 'ar' ? 'إضافة العرض' : 'Add Card' }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    @php
+                        $user = Auth::user();
+                        $desc = $user->meta_data['service_description'] ?? '';
+                        $priceType = $user->meta_data['price_type'] ?? 'quote';
+                        $price = $user->meta_data['service_price'] ?? null;
+                        $providerType = $user->meta_data['provider_type'] ?? '';
+                        
+                        $providerTypeLabels = [
+                            'freelancer' => ['ar' => 'مستقل / Freelancer', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                            'bureau' => ['ar' => 'مكتب / Bureau', 'color' => 'bg-sky-50 text-sky-700 border-sky-200'],
+                            'societe' => ['ar' => 'شركة / Société', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
+                        ];
+                        $typeData = $providerTypeLabels[$providerType] ?? null;
+                    @endphp
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between">
+                            <span class="text-xs text-gray-500 font-bold">{{ __('Structure Type:') }}</span>
+                            <span class="text-sm font-bold text-gray-800">
+                                {{ $typeData ? $typeData['ar'] : __('Not Specified') }}
+                            </span>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between">
+                            <span class="text-xs text-gray-500 font-bold">{{ __('Service Pricing:') }}</span>
+                            <span class="text-sm font-bold text-gray-800">
+                                {{ $priceType === 'fixed' && !empty($price) ? number_format($price, 0) . ' TND' : __('Upon Request') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 space-y-2">
+                        <h4 class="text-xs text-gray-500 font-bold uppercase">{{ app()->getLocale() === 'ar' ? 'نبذة عن الخدمات' : __('Service Description') }}</h4>
+                        <p class="text-sm text-gray-700 leading-relaxed font-medium whitespace-pre-line">
+                            {{ $desc ?: (app()->getLocale() === 'ar' ? 'لم تقم بإضافة وصف لخدماتك بعد. اضغط على تعديل لتحديد تفاصيل نشاطك.' : __('No service description added yet. Click edit above to describe your business.')) }}
+                        </p>
+                    </div>
+
+                    <!-- Detailed Service Cards in Dashboard -->
+                    <div class="space-y-3 pt-2">
+                        <h4 class="text-xs text-gray-500 font-bold uppercase">{{ app()->getLocale() === 'ar' ? 'بطاقات الخدمات التفصيلية والأسعار' : __('Detailed Service Cards & Prices') }}</h4>
+                        @php
+                            $servicesList = $user->meta_data['services'] ?? [];
+                        @endphp
+                        @if(!empty($servicesList))
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @foreach($servicesList as $srv)
+                            <div class="bg-indigo-50/30 border border-indigo-100 rounded-2xl p-4 flex flex-col justify-between text-right">
+                                @if(!empty($srv['image']))
+                                <div class="w-full h-24 rounded-lg overflow-hidden mb-2 relative bg-gray-50 border border-gray-100">
+                                    <img src="{{ asset($srv['image']) }}" class="w-full h-full object-cover">
+                                </div>
+                                @endif
+                                <h5 class="font-bold text-gray-900 text-xs">{{ $srv['title'] }}</h5>
+                                <div class="mt-2 flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">
+                                        @if(($srv['price_type'] ?? 'fixed') === 'fixed')
+                                            {{ number_format($srv['price'] ?? 0, 0) }} TND
+                                        @else
+                                            {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="bg-amber-50/50 border border-dashed border-amber-200 rounded-xl p-5 text-center text-xs text-amber-800">
+                            {{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة بطاقات خدمات تفصيلية بعد (مثل: عقد تصدير 150 د.ت). يمكنك إضافتها عبر تعديل الخدمات أعلاه.' : 'No detailed service cards added yet (e.g. Export Contract 150 DT). Add them via the Edit button above.' }}
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 pt-4 border-t border-gray-100">
+                        <a href="{{ route('user.profile', $user->id) }}" class="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm flex items-center gap-2 transition">
+                            👁 {{ app()->getLocale() === 'ar' ? 'معاينة الملف الشخصي العام' : __('View Public Profile') }}
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm flex items-center gap-2 transition">
+                            ➕ {{ app()->getLocale() === 'ar' ? 'أضف خدمة جديدة' : __('Add Service') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @else
             <!-- My Products Grid -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f]">
@@ -738,15 +1124,15 @@
                             </div>
                             <div class="p-4 flex flex-col flex-1">
                                 <h3 class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition text-sm mb-1 truncate">{{ $listing->product?->variety ?? __('Product') }}@if($listing->product?->quality)<span class="text-xs text-gray-400 font-normal"> — {{ $listing->product->quality }}</span>@endif</h3>
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-[#6A8F3B] font-bold">{{ $listing->price ?? '-' }} <span class="text-xs text-gray-400">{{ $listing->currency ?? 'TND' }}</span></span>
-                                    <span class="text-gray-400 text-xs">{{ $listing->product?->quantity ?? '-' }} {{ __('units') }}</span>
+                                <div class="text-xs text-gray-500 flex items-center gap-1.5 mb-3 flex-wrap">
+                                    <span>📍 {{ $listing->governorate ?? 'تونس' }}</span>
+                                    <span>•</span>
+                                    <span>{{ $listing->quantity }} {{ __($listing->unit) }}</span>
                                 </div>
-                                <p class="text-xs text-gray-400 mb-3">{{ $listing->created_at->diffForHumans() }}</p>
-                                @if(Auth::user()->addresses->first())
-                                @php $address = Auth::user()->addresses->first(); @endphp
-                                <p class="text-xs text-gray-400 mb-3">📍 {{ $address->governorate ?? '' }}@if($address->delegation), {{ $address->delegation }}@endif</p>
-                                @endif
+                                <div class="flex items-center justify-between pt-3 border-t border-gray-50 mt-auto">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">{{ __('Price') }}</span>
+                                    <span class="text-sm font-black text-[#C8A356]">{{ $listing->price > 0 ? number_format($listing->price, 0).' TND' : __('Upon Request') }}</span>
+                                </div>
                                 <div class="flex gap-2 mt-auto">
                                     <a href="{{ url('/listings/'.$listing->id) }}" class="flex-1 text-center bg-[#6A8F3B] text-white px-3 py-2 rounded-xl hover:bg-[#5a7a2f] transition font-bold text-xs">👁 {{ __('View') }}</a>
                                     <a href="{{ url('/listings/'.$listing->id.'/edit') }}" class="flex-1 text-center bg-blue-50 text-blue-600 border border-blue-100 px-3 py-2 rounded-xl hover:bg-blue-100 transition font-bold text-xs">✏️ {{ __('Edit') }}</a>
@@ -774,6 +1160,7 @@
                     @endif
                 </div>
             </div>
+            @endif
 
         </div>{{-- /max-w container --}}
     </main>
@@ -811,23 +1198,7 @@
             </a>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
-            <h3 class="text-xs font-bold text-gray-400 uppercase mb-3">{{ __('Quick Actions') }}</h3>
-            <div class="space-y-1.5">
-                @if(Auth::user()->role !== 'carrier')
-                <a href="{{ route('listings.create') }}" class="flex items-center gap-3 px-3 py-2.5 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl hover:bg-[#6A8F3B]/20 transition font-bold text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>{{ __('Add Product') }}
-                </a>
-                @endif
-                <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition font-bold text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>{{ __('Marketplace') }}
-                </a>
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 bg-gray-50 text-gray-700 rounded-xl hover:bg-gray-100 transition font-bold text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{ __('Settings') }}
-                </a>
-            </div>
-        </div>
+
 
         <!-- Notifications -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">

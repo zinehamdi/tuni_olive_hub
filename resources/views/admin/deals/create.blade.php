@@ -16,6 +16,16 @@
 
         <!-- Form -->
         <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+            @if ($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl">
+                <ul class="list-disc list-inside text-sm font-bold space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <form action="{{ route('admin.deals.store') }}" method="POST">
                 @csrf
 
@@ -59,29 +69,27 @@
                             <textarea name="description[ar]" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition" required></textarea>
                         </div>
                     </div>
-
                     <div x-show="tab === 'fr'">
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Titre (Français)</label>
-                            <input type="text" name="title[fr]" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition" required>
+                            <input type="text" name="title[fr]" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition">
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Description (Français)</label>
-                            <textarea name="description[fr]" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition" required></textarea>
+                            <textarea name="description[fr]" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition"></textarea>
                         </div>
                     </div>
 
                     <div x-show="tab === 'en'">
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Title (English)</label>
-                            <input type="text" name="title[en]" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition" required>
+                            <input type="text" name="title[en]" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition">
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Description (English)</label>
-                            <textarea name="description[en]" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition" required></textarea>
+                            <textarea name="description[en]" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-amber-500 focus:outline-none transition"></textarea>
                         </div>
-                    </div>
-                </div>
+                    </div>                </div>
 
                 <div class="grid md:grid-cols-2 gap-6 mb-8">
                     <!-- Price Range -->

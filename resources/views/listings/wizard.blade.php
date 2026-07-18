@@ -638,7 +638,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <input type="file" id="images" name="images[]" multiple accept="image/*"
                                    @change="
                                        const files = Array.from($event.target.files);
-                                       if (files.length > 5) { alert('يمكنك رفع 5 صور كحد أقصى'); return; }
+                                       if (files.length > 5) { showToast('يمكنك رفع 5 صور كحد أقصى', 'error'); return; }
                                        formData.images = files;
                                        formData.imagePreview = [];
                                        files.forEach((file, idx) => {
@@ -757,14 +757,14 @@ console.log('[wizard] Variety selection mode - no product database needed');
                     <button type="button" 
                         @click="
                             let valid = true;
-                            if (currentStep === 1 && !formData.category) { alert('الرجاء اختيار نوع المنتج'); valid = false; }
-                            else if (currentStep === 2 && !formData.variety) { alert('الرجاء اختيار الصنف'); valid = false; }
-                            else if (currentStep === 3 && (!formData.quantity || formData.quantity <= 0)) { alert('الرجاء إدخال الكمية'); valid = false; }
-                            else if (currentStep === 3 && !formData.unit) { alert('الرجاء اختيار الوحدة'); valid = false; }
-                            else if (currentStep === 4 && (!formData.price || formData.price <= 0)) { alert('الرجاء إدخال السعر'); valid = false; }
-                            else if (currentStep === 5 && formData.payment_methods.length === 0) { alert('الرجاء اختيار طريقة دفع واحدة على الأقل'); valid = false; }
-                            else if (currentStep === 6 && formData.delivery_options.length === 0) { alert('الرجاء اختيار خيار تسليم واحد على الأقل'); valid = false; }
-                            else if (currentStep === 7 && !formData.governorate && !formData.location_text) { alert('الرجاء إدخال الموقع أو اختيار الولاية'); valid = false; }
+                            if (currentStep === 1 && !formData.category) { showToast('الرجاء اختيار نوع المنتج', 'error'); valid = false; }
+                            else if (currentStep === 2 && !formData.variety) { showToast('الرجاء اختيار الصنف', 'error'); valid = false; }
+                            else if (currentStep === 3 && (!formData.quantity || formData.quantity <= 0)) { showToast('الرجاء إدخال الكمية', 'error'); valid = false; }
+                            else if (currentStep === 3 && !formData.unit) { showToast('الرجاء اختيار الوحدة', 'error'); valid = false; }
+                            else if (currentStep === 4 && (!formData.price || formData.price <= 0)) { showToast('الرجاء إدخال السعر', 'error'); valid = false; }
+                            else if (currentStep === 5 && formData.payment_methods.length === 0) { showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error'); valid = false; }
+                            else if (currentStep === 6 && formData.delivery_options.length === 0) { showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error'); valid = false; }
+                            else if (currentStep === 7 && !formData.governorate && !formData.location_text) { showToast('الرجاء إدخال الموقع أو اختيار الولاية', 'error'); valid = false; }
                             if (valid && currentStep < 9) { currentStep++; window.scrollTo({ top: 0, behavior: 'smooth' }); }
                         " 
                         x-show="currentStep < 9"
@@ -915,12 +915,12 @@ document.addEventListener('alpine:init', () => {
                     else this.formData.variety = 'other';
                     
                     // Show a toast or small alert
-                    alert(`Ezzitouni Bot 🤖:\nتم التعرف على الصنف: ${result.detected_variety}`);
+                    showToast(`Ezzitouni Bot 🤖: تم التعرف على الصنف: ${result.detected_variety}`, 'success');
                 } else {
                     throw new Error(result.message || 'حدث خطأ غير متوقع');
                 }
             } catch (error) {
-                alert('عذراً، لم نتمكن من تحليل الصورة: ' + error.message);
+                showToast('عذراً، لم نتمكن من تحليل الصورة: ' + error.message, 'error');
             } finally {
                 this.isAnalyzingVariety = false;
                 event.target.value = ''; // Reset input
@@ -972,11 +972,11 @@ document.addEventListener('alpine:init', () => {
                 if (result.success) {
                     this.formData.estimated_oil_yield = result.estimated_yield;
                 } else {
-                    alert('عذراً، لم نتمكن من تحليل الصورة. ' + (result.message || ''));
+                    showToast('عذراً، لم نتمكن من تحليل الصورة. ' + (result.message || ''), 'error');
                 }
             } catch (error) {
                 console.error(error);
-                alert(error.message || 'حدث خطأ أثناء الاتصال بخادم الذكاء الاصطناعي.');
+                showToast(error.message || 'حدث خطأ أثناء الاتصال بخادم الذكاء الاصطناعي.', 'error');
             } finally {
                 this.isAnalyzingOlive = false;
             }
@@ -1028,48 +1028,48 @@ document.addEventListener('alpine:init', () => {
             switch(this.currentStep) {
                 case 1:
                     if (!this.formData.category) {
-                        alert('الرجاء اختيار نوع المنتج');
+                        showToast('الرجاء اختيار نوع المنتج', 'error');
                         return false;
                     }
                     break;
                 case 2:
                     if (!this.formData.variety) {
-                        alert('الرجاء اختيار الصنف');
+                        showToast('الرجاء اختيار الصنف', 'error');
                         return false;
                     }
                     break;
                 case 3:
                     if (!this.formData.quantity || this.formData.quantity <= 0) {
-                        alert('الرجاء إدخال الكمية المتاحة');
+                        showToast('الرجاء إدخال الكمية المتاحة', 'error');
                         return false;
                     }
                     if (!this.formData.unit) {
-                        alert('الرجاء اختيار الوحدة');
+                        showToast('الرجاء اختيار الوحدة', 'error');
                         return false;
                     }
                     break;
                 case 4:
                     if (!this.formData.price_on_request && (!this.formData.price || this.formData.price <= 0)) {
-                        alert('الرجاء إدخال السعر');
+                        showToast('الرجاء إدخال السعر', 'error');
                         return false;
                     }
                     break;
                 case 5:
                     if (this.formData.payment_methods.length === 0) {
-                        alert('الرجاء اختيار طريقة دفع واحدة على الأقل');
+                        showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error');
                         return false;
                     }
                     break;
                 case 6:
                     if (this.formData.delivery_options.length === 0) {
-                        alert('الرجاء اختيار خيار تسليم واحد على الأقل');
+                        showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error');
                         return false;
                     }
                     break;
                 case 7:
                     // Location validation - at least governorate is required
                     if (!this.formData.governorate && !this.formData.location_text) {
-                        alert('الرجاء إدخال الموقع أو اختيار الولاية على الأقل');
+                        showToast('الرجاء إدخال الموقع أو اختيار الولاية على الأقل', 'error');
                         return false;
                     }
                     break;

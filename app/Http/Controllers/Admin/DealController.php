@@ -21,6 +21,16 @@ class DealController extends Controller
 
     public function store(Request $request)
     {
+        $title = $request->input('title', []);
+        $description = $request->input('description', []);
+        
+        if (empty($title['en']) && !empty($title['ar'])) $title['en'] = $title['ar'];
+        if (empty($title['fr']) && !empty($title['ar'])) $title['fr'] = $title['ar'];
+        if (empty($description['en']) && !empty($description['ar'])) $description['en'] = $description['ar'];
+        if (empty($description['fr']) && !empty($description['ar'])) $description['fr'] = $description['ar'];
+        
+        $request->merge(['title' => $title, 'description' => $description]);
+
         $data = $request->validate([
             'type' => 'required|in:demand,service,supply',
             'title' => 'required|array',
@@ -53,6 +63,16 @@ class DealController extends Controller
 
     public function update(Request $request, Deal $deal)
     {
+        $title = $request->input('title', []);
+        $description = $request->input('description', []);
+        
+        if (empty($title['en']) && !empty($title['ar'])) $title['en'] = $title['ar'];
+        if (empty($title['fr']) && !empty($title['ar'])) $title['fr'] = $title['ar'];
+        if (empty($description['en']) && !empty($description['ar'])) $description['en'] = $description['ar'];
+        if (empty($description['fr']) && !empty($description['ar'])) $description['fr'] = $description['ar'];
+        
+        $request->merge(['title' => $title, 'description' => $description]);
+
         $data = $request->validate([
             'type' => 'required|in:demand,service,supply',
             'title' => 'required|array',
