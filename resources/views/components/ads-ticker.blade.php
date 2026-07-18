@@ -71,7 +71,7 @@
                     
                     $providerAds[] = [
                         'icon' => $icon,
-                        'logo' => $logoUrl ?: asset('images/zintoop-logo.png'),
+                        'logo' => $logoUrl,
                         'name' => $p->name,
                         'desc' => $descShort,
                         'text' => $p->name . ' (' . $icon . '): ' . $descShort,
@@ -108,9 +108,16 @@
                 @foreach($displayAds as $ad)
                 <a href="{{ $ad['url'] }}" class="ads-ticker-item group">
                     @if(!empty($ad['logo']))
-                        <img src="{{ $ad['logo'] }}" class="ads-ticker-logo border border-black/10 object-cover rounded-full" alt="logo">
+                        <div class="relative ads-ticker-logo border border-black/10 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-white" style="width: 26px; height: 26px;">
+                            <img src="{{ $ad['logo'] }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="hidden w-full h-full rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 items-center justify-center text-white text-[10px] font-bold">
+                                {{ strtoupper(substr($ad['name'] ?? '', 0, 1)) }}
+                            </div>
+                        </div>
                     @else
-                        <span class="ads-ticker-icon">{{ $ad['icon'] }}</span>
+                        <div class="rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0" style="width: 26px; height: 26px;">
+                            {{ strtoupper(substr($ad['name'] ?? '', 0, 1)) }}
+                        </div>
                     @endif
                     <div class="ads-ticker-text-wrapper flex flex-col text-right justify-center leading-none">
                         <span class="ads-ticker-title font-black text-black leading-tight">
