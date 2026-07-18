@@ -41,7 +41,7 @@ class NewMessage extends Notification
     {
         return (new WebPushMessage)
             ->title('New Message from ' . $this->sender->name)
-            ->icon('/images/zintooplogo3d.jpg')
+            ->icon('/images/zintoop-logo.png')
             ->body(str()->limit($this->message->body, 100))
             ->action('View Message', 'view_message')
             ->options(['TTL' => 1000]);

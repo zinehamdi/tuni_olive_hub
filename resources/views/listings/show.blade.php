@@ -11,7 +11,7 @@
 @endsection
 @section('og_description', 'عرض متوفر الآن على منصة الزين! اشترِ زيت الزيتون التونسي مباشرة من المنتج بدون وسطاء.')
 @section('og_image')
-{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}
+{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}
 @endsection
 
 @push('head')
@@ -22,7 +22,7 @@
       "@@type": "Product",
       "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
       "image": [
-        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintooplogo3d.jpg') }}"
+        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}"
       ],
       "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
       "brand": {

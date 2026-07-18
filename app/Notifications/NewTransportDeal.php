@@ -44,7 +44,7 @@ class NewTransportDeal extends Notification
         
         return (new WebPushMessage)
             ->title(__('New Transport Deal') . ' - ' . $this->sender->name)
-            ->icon('/images/zintooplogo3d.jpg')
+            ->icon('/images/zintoop-logo.png')
             ->body($bodyText)
             ->action(__('View Deal'), 'view_deal')
             ->options(['TTL' => 1000]);

@@ -25,7 +25,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', $defaultTitle)">
     <meta property="og:description" content="@yield('og_description', $defaultDesc)">
-    <meta property="og:image" content="@yield('og_image', asset('images/zintooplogo3d.jpg'))">
+    <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
     <meta property="fb:app_id" content="{{ env('FB_APP_ID', '') }}">
 
@@ -34,7 +34,7 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="@yield('twitter_title', $defaultTitle)">
     <meta name="twitter:description" content="@yield('twitter_description', $defaultDesc)">
-    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintooplogo3d.jpg'))">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
 
     <!-- JSON-LD Schema (Structured Data for Google) -->
     <script type="application/ld+json">
@@ -57,7 +57,7 @@
       "@@type": "Organization",
       "name": "ZinToop",
       "url": "https://zintoop.com",
-      "logo": "{{ asset('images/zintooplogo3d.jpg') }}"
+      "logo": "{{ asset('images/zintoop-logo.png') }}"
     }
     </script>
 
@@ -71,7 +71,7 @@
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('images/zintooplogo3d.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('icons/zintoop-192.png') }}">
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#6A8F3B">
@@ -663,7 +663,7 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('images/zintooplogo3d.jpg') }}" alt="ZinToop" class="h-10 w-20 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" class="h-10 w-20 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
                     <h3 class="text-xl font-bold">ZinToop</h3>
                 </div>
                 <p class="text-gray-400">{{ __('Platform connecting producers and buyers') }}</p>

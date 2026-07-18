@@ -61,7 +61,7 @@
                         $text = $locale === 'ar' ? $ad['text_ar'] : ($locale === 'fr' ? $ad['text_fr'] : $ad['text_en']);
                         $mergedAds[] = [
                             'icon' => $ad['icon'],
-                            'logo' => asset('images/zintooplogo3d.jpg'),
+                            'logo' => asset('images/zintoop-logo.png'),
                             'name' => $locale === 'ar' ? 'منصة الزين' : 'ZinToop',
                             'desc' => $text,
                             'text' => $text,

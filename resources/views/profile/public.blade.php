@@ -2,7 +2,7 @@
     $locale = app()->getLocale();
     $isRTL = $locale === 'ar';
     $coverPhotos = ($coverPhotos ?? collect())->filter()->values();
-    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintooplogo3d.jpg');
+    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintoop-logo.png');
     $isOwner = auth()->check() && auth()->id() === $user->id;
     $contactInfo = [
         'phone' => $user->phone ?? $user->phone_number ?? null,
@@ -30,7 +30,7 @@
                 <div class="px-4 sm:px-8 pb-6 relative flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-end -mt-16 sm:-mt-20 z-10">
                     <div class="relative group shrink-0">
                         @if($profilePhotoUrl)
-                            <img src="{{ $profilePhotoUrl }}" class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover ring-4 ring-white shadow-xl bg-white" loading="lazy" onerror="this.src='{{ asset('images/zintooplogo3d.jpg') }}'">
+                            <img src="{{ $profilePhotoUrl }}" class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover ring-4 ring-white shadow-xl bg-white" loading="lazy" onerror="this.src='{{ asset('images/zintoop-logo.png') }}'">
                         @else
                             <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-5xl font-bold ring-4 ring-white shadow-xl">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
