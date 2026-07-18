@@ -71,7 +71,7 @@
                         'name' => $p->name,
                         'desc' => $descShort,
                         'text' => $p->name . ' (' . $icon . '): ' . $descShort,
-                        'url' => route('services.index') . '#directory'
+                        'url' => route('services.index') . '?provider=' . $p->id . '#directory'
                     ];
                 }
 

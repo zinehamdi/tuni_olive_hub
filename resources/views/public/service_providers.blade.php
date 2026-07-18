@@ -15,6 +15,84 @@
             'icon' => $item->icon_url
         ]];
     })->all();
+
+    $roleTitlesGlobal = [
+        'carrier' => ['ar' => 'خدمات النقل اللوجستي والبري', 'fr' => 'Services de Transport Logistique', 'en' => 'Logistic & Land Transport Services'],
+        'mill' => ['ar' => 'خدمات معصرة زيتون', 'fr' => 'Services de Moulin / Pressoir', 'en' => 'Olive Mill Services'],
+        'packer' => ['ar' => 'خدمات تعبئة وتغليف وتعبئة', 'fr' => 'Services d\'Embouteillage & Emballage', 'en' => 'Packaging & Bottling Services'],
+        'transiteur' => ['ar' => 'خدمات مخلص جمركي وتصدير', 'fr' => 'Services de Transiteur', 'en' => 'Customs Broker & Export Services'],
+        'comptable' => ['ar' => 'خدمات محاسبة فلاحية ومالية', 'fr' => 'Services de Comptable', 'en' => 'Accounting & Financial Services'],
+        'service_bureau' => ['ar' => 'خدمات مكتب إداري وتسهيلات', 'fr' => 'Services de Bureau de services', 'en' => 'Administrative Service Bureau'],
+        'agri_equipment' => ['ar' => 'شركات معدات وآلات فلاحية', 'fr' => 'Matériel Agricole', 'en' => 'Agri Equipment & Machinery'],
+        'agri_materials' => ['ar' => 'شركات أسمدة ومواد فلاحية', 'fr' => 'Matières & Engrais Agricoles', 'en' => 'Agri Materials & Fertilizers'],
+        'agri_study_office' => ['ar' => 'مكتب دراسات واستشارات فلاحية', 'fr' => 'Bureau d\'études agricoles', 'en' => 'Agri Study Office & Consulting'],
+    ];
+
+    $roleLabelsGlobal = [
+        'carrier' => ['ar' => 'ناقل بري وبحري', 'fr' => 'Transporteur', 'en' => 'Carrier', 'icon' => '🚛'],
+        'mill' => ['ar' => 'معصرة زيتون', 'fr' => 'Pressoir / Moulin', 'en' => 'Olive Mill', 'icon' => '🏢'],
+        'packer' => ['ar' => 'تعبئة وتغليف', 'fr' => 'Embouteillage & Emballage', 'en' => 'Packaging & Bottling', 'icon' => '📦'],
+        'transiteur' => ['ar' => 'مخلص جمركي', 'fr' => 'Transiteur', 'en' => 'Customs Broker', 'icon' => '🛃'],
+        'comptable' => ['ar' => 'محاسب', 'fr' => 'Comptable', 'en' => 'Accountant', 'icon' => '📊'],
+        'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'fr' => 'Bureau de services', 'en' => 'Service Bureau', 'icon' => '📝'],
+        'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Matériel Agricole', 'en' => 'Agri Equipment', 'icon' => '🚜'],
+        'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Matières & Engrais Agricoles', 'en' => 'Agri Materials & Fertilizers', 'icon' => '🌱'],
+        'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'études agricoles', 'en' => 'Agri Study Office', 'icon' => '📐'],
+    ];
+
+    $providerTypeLabelsGlobal = [
+        'freelancer' => ['ar' => 'مستقل', 'fr' => 'Indépendant', 'en' => 'Freelancer', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+        'bureau' => ['ar' => 'مكتب', 'fr' => 'Bureau / Cabinet', 'en' => 'Office / Agency', 'color' => 'bg-sky-50 text-sky-700 border-sky-200'],
+        'societe' => ['ar' => 'شركة', 'fr' => 'Société / Entreprise', 'en' => 'Company', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
+    ];
+
+    $defaultDescsGlobal = [
+        'carrier' => 'ناقل بري ولوجستي لنقل الزيتون والزيت بين الولايات التونسية',
+        'mill' => 'معصرة زيتون مجهزة بأحدث آليات العصر لإنتاج زيت رفيع',
+        'packer' => 'وحدة تعليب وتغليف متكاملة لمنتجات زيت الزيتون والزيتون',
+        'transiteur' => 'خدمات تخليص جمركي وتصدير زيت الزيتون لكافة دول العالم',
+        'comptable' => 'محاسبة واستشارات مالية وإدارية للشركات والتعاونيات الفلاحية',
+        'service_bureau' => 'مكتب خدمات إدارية وتسهيل المعاملات والملفات القانونية',
+        'agri_equipment' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون',
+        'agri_materials' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية',
+        'agri_study_office' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع',
+    ];
+
+    $providersJsonData = collect($providers)->mapWithKeys(function($p) use ($roleLabelsGlobal, $providerTypeLabelsGlobal, $defaultDescsGlobal) {
+        $providerType = $p->meta_data['provider_type'] ?? '';
+        $roleData = $roleLabelsGlobal[$p->role] ?? ['ar' => 'مزود خدمة', 'fr' => 'Prestataire', 'en' => 'Service Provider', 'icon' => '👥'];
+        $typeData = $providerTypeLabelsGlobal[$providerType] ?? null;
+        $validPhotos = array_values(array_filter($p->cover_photos ?? [], fn($photo) => is_string($photo) && !empty($photo) && \Illuminate\Support\Facades\Storage::disk('public')->exists($photo)));
+        $provServices = $p->meta_data['services'] ?? [];
+        
+        $desc = null;
+        if (is_array($p->meta_data)) {
+            $desc = $p->meta_data['service_description'] ?? null;
+        } elseif (is_object($p->meta_data)) {
+            $desc = $p->meta_data->service_description ?? null;
+        }
+        
+        if (empty($desc)) {
+            $desc = $defaultDescsGlobal[$p->role] ?? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا';
+        }
+
+        return [$p->id => [
+            'name' => $p->name,
+            'role' => $roleData[app()->getLocale()] ?? $roleData['ar'],
+            'icon' => $roleData['icon'],
+            'type' => $typeData[app()->getLocale()] ?? $typeData['ar'] ?? '',
+            'typeColor' => $typeData['color'] ?? '',
+            'governorate' => $p->addresses->first()->governorate ?? 'تونس',
+            'profile_picture' => $p->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($p->profile_picture) ? Storage::url($p->profile_picture) : '',
+            'description' => str_replace(["\r", "\n"], ' ', $desc),
+            'services' => $provServices,
+            'price_type' => $p->meta_data['price_type'] ?? 'quote',
+            'price' => $p->meta_data['service_price'] ?? null,
+            'phone' => $p->phone,
+            'url' => route('user.profile', $p->id),
+            'cover' => count($validPhotos) > 0 ? Storage::url($validPhotos[0]) : ''
+        ]];
+    })->all();
 @endphp
 
 <div x-data="{ 
@@ -38,6 +116,7 @@
     },
     init() {
         const services = {{ json_encode($servicesData) }};
+        const providers = {{ json_encode($providersJsonData) }};
         
         const urlParams = new URLSearchParams(window.location.search);
         const serviceId = urlParams.get('service');
@@ -48,6 +127,19 @@
             setTimeout(() => {
                 this.openModal(s.id, name, s.price, s.icon);
             }, 100);
+        }
+
+        const providerId = urlParams.get('provider');
+        if (providerId && providers[providerId]) {
+            setTimeout(() => {
+                this.activeProvider = providers[providerId];
+                this.showProviderModal = true;
+                
+                const el = document.getElementById('directory');
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 300);
         }
     }
 }">
@@ -179,7 +271,7 @@
                             $allCards[] = [
                                 'provider' => $provider,
                                 'is_default' => true,
-                                'title' => $provider->role === 'carrier' ? 'خدمات النقل اللوجستي والبري' : 'خدمات عامة متكاملة',
+                                'title' => $roleTitlesGlobal[$provider->role][app()->getLocale()] ?? ($roleTitlesGlobal[$provider->role]['ar'] ?? 'خدمات عامة متكاملة'),
                                 'price' => $provider->meta_data['service_price'] ?? null,
                                 'price_type' => $provider->meta_data['price_type'] ?? 'quote',
                                 'description' => $provider->meta_data['service_description'] ?? '',
