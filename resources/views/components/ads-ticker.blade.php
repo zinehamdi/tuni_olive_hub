@@ -13,8 +13,8 @@
                 $dbProviders = \App\Models\User::whereIn('role', [
                         'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
                     ])
-                    ->latest()
-                    ->take(15)
+                    ->inRandomOrder()
+                    ->take(30)
                     ->get();
 
                 $platformAds = [
