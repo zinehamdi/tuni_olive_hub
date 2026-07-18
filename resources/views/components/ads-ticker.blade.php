@@ -9,13 +9,17 @@
                 $locale = app()->getLocale();
                 $pricingUrl = route('services.pricing');
 
-                // Fetch active registered service providers
-                $dbProviders = \App\Models\User::whereIn('role', [
-                        'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
-                    ])
-                    ->inRandomOrder()
-                    ->take(30)
-                    ->get();
+                // Fetch active registered service providers from Cache to avoid slow database queries
+                $cachedProviders = \Illuminate\Support\Facades\Cache::remember('ticker_b2b_providers', 600, function() {
+                    return \App\Models\User::whereIn('role', [
+                            'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
+                        ])
+                        ->latest()
+                        ->get();
+                });
+
+                // Shuffle in memory and take 30
+                $dbProviders = collect($cachedProviders)->shuffle()->take(30);
 
                 $platformAds = [
                     ['icon' => '🌐', 'text_ar' => 'هل تريد موقعاً احترافياً؟ نبني لك حضوراً رقمياً قوياً', 'text_en' => 'Need a professional website? We build powerful digital presences', 'text_fr' => 'Besoin d\'un site pro? Nous créons votre présence digitale', 'url' => $pricingUrl],
@@ -63,7 +67,7 @@
                     }
 
                     $descShort = \Illuminate\Support\Str::limit($desc, 60);
-                    $logoUrl = ($p->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($p->profile_picture)) ? Storage::url($p->profile_picture) : null;
+                    $logoUrl = $p->profile_picture ? Storage::url($p->profile_picture) : null;
                     
                     $providerAds[] = [
                         'icon' => $icon,

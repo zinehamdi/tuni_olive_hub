@@ -62,7 +62,7 @@
         $providerType = $p->meta_data['provider_type'] ?? '';
         $roleData = $roleLabelsGlobal[$p->role] ?? ['ar' => 'مزود خدمة', 'fr' => 'Prestataire', 'en' => 'Service Provider', 'icon' => '👥'];
         $typeData = $providerTypeLabelsGlobal[$providerType] ?? null;
-        $validPhotos = array_values(array_filter($p->cover_photos ?? [], fn($photo) => is_string($photo) && !empty($photo) && \Illuminate\Support\Facades\Storage::disk('public')->exists($photo)));
+        $validPhotos = array_values(array_filter($p->cover_photos ?? [], fn($photo) => is_string($photo) && !empty($photo)));
         $provServices = $p->meta_data['services'] ?? [];
         
         $desc = null;
@@ -83,7 +83,7 @@
             'type' => $typeData[app()->getLocale()] ?? $typeData['ar'] ?? '',
             'typeColor' => $typeData['color'] ?? '',
             'governorate' => $p->addresses->first()->governorate ?? 'تونس',
-            'profile_picture' => $p->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($p->profile_picture) ? Storage::url($p->profile_picture) : '',
+            'profile_picture' => $p->profile_picture ? Storage::url($p->profile_picture) : '',
             'description' => str_replace(["\r", "\n"], ' ', $desc),
             'services' => $provServices,
             'price_type' => $p->meta_data['price_type'] ?? 'quote',
@@ -308,7 +308,7 @@
                             'societe' => ['ar' => 'شركة', 'fr' => 'Société / Entreprise', 'en' => 'Company', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
                         ];
                         $typeData = $providerTypeLabels[$providerType] ?? null;
-                        $validPhotos = array_values(array_filter($provider->cover_photos ?? [], fn($p) => is_string($p) && !empty($p) && \Illuminate\Support\Facades\Storage::disk('public')->exists($p)));
+                        $validPhotos = array_values(array_filter($provider->cover_photos ?? [], fn($p) => is_string($p) && !empty($p)));
                         $provServices = $provider->meta_data['services'] ?? [];
                     @endphp
 
@@ -320,7 +320,7 @@
                             type: {{ json_encode($typeData[app()->getLocale()] ?? $typeData['ar'] ?? '') }}, 
                             typeColor: {{ json_encode($typeData['color'] ?? '') }}, 
                             governorate: {{ json_encode($provider->addresses->first()->governorate ?? 'تونس') }}, 
-                            profile_picture: {{ json_encode($provider->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($provider->profile_picture) ? Storage::url($provider->profile_picture) : '') }}, 
+                            profile_picture: {{ json_encode($provider->profile_picture ? Storage::url($provider->profile_picture) : '') }}, 
                             description: {{ json_encode(str_replace(["\r", "\n"], ' ', $provider->meta_data['service_description'] ?? '')) }}, 
                             services: {{ json_encode($provServices) }}, 
                             price_type: {{ json_encode($card['price_type']) }}, 
@@ -332,9 +332,9 @@
                         
                         <!-- Little Card Image -->
                         <div class="w-full h-24 rounded-xl overflow-hidden mb-3 relative bg-gray-50 border border-gray-100/50 flex items-center justify-center">
-                            @if(!empty($card['image']))
+                             @if(!empty($card['image']))
                                 <img src="{{ asset($card['image']) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            @elseif($provider->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($provider->profile_picture))
+                            @elseif($provider->profile_picture)
                                 <img src="{{ Storage::url($provider->profile_picture) }}" class="w-12 h-12 rounded-full object-cover">
                             @else
                                 <span class="text-3xl">{{ $roleData['icon'] }}</span>
