@@ -2,7 +2,7 @@
     $locale = app()->getLocale();
     $isRTL = $locale === 'ar';
     $coverPhotos = ($coverPhotos ?? collect())->filter()->values();
-    $profilePhotoUrl = $profilePhotoUrl ?? asset('images/zintoop-logo.png');
+    $profilePhotoUrl = $user->profile_picture ? Storage::url($user->profile_picture) : null;
     $isOwner = auth()->check() && auth()->id() === $user->id;
     $contactInfo = [
         'phone' => $user->phone ?? $user->phone_number ?? null,
@@ -29,13 +29,14 @@
                 <!-- Avatar & Name -->
                 <div class="px-4 sm:px-8 pb-6 relative flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-end -mt-16 sm:-mt-20 z-10">
                     <div class="relative group shrink-0">
-                        @if($profilePhotoUrl)
-                            <img src="{{ $profilePhotoUrl }}" style="width: 128px; height: 128px; min-width: 128px; min-height: 128px;" class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover ring-4 ring-white shadow-xl bg-white" loading="lazy" onerror="this.src='{{ asset('images/zintoop-logo.png') }}'">
-                        @else
-                            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-5xl font-bold ring-4 ring-white shadow-xl">
+                        <div class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden ring-4 ring-white shadow-xl bg-white shrink-0 flex items-center justify-center">
+                            @if($profilePhotoUrl)
+                                <img src="{{ $profilePhotoUrl }}" style="width: 128px; height: 128px; min-width: 128px; min-height: 128px;" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            @endif
+                            <div class="{{ $profilePhotoUrl ? 'hidden' : 'flex' }} w-full h-full rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 items-center justify-center text-white text-5xl font-bold">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
-                        @endif
+                        </div>
                         <div class="absolute bottom-2 {{ $isRTL ? 'left-2' : 'right-2' }} w-6 h-6 bg-green-500 rounded-full ring-4 ring-white shadow-md"></div>
                     </div>
                     

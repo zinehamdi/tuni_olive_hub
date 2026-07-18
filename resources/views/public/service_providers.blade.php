@@ -335,9 +335,16 @@
                              @if(!empty($card['image']))
                                 <img src="{{ asset($card['image']) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             @elseif($provider->profile_picture)
-                                <img src="{{ Storage::url($provider->profile_picture) }}" class="w-12 h-12 rounded-full object-cover" onerror="this.onerror=null; this.src='{{ asset('images/zintoop-logo.png') }}';">
+                                <div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
+                                    <img src="{{ Storage::url($provider->profile_picture) }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="hidden w-full h-full rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 items-center justify-center text-white text-base font-bold">
+                                        {{ strtoupper(substr($provider->name, 0, 1)) }}
+                                    </div>
+                                </div>
                             @else
-                                <span class="text-3xl">{{ $roleData['icon'] }}</span>
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-base font-bold">
+                                    {{ strtoupper(substr($provider->name, 0, 1)) }}
+                                </div>
                             @endif
                         </div>
 
@@ -424,14 +431,15 @@
                                     </div>
                                 </div>
                                 <!-- Profile Pic -->
-                                <template x-if="activeProvider && activeProvider.profile_picture">
-                                    <img :src="activeProvider.profile_picture" class="w-14 h-14 rounded-full object-cover border-2 border-[#6A8F3B]/20" onerror="this.onerror=null; this.src='{{ asset('images/zintoop-logo.png') }}';">
-                                </template>
-                                <template x-if="activeProvider && !activeProvider.profile_picture">
-                                    <div class="w-14 h-14 rounded-full bg-[#6A8F3B]/10 text-[#6A8F3B] flex items-center justify-center text-2xl font-bold">
-                                        <span x-text="activeProvider ? activeProvider.icon : ''"></span>
+                                <div class="relative w-14 h-14 rounded-full overflow-hidden shrink-0 border-2 border-[#6A8F3B]/20 flex items-center justify-center">
+                                    <template x-if="activeProvider && activeProvider.profile_picture">
+                                        <img :src="activeProvider.profile_picture" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    </template>
+                                    <div class="w-full h-full rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 items-center justify-center text-white text-lg font-bold"
+                                         :class="activeProvider && activeProvider.profile_picture ? 'hidden' : 'flex'">
+                                        <span x-text="activeProvider ? activeProvider.name.substring(0,1).toUpperCase() : ''"></span>
                                     </div>
-                                </template>
+                                </div>
                             </div>
 
                             <!-- Description -->
