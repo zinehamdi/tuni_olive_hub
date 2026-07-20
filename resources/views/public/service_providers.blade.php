@@ -103,6 +103,7 @@
     activeServiceIcon: '📦',
     activeProvider: null,
     showProviderModal: false,
+    providers: {{ json_encode($providersJsonData) }},
     openModal(id, name, price, icon) {
         this.activeServiceId = id;
         this.activeServiceName = name;
@@ -116,7 +117,6 @@
     },
     init() {
         const services = {{ json_encode($servicesData) }};
-        const providers = {{ json_encode($providersJsonData) }};
         
         const urlParams = new URLSearchParams(window.location.search);
         const serviceId = urlParams.get('service');
@@ -130,9 +130,9 @@
         }
 
         const providerId = urlParams.get('provider');
-        if (providerId && providers[providerId]) {
+        if (providerId && this.providers[providerId]) {
             setTimeout(() => {
-                this.activeProvider = providers[providerId];
+                this.activeProvider = this.providers[providerId];
                 this.showProviderModal = true;
                 
                 const el = document.getElementById('directory');
@@ -313,22 +313,7 @@
                     @endphp
 
                     <div class="group bg-white border border-gray-100 shadow-md rounded-2xl p-4 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden text-right cursor-pointer"
-                        @click="activeProvider = { 
-                            name: {{ json_encode($provider->name) }}, 
-                            role: {{ json_encode($roleData[app()->getLocale()] ?? $roleData['ar']) }}, 
-                            icon: {{ json_encode($roleData['icon']) }}, 
-                            type: {{ json_encode($typeData[app()->getLocale()] ?? $typeData['ar'] ?? '') }}, 
-                            typeColor: {{ json_encode($typeData['color'] ?? '') }}, 
-                            governorate: {{ json_encode($provider->addresses->first()->governorate ?? 'تونس') }}, 
-                            profile_picture: {{ json_encode($provider->profile_picture ? Storage::url($provider->profile_picture) : '') }}, 
-                            description: {{ json_encode(str_replace(["\r", "\n"], ' ', $provider->meta_data['service_description'] ?? '')) }}, 
-                            services: {{ json_encode($provServices) }}, 
-                            price_type: {{ json_encode($card['price_type']) }}, 
-                            price: {{ json_encode($card['price']) }}, 
-                            phone: {{ json_encode($provider->phone) }}, 
-                            url: {{ json_encode(route('user.profile', $provider->id)) }}, 
-                            cover: {{ json_encode(count($validPhotos) > 0 ? Storage::url($validPhotos[0]) : '') }} 
-                        }; showProviderModal = true">
+                        @click="activeProvider = providers[{{ $provider->id }}] || {}; showProviderModal = true">
                         
                         <!-- Little Card Image -->
                         <div class="w-full h-24 rounded-xl overflow-hidden mb-3 relative bg-gray-50 border border-gray-100/50 flex items-center justify-center">
