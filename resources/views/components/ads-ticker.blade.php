@@ -245,7 +245,7 @@
         align-items: center;
         gap: 1.5rem;
         white-space: nowrap;
-        animation: ads-scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 50s linear infinite;
+        animation: ads-scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 110s linear infinite;
         padding-left: 100%;
     }
     .ads-ticker-item {
