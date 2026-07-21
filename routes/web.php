@@ -49,7 +49,7 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::middleware('set.locale')->group(function () {
+Route::middleware(['web', 'set.locale'])->group(function () {
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering
         $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(10), function () {
