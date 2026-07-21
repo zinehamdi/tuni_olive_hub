@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zintoop-cache-v2';
+const CACHE_NAME = 'zintoop-cache-v3';
 const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/icons/zintoop-192.png',
