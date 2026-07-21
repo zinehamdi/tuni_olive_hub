@@ -192,7 +192,7 @@
 
                         <div class="mb-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Select Template (Optional)') }}</label>
-                            <select id="templateSelector" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" onchange="loadTemplate()">
+                            <select id="templateSelector" name="template" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200" onchange="loadTemplate()">
                                 <option value="">-- Custom Message --</option>
                                 <option value="fix_listings_ar">تنبيه: مراجعة وتعديل العروض (العربية) 🫒</option>
                                 <option value="fix_listings_fr">Correction d'annonces et guide (Français) 🫒</option>
