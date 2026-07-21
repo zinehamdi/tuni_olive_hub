@@ -55,6 +55,11 @@ class SetLocale
 
         AppFacade::setLocale($locale);
 
-        return $next($request);
+        $response = $next($request);
+        if (method_exists($response, 'header')) {
+            $response->header('X-LiteSpeed-Cache-Control', 'no-cache');
+            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        }
+        return $response;
     }
 }
