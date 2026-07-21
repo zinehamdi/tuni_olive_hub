@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Disable LiteSpeed Cache for public profile routes
+    RewriteCond %{REQUEST_URI} ^/user/ [NC]
+    RewriteRule .* - [E=Cache-Control:no-cache]
+
     # PHP Upload Configuration for Large Image Files
     php_value upload_max_filesize 500M
     php_value post_max_size 500M
