@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\BulkSubscriberEmail;
+use App\Mail\PlatformUpdateAnnouncementMail;
 
 class SubscriberController extends Controller
 {
@@ -171,12 +172,15 @@ class SubscriberController extends Controller
 
     public function bulkMessage(Request $request)
     {
+        @set_time_limit(600);
+        @ini_set('max_execution_time', '600');
+
         $request->validate([
-            'message_body' => 'required|string',
+            'message_body' => 'nullable|string',
         ]);
 
-        $subject = $request->input('subject', 'Zintoop Update');
-        $body = $request->input('message_body');
+        $subject = $request->input('subject', 'منصة زيت الزيتون التونسي / زينتوب');
+        $body = $request->input('message_body', '');
         $scope = $request->input('recipient_scope', 'selected');
         $role = $request->input('role_filter', 'all');
         $type = $request->input('type_filter', 'all');
@@ -259,6 +263,9 @@ class SubscriberController extends Controller
             $contacts = $request->contacts;
         }
 
+        // Deduplicate contacts list
+        $contacts = array_values(array_unique($contacts));
+
         $emailQueue = 0;
         $waQueue = [];
 
@@ -266,13 +273,20 @@ class SubscriberController extends Controller
             $parts = explode(':', $contactString, 3);
             if (count($parts) === 3) {
                 $type = $parts[1];
-                $value = $parts[2];
+                $value = trim($parts[2]);
                 
                 if ($type === 'email') {
                     if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                        // Standard bulk mailer sending
-                        Mail::to($value)->send(new BulkSubscriberEmail($subject, $body));
-                        $emailQueue++;
+                        try {
+                            if ($request->input('template') === 'update_announcement') {
+                                Mail::to($value)->send(new PlatformUpdateAnnouncementMail($subject));
+                            } else {
+                                Mail::to($value)->send(new BulkSubscriberEmail($subject, $body));
+                            }
+                            $emailQueue++;
+                        } catch (\Throwable $e) {
+                            \Illuminate\Support\Facades\Log::error("Failed bulk email sending to {$value}: " . $e->getMessage());
+                        }
                     }
                 } elseif ($type === 'whatsapp') {
                     $waText = $body;

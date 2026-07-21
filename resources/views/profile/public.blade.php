@@ -132,7 +132,16 @@
                             <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                             </div>
-                            <a href="tel:{{ $contactInfo['phone'] }}" class="text-sm font-medium text-gray-700 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
+                            @auth
+                                <a href="tel:{{ $contactInfo['phone'] }}" class="text-sm font-medium text-gray-700 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-medium text-gray-500 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
+                                    <a href="{{ route('register') }}" class="text-[11px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
+                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
+                                    </a>
+                                </div>
+                            @endauth
                         </div>
                         @endif
 
@@ -141,7 +150,16 @@
                             <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             </div>
-                            <a href="mailto:{{ $contactInfo['email'] }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
+                            @auth
+                                <a href="mailto:{{ $contactInfo['email'] }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-medium text-gray-500 blur-[2px] select-none">contact@******.com</span>
+                                    <a href="{{ route('register') }}" class="text-[11px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
+                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
+                                    </a>
+                                </div>
+                            @endauth
                         </div>
                         @endif
 

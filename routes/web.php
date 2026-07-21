@@ -49,6 +49,11 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect()->back();
 })->name('lang.switch');
 
+// Email Preview Route for Marketing Updates
+Route::get('/email-preview', function () {
+    return view('emails.platform_update_announcement');
+});
+
 Route::middleware('set.locale')->group(function () {
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering

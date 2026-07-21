@@ -17,6 +17,9 @@ class SocialLoginController extends Controller
 
     public function redirectGoogle()
     {
+        if (empty(config('services.google.client_id'))) {
+            return redirect('/register')->with('info', __('تسجيل الدخول عبر Google بيتطلب إعداد المعرف في ملف البيئة. يرجى التسجيل بالبريد الإلكتروني حالياً.'));
+        }
         return Socialite::driver('google')->redirect();
     }
 

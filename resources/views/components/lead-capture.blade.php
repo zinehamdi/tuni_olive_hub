@@ -1,84 +1,69 @@
-<div id="leadCaptureModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300 opacity-0 pointer-events-none">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="leadCaptureContent">
-        <!-- Header Image / Banner -->
-        <div class="h-32 bg-green-700 rounded-t-xl flex items-center justify-center relative overflow-hidden">
-            <!-- Decorative circles -->
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-green-600 rounded-full opacity-50"></div>
-            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-green-800 rounded-full opacity-50"></div>
-            
-            <button id="closeLeadModal" class="absolute top-3 right-3 text-white/80 hover:text-white transition bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center z-10">
+@guest
+<div id="leadCaptureModal" class="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden transform transition-all duration-300 scale-95 opacity-0 relative text-right" id="leadCaptureContent" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        
+        <!-- Header Banner -->
+        <div class="bg-gradient-to-r from-[#111827] via-[#0F291E] to-[#6A8F3B] p-6 text-white text-center relative overflow-hidden">
+            <button id="closeLeadModal" class="absolute top-4 left-4 text-white/80 hover:text-white transition bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center z-10 cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <h2 class="text-white text-2xl font-bold z-10 text-center px-4">{{ __('Join 14,000+ Professionals') }}</h2>
+
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/20 text-xs font-bold text-emerald-200 mb-3">
+                🫒 {{ app()->getLocale() === 'ar' ? 'منصة زيت الزيتون التونسي / زينتوب' : 'ZinToop Platform' }}
+            </div>
+            
+            <h2 class="text-xl font-black leading-snug">
+                {{ app()->getLocale() === 'ar' ? 'انضم مجاناً إلى أكبر تجمع لزيت الزيتون والخدمات الفلاحية' : 'Join Tunisia\'s Premier Olive Oil Marketplace' }}
+            </h2>
         </div>
 
-        <div class="p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ __('Get the Free Zintoop Guide & Weekly Market Updates!') }}</h3>
-            <p class="text-gray-600 text-sm mb-6">{{ __('Learn how to track transporters, negotiate deals, and get the latest olive prices directly to your inbox or phone.') }}</p>
+        <div class="p-6 sm:p-7">
+            <p class="text-xs text-gray-600 mb-5 leading-relaxed font-medium text-center">
+                {{ app()->getLocale() === 'ar' ? 'أنشئ حسابك المجاني في ثوانٍ للتواصل المباشر مع الفلاحين، أصحاب المعاصر، الناقلين والمشترين بدون سماسرة أو عمولات.' : 'Create your free account in seconds to connect directly with farmers, mills, and transporters without commissions.' }}
+            </p>
 
-            <form id="leadCaptureForm" class="space-y-4">
-                @csrf
-                
-                <!-- Toggle -->
-                <div class="text-sm font-bold text-gray-700 mb-2">{{ __('Choose your preferred method:') }}</div>
-                <div class="flex items-center justify-between bg-gray-100 p-1 rounded-lg relative">
-                    <button type="button" id="tabWhatsapp" class="flex-1 py-2 text-sm font-bold rounded-md bg-white shadow text-green-600 hover:text-green-700 hover:bg-green-50 transition z-10">{{ __('WhatsApp') }}</button>
-                    
-                    <!-- OR Badge -->
-                    <div class="absolute left-1/2 -translate-x-1/2 z-20 bg-gray-200 text-gray-500 rounded-full px-2 py-0.5 text-xs font-bold border-2 border-white pointer-events-none">
-                        {{ __('or') }}
-                    </div>
-
-                    <button type="button" id="tabEmail" class="flex-1 py-2 text-sm font-bold rounded-md text-gray-500 hover:text-green-700 hover:bg-green-50 transition z-10">{{ __('Email') }}</button>
+            <!-- Value Highlights -->
+            <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 mb-6 space-y-2 text-xs text-emerald-900 font-semibold">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'تواصل فوري ومباشر عبر الواتساب والمكالمات' : 'Direct WhatsApp & phone calls with verified users' }}</span>
                 </div>
-
-                <input type="hidden" name="type" id="contactType" value="whatsapp">
-
-                <!-- Input Group -->
-                <div id="inputWrapper">
-                    <label for="contactValue" class="block text-sm font-medium text-gray-700 mb-1" id="contactLabel">{{ __('WhatsApp Number') }}</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" id="inputIcon">
-                            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.128.552 4.135 1.523 5.918L.004 24l6.236-1.636a11.967 11.967 0 005.791 1.492h.004c6.645 0 12.03-5.385 12.03-12.031C24.065 5.385 18.68 0 12.031 0zm0 21.84c-1.802 0-3.564-.485-5.111-1.401l-.366-.217-3.799.996 1.015-3.704-.239-.38C2.569 15.485 2.016 13.785 2.016 12.03 2.016 6.505 6.51 2.01 12.035 2.01c2.677 0 5.193 1.043 7.085 2.936A9.972 9.972 0 0122.052 12.03c0 5.524-4.494 10.02-10.02 10.02v-.01zm5.496-7.502c-.301-.151-1.782-.879-2.058-.979-.276-.1-.478-.151-.678.151-.201.301-.778.979-.953 1.18-.175.201-.35.226-.652.075-.301-.151-1.272-.469-2.423-1.496-.895-.8-1.501-1.787-1.677-2.088-.175-.301-.019-.464.131-.614.136-.136.301-.351.452-.526.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.151-.678-1.634-.928-2.237-.243-.591-.49-.51-.678-.519-.175-.01-.377-.01-.578-.01-.201 0-.527.075-.803.376-.276.301-1.054 1.03-1.054 2.508 0 1.479 1.079 2.909 1.23 3.109.15.201 2.118 3.232 5.13 4.531 2.457 1.06 2.96 1.058 3.565.98.665-.084 1.782-.729 2.032-1.433.251-.703.251-1.306.175-1.433-.075-.126-.276-.201-.578-.352z"></path></svg>
-                        </div>
-                        <input type="tel" name="contact_value" id="contactValue" class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 py-2 border" placeholder="+216 20 123 456" required>
-                    </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'تصفح واستكشاف دليل المعاصر والخدمات الفلاحية' : 'Explore oil mills & agricultural services directory' }}</span>
                 </div>
-                
-                <div id="formError" class="text-red-500 text-sm hidden"></div>
-                <div id="formSuccess" class="text-green-600 text-sm font-medium hidden">{{ __('Success! Check your messages soon.') }}</div>
-
-                <button type="submit" id="submitLead" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-200 flex justify-center items-center">
-                    <span>{{ __('Send Me The Guide') }}</span>
-                </button>
-
-            </form>
-
-            <div class="mt-6 text-center">
-                <span class="text-gray-500 text-sm">{{ __('Already ready to trade?') }}</span>
-                <a href="{{ route('register') }}" class="text-green-600 font-medium hover:text-green-800 text-sm ml-1 transition">{{ __('Create a Full Account') }}</a>
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'متابعة يومية لأسعار بورصة زيت الزيتون التونسي والعالمي' : 'Real-time local & international olive oil market prices' }}</span>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Facebook Messenger Banner (Segment A) -->
-<div id="messengerBanner" class="fixed bottom-4 right-4 z-[100] hidden">
-    <div class="bg-white rounded-2xl shadow-2xl p-4 w-72 border border-[#1877F2]/20 relative transform transition-all duration-300">
-        <button id="closeMessengerBanner" class="absolute -top-2 -right-2 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        <div class="flex items-start gap-3">
-            <div class="bg-[#1877F2]/10 p-2 rounded-full text-[#1877F2] shrink-0">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.915 1.488 5.49 3.796 7.157v3.585l3.473-1.905c.87.239 1.786.363 2.731.363 5.523 0 10-4.145 10-9.258S17.523 2 12 2zm1.094 12.336l-2.825-3.013-5.518 3.013 6.071-6.438 2.894 3.013 5.449-3.013-6.071 6.438z"/>
-                </svg>
+            <!-- Primary 1-Click Google Sign Up -->
+            <div class="space-y-3">
+                <a href="{{ route('auth.google') }}" class="w-full py-3.5 bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-800 font-black rounded-2xl shadow-md transition duration-200 text-sm flex items-center justify-center gap-3 group">
+                    <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>{{ app()->getLocale() === 'ar' ? 'التسجيل السريع بـ Google / Gmail' : 'Sign up instantly with Google / Gmail' }}</span>
+                </a>
+                <p class="text-[11px] text-emerald-700 font-bold text-center -mt-1">
+                    ⚡ {{ app()->getLocale() === 'ar' ? 'الأسرع والأسهل - بنقرة واحدة بدون كلمة سر' : 'Fastest & Easiest - 1 click without passwords' }}
+                </p>
+
+                <!-- Secondary Email Registration -->
+                <a href="{{ route('register') }}" class="w-full py-3 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold rounded-xl transition duration-200 text-xs flex items-center justify-center gap-2 shadow-sm">
+                    ✉️ {{ app()->getLocale() === 'ar' ? 'التسجيل بالبريد الإلكتروني عادي' : 'Register with Email' }}
+                </a>
             </div>
-            <div>
-                <h4 class="font-bold text-gray-900 text-sm leading-tight">{{ __('Welcome from Facebook!') }}</h4>
-                <p class="text-xs text-gray-600 mt-1 mb-3">{{ __('Talk to our AI Assistant to get your free guide instantly.') }}</p>
-                <a href="https://m.me/828942590302317?ref=website_khadhara" target="_blank" class="block w-full text-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-bold py-2 rounded-lg shadow-sm transition">
-                    {{ __('Chat in Messenger') }}
+
+            <!-- Login Link -->
+            <div class="mt-5 pt-4 border-t border-gray-100 text-center">
+                <span class="text-xs text-gray-500">{{ app()->getLocale() === 'ar' ? 'لديك حساب بالفعل؟' : 'Already have an account?' }}</span>
+                <a href="{{ route('login') }}" class="text-xs font-bold text-[#6A8F3B] hover:underline mr-1">
+                    🔐 {{ app()->getLocale() === 'ar' ? 'تسجيل الدخول' : 'Log In' }}
                 </a>
             </div>
         </div>
@@ -91,150 +76,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const content = document.getElementById('leadCaptureContent');
     const closeBtn = document.getElementById('closeLeadModal');
     
-    // Tabs
-    const tabEmail = document.getElementById('tabEmail');
-    const tabWhatsapp = document.getElementById('tabWhatsapp');
-    const contactType = document.getElementById('contactType');
-    const contactLabel = document.getElementById('contactLabel');
-    const contactValue = document.getElementById('contactValue');
-    const inputIcon = document.getElementById('inputIcon');
+    if (!modal || !content) return;
 
-    // Form
-    const form = document.getElementById('leadCaptureForm');
-    const submitBtn = document.getElementById('submitLead');
-    const formError = document.getElementById('formError');
-    const formSuccess = document.getElementById('formSuccess');
-
-    // Check if user already saw or subscribed
-    const hasSeenLeadCapture = localStorage.getItem('zintoop_lead_capture_seen');
-    const hasSeenMessengerBanner = sessionStorage.getItem('zintoop_messenger_banner_seen');
+    // Check if user dismissed prompt recently (remember for 7 days)
+    const dismissedUntil = localStorage.getItem('zintoop_register_prompt_dismissed');
+    const now = new Date().getTime();
     
-    // Segment Logic
-    const isFacebookTraffic = document.referrer.includes('facebook.com') || window.location.search.includes('utm_source=facebook') || window.location.search.includes('fbclid=');
-    
-    const messengerBanner = document.getElementById('messengerBanner');
-    const closeMessengerBanner = document.getElementById('closeMessengerBanner');
-    
-    if (closeMessengerBanner) {
-        closeMessengerBanner.addEventListener('click', () => {
-            messengerBanner.classList.add('translate-y-full', 'opacity-0');
-            setTimeout(() => messengerBanner.classList.add('hidden'), 300);
-            sessionStorage.setItem('zintoop_messenger_banner_seen', 'true');
-        });
+    if (dismissedUntil && now < parseInt(dismissedUntil)) {
+        return;
     }
 
-    if (!window.location.pathname.includes('/register') && !window.location.pathname.includes('/login')) {
+    // Do not show on auth pages
+    const path = window.location.pathname;
+    if (path.includes('/register') || path.includes('/login') || path.includes('/onboarding')) {
+        return;
+    }
+
+    let modalTriggered = false;
+
+    const showModal = () => {
+        if (modalTriggered) return;
+        modalTriggered = true;
         
-        if (isFacebookTraffic) {
-            // Facebook Messenger Banner has been deactivated
-        } else {
-            // SEGMENT B: Standard Traffic
-            if (!hasSeenLeadCapture) {
-                let modalTriggered = false;
-
-                const showModal = () => {
-                    if (modalTriggered) return;
-                    modalTriggered = true;
-                    
-                    modal.classList.remove('opacity-0', 'pointer-events-none');
-                    content.classList.remove('scale-95', 'opacity-0');
-                    
-                    // Mark as seen so we don't annoy them for 30 days
-                    const thirtyDays = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-                    localStorage.setItem('zintoop_lead_capture_seen', thirtyDays);
-                };
-
-                // 1. Time-based trigger (15 seconds)
-                const timeTrigger = setTimeout(showModal, 15000);
-
-                // 2. Scroll-based trigger (50% of page)
-                window.addEventListener('scroll', () => {
-                    if (modalTriggered) return;
-                    const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-                    if (scrollPercent > 50) {
-                        showModal();
-                        clearTimeout(timeTrigger);
-                    }
-                });
-            }
-        }
-    }
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-95', 'opacity-0');
+    };
 
     const hideModal = () => {
         content.classList.add('scale-95', 'opacity-0');
         modal.classList.add('opacity-0', 'pointer-events-none');
+        
+        // Remember dismiss for 7 days
+        const sevenDays = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+        localStorage.setItem('zintoop_register_prompt_dismissed', sevenDays);
     };
 
-    closeBtn.addEventListener('click', hideModal);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideModal);
+    }
 
-    // Tab Switching Logic
-    tabEmail.addEventListener('click', () => {
-        contactType.value = 'email';
-        tabEmail.classList.add('bg-white', 'shadow', 'text-green-600');
-        tabEmail.classList.remove('text-gray-500');
-        tabWhatsapp.classList.remove('bg-white', 'shadow', 'text-green-600');
-        tabWhatsapp.classList.add('text-gray-500');
-        
-        contactLabel.innerText = '{{ __('Email Address') }}';
-        contactValue.placeholder = 'you@example.com';
-        contactValue.type = 'email';
-        inputIcon.innerHTML = '<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>';
-    });
+    // 1. Time trigger: 18 seconds stay
+    const timeTrigger = setTimeout(showModal, 18000);
 
-    tabWhatsapp.addEventListener('click', () => {
-        contactType.value = 'whatsapp';
-        tabWhatsapp.classList.add('bg-white', 'shadow', 'text-green-600');
-        tabWhatsapp.classList.remove('text-gray-500');
-        tabEmail.classList.remove('bg-white', 'shadow', 'text-green-600');
-        tabEmail.classList.add('text-gray-500');
-        
-        contactLabel.innerText = '{{ __('WhatsApp Number') }}';
-        contactValue.placeholder = '+216 20 123 456';
-        contactValue.type = 'tel';
-        inputIcon.innerHTML = '<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.128.552 4.135 1.523 5.918L.004 24l6.236-1.636a11.967 11.967 0 005.791 1.492h.004c6.645 0 12.03-5.385 12.03-12.031C24.065 5.385 18.68 0 12.031 0zm0 21.84c-1.802 0-3.564-.485-5.111-1.401l-.366-.217-3.799.996 1.015-3.704-.239-.38C2.569 15.485 2.016 13.785 2.016 12.03 2.016 6.505 6.51 2.01 12.035 2.01c2.677 0 5.193 1.043 7.085 2.936A9.972 9.972 0 0122.052 12.03c0 5.524-4.494 10.02-10.02 10.02v-.01zm5.496-7.502c-.301-.151-1.782-.879-2.058-.979-.276-.1-.478-.151-.678.151-.201.301-.778.979-.953 1.18-.175.201-.35.226-.652.075-.301-.151-1.272-.469-2.423-1.496-.895-.8-1.501-1.787-1.677-2.088-.175-.301-.019-.464.131-.614.136-.136.301-.351.452-.526.151-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.151-.678-1.634-.928-2.237-.243-.591-.49-.51-.678-.519-.175-.01-.377-.01-.578-.01-.201 0-.527.075-.803.376-.276.301-1.054 1.03-1.054 2.508 0 1.479 1.079 2.909 1.23 3.109.15.201 2.118 3.232 5.13 4.531 2.457 1.06 2.96 1.058 3.565.98.665-.084 1.782-.729 2.032-1.433.251-.703.251-1.306.175-1.433-.075-.126-.276-.201-.578-.352z"></path></svg>';
-    });
-
-    // Form Submit
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> {{ __('Sending...') }}';
-        formError.classList.add('hidden');
-        formSuccess.classList.add('hidden');
-
-        try {
-            const response = await fetch('/api/subscribe', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-                },
-                body: JSON.stringify({
-                    type: contactType.value,
-                    contact_value: contactValue.value
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                formError.innerText = data.message || (data.errors ? Object.values(data.errors)[0][0] : 'An error occurred');
-                formError.classList.remove('hidden');
-            } else {
-                formSuccess.classList.remove('hidden');
-                form.reset();
-                setTimeout(() => {
-                    hideModal();
-                }, 2000);
-            }
-        } catch (error) {
-            formError.innerText = '{{ __('Network error. Please try again.') }}';
-            formError.classList.remove('hidden');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<span>{{ __('Send Me The Guide') }}</span>';
+    // 2. Scroll trigger: 40% page scroll
+    window.addEventListener('scroll', () => {
+        if (modalTriggered) return;
+        const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        if (scrollPercent > 40) {
+            showModal();
+            clearTimeout(timeTrigger);
         }
     });
 });
 </script>
+@endguest

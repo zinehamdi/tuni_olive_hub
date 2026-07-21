@@ -197,6 +197,7 @@
                                 <option value="fix_listings_ar">تنبيه: مراجعة وتعديل العروض (العربية) 🫒</option>
                                 <option value="fix_listings_fr">Correction d'annonces et guide (Français) 🫒</option>
                                 <option value="welcome">{{ __('Welcome to Zintoop') }}</option>
+                                <option value="update_announcement">🚀 {{ app()->getLocale() === 'ar' ? 'إعلان التحديث الشامل لمنصة زين توب (قالب HTML الاحترافي)' : 'ZinToop Major Platform Update (HTML Theme)' }}</option>
                                 <option value="update">{{ __('Weekly Update / News') }}</option>
                                 <option value="deal">{{ __('New Deals Available') }}</option>
                                 <option value="guide">{{ __('How to Use Zintoop Guide') }}</option>
@@ -297,6 +298,19 @@ L'équipe ZinToop.</p>
         'welcome': {
             subject: 'مرحباً بك في منصة الزين Zintoop!',
             body: "<p>مرحباً،</p><p>نحن سعداء بانضمامك لمنصة الزين Zintoop، أكبر سوق لزيت الزيتون.<br>يمكنك الآن استكشاف أحدث العروض والطلبات.</p><p>تفضل بزيارة المنصة: <a href='https://zintoop.com'>https://zintoop.com</a></p><p>فريق الزين.</p>"
+        },
+        'update_announcement': {
+            subject: '🚀 إطلاق التحديث الجديد لمنصة زين توب | ZinToop New Update',
+            body: `
+<p style="direction: rtl; text-align: right;"><strong>🚀 إعلان إطلاق التحديث الشامل لمنصة زين توب (ZinToop)</strong></p>
+<p style="direction: rtl; text-align: right;">سيتم إرسال القالب الترويجي الاحترافي المنسق بـ HTML وألوان المنصة الرسمية تلقائياً لجميع المشتركين والمستخدمين، متضمناً:</p>
+<ul style="direction: rtl; text-align: right;">
+    <li>💼 <strong>دليل الخدمات الفلاحية والتجارية (ServiceHub):</strong> المعاصر، الناقلين، التعبئة والتغليف والمخلصين الجمركيين.</li>
+    <li>📈 <strong>أسعار بورصة زيت الزيتون:</strong> متابعة يومية لأسعار السوق التونسي والعالمي.</li>
+    <li>📱 <strong>التواصل الفوري والواتساب:</strong> إمكانية التواصل المباشر وتصفح الملفات الموثقة.</li>
+</ul>
+<p style="direction: rtl; text-align: right;">يمكنك استعراض الشكل النهائي للقالب على الرابط المحاكي: <a href="/email-preview" target="_blank">معاينة تصميم الإيميل</a></p>
+`
         },
         'update': {
             subject: 'نشرة أخبار الزين Zintoop',

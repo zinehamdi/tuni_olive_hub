@@ -7,16 +7,27 @@
 
     <!-- SEO Meta Tags -->
     @php
-        $defaultBrandName = app()->getLocale() === 'ar' ? 'زين توب' : 'ZinToop';
-        $isArabic = app()->getLocale() === 'ar';
-        $defaultTitle = $isArabic ? 'زين توب | السوق التونسي الأول لزيت الزيتون' : 'ZinToop | Tunisian Olive Oil Marketplace';
-        $defaultDesc = $isArabic 
-            ? 'زين توب - السوق التونسي الأول لزيت الزيتون. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.'
-            : 'ZinToop - The leading Tunisian Olive Oil Marketplace. Connect directly with farmers and mills. No commissions.';
+        $locale = app()->getLocale();
+        $defaultBrandName = $locale === 'ar' ? 'زين توب' : 'ZinToop';
+        $defaultTitle = match($locale) {
+            'ar' => 'زين توب | السوق التونسي الأول لزيت الزيتون والخدمات الفلاحية',
+            'fr' => 'ZinToop | 1ère Marketplace d\'Huile d\'Olive en Tunisie',
+            default => 'ZinToop | Leading Tunisian Olive Oil & Agricultural Services Marketplace',
+        };
+        $defaultDesc = match($locale) {
+            'ar' => 'زين توب - المنصة الأولى لزيت الزيتون والدليل التجاري في تونس. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.',
+            'fr' => 'ZinToop - Première plateforme d\'huile d\'olive et annuaire B2B en Tunisie. Connectez-vous directement avec les producteurs sans commissions.',
+            default => 'ZinToop - Premier Tunisian Olive Oil Marketplace & B2B Directory. Connect directly with farmers and oil mills without commissions.',
+        };
+        $defaultKeywords = match($locale) {
+            'ar' => 'أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت زيتون, معصرة زيتون, تونس, فلاح, زيت بكر ممتاز, سوق الزيتون, زين توب',
+            'fr' => 'meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, moulin à huile, zintoop',
+            default => 'best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, extra virgin olive oil, zintoop',
+        };
     @endphp
     <title>{{ config('app.name') }} - @yield('title', $defaultTitle)</title>
     <meta name="description" content="@yield('description', $defaultDesc)">
-    <meta name="keywords" content="زيت زيتون, تونس, فلاح, معصرة, زيتون, زيت بكر ممتاز, سوق الزيتون, tunisian olive oil, olive oil marketplace, extra virgin, zintoop">
+    <meta name="keywords" content="@yield('keywords', $defaultKeywords)">
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
     <!-- Open Graph / Facebook -->

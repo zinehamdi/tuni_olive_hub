@@ -103,7 +103,23 @@
     activeServiceIcon: '📦',
     activeProvider: null,
     showProviderModal: false,
+    showRegisterGateModal: false,
+    isGuest: {{ auth()->guest() ? 'true' : 'false' }},
     providers: {{ json_encode($providersJsonData) }},
+    handleFullProfile(url) {
+        if (this.isGuest) {
+            this.showRegisterGateModal = true;
+        } else {
+            window.location.href = url;
+        }
+    },
+    handleWhatsApp(phone) {
+        if (this.isGuest) {
+            this.showRegisterGateModal = true;
+        } else {
+            window.open('https://wa.me/' + phone.replace(/[^0-9]/g, ''), '_blank');
+        }
+    },
     openModal(id, name, price, icon) {
         this.activeServiceId = id;
         this.activeServiceName = name;
@@ -382,7 +398,7 @@
                 </div>
 
                 <!-- Big Provider Card Modal -->
-                <div x-show="showProviderModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
+                <div x-show="showProviderModal" x-cloak class="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
                     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showProviderModal = false">
                         
                         <!-- Close button -->
@@ -451,18 +467,84 @@
 
                             <!-- CTA Buttons -->
                             <div class="flex gap-2" x-show="activeProvider">
-                                <a :href="activeProvider ? activeProvider.url : '#'" class="flex-grow text-center py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-sm transition duration-200">
+                                <button type="button" @click="handleFullProfile(activeProvider ? activeProvider.url : '#')" class="flex-grow text-center py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-sm transition duration-200 cursor-pointer">
                                     👁 {{ app()->getLocale() === 'ar' ? 'عرض الملف الكامل' : 'View Full Profile' }}
-                                </a>
-                                <a :href="activeProvider ? 'https://wa.me/' + activeProvider.phone.replace(/[^0-9]/g, '') : '#'" target="_blank" class="flex-grow text-center py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center justify-center gap-1.5 transition duration-200">
+                                </button>
+                                <button type="button" @click="handleWhatsApp(activeProvider ? activeProvider.phone : '')" class="flex-grow text-center py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center justify-center gap-1.5 transition duration-200 cursor-pointer">
                                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
                                     <span>{{ app()->getLocale() === 'ar' ? 'واتساب' : 'WhatsApp' }}</span>
-                                </a>
+                                </button>
                             </div>
                         </div>
 
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ─── GUEST REGISTRATION GATE MODAL ─── --}}
+    <div x-show="showRegisterGateModal" 
+         class="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" 
+         x-transition:enter="transition ease-out duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100" 
+         x-transition:leave="transition ease-in duration-200" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0"
+         style="display: none;">
+         
+        <div @click.away="showRegisterGateModal = false" 
+             class="bg-white border border-gray-100 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative text-right overflow-hidden"
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4" 
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0" 
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+             
+            <!-- Close Button -->
+            <button @click="showRegisterGateModal = false" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition z-20 cursor-pointer">
+                ✕
+            </button>
+
+            <!-- Modal Icon & Header -->
+            <div class="flex flex-col items-center text-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#6A8F3B] to-[#5a7a2f] text-white flex items-center justify-center text-3xl shadow-lg mb-4">
+                    🔒
+                </div>
+                <h3 class="text-xl font-black text-gray-900 leading-snug">
+                    {{ app()->getLocale() === 'ar' ? 'انضم إلى منصة زين للتواصل المباشر' : 'Join ZinToop for Direct Contact' }}
+                </h3>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed max-w-xs">
+                    {{ app()->getLocale() === 'ar' ? 'للتواصل المباشر مع هذا المزود ومشاهدة رقم الهاتف والملف الكامل، أنشئ حسابك المجاني في ثوانٍ.' : 'Create a free account in seconds to view direct phone numbers and full profiles.' }}
+                </p>
+            </div>
+
+            <!-- Conversion Highlights -->
+            <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 mb-6 space-y-2.5 text-xs text-emerald-800 text-right font-medium">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'تواصل مباشر عبر الواتساب والمكالمات بدون عمولات' : 'Direct WhatsApp & phone calls without commissions' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'إضافة طلباتك وعروضك في سوق زيت الزيتون التونسي' : 'Post your offers & requests in the Tunisian marketplace' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-base">✅</span>
+                    <span>{{ app()->getLocale() === 'ar' ? 'حساب مجاني 100% يتيح لك الاستفادة من جميع الخدمات' : '100% free account with full access to all features' }}</span>
+                </div>
+            </div>
+
+            <!-- Action CTA Buttons -->
+            <div class="space-y-3">
+                <a href="{{ route('register') }}" class="w-full py-3.5 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-black rounded-xl shadow-lg shadow-[#6A8F3B]/30 transition duration-200 text-sm flex items-center justify-center gap-2">
+                    🚀 {{ app()->getLocale() === 'ar' ? 'إنشاء حساب مجاني في ثوانٍ' : 'Create Free Account' }}
+                </a>
+                <a href="{{ route('login') }}" class="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold rounded-xl border border-gray-200 transition duration-200 text-xs flex items-center justify-center gap-1.5">
+                    🔐 {{ app()->getLocale() === 'ar' ? 'لديك حساب بالفعل؟ تسجيل الدخول' : 'Already have an account? Log In' }}
+                </a>
             </div>
         </div>
     </div>
