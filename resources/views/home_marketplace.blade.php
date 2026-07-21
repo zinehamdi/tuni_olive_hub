@@ -32,7 +32,7 @@
                 <!-- Logo -->
                 <a href="{{ url('/') }}" class="flex items-center gap-3 group">
                     <div class="h-20 w-20 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-all">
-                        <img src="{{ asset('images/logotoop.PNG') }}" alt="Tunisian Olive Oil Platform" class="h-full w-full object-cover scale-125 translate-y-2 group-hover:scale-[1.35] transition-transform">
+                        <img src="{{ asset('images/zintoop-logo.png') }}" alt="Tunisian Olive Oil Platform" class="h-full w-full object-cover scale-125 translate-y-2 group-hover:scale-[1.35] transition-transform">
                     </div>
                     <div>
                         <div class="text-xl font-bold text-gray-900">{{ __('Tunisian Olive Oil Platform') }}</div>
@@ -1303,7 +1303,7 @@ document.addEventListener('alpine:init', () => {
                         "name": "{{ $listing->seller->name ?? 'بائع' }}"
                     }
                 },
-                "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/logotoop.PNG') !!}",
+                "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') !!}",
                 "brand": {
                     "@@type": "Brand",
                     "name": "Tunisian Olive Oil"
@@ -1328,7 +1328,7 @@ document.addEventListener('alpine:init', () => {
     "name": "منصة زيت الزيتون التونسي",
     "alternateName": "Tunisian Olive Oil Platform",
     "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/logotoop.PNG') }}",
+    "logo": "{{ asset('images/zintoop-logo.png') }}",
     "description": "منصة تونسية متخصصة في تجارة زيت الزيتون والزيتون التونسي الأصلي",
     "contactPoint": {
         "@@type": "ContactPoint",
