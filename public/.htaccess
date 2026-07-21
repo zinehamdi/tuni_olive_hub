@@ -5,8 +5,8 @@
 
     RewriteEngine On
 
-    # Disable LiteSpeed Cache for public profile routes
-    RewriteCond %{REQUEST_URI} ^/user/ [NC]
+    # Disable LiteSpeed Cache for dynamic auth routes
+    RewriteCond %{REQUEST_URI} (user|servicehub|login|register) [NC]
     RewriteRule .* - [E=Cache-Control:no-cache]
 
     # PHP Upload Configuration for Large Image Files
@@ -41,7 +41,7 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    Header set X-LiteSpeed-Cache-Control "no-cache"
+    Header set X-LiteSpeed-Cache-Control "no-cache, no-store"
 </IfModule>
 
 <IfModule mod_deflate.c>
