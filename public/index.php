@@ -1,5 +1,10 @@
 <?php
 
+if (isset($_SERVER['REQUEST_URI'])) {
+    header('X-LiteSpeed-Cache-Control: no-cache, no-store');
+    header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+}
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
