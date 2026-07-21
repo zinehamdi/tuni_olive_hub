@@ -148,8 +148,12 @@
         const providerId = urlParams.get('provider');
         if (providerId && this.providers[providerId]) {
             setTimeout(() => {
-                this.activeProvider = this.providers[providerId];
-                this.showProviderModal = true;
+                if (this.isGuest) {
+                    this.showRegisterGateModal = true;
+                } else {
+                    this.activeProvider = this.providers[providerId];
+                    this.showProviderModal = true;
+                }
                 
                 const el = document.getElementById('directory');
                 if (el) {
@@ -329,7 +333,7 @@
                     @endphp
 
                     <div class="group bg-white border border-gray-100 shadow-md rounded-2xl p-4 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden text-right cursor-pointer"
-                        @click="activeProvider = providers[{{ $provider->id }}] || {}; showProviderModal = true">
+                        @click="if (isGuest) { showRegisterGateModal = true; } else { activeProvider = providers[{{ $provider->id }}] || {}; showProviderModal = true; }">
                         
                         <!-- Little Card Image -->
                         <div class="w-full h-24 rounded-xl overflow-hidden mb-3 relative bg-gray-50 border border-gray-100/50 flex items-center justify-center">
