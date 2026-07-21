@@ -50,11 +50,6 @@ Route::get('/lang/{locale}', function (string $locale) {
 })->name('lang.switch');
 
 Route::middleware('set.locale')->group(function () {
-    // Email Preview Route for Marketing Updates
-    Route::get('/email-preview', function () {
-        return view('emails.platform_update_announcement');
-    });
-
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering
         $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(10), function () {
@@ -362,4 +357,5 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
     return view('auth.register_' . $role, compact('role'));
 })->name('register.role');
 Route::get('/healthz', function(){ return 'OK'; });
+Route::get('/email-preview', function(){ return view('emails.platform_update_announcement'); })->name('email.preview');
 
