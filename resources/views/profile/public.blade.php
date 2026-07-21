@@ -275,15 +275,21 @@
                             @endif
 
                             <div class="pt-4 border-t border-gray-100 flex flex-wrap gap-4">
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $user->phone) }}" target="_blank" class="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center gap-2 transition">
-                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
-                                    {{ app()->getLocale() === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' }}
-                                </a>
-                                @if($user->email)
-                                <a href="mailto:{{ $user->email }}" class="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm flex items-center gap-2 transition">
-                                    ✉️ {{ $user->email }}
-                                </a>
-                                @endif
+                                @auth
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $user->phone) }}" target="_blank" class="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center gap-2 transition">
+                                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
+                                        {{ app()->getLocale() === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' }}
+                                    </a>
+                                    @if($user->email)
+                                    <a href="mailto:{{ $user->email }}" class="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm flex items-center gap-2 transition">
+                                        ✉️ {{ $user->email }}
+                                    </a>
+                                    @endif
+                                @else
+                                    <a href="{{ route('register') }}" class="px-6 py-3 rounded-xl bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold text-sm flex items-center gap-2 transition shadow-lg">
+                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل مجاناً للتواصل مع هذا المزود' : 'Register Free to Contact Provider' }}
+                                    </a>
+                                @endauth
                             </div>
                         </div>
                     </div>
