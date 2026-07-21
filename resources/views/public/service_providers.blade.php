@@ -121,15 +121,15 @@
         }
     },
     openModal(id, name, price, icon) {
+        if (this.isGuest) {
+            this.showRegisterGateModal = true;
+            return;
+        }
         this.activeServiceId = id;
         this.activeServiceName = name;
         this.activeServicePrice = price;
         this.activeServiceIcon = icon;
         this.modalOpen = true;
-        
-        fetch('{{ url('/services/appointment') }}/' + id)
-            .then(res => console.log('Logged add_to_cart'))
-            .catch(err => console.error(err));
     },
     init() {
         const services = {{ json_encode($servicesData) }};
@@ -606,42 +606,25 @@
                 @csrf
                 
                 <div>
-                    <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'الاسم بالكامل أو اسم النشاط التجاري' : 'Full Name / Business Name' }} <span class="text-red-400">*</span></label>
-                    <input type="text" 
-                           name="name" 
-                           required 
-                           placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: معصرة الزيتون الكبرى...' : 'e.g. Olive Oil Mill Co.' }}"
-                           class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp Number' }} <span class="text-red-400">*</span></label>
-                    <input type="tel" 
-                           name="phone" 
-                           required 
-                           placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: 216XXXXXXXX+' : 'e.g. +216XXXXXXXX' }}"
-                           class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'معلومات إضافية عن نشاطك (اختياري)' : 'Additional Info (Optional)' }}</label>
+                    <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الطلب أو الاستفسار' : 'Inquiry / Order Details' }} <span class="text-red-400">*</span></label>
                     <textarea name="business_info" 
-                              rows="2" 
-                              placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: رابط صفحة الفيسبوك أو تفاصيل المنتج...' : 'e.g. Facebook page link or product details...' }}"
+                              required
+                              rows="3" 
+                              placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل طلبك هنا لنقوم بالتواصل معك داخل المنصة...' : 'Type your request details here for direct platform contact...' }}"
                               class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all"></textarea>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" 
-                        class="w-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#6A8F3B]/20 active:scale-[0.98] transition-all duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer mt-6">
-                    <span>💬</span>
-                    {{ app()->getLocale() === 'ar' ? 'احجز الآن وتواصل عبر واتساب' : 'Book & Chat on WhatsApp' }}
+                        class="w-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#6A8F3B]/20 active:scale-[0.98] transition-all duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer mt-4">
+                    <span>📩</span>
+                    {{ app()->getLocale() === 'ar' ? 'إرسال الطلب المباشر عبر المنصة' : 'Send Direct Request' }}
                 </button>
                 
                 <p class="text-[10px] text-center text-white/40 mt-3 leading-relaxed">
                     {{ app()->getLocale() === 'ar' 
-                        ? 'بمجرد النقر، سيتم تسجيل طلبك في نظامنا وفتح محادثة مباشرة وآمنة معك على الواتساب لإكمال التجهيز.' 
-                        : 'Clicking registers your lead instantly and opens a secure live chat on WhatsApp to finalize setup.' }}
+                        ? 'سيتم تسجيل طلبك مباشرة في حسابك بالمنصة وسيتواصل معك فريقنا أو المزود داخل صندوق الرسائل.' 
+                        : 'Your request will be submitted to your account inbox directly.' }}
                 </p>
             </form>
 
