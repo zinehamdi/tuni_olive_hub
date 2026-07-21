@@ -489,14 +489,14 @@
 
     {{-- ─── GUEST REGISTRATION GATE MODAL ─── --}}
     <div x-show="showRegisterGateModal" 
-         class="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" 
+         class="fixed inset-0 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" 
          x-transition:enter="transition ease-out duration-300" 
          x-transition:enter-start="opacity-0" 
          x-transition:enter-end="opacity-100" 
          x-transition:leave="transition ease-in duration-200" 
          x-transition:leave-start="opacity-100" 
          x-transition:leave-end="opacity-0"
-         style="display: none;">
+         style="display: none; z-index: 10001;">
          
         <div @click.away="showRegisterGateModal = false" 
              class="bg-white border border-gray-100 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative text-right overflow-hidden"
