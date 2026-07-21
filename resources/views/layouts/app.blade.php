@@ -255,6 +255,20 @@
              }
          @endauth" 
          @scroll.window="scrolled = window.scrollY > 20">
+        <!-- Platform Update Notification Banner -->
+        <div x-data="{ showNotice: !localStorage.getItem('zintoop_v13_notice_dismissed') }" 
+             x-show="showNotice" 
+             x-transition
+             class="bg-gradient-to-r from-emerald-800 via-[#6A8F3B] to-[#C8A356] text-white text-xs font-bold py-2 px-4 shadow-inner flex items-center justify-between z-[9990] relative border-b border-white/20">
+            <div class="flex-1 text-center flex items-center justify-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+                <span>🚀 {{ app()->getLocale() === 'ar' ? 'تم تحديث المنصة بنجاح - سرعة أفضل وأمان متقدم لجميع الزوار' : 'Platform updated successfully - Enhanced speed & security' }}</span>
+            </div>
+            <button @click="showNotice = false; localStorage.setItem('zintoop_v13_notice_dismissed', '1')" class="text-white/80 hover:text-white font-bold px-2 py-0.5 rounded hover:bg-white/10 transition">
+                ✕
+            </button>
+        </div>
+
         <!-- Main Nav Bar -->
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -732,7 +746,7 @@
         }
     </script>
     @include("components.cookie-consent")
-    @include("components.lead-capture")
+    {{-- @include("components.lead-capture") --}}
 
     {{-- Global Toast Component --}}
     <div x-data="{ 

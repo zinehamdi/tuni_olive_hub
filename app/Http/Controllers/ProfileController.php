@@ -50,6 +50,9 @@ class ProfileController extends Controller
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
+        if (auth()->guest()) {
+            return redirect()->route('register')->with('info', __('يرجى التسجيل أو تسجيل الدخول لمشاهدة الملف الشخصي الكامل.'));
+        }
         // compute coverUrl safely
         $coverUrl = null;
         try {
