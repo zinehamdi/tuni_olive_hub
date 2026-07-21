@@ -146,12 +146,10 @@ Route::middleware('set.locale')->group(function () {
 
     // Stories (public fetch)
     Route::get('/user/{user}/stories', [StoryController::class, 'index'])->name('user.stories');
+    Route::get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
 });
 
 Route::middleware(['auth', 'set.locale', 'onboarding'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');
-
-// Public user profile - accessible to anyone (view seller/publisher profiles)
-Route::middleware('set.locale')->get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
 
 // User interaction routes (follow/like)
 Route::middleware('set.locale')->get('/user/{user}/interaction-status', [\App\Http\Controllers\UserInteractionController::class, 'getStatus'])->name('user.interaction.status');
