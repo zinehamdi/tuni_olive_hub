@@ -50,6 +50,13 @@ class ProfileController extends Controller
     }
     public function viewPublicProfile(\App\Models\User $user)
     {
+        if (!headers_sent()) {
+            header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+            header('Pragma: no-cache');
+            header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+            header('X-LiteSpeed-Control: no-cache');
+        }
+
         if (auth()->guest()) {
             return redirect()->route('register')->with('info', __('يرجى التسجيل أو تسجيل الدخول لمشاهدة الملف الشخصي الكامل.'));
         }
