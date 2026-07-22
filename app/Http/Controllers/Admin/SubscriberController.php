@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\BulkSubscriberEmail;
 use App\Mail\PlatformUpdateAnnouncementMail;
+use App\Mail\NewListingNotificationMail;
+use App\Models\Listing;
 
 class SubscriberController extends Controller
 {
@@ -167,7 +169,9 @@ class SubscriberController extends Controller
             $contacts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 50);
         }
 
-        return view('admin.subscribers.index', compact('contacts', 'role', 'type', 'totalContacts'));
+        $latestListing = Listing::with(['product', 'seller'])->latest()->first();
+
+        return view('admin.subscribers.index', compact('contacts', 'role', 'type', 'totalContacts', 'latestListing'));
     }
 
     public function bulkMessage(Request $request)
@@ -280,6 +284,11 @@ class SubscriberController extends Controller
                         try {
                             if ($request->input('template') === 'update_announcement') {
                                 Mail::to($value)->send(new PlatformUpdateAnnouncementMail($subject));
+                            } elseif ($request->input('template') === 'latest_listing') {
+                                $listing = Listing::with(['product', 'seller'])->latest()->first();
+                                if ($listing) {
+                                    Mail::to($value)->send(new NewListingNotificationMail($listing));
+                                }
                             } else {
                                 Mail::to($value)->send(new BulkSubscriberEmail($subject, $body));
                             }

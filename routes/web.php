@@ -356,4 +356,27 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
 })->name('register.role');
 Route::get('/healthz', function(){ return 'OK'; });
 Route::get('/email-preview', function(){ return view('emails.platform_update_announcement'); })->name('email.preview');
+Route::get('/email-preview/welcome', function(){
+    $user = \App\Models\User::first() ?? (object)['name' => 'محمد الفلاح'];
+    return view('emails.welcome', compact('user'));
+});
+Route::get('/email-preview/listing', function(){
+    $listing = \App\Models\Listing::with('product')->first();
+    if (!$listing) return 'No listings found';
+    return view('emails.listing_created', compact('listing'));
+});
+Route::get('/email-preview/bulk', function(){
+    return view('emails.bulk_subscriber', [
+        'subjectTitle' => '🚀 مثال على رسالة جماعية | Exemple de message',
+        'messageBody' => '<p style="direction:rtl; text-align:right;">هذا مثال على محتوى الرسالة الجماعية التي سيتم إرسالها لجميع المشتركين.</p><p style="direction:rtl; text-align:right;"><strong>يمكن تضمين أي محتوى HTML هنا</strong> — عروض، تحديثات، أسعار، إلخ.</p>'
+    ]);
+});
+Route::get('/email-preview/onboarding', function(){
+    return view('emails.onboarding');
+});
+Route::get('/email-preview/new-listing', function(){
+    $listing = \App\Models\Listing::with(['product', 'seller'])->first();
+    if (!$listing) return 'No listings found — create one first.';
+    return view('emails.new_listing_notification', compact('listing'));
+});
 

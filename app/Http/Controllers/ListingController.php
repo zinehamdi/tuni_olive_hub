@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Mail\NewListingNotificationMail;
 use App\Services\ImageOptimizationService;
 
 /**
@@ -208,6 +209,14 @@ class ListingController extends Controller
                 \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
             } catch (\Exception $e) {
                 Log::error('Failed to send listing creation email: ' . $e->getMessage());
+            }
+
+            // Notify admin about new listing so they can review and send to subscribers manually
+            try {
+                \Illuminate\Support\Facades\Mail::to('zinehamdi8@gmail.com')->send(new NewListingNotificationMail($listing));
+                Log::info('Admin notified of new listing.', ['listing_id' => $listing->id]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send new listing admin notification: ' . $e->getMessage());
             }
 
             // Redirect to dashboard with success message

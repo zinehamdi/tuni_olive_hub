@@ -198,6 +198,7 @@
                                 <option value="fix_listings_fr">Correction d'annonces et guide (Français) 🫒</option>
                                 <option value="welcome">{{ __('Welcome to Zintoop') }}</option>
                                 <option value="update_announcement">🚀 {{ app()->getLocale() === 'ar' ? 'إعلان التحديث الشامل لمنصة زين توب (قالب HTML الاحترافي)' : 'ZinToop Major Platform Update (HTML Theme)' }}</option>
+                                <option value="latest_listing">🆕 {{ app()->getLocale() === 'ar' ? 'آخر عرض منشور (إشعار للمشتركين)' : 'Latest Listing — Subscriber Notification' }}</option>
                                 <option value="update">{{ __('Weekly Update / News') }}</option>
                                 <option value="deal">{{ __('New Deals Available') }}</option>
                                 <option value="guide">{{ __('How to Use Zintoop Guide') }}</option>
@@ -298,6 +299,18 @@ L'équipe ZinToop.</p>
         'welcome': {
             subject: 'مرحباً بك في منصة الزين Zintoop!',
             body: "<p>مرحباً،</p><p>نحن سعداء بانضمامك لمنصة الزين Zintoop، أكبر سوق لزيت الزيتون.<br>يمكنك الآن استكشاف أحدث العروض والطلبات.</p><p>تفضل بزيارة المنصة: <a href='https://zintoop.com'>https://zintoop.com</a></p><p>فريق الزين.</p>"
+        },
+        'latest_listing': {
+            subject: '🆕 {{ addslashes($latestListing?->product?->variety ?? "عرض جديد") }} — {{ addslashes($latestListing?->product?->type === "oil" ? "زيت زيتون" : "زيتون") }} | ZinToop',
+            body: `<p style="direction:rtl;text-align:right;"><strong>🆕 عرض جديد في السوق</strong></p>
+<p style="direction:rtl;text-align:right;">تم نشر عرض جديد على منصة زينتوب:</p>
+<ul style="direction:rtl;text-align:right;">
+    <li><strong>المنتج:</strong> {{ addslashes($latestListing?->product?->variety ?? '—') }} ({{ addslashes($latestListing?->product?->type === 'oil' ? 'زيت زيتون' : 'زيتون') }})</li>
+    <li><strong>الكمية:</strong> {{ addslashes(number_format($latestListing?->quantity ?? 0, 0)) }} {{ addslashes($latestListing?->unit ?? '') }}</li>
+    <li><strong>السعر:</strong> {{ addslashes($latestListing && $latestListing->price > 0 ? number_format($latestListing->price, 2).' '.($latestListing->currency ?? 'TND') : 'عند الطلب') }}</li>
+    {{ $latestListing?->governorate ? '<li><strong>المنطقة:</strong> '.addslashes($latestListing->governorate).'</li>' : '' }}
+</ul>
+<p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing->id) : url('/market') }}">👁 مشاهدة العرض الآن</a></p>`
         },
         'update_announcement': {
             subject: '🚀 إطلاق التحديث الجديد لمنصة زين توب | ZinToop New Update',
