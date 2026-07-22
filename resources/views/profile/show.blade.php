@@ -165,7 +165,7 @@
                                         
                                         <div class="flex gap-4 text-sm text-gray-600">
                                             @if($listing->min_order)
-                                                <span>📊 حد أدنى: {{ $listing->min_order }}</span>
+                                                <span>📊 حد أدنى: {{ $listing->formatted_min_order }} {{ $listing->unit }}</span>
                                             @endif
                                             <span>🕒 {{ $listing->created_at->diffForHumans() }}</span>
                                         </div>

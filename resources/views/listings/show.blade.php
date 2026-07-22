@@ -287,7 +287,7 @@
                                 </svg>
                                 <div>
                                     <div class="text-sm text-gray-600">{{ __('Minimum Order') }}</div>
-                                    <div class="font-bold">{{ $listing->min_order }} {{ __('unit') }}</div>
+                                    <div class="font-bold">{{ $listing->formatted_min_order }} {{ $listing->unit }}</div>
                                 </div>
                             </div>
                         @endif
@@ -419,9 +419,9 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
                                                 <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الكمية (' . $listing->unit . ')' : 'Quantity (' . $listing->unit . ')' }}</label>
-                                                <input type="number" x-model.number="dealQty" min="{{ $listing->min_order ?? 1 }}" step="0.1" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
+                                                <input type="number" x-model.number="dealQty" min="{{ $listing->formatted_min_order ?? 1 }}" step="any" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
                                                 @if($listing->min_order)
-                                                    <p class="text-xs text-gray-500 mt-1">{{ app()->getLocale() === 'ar' ? 'الحد الأدنى للطلب: ' : 'Minimum order: ' }} {{ $listing->min_order }}</p>
+                                                    <p class="text-xs text-gray-500 mt-1">{{ app()->getLocale() === 'ar' ? 'الحد الأدنى للطلب: ' : 'Minimum order: ' }} {{ $listing->formatted_min_order }} {{ $listing->unit }}</p>
                                                 @endif
                                             </div>
                                             
@@ -451,7 +451,7 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                         <button @click="showDealModal = false" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-bold">
                                             {{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}
                                         </button>
-                                        <button @click="submitDeal" :disabled="makingDeal || dealQty < {{ $listing->min_order ?? 1 }} || !dealPrice" class="flex-1 px-4 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] disabled:opacity-50 transition font-bold flex items-center justify-center gap-2">
+                                        <button @click="submitDeal" :disabled="makingDeal || dealQty < {{ $listing->formatted_min_order ?? 1 }} || !dealPrice" class="flex-1 px-4 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] disabled:opacity-50 transition font-bold flex items-center justify-center gap-2">
                                             <span x-show="!makingDeal">{{ app()->getLocale() === 'ar' ? 'إرسال العرض' : 'Send Offer' }}</span>
                                             <svg x-show="makingDeal" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         </button>
@@ -746,7 +746,7 @@ document.addEventListener('alpine:init', () => {
         showContactModal: false,
         showDealModal: false,
         makingDeal: false,
-        dealQty: {{ $listing->min_order ?? 1 }},
+        dealQty: {{ $listing->formatted_min_order ?? 1 }},
         dealPrice: {{ $listing->price }},
         showMapModal: false,
         isFavorite: false,
@@ -803,7 +803,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         async submitDeal() {
-            if (this.dealQty < {{ $listing->min_order ?? 1 }}) return;
+            if (this.dealQty < {{ $listing->formatted_min_order ?? 1 }}) return;
             this.makingDeal = true;
             
             try {

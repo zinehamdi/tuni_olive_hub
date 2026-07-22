@@ -96,6 +96,28 @@ class Listing extends Model
         'delivery_options' => 'array',
         'media' => 'array',
     ];
+
+    /**
+     * Get clean numeric float format for min_order without trailing zeros (.000)
+     */
+    public function getFormattedMinOrderAttribute()
+    {
+        if ($this->min_order === null || $this->min_order === '') {
+            return null;
+        }
+        return (float) $this->min_order;
+    }
+
+    /**
+     * Get clean numeric float format for quantity without trailing zeros (.000)
+     */
+    public function getFormattedQuantityAttribute()
+    {
+        if ($this->quantity === null || $this->quantity === '') {
+            return null;
+        }
+        return (float) $this->quantity;
+    }
     
     /**
      * Get the product associated with this listing

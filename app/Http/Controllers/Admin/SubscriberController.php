@@ -270,7 +270,7 @@ class SubscriberController extends Controller
         // Deduplicate contacts list
         $contacts = array_values(array_unique($contacts));
 
-        $emailQueue = 0;
+        $emailContacts = [];
         $waQueue = [];
 
         foreach ($contacts as $contactString) {
@@ -279,24 +279,8 @@ class SubscriberController extends Controller
                 $type = $parts[1];
                 $value = trim($parts[2]);
                 
-                if ($type === 'email') {
-                    if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                        try {
-                            if ($request->input('template') === 'update_announcement') {
-                                Mail::to($value)->send(new PlatformUpdateAnnouncementMail($subject));
-                            } elseif ($request->input('template') === 'latest_listing') {
-                                $listing = Listing::with(['product', 'seller'])->latest()->first();
-                                if ($listing) {
-                                    Mail::to($value)->send(new NewListingNotificationMail($listing));
-                                }
-                            } else {
-                                Mail::to($value)->send(new BulkSubscriberEmail($subject, $body));
-                            }
-                            $emailQueue++;
-                        } catch (\Throwable $e) {
-                            \Illuminate\Support\Facades\Log::error("Failed bulk email sending to {$value}: " . $e->getMessage());
-                        }
-                    }
+                if ($type === 'email' && filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    $emailContacts[] = $contactString;
                 } elseif ($type === 'whatsapp') {
                     $waText = $body;
                     
@@ -319,6 +303,38 @@ class SubscriberController extends Controller
                         'phone' => $value,
                         'message' => trim($waText)
                     ];
+                }
+            }
+        }
+
+        $emailQueue = count($emailContacts);
+
+        if ($emailQueue > 0) {
+            $jobId = uniqid('bulk_mail_', true);
+            $dir = storage_path('app/bulk_mail_jobs');
+            if (!file_exists($dir)) {
+                @mkdir($dir, 0775, true);
+            }
+
+            $payload = [
+                'template' => $request->input('template', ''),
+                'subject' => $subject,
+                'body' => $body,
+                'contacts' => $emailContacts,
+            ];
+
+            file_put_contents("{$dir}/{$jobId}.json", json_encode($payload));
+
+            // Execute background Artisan command without blocking HTTP response
+            $artisan = base_path('artisan');
+            $command = "php {$artisan} mail:send-bulk {$jobId} > /dev/null 2>&1 &";
+            if (function_exists('exec')) {
+                @exec($command);
+            } else {
+                try {
+                    \Illuminate\Support\Facades\Artisan::call('mail:send-bulk', ['job_id' => $jobId]);
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error("Failed to run Artisan mail:send-bulk inline: " . $e->getMessage());
                 }
             }
         }

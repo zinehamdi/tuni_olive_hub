@@ -77,7 +77,7 @@ class ListingController extends Controller
                 'currency' => 'nullable|string|max:8',
                 'quantity' => 'required|numeric|min:0.001',
                 'unit' => 'nullable|string|max:16',
-                'min_order' => 'nullable|numeric|min:0',
+                'min_order' => 'nullable|numeric|min:0|lte:quantity',
                 'status' => 'nullable|string',
                 'payment_methods' => 'nullable', // Can be array or JSON string
                 'delivery_options' => 'nullable', // Can be array or JSON string
@@ -88,6 +88,10 @@ class ListingController extends Controller
                 'delegation' => 'nullable|string',
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
                 'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
+            ], [
+                'min_order.lte' => app()->getLocale() === 'ar' 
+                    ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
+                    : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
             ]);
 
             // Set seller_id to authenticated user if not provided
@@ -301,7 +305,7 @@ class ListingController extends Controller
             'quantity' => 'required|numeric|min:0',
             'unit' => 'required|string|in:kg,ton,liter,bottle',
             'price' => 'required|numeric|min:0',
-            'min_order' => 'nullable|numeric|min:0',
+            'min_order' => 'nullable|numeric|min:0|lte:quantity',
             'status' => 'nullable|string',
             'payment_methods' => 'nullable|array',
             'delivery_options' => 'nullable|array',
@@ -311,6 +315,10 @@ class ListingController extends Controller
             'governorate' => 'nullable|string|max:255',
             'delegation' => 'nullable|string|max:255',
             'images.*' => 'nullable|image|max:10240', // 10MB max per image
+        ], [
+            'min_order.lte' => app()->getLocale() === 'ar' 
+                ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
+                : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
         ]);
 
         // Find or create the product associated with this listing/seller

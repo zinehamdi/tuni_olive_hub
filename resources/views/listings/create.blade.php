@@ -94,7 +94,7 @@
             </div>
             <div>
               <label for="min_order" class="block text-[#C8A356] font-semibold mb-1">أدنى كمية للطلب</label>
-              <input id="min_order" name="min_order" type="number" step="0.001" min="0" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 50">
+              <input id="min_order" name="min_order" type="number" step="any" min="0" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 50">
             </div>
           </div>
           <div class="grid md:grid-cols-3 gap-5">

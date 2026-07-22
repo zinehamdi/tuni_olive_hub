@@ -363,10 +363,11 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </div>
 
                         <div>
-                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">الحد الأدنى للطلب (اختياري)</label>
-                            <input type="number" x-model="formData.min_order" step="0.01" min="0"
+                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">الحد الأدنى للطلب (اختياري) <span x-show="formData.unit" class="text-sm font-normal text-gray-500">(بـ <span x-text="formData.unit"></span>)</span></label>
+                            <input type="number" x-model="formData.min_order" step="any" min="0" :max="formData.quantity"
                                 class="w-full text-xl rounded-xl border-2 border-gray-300 px-6 py-3 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition"
                                 placeholder="اتركه فارغاً إذا لم يكن هناك حد أدنى">
+                            <p x-show="formData.quantity" class="text-xs text-gray-500 mt-1">الكمية الإجمالية للمنتج: <span x-text="parseFloat(formData.quantity)"></span> <span x-text="formData.unit"></span></p>
                         </div>
                     </div>
                 </div>
@@ -762,6 +763,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             else if (currentStep === 3 && (!formData.quantity || formData.quantity <= 0)) { showToast('الرجاء إدخال الكمية', 'error'); valid = false; }
                             else if (currentStep === 3 && !formData.unit) { showToast('الرجاء اختيار الوحدة', 'error'); valid = false; }
                             else if (currentStep === 4 && (!formData.price || formData.price <= 0)) { showToast('الرجاء إدخال السعر', 'error'); valid = false; }
+                            else if (currentStep === 4 && formData.min_order && parseFloat(formData.min_order) > parseFloat(formData.quantity)) { showToast('أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج (' + parseFloat(formData.quantity) + ' ' + (formData.unit || '') + ')', 'error'); valid = false; }
                             else if (currentStep === 5 && formData.payment_methods.length === 0) { showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error'); valid = false; }
                             else if (currentStep === 6 && formData.delivery_options.length === 0) { showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error'); valid = false; }
                             else if (currentStep === 7 && !formData.governorate && !formData.location_text) { showToast('الرجاء إدخال الموقع أو اختيار الولاية', 'error'); valid = false; }
