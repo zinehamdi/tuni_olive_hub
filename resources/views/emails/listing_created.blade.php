@@ -3,16 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light only">
     <title>تم نشر عرضك | Annonce publiée</title>
     <style>
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
         table { border-collapse: collapse !important; }
-        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #F3F4F6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #F3F4F6 !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         @media screen and (max-width: 600px) {
             .email-container { width: 100% !important; }
             .padding-mobile { padding-left: 20px !important; padding-right: 20px !important; }
+        }
+            @media (prefers-color-scheme: dark) {
+            body { background-color: #F3F4F6 !important; }
+            .email-container { background-color: #FFFFFF !important; }
+            td, p, h1, h2, h3, h4, span, li, a { color: inherit !important; }
         }
     </style>
 </head>
