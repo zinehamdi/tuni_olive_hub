@@ -98,6 +98,7 @@
                                 <th class="px-6 py-4 text-left">
                                     <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
                                 </th>
+                                <th class="px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase">#</th>
                                 <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">{{ __('Source') }}</th>
                                 <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">{{ __('Contact Type') }}</th>
                                 <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">{{ __('Contact Value') }}</th>
@@ -109,6 +110,9 @@
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
                                     <input type="checkbox" name="contacts[]" value="{{ $contact->source }}:{{ $contact->type }}:{{ $contact->contact_value }}" class="contact-checkbox rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                                </td>
+                                <td class="px-4 py-4 text-xs font-bold text-gray-400">
+                                    #{{ $loop->iteration + ($contacts->currentPage() - 1) * $contacts->perPage() }}
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($contact->source === 'user')
@@ -141,7 +145,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                     {{ __('No contacts found yet.') }}
                                 </td>
                             </tr>
@@ -176,11 +180,52 @@
                         <!-- Recipient Scope Selector -->
                         <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-3 text-right" dir="rtl">
                             <label class="block text-sm font-bold text-gray-850 mb-1">المستلمون (Recipients)</label>
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col gap-2.5">
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="radio" name="recipient_scope" value="selected" checked onchange="toggleRecipientScope()" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
                                     <span class="text-sm font-semibold text-gray-700">الجهات المحددة يدوياً فقط (<span id="selectedCountDisplay" class="font-bold text-green-600">0</span> جهة)</span>
                                 </label>
+                                
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="recipient_scope" value="range" onchange="toggleRecipientScope()" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm font-semibold text-gray-700">🎯 تحديد نطاق بالرقم (Range Batch) — مثال: من 1 إلى 49</span>
+                                </label>
+
+                                <!-- Range Inputs Box -->
+                                <div id="rangeInputsContainer" class="hidden mt-1 p-4 bg-gradient-to-br from-green-50 to-emerald-50/60 border border-green-200 rounded-xl space-y-3 text-right">
+                                    <div class="flex items-center justify-between flex-wrap gap-1">
+                                        <div class="text-xs font-bold text-green-900">✍️ اكتب أرقام النطاق مباشرة (مثال: من 1 إلى 50، أو من 500 إلى 550):</div>
+                                        <div class="text-xs text-gray-600 font-semibold">إجمالي القائمة: <strong class="text-green-700 font-bold">{{ $totalContacts }}</strong> جهة</div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3 flex-wrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-gray-700">من رقم:</span>
+                                            <input type="number" id="range_start" name="range_start" value="1" min="1" inputmode="numeric" placeholder="1" class="w-32 px-3 py-2 border-2 border-green-300 rounded-lg text-center font-bold text-base focus:ring-2 focus:ring-green-500 focus:border-green-600 bg-white">
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-gray-700">إلى رقم:</span>
+                                            <input type="number" id="range_end" name="range_end" value="50" min="1" inputmode="numeric" placeholder="50" class="w-32 px-3 py-2 border-2 border-green-300 rounded-lg text-center font-bold text-base focus:ring-2 focus:ring-green-500 focus:border-green-600 bg-white">
+                                        </div>
+                                        
+                                        <button type="button" onclick="nextRangeBatch(50)" class="px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1">
+                                            <span>الدفعة التالية (+50)</span>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Quick Presets -->
+                                    <div class="flex items-center gap-1.5 flex-wrap pt-2 border-t border-green-200/60">
+                                        <span class="text-xs text-gray-600 font-semibold">اختيار سريع:</span>
+                                        <button type="button" onclick="setRange(1, 50)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">1 - 50</button>
+                                        <button type="button" onclick="setRange(51, 100)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">51 - 100</button>
+                                        <button type="button" onclick="setRange(101, 150)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">101 - 150</button>
+                                        <button type="button" onclick="setRange(151, 200)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">151 - 200</button>
+                                        <button type="button" onclick="setRange(201, 250)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">201 - 250</button>
+                                        <button type="button" onclick="setRange(251, 300)" class="px-2.5 py-1 bg-white border border-green-300 text-green-800 rounded-md text-xs font-bold hover:bg-green-100 transition">251 - 300</button>
+                                    </div>
+                                </div>
+
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="radio" name="recipient_scope" value="all_filtered" onchange="toggleRecipientScope()" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
                                     <span class="text-sm font-semibold text-gray-700">إرسال لجميع الجهات في هذا الفلتر ({{ $totalContacts }} جهة)</span>
@@ -473,10 +518,31 @@ L'équipe ZinToop.</p>
         window.location.href = `{{ route('admin.subscribers.index') }}?role=${role}&type=${type}&search=${encodeURIComponent(search)}`;
     }
 
+    function setRange(start, end) {
+        document.getElementById('range_start').value = start;
+        document.getElementById('range_end').value = end;
+    }
+
+    function nextRangeBatch(step = 50) {
+        const endInput = document.getElementById('range_end');
+        const startInput = document.getElementById('range_start');
+        let currentEnd = parseInt(endInput.value) || 0;
+        let newStart = currentEnd + 1;
+        let newEnd = newStart + step - 1;
+        startInput.value = newStart;
+        endInput.value = newEnd;
+    }
+
     function toggleRecipientScope() {
         const scope = document.querySelector('input[name="recipient_scope"]:checked').value;
-        const selectAll = document.getElementById('selectAll');
-        // No action needed, input handles selection
+        const rangeContainer = document.getElementById('rangeInputsContainer');
+        if (rangeContainer) {
+            if (scope === 'range') {
+                rangeContainer.classList.remove('hidden');
+            } else {
+                rangeContainer.classList.add('hidden');
+            }
+        }
     }
 
     function openBulkModal() {
@@ -513,8 +579,17 @@ L'équipe ZinToop.</p>
         const checkedCount = Array.from(contactCheckboxes).filter(cb => cb.checked).length;
 
         if (scope === 'selected' && checkedCount === 0) {
-            alert('الرجاء تحديد مستلم واحد على الأقل أو اختيار الإرسال للجميع.');
+            alert('الرجاء تحديد مستلم واحد على الأقل أو اختيار إرسال حسب النطاق أو للجميع.');
             return;
+        }
+
+        if (scope === 'range') {
+            const start = parseInt(document.getElementById('range_start').value) || 0;
+            const end = parseInt(document.getElementById('range_end').value) || 0;
+            if (start < 1 || end < start) {
+                alert('الرجاء إدخال نطاق أرقام صحيح (مثال: من 1 إلى 49).');
+                return;
+            }
         }
 
         const btn = document.getElementById('btnSubmitBulk');

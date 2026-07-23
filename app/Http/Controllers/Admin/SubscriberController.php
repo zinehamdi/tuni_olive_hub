@@ -191,7 +191,7 @@ class SubscriberController extends Controller
 
         $contacts = [];
 
-        if ($scope === 'all_filtered') {
+        if ($scope === 'all_filtered' || $scope === 'range') {
             // Retrieve all contacts dynamically matching filter parameters
             $subscribersQuery = null;
             $usersQuery = null;
@@ -199,7 +199,7 @@ class SubscriberController extends Controller
 
             if (($role === 'all' || $role === 'subscriber') && ($type === 'all' || $type === 'email')) {
                 $subscribersQuery = DB::table('subscribers')
-                    ->select('type', 'contact_value', DB::raw("'subscriber' as source"));
+                    ->select('type', 'contact_value', DB::raw("'subscriber' as source"), 'created_at');
                 if ($type === 'email') {
                     $subscribersQuery->where('type', 'email');
                 }
@@ -210,7 +210,7 @@ class SubscriberController extends Controller
                     if ($type === 'all' || $type === 'email') {
                         $usersQuery = DB::table('users')
                             ->join('listings', 'users.id', '=', 'listings.seller_id')
-                            ->select(DB::raw("'email' as type"), 'users.email as contact_value', DB::raw("'user' as source"))
+                            ->select(DB::raw("'email' as type"), 'users.email as contact_value', DB::raw("'user' as source"), 'users.created_at')
                             ->distinct();
                     }
 
@@ -219,13 +219,13 @@ class SubscriberController extends Controller
                             ->join('listings', 'users.id', '=', 'listings.seller_id')
                             ->whereNotNull('users.phone')
                             ->where('users.phone', '!=', '')
-                            ->select(DB::raw("'whatsapp' as type"), 'users.phone as contact_value', DB::raw("'user' as source"))
+                            ->select(DB::raw("'whatsapp' as type"), 'users.phone as contact_value', DB::raw("'user' as source"), 'users.created_at')
                             ->distinct();
                     }
                 } else {
                     if ($type === 'all' || $type === 'email') {
                         $usersQuery = DB::table('users')
-                            ->select(DB::raw("'email' as type"), 'email as contact_value', DB::raw("'user' as source"));
+                            ->select(DB::raw("'email' as type"), 'email as contact_value', DB::raw("'user' as source"), 'created_at');
                         if ($role !== 'all') {
                             $usersQuery->where('role', $role);
                         }
@@ -235,7 +235,7 @@ class SubscriberController extends Controller
                         $usersWithPhoneQuery = DB::table('users')
                             ->whereNotNull('phone')
                             ->where('phone', '!=', '')
-                            ->select(DB::raw("'whatsapp' as type"), 'phone as contact_value', DB::raw("'user' as source"));
+                            ->select(DB::raw("'whatsapp' as type"), 'phone as contact_value', DB::raw("'user' as source"), 'created_at');
                         if ($role !== 'all') {
                             $usersWithPhoneQuery->where('role', $role);
                         }
@@ -255,7 +255,18 @@ class SubscriberController extends Controller
             }
 
             if ($query) {
-                $dbContacts = $query->get();
+                $subQuery = DB::query()->fromSub($query, 'union_table')->orderBy('created_at', 'desc');
+
+                if ($scope === 'range') {
+                    $start = max(1, (int)$request->input('range_start', 1));
+                    $end = max($start, (int)$request->input('range_end', 50));
+                    $offset = $start - 1;
+                    $limit = ($end - $start) + 1;
+                    $dbContacts = $subQuery->skip($offset)->take($limit)->get();
+                } else {
+                    $dbContacts = $subQuery->get();
+                }
+
                 foreach ($dbContacts as $c) {
                     $contacts[] = "{$c->source}:{$c->type}:{$c->contact_value}";
                 }

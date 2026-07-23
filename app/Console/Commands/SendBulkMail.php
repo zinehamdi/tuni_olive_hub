@@ -81,8 +81,8 @@ class SendBulkMail extends Command
                         }
 
                         $sentCount++;
-                        // Small 50ms pause to avoid hitting strict SMTP rate limits
-                        usleep(50000);
+                        // 1 second throttle delay to comply with Hostinger SMTP rate limits (e.g. max 50-100 emails/hour)
+                        sleep(1);
                     } catch (\Throwable $e) {
                         $failedCount++;
                         Log::error("Background bulk email failed for {$value}: " . $e->getMessage());
