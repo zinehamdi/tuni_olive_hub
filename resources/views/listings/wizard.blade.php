@@ -624,8 +624,8 @@ console.log('[wizard] Variety selection mode - no product database needed');
 
                 <!-- Step 8: Images Upload -->
                 <div x-show="currentStep === 8" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-10" x-transition:enter-end="opacity-100 transform translate-x-0">
-                    <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2">📸 صور المنتج</h2>
-                    <p class="text-gray-600 mb-8">أضف صور واضحة لمنتجك (اختياري)</p>
+                    <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2">📸 صور المنتج <span class="text-red-500 font-extrabold text-xl">* (مطلوب)</span></h2>
+                    <p class="text-gray-600 mb-8 font-semibold">أضف صورة واحدة على الأقل لمنتجك لإتاحة العرض وإبرازه للمشترين</p>
                     
                     <div class="bg-gray-50 rounded-2xl p-6 border-2 border-dashed border-gray-300 hover:border-[#6A8F3B] transition-colors">
                         <div class="text-center mb-4">
@@ -1076,8 +1076,10 @@ document.addEventListener('alpine:init', () => {
                     }
                     break;
                 case 8:
-                    // Final review - no specific validation needed
-                    // Just make sure all previous steps are valid
+                    if (!this.formData.images || this.formData.images.length === 0) {
+                        showToast('الرجاء إرفاق صورة واحدة على الأقل لمنتجك لإتاحة العرض 📷', 'error');
+                        return false;
+                    }
                     return true;
             }
             return true;

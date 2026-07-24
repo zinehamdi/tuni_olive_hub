@@ -135,16 +135,56 @@
                     </select>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6 p-4 bg-gray-50 border border-gray-200 rounded-xl">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('Upload New Media') }}</label>
-                        <input type="file" name="new_media[]" multiple accept="image/*" class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white hover:bg-gray-50 transition cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#6A8F3B]/10 file:text-[#6A8F3B] hover:file:bg-[#6A8F3B]/20">
-                        <p class="text-xs text-gray-500 mt-2">{{ __('Select images to append to the listing. Max 5MB per file.') }}</p>
+                <!-- Interactive Media Gallery Manager -->
+                <div class="p-5 bg-gray-50 border border-gray-200 rounded-2xl space-y-3" x-data="adminMediaManager({{ json_encode($listing->media ?? []) }})">
+                    <div class="flex items-center justify-between border-b pb-2">
+                        <label class="block text-sm font-bold text-gray-800">🖼️ {{ __('Media Gallery & Photos') }}</label>
+                        <span class="text-xs text-gray-500 font-semibold">{{ __('Click red trash icon to delete an image') }}</span>
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">{{ __('Existing Media Paths') }}</label>
-                        <input name="media" value="{{ old('media', $listing->media ? implode(',', $listing->media) : '') }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 font-mono text-sm bg-white" placeholder="listings/1/img1.webp,listings/1/img2.webp">
-                        <p class="text-xs text-gray-500 mt-2">{{ __('Edit or remove existing paths (comma-separated).') }}</p>
+
+                    <input type="hidden" name="media" :value="existingImages.join(',')">
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                        <!-- Kept Existing Images -->
+                        <template x-for="(img, index) in existingImages" :key="img">
+                            <div class="relative group rounded-xl overflow-hidden border-2 border-gray-200 bg-black/5 aspect-square shadow-sm">
+                                <img :src="'/storage/' + img" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <button type="button" @click="removeImage(index)" 
+                                        title="Delete image"
+                                        class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition transform hover:scale-110">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur">Saved</div>
+                            </div>
+                        </template>
+
+                        <!-- New Image Previews -->
+                        <template x-for="(preview, index) in newPreviews" :key="index">
+                            <div class="relative group rounded-xl overflow-hidden border-2 border-emerald-500 bg-emerald-50/50 aspect-square shadow-sm">
+                                <img :src="preview.url" class="w-full h-full object-cover">
+                                <button type="button" @click="removeNewPreview(index)" 
+                                        title="Cancel new image"
+                                        class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition transform hover:scale-110">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                <div class="absolute bottom-1 right-1 bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">New</div>
+                            </div>
+                        </template>
+
+                        <!-- Dropzone / Add Button -->
+                        <label class="border-2 border-dashed border-[#6A8F3B] hover:border-[#5a7a2f] rounded-xl flex flex-col items-center justify-center p-3 bg-white hover:bg-emerald-50/40 cursor-pointer transition aspect-square text-center relative group">
+                            <input type="file" name="new_media[]" multiple accept="image/*" @change="handleFileSelect($event)" class="hidden">
+                            <div class="w-10 h-10 rounded-full bg-[#6A8F3B]/10 text-[#6A8F3B] group-hover:bg-[#6A8F3B] group-hover:text-white flex items-center justify-center transition mb-1">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
+                            <span class="text-xs font-bold text-[#6A8F3B] group-hover:text-[#5a7a2f]">{{ __('Add Photos') }}</span>
+                        </label>
                     </div>
                 </div>
 
@@ -169,6 +209,28 @@
 </div>
 
 <script>
+function adminMediaManager(initialImages) {
+    return {
+        existingImages: Array.isArray(initialImages) ? initialImages : [],
+        newPreviews: [],
+        removeImage(index) {
+            this.existingImages.splice(index, 1);
+        },
+        removeNewPreview(index) {
+            this.newPreviews.splice(index, 1);
+        },
+        handleFileSelect(event) {
+            const files = event.target.files;
+            if (!files) return;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const url = URL.createObjectURL(file);
+                this.newPreviews.push({ file, url });
+            }
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const categorySelect = document.getElementById('categorySelect');
     if (categorySelect) {

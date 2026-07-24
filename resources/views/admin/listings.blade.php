@@ -65,7 +65,27 @@
          class="w-full h-full object-cover"
          loading="lazy">
 @else
-    <img src="{{ $fallbackImage }}" alt="fallback" class="w-full h-full object-cover" loading="lazy">
+    @if($listing->seller && $listing->seller->profile_picture && \Illuminate\Support\Facades\Storage::disk('public')->exists($listing->seller->profile_picture))
+        <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $listing->product?->type === 'olive' ? 'from-[#1B3A1E] via-[#2D5A2F] to-[#528A42]' : 'from-[#7A5A1B] via-[#C8A356] to-[#5A7A2F]' }}">
+            <img src="{{ Storage::url($listing->seller->profile_picture) }}" class="w-20 h-20 rounded-full object-cover border-4 border-white/90 shadow-xl relative z-10">
+        </div>
+    @else
+        @php
+            $type = $listing->product?->type ?? 'oil';
+            $variety = $listing->product?->variety ?? $listing->seller?->name ?? 'Zintoop';
+            $words = preg_split('/\s+/', trim($variety));
+            $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($variety, 0, 2);
+            $initials = mb_strtoupper($initials);
+        @endphp
+        <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]' }}">
+            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg mb-1">
+                <span class="text-white text-lg font-black uppercase">{{ $initials }}</span>
+            </div>
+            <span class="text-white/90 text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10">
+                {{ $type === 'olive' ? '🫒 ' . (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : '🫗 ' . (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil')) }}
+            </span>
+        </div>
+    @endif
 @endif
                     
                     <!-- Status Badge -->

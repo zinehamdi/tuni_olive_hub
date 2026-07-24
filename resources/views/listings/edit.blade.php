@@ -169,34 +169,57 @@
           </div>
 
           <!-- Listing Images Section -->
-          <div class="bg-gradient-to-br from-white to-[#F8F4EC] rounded-2xl p-4 shadow-sm space-y-4">
-            <h3 class="text-lg font-bold text-[#1B2A1B] border-b pb-2">صور المنتج</h3>
-            
-            <!-- Existing Images -->
-            @if(is_array($listing->media) && count($listing->media) > 0)
-              <div>
-                <label class="block text-gray-700 font-semibold mb-2">الصور الحالية:</label>
-                <div class="grid grid-cols-4 gap-2">
-                  @foreach($listing->media as $img)
-                    <div class="relative rounded-lg overflow-hidden border border-gray-200">
-                      <img src="{{ Storage::disk('public')->url($img) }}" class="object-cover w-full h-20" alt="Listing image">
-                    </div>
-                  @endforeach
-                </div>
-              </div>
-            @endif
+          <div class="bg-gradient-to-br from-white to-[#F8F4EC] rounded-2xl p-4 shadow-sm space-y-4" x-data="editMediaManager({{ json_encode($listing->media ?? []) }})">
+            <input type="hidden" name="keep_media_specified" value="1">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="text-lg font-bold text-[#1B2A1B]">صور المنتج (Product Photos)</h3>
+              <span class="text-xs text-gray-500 font-semibold">يمكنك حذف صور سابقة أو إضافة صور جديدة بسهولة</span>
+            </div>
 
-            <!-- New Images Upload -->
-            <div>
-              <label class="block text-[#C8A356] font-semibold mb-1">رفع صور جديدة (تستبدل الصور القديمة)</label>
-              <div class="border-2 border-dashed border-[#C7D1C7] rounded-2xl p-6 text-center bg-white cursor-pointer hover:bg-gray-50 transition relative">
-                <input type="file" name="images[]" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" id="newImages">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p class="mt-2 text-sm text-gray-600 font-bold" id="uploadLabel">اختر صورًا جديدة لتحميلها</p>
-                <p class="text-xs text-gray-500">يقبل صيغ الصور JPG, PNG, WEBP حتى 10 ميغابايت</p>
-              </div>
+            <!-- Existing & New Images Visual Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 pt-2">
+              <!-- Kept Existing Images -->
+              <template x-for="(img, index) in existingImages" :key="img">
+                <div class="relative group rounded-xl overflow-hidden border-2 border-gray-200 bg-black/5 aspect-square shadow-sm">
+                  <input type="hidden" name="keep_media[]" :value="img">
+                  <img :src="'/storage/' + img" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                  <button type="button" @click="removeExistingImage(index)" 
+                          title="حذف هذه الصورة"
+                          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition transform hover:scale-110">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                  <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur">حالية</div>
+                </div>
+              </template>
+
+              <!-- New Image Previews -->
+              <template x-for="(preview, index) in newPreviews" :key="index">
+                <div class="relative group rounded-xl overflow-hidden border-2 border-emerald-500 bg-emerald-50/50 aspect-square shadow-sm">
+                  <img :src="preview.url" class="w-full h-full object-cover">
+                  <button type="button" @click="removeNewPreview(index)" 
+                          title="إلغاء الصورة الجديدة"
+                          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition transform hover:scale-110">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <div class="absolute bottom-1 right-1 bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">جديدة</div>
+                </div>
+              </template>
+
+              <!-- Dropzone / Add Button -->
+              <label class="border-2 border-dashed border-[#6A8F3B] hover:border-[#5a7a2f] rounded-xl flex flex-col items-center justify-center p-3 bg-emerald-50/30 hover:bg-emerald-50/80 cursor-pointer transition aspect-square text-center relative group">
+                <input type="file" name="images[]" multiple accept="image/*" @change="handleFileSelect($event)" class="hidden">
+                <div class="w-10 h-10 rounded-full bg-[#6A8F3B]/10 text-[#6A8F3B] group-hover:bg-[#6A8F3B] group-hover:text-white flex items-center justify-center transition mb-1">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+                <span class="text-xs font-bold text-[#6A8F3B] group-hover:text-[#5a7a2f]">إضافة صور</span>
+                <span class="text-[10px] text-gray-500">JPG, PNG, WEBP</span>
+              </label>
             </div>
           </div>
 
@@ -221,6 +244,28 @@
 </div>
 
 <script>
+function editMediaManager(initialImages) {
+  return {
+    existingImages: Array.isArray(initialImages) ? initialImages : [],
+    newPreviews: [],
+    removeExistingImage(index) {
+      this.existingImages.splice(index, 1);
+    },
+    removeNewPreview(index) {
+      this.newPreviews.splice(index, 1);
+    },
+    handleFileSelect(event) {
+      const files = event.target.files;
+      if (!files) return;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const url = URL.createObjectURL(file);
+        this.newPreviews.push({ file, url });
+      }
+    }
+  }
+}
+
 // Alpine.js data binding for location parameters inside blade
 function locationPicker() {
   return {

@@ -709,20 +709,53 @@
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                     <template x-for="listing in filteredListings" :key="listing.id">
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'انقر على عرض التفاصيل لرؤية المزيد عن هذا المنتج وكيفية الشراء' : 'Click View Details to learn more about this product and how to buy' }}">
-                            <!-- Product Image -->
-                            <div class="h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center relative overflow-hidden">
-                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
-                                     :alt="listing.product?.variety || ''"
-                                     class="w-full h-full object-cover"
-                                     loading="lazy">
+                            <!-- Product Image / Seller Logo / Initial Badge -->
+                            <div class="h-48 flex items-center justify-center relative overflow-hidden">
+                                <template x-if="listing.media && listing.media.length > 0">
+                                    <img :src="'/storage/' + listing.media[0]"
+                                         :alt="listing.product?.variety || ''"
+                                         class="w-full h-full object-cover"
+                                         loading="lazy">
+                                </template>
+
+                                <template x-if="!listing.media || listing.media.length === 0">
+                                    <div class="w-full h-full flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br"
+                                         :class="listing.product?.type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]'">
+                                        <div class="absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
+                                        <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
+                                        
+                                        <div class="relative z-10 flex flex-col items-center text-center">
+                                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center shadow-xl mb-1.5">
+                                                <span class="text-white text-xl font-black tracking-wider uppercase" x-text="getInitials(listing.product?.variety || listing.seller?.name || 'Z')"></span>
+                                            </div>
+                                            <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
+                                                  x-text="listing.product?.type === 'olive' ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Quick Add/Change Photo Button for Owner -->
+                                <template x-if="currentUserId > 0 && (listing.seller_id === currentUserId || listing.seller?.id === currentUserId)">
+                                    <button type="button" @click.stop="openQuickUploadModal(listing)" 
+                                            title="{{ __('Upload product photo') }}"
+                                            class="absolute bottom-2.5 left-2.5 px-3 py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur text-white text-xs font-bold rounded-xl shadow-lg border border-white/20 transition flex items-center gap-1.5 z-20">
+                                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span>📷 {{ __('إضافة صورة') }}</span>
+                                    </button>
+                                </template>
+
                                 <div class="absolute top-3 right-3 flex gap-2">
-                                    <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide"
+                                    <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide shadow-md backdrop-blur"
                                         :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                         x-text="listing.product?.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                 </div>
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
-                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#C8A356] backdrop-blur flex items-center gap-1">
+                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#C8A356] backdrop-blur flex items-center gap-1 shadow-md">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
@@ -793,15 +826,48 @@
                 <div x-show="viewMode === 'list'" class="space-y-4">
                     <template x-for="listing in filteredListings" :key="listing.id">
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row">
-                            <!-- Product Image -->
-                            <div class="w-full md:w-48 h-48 bg-gradient-to-br from-[#6A8F3B] to-[#C8A356] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                                  <img :src="(listing.media && listing.media.length > 0) ? '/storage/' + listing.media[0] : (listing.product?.type === 'oil' ? oilFallbackImage : fallbackImage)"
-                                     :alt="listing.product?.variety || ''"
-                                     class="w-full h-full object-cover"
-                                     loading="lazy">
+                            <!-- Product Image / Seller Logo / Initial Badge -->
+                            <div class="w-full md:w-48 h-48 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                                <template x-if="listing.media && listing.media.length > 0">
+                                    <img :src="'/storage/' + listing.media[0]"
+                                         :alt="listing.product?.variety || ''"
+                                         class="w-full h-full object-cover"
+                                         loading="lazy">
+                                </template>
+
+                                <template x-if="!listing.media || listing.media.length === 0">
+                                    <div class="w-full h-full flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br"
+                                         :class="listing.product?.type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]'">
+                                        <div class="absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
+                                        <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
+                                        
+                                        <div class="relative z-10 flex flex-col items-center text-center">
+                                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center shadow-xl mb-1.5">
+                                                <span class="text-white text-xl font-black tracking-wider uppercase" x-text="getInitials(listing.product?.variety || listing.seller?.name || 'Z')"></span>
+                                            </div>
+                                            <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
+                                                  x-text="listing.product?.type === 'olive' ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Quick Add/Change Photo Button for Owner -->
+                                <template x-if="currentUserId > 0 && (listing.seller_id === currentUserId || listing.seller?.id === currentUserId)">
+                                    <button type="button" @click.stop="openQuickUploadModal(listing)" 
+                                            title="{{ __('Upload product photo') }}"
+                                            class="absolute bottom-2.5 left-2.5 px-3 py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur text-white text-xs font-bold rounded-xl shadow-lg border border-white/20 transition flex items-center gap-1.5 z-20">
+                                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span>📷 {{ __('إضافة صورة') }}</span>
+                                    </button>
+                                </template>
+                                
                                 <!-- Distance Badge -->
                                 <div x-show="listing.distance != null && listing.distance !== undefined" class="absolute top-3 left-3">
-                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#C8A356] backdrop-blur flex items-center gap-1">
+                                    <span class="px-3 py-1 rounded-full text-white text-xs font-bold bg-[#C8A356] backdrop-blur flex items-center gap-1 shadow-md">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
@@ -938,12 +1004,64 @@
 
 
 
+    <!-- Quick Photo Upload Modal -->
+    <div x-show="quickUploadModalOpen" x-cloak 
+         class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div @click.away="quickUploadModalOpen = false" 
+             class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 text-right" dir="rtl">
+            
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span>📷 {{ __('إضافة / تغيير صورة المنتج') }}</span>
+                </h3>
+                <button @click="quickUploadModalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+            </div>
+
+            <p class="text-xs text-gray-600">اختر صورة واضحة لمنتجك (<strong class="text-[#6A8F3B]" x-text="targetListing?.product?.variety || ''"></strong>) لجذب المشترين زيادة المبيعات!</p>
+
+            <form @submit.prevent="submitQuickUpload($event)" class="space-y-4">
+                <div class="border-2 border-dashed border-emerald-400 rounded-xl p-6 text-center bg-emerald-50/40 hover:bg-emerald-50 transition cursor-pointer relative">
+                    <input type="file" name="image" accept="image/*" required @change="handleQuickFileChange($event)" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                    
+                    <template x-if="!quickFilePreview">
+                        <div>
+                            <svg class="mx-auto h-12 w-12 text-[#6A8F3B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-[#6A8F3B] font-bold">اضغط هنا لاختيار صورة من جهازك</p>
+                            <p class="text-[11px] text-gray-500">يقبل JPG, PNG, WEBP</p>
+                        </div>
+                    </template>
+
+                    <template x-if="quickFilePreview">
+                        <div class="relative h-44 w-full rounded-lg overflow-hidden border">
+                            <img :src="quickFilePreview" class="w-full h-full object-cover">
+                        </div>
+                    </template>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit" :disabled="uploadingQuickFile" class="flex-1 py-3 px-4 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        <span x-show="!uploadingQuickFile">✓ رفع وحفظ الصورة</span>
+                        <span x-show="uploadingQuickFile">جاري الرفع...</span>
+                    </button>
+                    <button type="button" @click="quickUploadModalOpen = false" class="py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
 document.addEventListener('alpine:init', () => {
 
     Alpine.data('marketplace', () => ({
+        currentUserId: {{ Auth::id() ?? 0 }},
+        quickUploadModalOpen: false,
+        targetListing: null,
+        quickFilePreview: null,
+        uploadingQuickFile: false,
         listings: @json($featuredListings ?? []),
         filteredListings: [],
         searchQuery: '',
@@ -987,6 +1105,55 @@ document.addEventListener('alpine:init', () => {
             this.currentDeal = { id, title, type };
             this.dealRequestModalOpen = true;
             document.body.classList.add('overflow-hidden');
+        },
+        openQuickUploadModal(listing) {
+            this.targetListing = listing;
+            this.quickFilePreview = null;
+            this.quickUploadModalOpen = true;
+        },
+        handleQuickFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.quickFilePreview = URL.createObjectURL(file);
+            }
+        },
+        async submitQuickUpload(event) {
+            if (!this.targetListing) return;
+            const formData = new FormData(event.target);
+            this.uploadingQuickFile = true;
+            try {
+                const response = await fetch(`/listings/${this.targetListing.id}/quick-upload`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    this.targetListing.media = result.media;
+                    const found = this.listings.find(l => l.id === this.targetListing.id);
+                    if (found) found.media = result.media;
+                    this.quickUploadModalOpen = false;
+                } else {
+                    alert(result.error || 'حدث خطأ أثناء رفع الصورة');
+                }
+            } catch (e) {
+                alert('حدث خطأ في الاتصال بالسيرفر');
+            } finally {
+                this.uploadingQuickFile = false;
+            }
+        },
+        getInitials(text) {
+            if (!text) return 'ZT';
+            const clean = text.trim();
+            if (clean.length <= 2) return clean.toUpperCase();
+            const parts = clean.split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+            }
+            return clean.substring(0, 2).toUpperCase();
         },
         translations: {
             'Extra Virgin Olive Oil': '{{ __("Extra Virgin Olive Oil") }}',

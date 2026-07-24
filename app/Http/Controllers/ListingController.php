@@ -87,11 +87,18 @@ class ListingController extends Controller
                 'governorate' => 'nullable|string',
                 'delegation' => 'nullable|string',
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
-                'images.*' => 'nullable|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
+                'images' => 'required|array|min:1',
+                'images.*' => 'required|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
             ], [
                 'min_order.lte' => app()->getLocale() === 'ar' 
                     ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
                     : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
+                'images.required' => app()->getLocale() === 'ar' 
+                    ? 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.' 
+                    : (app()->getLocale() === 'fr' ? 'Veuillez joindre au moins une photo pour votre produit.' : 'Please attach at least one photo for your product.'),
+                'images.min' => app()->getLocale() === 'ar' 
+                    ? 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.' 
+                    : (app()->getLocale() === 'fr' ? 'Veuillez joindre au moins une photo pour votre produit.' : 'Please attach at least one photo for your product.'),
             ]);
 
             // Set seller_id to authenticated user if not provided
@@ -374,22 +381,64 @@ class ListingController extends Controller
             }
         }
 
-        // Handle image uploads with optimization
+        // Handle media management (retaining existing & adding new)
+        $existingMedia = is_array($listing->media) ? $listing->media : [];
+        $keepMedia = $request->input('keep_media', null);
+        
+        $finalMedia = [];
+        if (is_array($keepMedia)) {
+            $finalMedia = array_values(array_intersect($existingMedia, $keepMedia));
+        } elseif ($request->has('keep_media_specified')) {
+            $finalMedia = [];
+        } else {
+            $finalMedia = $request->hasFile('images') ? [] : $existingMedia;
+        }
+
         if ($request->hasFile('images')) {
             $imageOptimizer = new ImageOptimizationService();
-            $imagePaths = [];
             foreach ($request->file('images') as $image) {
                 $path = $imageOptimizer->optimizeListingImage($image, (string)$listing->id);
-                $imagePaths[] = $path;
+                $finalMedia[] = $path;
             }
-            $listing->update(['media' => $imagePaths]);
         }
+
+        $listing->update(['media' => array_values($finalMedia)]);
 
         // Bust homepage cache
         \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
 
         // Redirect to dashboard with success message
         return Redirect::route('dashboard')->with('success', __('Listing updated successfully!'));
+    }
+
+    /**
+     * Quick Upload Media directly from listing card
+     */
+    public function quickUploadMedia(Request $request, Listing $listing)
+    {
+        if ($listing->seller_id !== Auth::id() && (!Auth::user() || Auth::user()->role !== 'admin')) {
+            return response()->json(['error' => 'Unauthorized action.'], 403);
+        }
+
+        $request->validate([
+            'image' => 'required|image|max:10240',
+        ]);
+
+        $imageOptimizer = new ImageOptimizationService();
+        $path = $imageOptimizer->optimizeListingImage($request->file('image'), (string)$listing->id);
+
+        $currentMedia = is_array($listing->media) ? $listing->media : [];
+        $currentMedia[] = $path;
+
+        $listing->update(['media' => array_values($currentMedia)]);
+        \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Image uploaded successfully!'),
+            'media' => $listing->media,
+            'image_url' => \Illuminate\Support\Facades\Storage::disk('public')->url($path),
+        ]);
     }
 
     /**

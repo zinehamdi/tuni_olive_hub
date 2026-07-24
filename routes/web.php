@@ -309,6 +309,10 @@ Route::middleware('set.locale')->group(function(){
         ->middleware(['auth', 'onboarding', 'throttle:10,60'])
         ->name('listings.destroy');
     
+    Route::post('listings/{listing}/quick-upload', [\App\Http\Controllers\ListingController::class, 'quickUploadMedia'])
+        ->middleware(['auth', 'throttle:30,60'])
+        ->name('listings.quick_upload');
+
     // Add route for viewing single listing
     Route::get('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'show'])->name('listings.show');
 
