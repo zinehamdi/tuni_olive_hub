@@ -36,23 +36,21 @@
                 <span class="absolute bottom-2 right-2 bg-white/90 text-[#6A8F3B] px-2 py-1 rounded-lg text-xs font-bold shadow-md">🫒 {{ __('Olives') }}</span>
             @endif
         @else
-            @if($seller && isset($seller->profile_picture) && \Illuminate\Support\Facades\Storage::disk('public')->exists($seller->profile_picture))
-                <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $productType === 'olive' ? 'from-[#1B3A1E] via-[#2D5A2F] to-[#528A42]' : 'from-[#7A5A1B] via-[#C8A356] to-[#5A7A2F]' }}">
-                    <img src="{{ Storage::url($seller->profile_picture) }}" class="w-16 h-16 rounded-full object-cover border-2 border-white/90 shadow-lg relative z-10">
+            @php
+                $type = $productType ?: ($listing->category ?? $listing->product?->type ?? 'oil');
+                $varietyText = $variety ?: ($seller->name ?? $title);
+                $words = preg_split('/\s+/', trim($varietyText));
+                $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($varietyText, 0, 2);
+                $initials = mb_strtoupper($initials);
+            @endphp
+            <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $type === 'olive' ? 'from-[#1B3A1E] via-[#2D5A2F] to-[#528A42]' : 'from-[#7A5A1B] via-[#C8A356] to-[#5A7A2F]' }}">
+                <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg mb-1">
+                    <span class="text-white text-base font-black uppercase">{{ $initials }}</span>
                 </div>
-            @else
-                @php
-                    $varietyText = $variety ?: ($seller->name ?? $title);
-                    $words = preg_split('/\s+/', trim($varietyText));
-                    $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($varietyText, 0, 2);
-                    $initials = mb_strtoupper($initials);
-                @endphp
-                <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $productType === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]' }}">
-                    <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg mb-1">
-                        <span class="text-white text-base font-black uppercase">{{ $initials }}</span>
-                    </div>
-                </div>
-            @endif
+                <span class="text-white/90 text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10">
+                    {{ $type === 'olive' ? '🫒 ' . (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : '🫗 ' . (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil')) }}
+                </span>
+            </div>
         @endif
     </div>
     

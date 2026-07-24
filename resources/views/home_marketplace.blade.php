@@ -720,7 +720,7 @@
 
                                 <template x-if="!listing.media || listing.media.length === 0">
                                     <div class="w-full h-full flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br"
-                                         :class="listing.product?.type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]'">
+                                         :class="(listing.category === 'olive' || listing.product?.type === 'olive') ? 'from-emerald-950 via-emerald-800 to-green-700' : 'from-amber-950 via-amber-700 to-emerald-800'">
                                         <div class="absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         
@@ -729,7 +729,7 @@
                                                 <span class="text-white text-xl font-black tracking-wider uppercase" x-text="getInitials(listing.product?.variety || listing.seller?.name || 'Z')"></span>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
-                                                  x-text="listing.product?.type === 'olive' ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
+                                                  x-text="(listing.category === 'olive' || listing.product?.type === 'olive') ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
                                             </span>
                                         </div>
                                     </div>
