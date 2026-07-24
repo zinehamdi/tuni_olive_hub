@@ -318,13 +318,16 @@
                                         <img src="{{ Storage::url($productImage) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                                         @else
                                         @php
-                                            $type = $listing->product?->type ?? 'oil';
+                                            $type = $listing->product?->type ?? $listing->category ?? 'oil';
                                             $variety = $listing->product?->variety ?? $user->name ?? 'Zintoop';
                                             $words = preg_split('/\s+/', trim($variety));
                                             $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($variety, 0, 2);
                                             $initials = mb_strtoupper($initials);
+                                            $bgStyle = ($type === 'olive') 
+                                                ? 'background: linear-gradient(135deg, #143618 0%, #2A5C2E 50%, #47824B 100%);' 
+                                                : 'background: linear-gradient(135deg, #7A5A1B 0%, #C8A356 50%, #4F6C28 100%);';
                                         @endphp
-                                        <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden bg-gradient-to-br {{ $type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#5A7A2F]' }}">
+                                        <div class="w-full h-full flex flex-col items-center justify-center p-3 relative overflow-hidden" style="{{ $bgStyle }}">
                                             <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg mb-1">
                                                 <span class="text-white text-sm font-black uppercase">{{ $initials }}</span>
                                             </div>

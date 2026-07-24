@@ -92,13 +92,16 @@
                             @endforeach
                         @else
                             @php
-                                $type = $listing->product->type ?? 'oil';
+                                $type = $listing->product->type ?? $listing->category ?? 'oil';
                                 $variety = $listing->product->variety ?? $listing->seller->name ?? 'Zintoop';
                                 $words = preg_split('/\s+/', trim($variety));
                                 $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($variety, 0, 2);
                                 $initials = mb_strtoupper($initials);
+                                $bgStyle = ($type === 'olive') 
+                                    ? 'background: linear-gradient(135deg, #143618 0%, #2A5C2E 50%, #47824B 100%);' 
+                                    : 'background: linear-gradient(135deg, #7A5A1B 0%, #C8A356 50%, #4F6C28 100%);';
                             @endphp
-                            <div class="w-full h-full flex flex-col items-center justify-center p-6 relative overflow-hidden bg-gradient-to-br {{ $type === 'olive' ? 'from-[#143618] via-[#2A5C2E] to-[#47824B]' : 'from-[#8B6B23] via-[#C8A356] to-[#4F6C28]' }}">
+                            <div class="w-full h-full flex flex-col items-center justify-center p-6 relative overflow-hidden" style="{{ $bgStyle }}">
                                 <div class="absolute -right-12 -bottom-12 w-56 h-56 rounded-full bg-white/10 blur-2xl"></div>
                                 <div class="absolute -left-12 -top-12 w-56 h-56 rounded-full bg-white/10 blur-2xl"></div>
                                 
