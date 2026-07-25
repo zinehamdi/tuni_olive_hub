@@ -13,7 +13,7 @@
      }"
      x-init="
         document.body.style.overflow = 'hidden';
-        setTimeout(() => dismiss(), 2600);
+        setTimeout(() => dismiss(), 3000);
      "
      class="fixed inset-0 z-[999999] flex items-center justify-center bg-[#0C1A0F] overflow-hidden select-none w-full h-full min-h-screen">
 
@@ -35,10 +35,10 @@
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
     </button>
 
-    <!-- Center Card & Animated Content (Mobile Optimized) -->
-    <div class="relative z-10 max-w-lg w-full px-5 sm:px-6 text-center flex flex-col items-center animate-splash-appear">
+    <!-- Center Card & Content (Instant Appearance, Mobile Optimized) -->
+    <div class="relative z-10 max-w-lg w-full px-5 sm:px-6 text-center flex flex-col items-center opacity-100">
         
-        <!-- Animated Logo Container (Perfectly Circular) -->
+        <!-- Animated Logo Container (Instant & Circular) -->
         <div class="relative mb-5 sm:mb-6 group">
             <!-- Pulsing Glow Ring -->
             <div class="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] rounded-full blur-xl opacity-70 animate-tilt"></div>
@@ -51,7 +51,7 @@
         </div>
 
         <!-- English Sub-Title -->
-        <p class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#C8A356] mb-1.5 sm:mb-2 animate-fade-in-down">
+        <p class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#C8A356] mb-1.5 sm:mb-2">
             Zin Tunisian Olive Oil Platform
         </p>
 
@@ -73,7 +73,7 @@
             السوق الأول لمنتجي ومشتري زيت الزيتون والزيتون في تونس والعالم
         </p>
 
-        <!-- Loading Progress Line -->
+        <!-- Loading Progress Line (3 Seconds) -->
         <div class="w-40 sm:w-48 h-1.5 bg-white/10 rounded-full mt-6 sm:mt-8 overflow-hidden relative">
             <div class="h-full bg-gradient-to-r from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] rounded-full animate-splash-progress"></div>
         </div>
@@ -81,10 +81,6 @@
 </div>
 
 <style>
-    @keyframes splash-appear {
-        0% { opacity: 0; transform: scale(0.9) translateY(12px); }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
     @keyframes logo-float {
         0%, 100% { transform: translateY(0px) scale(1); }
         50% { transform: translateY(-5px) scale(1.04); }
@@ -93,13 +89,10 @@
         0% { width: 0%; }
         100% { width: 100%; }
     }
-    .animate-splash-appear {
-        animation: splash-appear 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
     .animate-logo-float {
         animation: logo-float 2.2s ease-in-out infinite;
     }
     .animate-splash-progress {
-        animation: splash-progress 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation: splash-progress 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 </style>
