@@ -104,22 +104,13 @@ class ImageOptimizationService
             mkdir($directory, 0755, true);
         }
 
-        // Read, resize, and optimize image
+        // Read, resize, and optimize image (single pass, fast WebP encoding)
         $image = Image::read($file);
         
-        // Resize to max 1200px width (maintains aspect ratio)
-        // This is optimal for product cards and detail pages
-        if (method_exists($image, "scaleDown")) $image->scaleDown(width: 1200);
-        else $image->scale(width: 1200);
+        if (method_exists($image, "scaleDown")) $image->scaleDown(width: 1000);
+        else $image->scale(width: 1000);
         
-        // Convert to WebP with 85% quality (good balance of quality vs size)
-        $image->toWebp(85)->save($path);
-        
-        // Also create a thumbnail for faster grid loading (400px)
-        $thumbPath = $directory . '/thumb_' . $filename;
-        if (method_exists($image, "scaleDown")) $image->scaleDown(width: 400);
-        else $image->scale(width: 400);
-        $image->toWebp(80)->save($thumbPath);
+        $image->toWebp(80)->save($path);
 
         return 'listings/' . $listingId . '/' . $filename;
     }

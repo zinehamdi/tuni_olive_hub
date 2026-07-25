@@ -1,5 +1,123 @@
 {{-- ─── Ads Ticker Bar ─── --}}
-<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20 ads-ticker-bar flex items-center">
+<style>
+    .ads-ticker-bar {
+        height: 48px;
+        min-height: 48px;
+        max-height: 80px;
+        overflow: hidden;
+    }
+    .ads-ticker-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        padding-right: 70px;
+    }
+    .ads-ticker-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        white-space: nowrap;
+        animation: ads-scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 75s linear infinite;
+        padding-left: 100%;
+    }
+    .ads-ticker-logo {
+        width: 26px;
+        height: 26px;
+    }
+    .ads-ticker-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0;
+        text-decoration: none;
+        background-color: #C6E1A5;
+        color: #000000 !important;
+        border-radius: 9999px;
+        padding: 0.3rem 0.8rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        transition: all 0.2s;
+    }
+    .ads-ticker-item:hover {
+        background-color: #b5d691;
+        transform: translateY(-1px);
+    }
+    .ads-ticker-text-wrapper {
+        white-space: normal;
+        max-width: 190px;
+    }
+    .ads-ticker-title {
+        font-size: 0.68rem;
+    }
+    .ads-ticker-desc {
+        font-size: 0.6rem;
+        margin-top: 1px;
+    }
+    .ads-ticker-icon {
+        font-size: 1rem;
+    }
+    .ads-ticker-sep {
+        font-size: 0.6rem;
+        color: rgba(106,143,59,0.35);
+        flex-shrink: 0;
+    }
+    .ads-ticker-cta {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 0.7rem;
+    }
+
+    @media (min-width: 768px) {
+        .ads-ticker-bar {
+            height: 72px;
+            min-height: 72px;
+            max-height: 80px;
+        }
+        .ads-ticker-logo {
+            width: 42px;
+            height: 42px;
+        }
+        .ads-ticker-item {
+            gap: 0.6rem;
+            padding: 0.45rem 1.25rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        .ads-ticker-text-wrapper {
+            max-width: 360px;
+        }
+        .ads-ticker-title {
+            font-size: 0.95rem;
+            line-height: 1.1;
+        }
+        .ads-ticker-desc {
+            font-size: 0.78rem;
+            line-height: 1.2;
+        }
+        .ads-ticker-icon {
+            font-size: 1.5rem;
+        }
+        .ads-ticker-sep {
+            font-size: 0.85rem;
+        }
+        .ads-ticker-cta {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    @keyframes ads-scroll-ltr {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    @keyframes ads-scroll-rtl {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(50%); }
+    }
+</style>
+
+<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20 ads-ticker-bar flex items-center" style="height: 48px; max-height: 80px; overflow: hidden;">
 
     <div class="relative z-10 w-full h-full flex items-center py-1">
         <div class="ads-ticker-wrapper">
@@ -144,126 +262,3 @@
         </a>
     </div>
 </div>
-
-<style>
-    .ads-ticker-bar {
-        min-height: 48px;
-    }
-    .ads-ticker-logo {
-        width: 26px;
-        height: 26px;
-    }
-    .ads-ticker-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        flex-shrink: 0;
-        text-decoration: none;
-        background-color: #C6E1A5;
-        color: #000000 !important;
-        border-radius: 9999px;
-        padding: 0.3rem 0.8rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        transition: all 0.2s;
-    }
-    .ads-ticker-item:hover {
-        background-color: #b5d691;
-        transform: translateY(-1px);
-    }
-    .ads-ticker-text-wrapper {
-        white-space: normal;
-        max-width: 190px;
-    }
-    .ads-ticker-title {
-        font-size: 0.68rem;
-    }
-    .ads-ticker-desc {
-        font-size: 0.6rem;
-        margin-top: 1px;
-    }
-    .ads-ticker-icon {
-        font-size: 1rem;
-    }
-    .ads-ticker-sep {
-        font-size: 0.6rem;
-        color: rgba(106,143,59,0.35);
-        flex-shrink: 0;
-    }
-    .ads-ticker-cta {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        font-size: 0.7rem;
-    }
-
-    @media (min-width: 768px) {
-        .ads-ticker-bar {
-            min-height: 80px;
-        }
-        .ads-ticker-logo {
-            width: 42px;
-            height: 42px;
-        }
-        .ads-ticker-item {
-            gap: 0.6rem;
-            padding: 0.45rem 1.25rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        .ads-ticker-text-wrapper {
-            max-width: 360px;
-        }
-        .ads-ticker-title {
-            font-size: 0.95rem;
-            line-height: 1.1;
-        }
-        .ads-ticker-desc {
-            font-size: 0.78rem;
-            line-height: 1.2;
-            margin-top: 2px;
-        }
-        .ads-ticker-icon {
-            font-size: 1.5rem;
-        }
-        .ads-ticker-sep {
-            font-size: 1rem;
-        }
-        .ads-ticker-cta {
-            padding-left: 1.25rem;
-            padding-right: 1.25rem;
-            font-size: 0.875rem;
-        }
-    }
-
-    .ads-ticker-wrapper {
-        width: 100%;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        padding-right: 70px;
-    }
-    .ads-ticker-content {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        white-space: nowrap;
-        animation: ads-scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 110s linear infinite;
-        padding-left: 100%;
-    }
-    .ads-ticker-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        flex-shrink: 0;
-        text-decoration: none;
-    }
-    @keyframes ads-scroll-ltr {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-    @keyframes ads-scroll-rtl {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(50%); }
-    }
-    .ads-ticker-wrapper:hover .ads-ticker-content {
-        animation-play-state: paused;
-    }
-</style>

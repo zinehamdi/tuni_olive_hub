@@ -177,6 +177,15 @@
                         </div>
                         @endif
 
+                        <!-- Featured Toggle -->
+                        <form action="{{ route('admin.listings.toggle_featured', $listing) }}" method="POST" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 {{ $listing->is_featured ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-md' : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300' }}">
+                                <span>⭐</span>
+                                <span>{{ $listing->is_featured ? __('إلغاء التمييز (عرض عالي)') : __('عرض مميز ⭐ (إظهار في Top 6)') }}</span>
+                            </button>
+                        </form>
+
                         <div class="flex gap-2">
                             <a href="{{ route('listings.show', $listing) }}" class="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-bold">
                                 {{ __('View') }}

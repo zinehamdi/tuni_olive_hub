@@ -52,12 +52,35 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::middleware(['web', 'set.locale'])->group(function () {
     Route::get('/', function () {
         // Get all active listings with product details and seller addresses for location-based filtering
-        $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(10), function () {
-            return \App\Models\Listing::with(['product', 'seller.addresses'])
+        $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(5), function () {
+            // Get Top 6 Admin Featured listings
+            $topFeatured = \App\Models\Listing::with(['product', 'seller.addresses'])
                 ->where('status', 'active')
-                ->latest()
+                ->where('is_featured', true)
+                ->latest('updated_at')
+                ->take(6)
                 ->get();
+
+            $featuredIds = $topFeatured->pluck('id')->toArray();
+
+            // Get remaining active listings in normal chronological order
+            $otherListings = \App\Models\Listing::with(['product', 'seller.addresses'])
+                ->where('status', 'active')
+                ->whereNotIn('id', $featuredIds)
+                ->latest('created_at')
+                ->get();
+
+            return $topFeatured->concat($otherListings);
         });
+
+        // Handle session new_listing_id for current user (Position #1 for creator's fresh listing)
+        $newListingId = session('new_listing_id');
+        if ($newListingId) {
+            $freshItem = \App\Models\Listing::with(['product', 'seller.addresses'])->find($newListingId);
+            if ($freshItem) {
+                $featuredListings = collect([$freshItem])->concat($featuredListings->reject(fn($item) => $item->id == $newListingId))->values();
+            }
+        }
             
         $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(30), function () {
             return \App\Models\Article::where('is_active', true)->latest()->take(3)->get();
@@ -258,6 +281,7 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     });
 
     Route::delete('/listings/{listing}', [\App\Http\Controllers\AdminController::class, 'deleteListing'])->name('listings.delete');
+    Route::post('/listings/{listing}/toggle-featured', [\App\Http\Controllers\AdminController::class, 'toggleFeatured'])->name('listings.toggle_featured');
     
     // User moderation
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'banUser'])->name('users.ban');

@@ -750,8 +750,13 @@
                                     </button>
                                 </template>
 
-                                <div class="absolute top-3 right-3 flex gap-2">
-                                    <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide shadow-md backdrop-blur"
+                                <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+                                    <template x-if="listing.is_featured">
+                                        <span class="px-2.5 py-1 rounded-full text-amber-950 text-xs font-black bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 shadow-md backdrop-blur border border-amber-200 flex items-center gap-1">
+                                            ⭐ {{ app()->getLocale() === 'ar' ? 'مميز' : __('Featured') }}
+                                        </span>
+                                    </template>
+                                    <span class="px-3 py-1.5 rounded-full text-white text-xs font-extrabold tracking-wide shadow-md backdrop-blur"
                                         :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
                                         x-text="listing.product?.type === 'olive' ? '{{ __('Olives') }}' : '{{ __('Olive Oil') }}'"></span>
                                 </div>
@@ -773,6 +778,7 @@
                                 <div class="flex items-center gap-2 mb-3 flex-wrap">
                                     <span x-show="listing.product?.quality" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.product?.quality)"></span>
                                     <span x-show="listing.packaging" class="px-2 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.packaging)"></span>
+                                    <span x-show="listing.tree_count" class="px-2.5 py-1 rounded-full bg-emerald-800 text-white text-xs font-bold shadow-sm" x-text="'🌳 ' + listing.tree_count + ' ' + ('{{ app()->getLocale() === 'ar' ? 'شجرة' : __('trees') }}')"></span>
                                     <span x-show="listing.status === 'active'" class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-semibold">{{ __('Active') }}</span>
                                 </div>
 
@@ -884,12 +890,18 @@
                             <div class="flex-1 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-2 flex-wrap">
-                                            <h3 class="text-2xl font-bold text-gray-900 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
-                                                <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
-                                                    :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
-                                                    x-text="listing.product?.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
+                                        <template x-if="listing.is_featured">
+                                            <span class="px-2.5 py-1 rounded-full text-amber-950 text-xs font-black bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 shadow border border-amber-200 flex items-center gap-1">
+                                                ⭐ {{ app()->getLocale() === 'ar' ? 'مميز' : __('Featured') }}
+                                            </span>
+                                        </template>
+                                        <h3 class="text-2xl font-bold text-gray-900 leading-tight" x-text="getEnhancedTitle(listing)"></h3>
+                                        <span class="px-3 py-2 rounded-full text-white text-sm font-extrabold tracking-wide" 
+                                              :class="listing.product?.type === 'olive' ? 'bg-[#0f9d58]' : 'bg-[#C8A356]'"
+                                              x-text="listing.product?.type === 'olive' ? '{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}' : '{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}'"></span>
                                         <span x-show="listing.product?.quality" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#C8A356] to-[#b8954e] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.product?.quality)"></span>
                                         <span x-show="listing.packaging" class="px-3 py-1 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white text-xs font-semibold" x-text="translate(listing.packaging)"></span>
+                                        <span x-show="listing.tree_count" class="px-2.5 py-1 rounded-full bg-emerald-800 text-white text-xs font-bold shadow-sm" x-text="'🌳 ' + listing.tree_count + ' ' + ('{{ app()->getLocale() === 'ar' ? 'شجرة' : __('trees') }}')"></span>
                                     </div>
                                     <div class="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                                         <div class="flex items-center gap-2">
@@ -1385,7 +1397,13 @@ document.addEventListener('alpine:init', () => {
                     }
                     break;
                 case 'newest':
-                    results.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                default:
+                    // Maintain initial server-side rank (Session fresh #1, Top 6 Featured ⭐, then chronological)
+                    results.sort((a, b) => {
+                        const aIndex = this.listings.findIndex(l => l.id === a.id);
+                        const bIndex = this.listings.findIndex(l => l.id === b.id);
+                        return aIndex - bIndex;
+                    });
                     break;
                 case 'oldest':
                     results.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));

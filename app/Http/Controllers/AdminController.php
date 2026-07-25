@@ -320,6 +320,25 @@ class AdminController extends Controller
         return redirect()->back()->with('success', __('Listing approved successfully'));
     }
 
+    public function toggleFeatured(Request $request, Listing $listing)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $listing->is_featured = !$listing->is_featured;
+        $listing->save();
+
+        \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'is_featured' => $listing->is_featured]);
+        }
+
+        $msg = $listing->is_featured ? __('Listing marked as Featured ⭐') : __('Listing unmarked from Featured');
+        return redirect()->back()->with('success', $msg);
+    }
+
     /**
      * Reject a listing
      * رفض عرض

@@ -82,7 +82,10 @@ class Listing extends Model
         'min_order',
         'payment_methods',
         'delivery_options',
-        'media'
+        'media',
+        'is_featured',
+        'tree_count',
+        'sale_mode'
     ];
     
     /**
@@ -95,6 +98,8 @@ class Listing extends Model
         'payment_methods' => 'array',
         'delivery_options' => 'array',
         'media' => 'array',
+        'is_featured' => 'boolean',
+        'tree_count' => 'integer'
     ];
 
     /**

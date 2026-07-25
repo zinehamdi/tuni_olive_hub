@@ -177,7 +177,8 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </select>
 
                         <!-- AI Variety Recognition Button -->
-                        <div class="mt-6 p-4 bg-white/50 border-2 border-[#C8A356]/30 rounded-xl">
+                        <!-- AI Variety Recognition Button (Only for Oil) -->
+                        <div x-show="formData.category === 'oil'" class="mt-6 p-4 bg-white/50 border-2 border-[#C8A356]/30 rounded-xl" x-cloak>
                             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                                 <div class="flex items-center gap-3 w-full sm:w-auto">
                                     <img src="{{ asset('images/ezzitouni_bot.png') }}" class="w-10 h-10 rounded-full border border-[#C8A356] shadow-sm">
@@ -219,10 +220,10 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </select>
                     </div>
 
-                    <!-- Packaging / Condition -->
-                    <div class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6">
+                    <!-- Packaging / Condition (Only for Oil) -->
+                    <div x-show="formData.category === 'oil'" class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6" x-cloak>
                         <label class="block text-lg font-bold text-[#1B2A1B] mb-4">حالة التعبئة / Packaging</label>
-                        <select x-model="formData.packaging" required
+                        <select x-model="formData.packaging" :required="formData.category === 'oil'"
                                 class="w-full text-xl rounded-xl border-2 border-gray-300 px-6 py-4 bg-white focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition">
                             <option value="">— اختر حالة التعبئة —</option>
                             <option value="جملة / صب (Vrac)">جملة / صب (Bulk / Vrac)</option>
@@ -230,44 +231,25 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </select>
                     </div>
 
-                    <!-- AI Smart Yield Estimator -->
-                    <div x-show="formData.category === 'olive'" class="mt-8 bg-gradient-to-br from-[#1B2A1B] to-[#6A8F3B] rounded-2xl p-6 shadow-xl text-white relative overflow-hidden" x-cloak>
-                        <!-- Decorative Background -->
-                        <div class="absolute inset-0 opacity-5 mix-blend-overlay" style="background-image: url('{{ asset('images/ezzitouni_bot.png') }}'); background-repeat: no-repeat; background-position: left top; background-size: 200px;"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center text-center">
-                            <!-- Ezzitouni Bot Avatar -->
-                            <div class="w-24 h-24 mb-4 rounded-full border-4 border-[#C8A356] shadow-xl overflow-hidden bg-white transform hover:scale-110 transition duration-300">
-                                <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Ezzitouni Bot" class="w-full h-full object-cover">
-                            </div>
-                            
-                            <h3 class="text-2xl font-bold mb-3">
-                                التقدير الذكي لنسبة الزيت (حصري) مع Ezzitouni Bot
-                            </h3>
-                            <p class="text-white/90 mb-6 text-lg max-w-2xl">هل تريد إقناع المشترين بجودة زيتونك؟ التقط صورة لزيتونة مهروسة بين أصابعك ودع صديقك الذكي "Ezzitouni Bot" يقدر نسبة الزيت!</p>
-                            
-                            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
-                                <div class="w-full sm:w-auto">
-                                    <input type="file" id="smashed_olive_image" accept="image/*" @change="analyzeOliveImage($event)" class="hidden">
-                                    <label for="smashed_olive_image" class="cursor-pointer w-full flex items-center justify-center px-6 py-4 bg-white text-[#1B2A1B] rounded-xl hover:bg-gray-100 transition shadow-lg font-bold">
-                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                        التقط صورة للاختبار
-                                    </label>
-                                </div>
-                                
-                                <div x-show="isAnalyzingOlive" class="flex-1 w-full flex items-center justify-center p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20" x-cloak>
-                                    <svg class="animate-spin h-6 w-6 text-white ml-3" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                    <span class="font-bold">جاري تحليل الصورة بالذكاء الاصطناعي...</span>
-                                </div>
-                                
-                                <div x-show="formData.estimated_oil_yield" class="flex-1 w-full flex items-center justify-center p-4 bg-white text-[#1B2A1B] border-4 border-[#C8A356] rounded-xl shadow-2xl transform scale-105 transition-all" x-cloak>
-                                    <span class="font-black text-xl">النسبة المتوقعة: <span x-text="formData.estimated_oil_yield" class="text-[#6A8F3B] text-2xl"></span>%</span>
-                                    <button type="button" @click="formData.estimated_oil_yield = null; document.getElementById('smashed_olive_image').value='';" class="mr-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full transition hover:bg-red-100">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                </div>
-                            </div>
+                    <!-- Sale Mode (Only for Olive: زيتون حب / سانية للخضارة) -->
+                    <div x-show="formData.category === 'olive'" class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6" x-cloak>
+                        <label class="block text-lg font-bold text-[#1B2A1B] mb-4">نوع البيع (زيتون حب / سانية للخضارة)</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button type="button" @click="formData.sale_mode = 'grain'; formData.packaging = 'زيتون حب'"
+                                    :class="formData.sale_mode === 'grain' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
+                                    class="p-5 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
+                                <span class="text-3xl">🫒</span>
+                                <span class="text-lg">زيتون حب</span>
+                            </button>
+
+                            <button type="button" @click="formData.sale_mode = 'saniya'; formData.packaging = 'سانية للخضارة'"
+                                    :class="formData.sale_mode === 'saniya' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
+                                    class="p-5 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
+                                <span class="text-3xl">🌳</span>
+                                <span class="text-lg">سانية للخضارة</span>
+                            </button>
                         </div>
+                        <input type="hidden" name="sale_mode" :value="formData.sale_mode">
                     </div>
                 </div>
 
@@ -282,6 +264,14 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <input type="number" x-model="formData.quantity" step="0.01" min="0" required
                                 class="w-full text-2xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition"
                                 placeholder="مثال: 500">
+                        </div>
+
+                        <!-- Tree Count (Only for Olives) -->
+                        <div x-show="formData.category === 'olive'" x-cloak>
+                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">عدد الأشجار (اختياري)</label>
+                            <input type="number" x-model="formData.tree_count" name="tree_count" min="1" step="1"
+                                class="w-full text-xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition"
+                                placeholder="مثال: 150 شجرة">
                         </div>
 
                         <div>
@@ -428,7 +418,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                 <!-- Step 6: Delivery Options -->
                 <div x-show="currentStep === 6" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-10" x-transition:enter-end="opacity-100 transform translate-x-0">
                     <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2">كيف سيتم التسليم؟</h2>
-                    <p class="text-gray-600 mb-8">اختر خيارات التسليم المتاحة (يمكنك اختيار أكثر من خيار)</p>
+                    <p class="text-gray-600 mb-8">اختر خيارات التسليم المتاحة</p>
                     
                     <div class="space-y-3">
                         <button type="button" @click="toggleDeliveryOption('pickup')"
@@ -460,26 +450,10 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             </div>
                             <input type="checkbox" :checked="formData.delivery_options.includes('local_delivery')" class="w-6 h-6 rounded">
                         </button>
-
-                        <button type="button" @click="toggleDeliveryOption('export')"
-                            :class="formData.delivery_options.includes('export') ? 'bg-[#C8A356] text-white border-[#C8A356]' : 'bg-white text-gray-700 border-gray-200'"
-                            class="w-full border-2 rounded-xl p-5 transition-all text-right flex items-center justify-between hover:shadow-lg">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center ml-4">
-                                    <span class="text-2xl">✈️</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-lg">تصدير دولي</h4>
-                                    <p class="text-sm opacity-80">الشحن إلى خارج البلاد</p>
-                                </div>
-                            </div>
-                            <input type="checkbox" :checked="formData.delivery_options.includes('export')" class="w-6 h-6 rounded">
-                        </button>
                     </div>
                 </div>
 
                 <!-- Step 7: Location -->
-                                <!-- Step 7: Location -->
                 <div x-show="currentStep === 7" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-10" x-transition:enter-end="opacity-100 transform translate-x-0">
                     <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2">الموقع الجغرافي</h2>
                     <p class="text-gray-600 mb-8">حدد موقع المنتج لمساعدة المشترين على إيجادك</p>
@@ -520,7 +494,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                 
                                 <!-- Instructions for allowing location access -->
                                 <div class="mt-3 p-3 bg-white rounded-lg text-gray-700 text-sm space-y-2">
-                                    <p class="font-bold text-gray-900">� كيفية السماح بالوصول إلى الموقع:</p>
+                                    <p class="font-bold text-gray-900">🔒 كيفية السماح بالوصول إلى الموقع:</p>
                                     <ul class="list-disc list-inside space-y-1 mr-4">
                                         <li><strong>Chrome/Edge:</strong> انقر على أيقونة القفل 🔒 بجانب رابط الموقع في شريط العناوين، ثم اختر "السماح" للموقع</li>
                                         <li><strong>Firefox:</strong> انقر على أيقونة الموقع في شريط العناوين، ثم قم بتفعيل "الوصول إلى الموقع"</li>
@@ -528,7 +502,6 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                         <li><strong>الهاتف المحمول:</strong> من إعدادات المتصفح أو إعدادات الجهاز، قم بتفعيل إذن الموقع للمتصفح</li>
                                     </ul>
                                     <p class="mt-2 text-blue-600">💡 بعد السماح، انقر على زر "حدد موقعي الحالي" مرة أخرى</p>
-                                    <p class="mt-2 text-gray-600">أو يمكنك إدخال الإحداثيات يدوياً أدناه ⬇️</p>
                                 </div>
                                 
                                 <!-- Retry and Close Buttons -->
@@ -555,29 +528,9 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:outline-none text-lg">
                         </div>
 
-                        <!-- Manual Coordinates -->
-                        <div :class="locationSuccess ? 'border-2 border-green-500 rounded-xl p-4' : ''">
-                            <label class="block font-bold text-gray-900 mb-3">الإحداثيات الجغرافية (اختياري)</label>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm text-gray-700 mb-1">خط العرض (Latitude)</label>
-                                    <input type="number" step="0.000001"
-                                           x-model="formData.latitude"
-                                           placeholder="33.8869"
-                                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#6A8F3B] focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-700 mb-1">خط الطول (Longitude)</label>
-                                    <input type="number" step="0.000001"
-                                           x-model="formData.longitude"
-                                           placeholder="10.1815"
-                                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#6A8F3B] focus:outline-none">
-                                </div>
-                            </div>
-                            <p class="mt-3 text-sm text-gray-600">
-                                💡 يمكنك الحصول على الإحداثيات من خرائط جوجل بالنقر بزر الماوس الأيمن على الموقع
-                            </p>
-                        </div>
+                        <!-- Hidden Coordinates State -->
+                        <input type="hidden" x-model="formData.latitude" name="latitude">
+                        <input type="hidden" x-model="formData.longitude" name="longitude">
 
                         <!-- Governorate & Delegation -->
                         <div class="grid grid-cols-2 gap-4">
@@ -845,8 +798,11 @@ document.addEventListener('alpine:init', () => {
         selectCategory(category) {
             this.formData.category = category;
             this.formData.variety = '';
-            if (category !== 'olive') {
+            if (category === 'olive') {
                 this.formData.estimated_oil_yield = null;
+                if (!['kg', 'ton'].includes(this.formData.unit)) {
+                    this.formData.unit = 'kg';
+                }
             }
         },
 

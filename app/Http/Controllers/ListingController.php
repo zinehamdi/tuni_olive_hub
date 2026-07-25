@@ -87,6 +87,8 @@ class ListingController extends Controller
                 'governorate' => 'nullable|string',
                 'delegation' => 'nullable|string',
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
+                'tree_count' => 'nullable|integer|min:1',
+                'sale_mode' => 'nullable|string|max:32',
                 'images' => 'required|array|min:1',
                 'images.*' => 'required|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
             ], [
@@ -215,23 +217,20 @@ class ListingController extends Controller
                 'status' => $listing->status
             ]);
 
-            // Send success email to seller
-            try {
-                \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
-            } catch (\Exception $e) {
-                Log::error('Failed to send listing creation email: ' . $e->getMessage());
-            }
+            // Send emails asynchronously after response to avoid blocking HTTP request
+            dispatch(function () use ($listing) {
+                try {
+                    if ($listing->seller && $listing->seller->email) {
+                        Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+                    }
+                    Mail::to('zinehamdi8@gmail.com')->send(new NewListingNotificationMail($listing));
+                } catch (\Exception $e) {
+                    Log::error('Failed to send listing creation email: ' . $e->getMessage());
+                }
+            })->afterResponse();
 
-            // Notify admin about new listing so they can review and send to subscribers manually
-            try {
-                \Illuminate\Support\Facades\Mail::to('zinehamdi8@gmail.com')->send(new NewListingNotificationMail($listing));
-                Log::info('Admin notified of new listing.', ['listing_id' => $listing->id]);
-            } catch (\Exception $e) {
-                Log::error('Failed to send new listing admin notification: ' . $e->getMessage());
-            }
-
-            // Redirect to dashboard with success message
-            return Redirect::route('dashboard')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
+            // Redirect to homepage with success message and new_listing_id for #1 ranking spot
+            return Redirect::route('home')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('❌ Validation Error:', [
