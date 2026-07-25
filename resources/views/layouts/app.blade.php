@@ -31,21 +31,22 @@
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:site_name" content="{{ config('app.name', 'ZinToop') }}">
+    <meta property="og:type" content="{{ trim($__env->yieldContent('og_type', 'website')) }}">
+    <meta property="og:site_name" content="ZinToop">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', $defaultTitle)">
-    <meta property="og:description" content="@yield('og_description', $defaultDesc)">
-    <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
+    <meta property="og:title" content="{{ trim($__env->yieldContent('og_title', $defaultTitle)) }}">
+    <meta property="og:description" content="{{ trim($__env->yieldContent('og_description', $defaultDesc)) }}">
+    <meta property="og:image" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
+    <meta property="og:image:secure_url" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
-    <meta property="fb:app_id" content="{{ env('FB_APP_ID', '') }}">
+    <meta property="fb:app_id" content="{{ env('FB_APP_ID', '8b9o5r7q1jz9762hqdi15atqy5iwae') }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
-    <meta name="twitter:title" content="@yield('twitter_title', $defaultTitle)">
-    <meta name="twitter:description" content="@yield('twitter_description', $defaultDesc)">
-    <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
+    <meta name="twitter:title" content="{{ trim($__env->yieldContent('twitter_title', $defaultTitle)) }}">
+    <meta name="twitter:description" content="{{ trim($__env->yieldContent('twitter_description', $defaultDesc)) }}">
+    <meta name="twitter:image" content="{{ trim($__env->yieldContent('twitter_image', asset('images/zintoop-logo.png'))) }}">
 
     <!-- JSON-LD Schema (Structured Data for Google) -->
     <script type="application/ld+json">

@@ -1,18 +1,30 @@
 @extends('layouts.app')
-@section('og_type', 'product')
-@section('og_title')
+
 @php
-    $variety = $listing->product->variety ?? 'زيت زيتون';
-    $city = $listing->seller->addresses->first() ? $listing->seller->addresses->first()->governorate : 'تونس';
-    $unit = $listing->unit ? ($listing->unit == 'liter' ? 'لتر' : ($listing->unit == 'kg' ? 'كلغ' : $listing->unit)) : 'لتر';
-    $price = $listing->price == 0 ? 'السعر عند الطلب' : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . $unit);
+    $variety = $listing->product->variety ?? 'زيت زيتون تونسي';
+    $city = optional($listing->seller->addresses->first())->governorate ?? 'تونس';
+    $unit = $listing->unit ? ($listing->unit == 'liter' ? 'لتر' : ($listing->unit == 'kg' ? 'كغ' : $listing->unit)) : 'كغ';
+    $priceText = $listing->price == 0 ? 'السعر عند الطلب' : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . $unit);
+    
+    $shareTitle = trim($variety . ' - ' . $priceText . ' (' . $city . ') | ZinToop');
+    $shareDesc = trim('عرض ' . $variety . ' في ' . $city . ' على منصة الزين لزيت الزيتون التونسي. تواصل مباشرة مع المنتج بدون وسطاء.');
+    
+    $rawImage = !empty($listing->media) && is_array($listing->media) ? $listing->media[0] : null;
+    $shareImage = $rawImage ? asset('storage/' . $rawImage) : asset('images/zintoop-logo.png');
+    if (str_starts_with($shareImage, 'http://')) {
+        $shareImage = str_replace('http://', 'https://', $shareImage);
+    }
 @endphp
-{{ $price }} - {{ $variety }} - {{ $city }}
-@endsection
-@section('og_description', 'عرض متوفر الآن على منصة الزين! اشترِ زيت الزيتون التونسي مباشرة من المنتج بدون وسطاء.')
-@section('og_image')
-{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}
-@endsection
+
+@section('title', $shareTitle)
+@section('description', $shareDesc)
+@section('og_type', 'product')
+@section('og_title', $shareTitle)
+@section('og_description', $shareDesc)
+@section('og_image', $shareImage)
+@section('twitter_title', $shareTitle)
+@section('twitter_description', $shareDesc)
+@section('twitter_image', $shareImage)
 
 @push('head')
     <!-- JSON-LD Product Schema for Google & Facebook SEO -->
