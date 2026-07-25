@@ -240,15 +240,20 @@ class MessageController extends Controller
     public function unreadCount(): JsonResponse
     {
         $user = auth()->user();
+        if (!$user) {
+            return response()->json(['count' => 0]);
+        }
         
-        $count = Message::whereHas('thread', function($q) use ($user) {
-                $q->where('object_type', 'direct_message')
-                  ->whereJsonContains('participants', $user->id);
-            })
-            ->where('sender_id', '!=', $user->id)
-            ->where('is_hidden', false)
-            ->whereNull('read_at')
-            ->count();
+        $count = \Illuminate\Support\Facades\Cache::remember('unread_msg_count_' . $user->id, 30, function() use ($user) {
+            return Message::whereHas('thread', function($q) use ($user) {
+                    $q->where('object_type', 'direct_message')
+                      ->whereJsonContains('participants', $user->id);
+                })
+                ->where('sender_id', '!=', $user->id)
+                ->where('is_hidden', false)
+                ->whereNull('read_at')
+                ->count();
+        });
         
         return response()->json(['count' => $count]);
     }

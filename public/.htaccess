@@ -41,7 +41,10 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    Header set X-LiteSpeed-Cache-Control "no-cache, no-store"
+    # Enable strong browser caching for static assets (images, CSS, JS)
+    <FilesMatch "\.(css|js|webp|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+    </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>
