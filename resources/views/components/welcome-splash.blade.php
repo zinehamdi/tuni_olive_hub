@@ -12,14 +12,20 @@
         }
      }"
      x-init="
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => dismiss(), 3000);
+        if (!sessionStorage.getItem('zintoop_splash_seen')) {
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => dismiss(), 3000);
+        } else {
+            const el = document.getElementById('zintoop-welcome-splash');
+            if (el) el.remove();
+        }
      "
      class="fixed inset-0 z-[999999] flex items-center justify-center bg-[#0C1A0F] overflow-hidden select-none w-full h-full min-h-screen">
 
     <script>
         if (sessionStorage.getItem('zintoop_splash_seen')) {
-            document.getElementById('zintoop-welcome-splash').style.display = 'none';
+            var splashEl = document.getElementById('zintoop-welcome-splash');
+            if (splashEl) splashEl.remove();
         }
     </script>
 

@@ -221,11 +221,11 @@ class ListingController extends Controller
             dispatch(function () use ($listing) {
                 try {
                     if ($listing->seller && $listing->seller->email) {
-                        Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+                        \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
                     }
-                    Mail::to('zinehamdi8@gmail.com')->send(new NewListingNotificationMail($listing));
+                    \Illuminate\Support\Facades\Mail::to('zinehamdi8@gmail.com')->send(new \App\Mail\NewListingNotificationMail($listing));
                 } catch (\Exception $e) {
-                    Log::error('Failed to send listing creation email: ' . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::error('Failed to send listing creation email: ' . $e->getMessage());
                 }
             })->afterResponse();
 

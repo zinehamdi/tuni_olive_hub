@@ -40,7 +40,7 @@
                                 <tr>
                                     <td align="center">
                                         <a href="{{ url('/') }}" target="_blank" style="text-decoration: none;">
-                                            <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop Logo" width="64" height="64" style="display: block; width: 64px; height: 64px; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2);">
+                                            <img src="https://zintoop.com/images/zintoop-logo.png" alt="ZinToop Logo" width="64" height="64" style="display: block; width: 64px; height: 64px; border-radius: 16px; border: 2px solid rgba(255,255,255,0.2);">
                                         </a>
                                         <h1 style="color: #FFFFFF; font-size: 24px; font-weight: 800; margin: 12px 0 4px 0; letter-spacing: -0.5px;">منصة زيت الزيتون التونسي / زينتوب</h1>
                                         <p style="color: #A7F3D0; font-size: 13px; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px;">ZinToop | السوق التونسي الأول لزيت الزيتون والخدمات الفلاحية</p>
