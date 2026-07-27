@@ -23,11 +23,11 @@
         flex-shrink: 0;
         width: max-content;
         min-width: max-content;
-        animation: ads-scroll-marquee 60s linear infinite;
+        animation: ads-scroll-marquee 110s linear infinite;
         will-change: transform;
     }
     [dir="rtl"] .ads-ticker-content {
-        animation: ads-scroll-marquee-rtl 60s linear infinite;
+        animation: ads-scroll-marquee-rtl 110s linear infinite;
     }
     .ads-ticker-wrapper:hover .ads-ticker-content {
         animation-play-state: paused;
