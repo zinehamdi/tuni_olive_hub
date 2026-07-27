@@ -19,12 +19,61 @@
         <!-- TOP COVER & AVATAR -->
         <div class="bg-white shadow-sm border-b border-gray-100">
             <div class="max-w-[1400px] mx-auto relative">
-                <!-- Cover Photo -->
-                <div class="h-48 md:h-64 lg:h-72 w-full relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600">
+                <!-- Cover Photo Carousel -->
+                <div x-data="{ 
+                    activeSlide: 0, 
+                    photos: {{ json_encode($coverPhotos->values()->all()) }}, 
+                    timer: null,
+                    next() { this.activeSlide = (this.activeSlide + 1) % this.photos.length },
+                    prev() { this.activeSlide = (this.activeSlide - 1 + this.photos.length) % this.photos.length },
+                    startTimer() { if (this.photos.length > 1) { this.timer = setInterval(() => this.next(), 4500) } },
+                    stopTimer() { if (this.timer) clearInterval(this.timer) }
+                }" 
+                x-init="startTimer()" 
+                @mouseenter="stopTimer()" 
+                @mouseleave="startTimer()"
+                class="h-48 md:h-64 lg:h-72 w-full relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600 group/cover">
+
                     @if($coverPhotos->count() > 0)
-                        <img src="{{ $coverPhotos[0] }}" class="w-full h-full object-cover opacity-90" loading="lazy">
+                        <!-- Slide Images -->
+                        <template x-for="(photo, index) in photos" :key="index">
+                            <div x-show="activeSlide === index" 
+                                 x-transition:enter="transition ease-out duration-700" 
+                                 x-transition:enter-start="opacity-0 scale-105" 
+                                 x-transition:enter-end="opacity-100 scale-100" 
+                                 x-transition:leave="transition ease-in duration-500" 
+                                 x-transition:leave-start="opacity-100 scale-100" 
+                                 x-transition:leave-end="opacity-0 scale-95" 
+                                 class="absolute inset-0 w-full h-full">
+                                <img :src="photo" class="w-full h-full object-cover opacity-90" loading="lazy">
+                            </div>
+                        </template>
+
+                        <!-- Navigation Arrows (If more than 1 photo) -->
+                        <template x-if="photos.length > 1">
+                            <div class="absolute inset-0 flex items-center justify-between px-3 pointer-events-none opacity-0 group-hover/cover:opacity-100 transition-opacity duration-300 z-10">
+                                <button @click.prevent="prev()" class="pointer-events-auto w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition transform hover:scale-110 shadow-lg font-black text-sm">
+                                    ❮
+                                </button>
+                                <button @click.prevent="next()" class="pointer-events-auto w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition transform hover:scale-110 shadow-lg font-black text-sm">
+                                    ❯
+                                </button>
+                            </div>
+                        </template>
+
+                        <!-- Slide Indicators / Dots (If more than 1 photo) -->
+                        <template x-if="photos.length > 1">
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 bg-black/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 shadow-md">
+                                <template x-for="(photo, index) in photos" :key="index">
+                                    <button @click.prevent="activeSlide = index" 
+                                            :class="activeSlide === index ? 'w-5 bg-emerald-400' : 'w-2 bg-white/60 hover:bg-white'" 
+                                            class="h-2 rounded-full transition-all duration-300">
+                                    </button>
+                                </template>
+                            </div>
+                        </template>
                     @endif
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 pointer-events-none"></div>
                 </div>
                 <!-- Avatar & Name -->
                 <div class="px-4 sm:px-8 pb-6 relative flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-end -mt-16 sm:-mt-20 z-10">
