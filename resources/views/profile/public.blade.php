@@ -40,19 +40,22 @@
                         <div class="absolute bottom-2 {{ $isRTL ? 'left-2' : 'right-2' }} w-6 h-6 bg-green-500 rounded-full ring-4 ring-white shadow-md"></div>
                     </div>
                     
-                    <div class="flex-1 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2 sm:mt-0 sm:pt-16">
-                        <div class="flex flex-col items-center sm:items-start gap-2.5">
-                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 flex items-center justify-center sm:justify-start gap-2 tracking-tight">
+                    <div class="flex-1 w-full flex flex-col md:flex-row items-center justify-between gap-4 mt-2 sm:mt-0 pt-2 sm:pt-20">
+                        <!-- User Name -->
+                        <div class="text-center sm:text-start shrink-0">
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
                                 <span>{{ $user->name }}</span>
                                 @if($user->trust_score > 80)
                                     <span title="{{ __('حساب موثق وموثوق') }}">
-                                        <svg class="w-7 h-7 text-blue-500 shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                        <svg class="w-6 h-6 text-blue-500 shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                     </span>
                                 @endif
                             </h1>
+                        </div>
 
-                            <!-- Premium Elegant Role & Business Badge -->
-                            <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 via-teal-50/90 to-amber-50/70 text-emerald-950 px-5 py-2.5 rounded-2xl border border-emerald-200/90 shadow-md font-extrabold text-base sm:text-lg backdrop-blur-md transform hover:scale-[1.02] transition duration-300">
+                        <!-- Role & Business Badge (Placed Prominently in the Middle) -->
+                        <div class="flex justify-center items-center flex-1 my-1 sm:my-0">
+                            <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50/90 text-emerald-950 px-5 py-2.5 rounded-2xl border border-emerald-200/90 shadow-md font-extrabold text-base sm:text-lg backdrop-blur-md transform hover:scale-[1.02] transition duration-300">
                                 @if($user->role === 'farmer' && ($user->farm_name || $user->farm_name_ar))
                                     <span class="text-xl">🌾</span>
                                     <span>{{ $user->farm_name ?? $user->farm_name_ar }}</span>
@@ -87,9 +90,9 @@
                             </div>
                         </div>
                         
-                        <!-- Actions -->
+                        <!-- Actions (Right Side) -->
                         @if(!$isOwner)
-                        <div x-data="userInteraction()" x-init="init()" class="flex justify-center sm:justify-end gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+                        <div x-data="userInteraction()" x-init="init()" class="flex justify-center sm:justify-end gap-2 w-full md:w-auto shrink-0">
                             <button @click="confirmFollow()" :class="followed ? 'bg-gray-100 text-gray-800' : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white'" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex-1 sm:flex-none justify-center px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition flex items-center gap-2">
                                 <span x-text="followed ? '{{ __('Following') }}' : '{{ __('Follow') }}'">{{ __('Follow') }}</span>
                                 <span class="px-2 py-0.5 rounded-full text-xs bg-white/20" :class="followed ? 'bg-white' : 'bg-white/20'" x-text="followerCount !== null ? followerCount : '-'">-</span>
@@ -269,6 +272,16 @@
                                         
                                         $rawTitle = $lab['title'] ?? '';
                                         $titleTranslations = [
+                                            'award_gold_medal' => [
+                                                'ar' => '🏆 جائزة وميدالية ذهبية دولية للجودة',
+                                                'en' => '🏆 International Gold Medal Award for Quality',
+                                                'fr' => '🏆 Médaille d\'Or Internationale de Qualité',
+                                            ],
+                                            'iso_cert' => [
+                                                'ar' => '📜 شهادة مطابقة وجودة إيزو (ISO / Bio)',
+                                                'en' => '📜 Official ISO & Organic Bio Certificate',
+                                                'fr' => '📜 Certificat Officiel ISO & Bio Biologique',
+                                            ],
                                             'acidity_peroxide' => [
                                                 'ar' => '🧪 تحليل نسبة الحموضة والتأكسد',
                                                 'en' => '🧪 Acidity & Peroxide Value Analysis',
@@ -295,9 +308,9 @@
                                                 'fr' => '👅 Profil Sensoriel & Dégustation Organoleptique',
                                             ],
                                             'other_lab_report' => [
-                                                'ar' => '📋 تقرير تحليل مخبري رسمي عام',
-                                                'en' => '📋 Official Laboratory Analysis Report',
-                                                'fr' => '📋 Rapport d\'Analyse de Laboratoire Officiel',
+                                                'ar' => '📋 شهادة أو تقرير تحليل مخبري رسمي',
+                                                'en' => '📋 Official Laboratory Certificate or Report',
+                                                'fr' => '📋 Certificat ou Rapport d\'Analyse Officiel',
                                             ],
                                         ];
 

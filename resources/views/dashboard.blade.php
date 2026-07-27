@@ -654,6 +654,16 @@
                                 
                                 $rawTitle = $lab['title'] ?? '';
                                 $titleTranslations = [
+                                    'award_gold_medal' => [
+                                        'ar' => '🏆 جائزة وميدالية ذهبية دولية للجودة',
+                                        'en' => '🏆 International Gold Medal Award for Quality',
+                                        'fr' => '🏆 Médaille d\'Or Internationale de Qualité',
+                                    ],
+                                    'iso_cert' => [
+                                        'ar' => '📜 شهادة مطابقة وجودة إيزو (ISO / Bio)',
+                                        'en' => '📜 Official ISO & Organic Bio Certificate',
+                                        'fr' => '📜 Certificat Officiel ISO & Bio Biologique',
+                                    ],
                                     'acidity_peroxide' => [
                                         'ar' => '🧪 تحليل نسبة الحموضة والتأكسد',
                                         'en' => '🧪 Acidity & Peroxide Value Analysis',
@@ -680,9 +690,9 @@
                                         'fr' => '👅 Profil Sensoriel & Dégustation Organoleptique',
                                     ],
                                     'other_lab_report' => [
-                                        'ar' => '📋 تقرير تحليل مخبري رسمي عام',
-                                        'en' => '📋 Official Laboratory Analysis Report',
-                                        'fr' => '📋 Rapport d\'Analyse de Laboratoire Officiel',
+                                        'ar' => '📋 شهادة أو تقرير تحليل مخبري رسمي',
+                                        'en' => '📋 Official Laboratory Certificate or Report',
+                                        'fr' => '📋 Certificat ou Rapport d\'Analyse Officiel',
                                     ],
                                 ];
 
@@ -807,12 +817,14 @@
                                         {{ app()->getLocale() === 'ar' ? 'نوع ونوعية التحليل المخبري' : 'Analysis Type & Title' }} <span class="text-red-500">*</span>
                                     </label>
                                     <select name="title" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-bold bg-white text-gray-800">
+                                        <option value="award_gold_medal">{{ app()->getLocale() === 'ar' ? '🏆 جائزة وميدالية ذهبية دولية للجودة (Gold Medal Award)' : (app()->getLocale() === 'fr' ? '🏆 Médaille d\'Or Internationale de Qualité' : '🏆 International Gold Medal Award for Quality') }}</option>
+                                        <option value="iso_cert">{{ app()->getLocale() === 'ar' ? '📜 شهادة مطابقة وجودة إيزو (ISO / Bio Certificate)' : (app()->getLocale() === 'fr' ? '📜 Certificat Officiel ISO & Bio Biologique' : '📜 Official ISO & Bio Organic Certificate') }}</option>
                                         <option value="acidity_peroxide">{{ app()->getLocale() === 'ar' ? '🧪 تحليل نسبة الحموضة والتأكسد (Acidity & Peroxide Value)' : (app()->getLocale() === 'fr' ? '🧪 Analyse d\'Acidité & Indice de Peroxydes' : '🧪 Acidity & Peroxide Value Analysis') }}</option>
                                         <option value="comprehensive_quality">{{ app()->getLocale() === 'ar' ? '🏅 تحليل الجودة الشاملة والتصنيف الرسمية (Full Quality & Grade)' : (app()->getLocale() === 'fr' ? '🏅 Certificat de Qualité Globale & Grade' : '🏅 Comprehensive Quality & Grade Certificate') }}</option>
                                         <option value="fatty_acids">{{ app()->getLocale() === 'ar' ? '🔬 تحليل التركيب الكيميائي والأحماض الدهنية (Fatty Acids)' : (app()->getLocale() === 'fr' ? '🔬 Profil des Acides Gras & Composition' : '🔬 Fatty Acid Profile & Composition') }}</option>
                                         <option value="pesticides_screen">{{ app()->getLocale() === 'ar' ? '🌱 تحليل بقايا المبيدات والملوثات (Pesticides Screen)' : (app()->getLocale() === 'fr' ? '🌱 Analyse des Résidus de Pesticides' : '🌱 Pesticide Residues & Contaminants Screen') }}</option>
                                         <option value="sensory_panel">{{ app()->getLocale() === 'ar' ? '👅 تحليل التذوق الحسي والتقييم الأورجانوستيك (Organoleptic)' : (app()->getLocale() === 'fr' ? '👅 Profil Sensoriel & Dégustation Organoleptique' : '👅 Organoleptic & Sensory Evaluation') }}</option>
-                                        <option value="other_lab_report">{{ app()->getLocale() === 'ar' ? '📋 تقرير تحليل مخبري رسمي عام (General Official Lab Report)' : (app()->getLocale() === 'fr' ? '📋 Rapport d\'Analyse de Laboratoire Officiel' : '📋 Official Laboratory Analysis Report') }}</option>
+                                        <option value="other_lab_report">{{ app()->getLocale() === 'ar' ? '📋 تقرير تحليل أو شهادة رسمية عامة (General Official Certificate)' : (app()->getLocale() === 'fr' ? '📋 Certificat ou Rapport Officiel' : '📋 Official Certificate or Report') }}</option>
                                     </select>
                                 </div>
 
