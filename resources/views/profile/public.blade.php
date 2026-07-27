@@ -40,41 +40,49 @@
                         <div class="absolute bottom-2 {{ $isRTL ? 'left-2' : 'right-2' }} w-6 h-6 bg-green-500 rounded-full ring-4 ring-white shadow-md"></div>
                     </div>
                     
-                    <div class="flex-1 w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-2 sm:mt-0 sm:pt-20">
-                        <div class="text-center sm:text-start">
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
-                                {{ $user->name }}
+                    <div class="flex-1 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2 sm:mt-0 sm:pt-16">
+                        <div class="flex flex-col items-center sm:items-start gap-2.5">
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 flex items-center justify-center sm:justify-start gap-2 tracking-tight">
+                                <span>{{ $user->name }}</span>
                                 @if($user->trust_score > 80)
-                                    <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                    <span title="{{ __('حساب موثق وموثوق') }}">
+                                        <svg class="w-7 h-7 text-blue-500 shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                    </span>
                                 @endif
                             </h1>
-                            <div class="mt-2 inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg border border-emerald-100 font-bold text-sm">
+
+                            <!-- Premium Elegant Role & Business Badge -->
+                            <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-50 via-teal-50/90 to-amber-50/70 text-emerald-950 px-5 py-2.5 rounded-2xl border border-emerald-200/90 shadow-md font-extrabold text-base sm:text-lg backdrop-blur-md transform hover:scale-[1.02] transition duration-300">
                                 @if($user->role === 'farmer' && ($user->farm_name || $user->farm_name_ar))
-                                    🌾 {{ $user->farm_name ?? $user->farm_name_ar }}
+                                    <span class="text-xl">🌾</span>
+                                    <span>{{ $user->farm_name ?? $user->farm_name_ar }}</span>
                                 @elseif($user->role === 'mill' && $user->mill_name)
-                                    🏭 {{ $user->mill_name }}
+                                    <span class="text-xl">🏭</span>
+                                    <span>{{ $user->mill_name }}</span>
                                 @elseif($user->role === 'carrier' && $user->company_name)
-                                    🚛 {{ $user->company_name }}
+                                    <span class="text-xl">🚛</span>
+                                    <span>{{ $user->company_name }}</span>
                                 @elseif($user->role === 'packer' && $user->packer_name)
-                                    📦 {{ $user->packer_name }}
+                                    <span class="text-xl">📦</span>
+                                    <span>{{ $user->packer_name }}</span>
                                 @else
                                     @php
                                         $roleNames = [
-                                            'farmer' => ['ar' => 'مزارع زيتون', 'en' => 'Olive grower'],
-                                            'carrier' => ['ar' => 'ناقل بري وبحري', 'en' => 'Transporter'],
-                                            'mill' => ['ar' => 'معصرة زيتون', 'en' => 'Oil mill'],
-                                            'packer' => ['ar' => 'وحدة تعبئة وتغليف', 'en' => 'Packaging Facility'],
-                                            'transiteur' => ['ar' => 'مخلص جمركي', 'en' => 'Customs Broker'],
-                                            'comptable' => ['ar' => 'محاسب', 'en' => 'Accountant'],
-                                            'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'en' => 'Service Bureau'],
-                                            'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'en' => 'Agri-Equipment'],
-                                            'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'en' => 'Agri-Materials'],
-                                            'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'en' => 'Agri-Study Office'],
+                                            'farmer' => ['ar' => '🌾 مزارع زيتون', 'en' => '🌾 Olive Grower'],
+                                            'carrier' => ['ar' => '🚛 ناقل بري وبحري', 'en' => '🚛 Transporter'],
+                                            'mill' => ['ar' => '🏭 معصرة زيتون', 'en' => '🏭 Oil Mill'],
+                                            'packer' => ['ar' => '📦 وحدة تعبئة وتغليف', 'en' => '📦 Packaging Facility'],
+                                            'transiteur' => ['ar' => '🛃 مخلص جمركي', 'en' => '🛃 Customs Broker'],
+                                            'comptable' => ['ar' => '📊 محاسب خبير', 'en' => '📊 Accountant'],
+                                            'service_bureau' => ['ar' => '📝 مكتب خدمات إدارية', 'en' => '📝 Service Bureau'],
+                                            'agri_equipment' => ['ar' => '🚜 معدات وآليات فلاحية', 'en' => '🚜 Agri-Equipment'],
+                                            'agri_materials' => ['ar' => '🌱 مواد فلاحية وأسمدة', 'en' => '🌱 Agri-Materials'],
+                                            'agri_study_office' => ['ar' => '📐 مكتب دراسات فلاحية', 'en' => '📐 Agri-Study Office'],
                                         ];
                                         $locale = app()->getLocale();
-                                        $roleName = $roleNames[$user->role][$locale === 'ar' ? 'ar' : 'en'] ?? ($locale === 'ar' ? 'عضو' : 'Member');
+                                        $roleName = $roleNames[$user->role][$locale === 'ar' ? 'ar' : 'en'] ?? ($locale === 'ar' ? '✨ عضو منصة الزين' : '✨ Member');
                                     @endphp
-                                    {{ $roleName }}
+                                    <span>{{ $roleName }}</span>
                                 @endif
                             </div>
                         </div>
