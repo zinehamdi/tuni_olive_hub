@@ -618,6 +618,142 @@
                 </div>
             </div>
 
+            <!-- Certified PDF Laboratory Analyses Management Card -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-6 space-y-5" x-data="{ showUploadModal: false }">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-500 to-amber-600 flex items-center justify-center shadow-lg text-white font-bold text-lg">
+                            📜
+                        </div>
+                        <div>
+                            <h2 class="font-extrabold text-gray-900 text-base flex items-center gap-2">
+                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية المعتمدة' : 'Certified Lab Analyses PDF' }}</span>
+                                <span class="text-xs bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full font-bold">PDF</span>
+                            </h2>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                {{ app()->getLocale() === 'ar' ? 'قم برفع تحاليل زيت الزيتون بصيغة PDF لتعزيز ثقة المشترين في ملفك الشخصي' : 'Upload official PDF lab analysis certificates to boost buyer trust on your profile' }}
+                            </p>
+                        </div>
+                    </div>
+                    <button @click="showUploadModal = true" class="px-4 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span>{{ app()->getLocale() === 'ar' ? 'إضافة تحليل PDF' : 'Add PDF Analysis' }}</span>
+                    </button>
+                </div>
+
+                <!-- Uploaded PDF List -->
+                @php
+                    $myLabAnalyses = collect(Auth::user()->lab_analyses ?? [])->filter()->values();
+                @endphp
+
+                @if($myLabAnalyses->count() > 0)
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($myLabAnalyses as $lab)
+                            @php
+                                $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
+                            @endphp
+                            @if($pdfUrl)
+                            <div class="p-4 bg-gradient-to-br from-red-50/40 via-white to-amber-50/20 rounded-2xl border border-red-100/80 flex items-center justify-between gap-3 hover:border-red-300 transition shadow-sm">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-11 h-11 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0 font-black text-xs shadow-sm">
+                                        PDF
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs font-extrabold text-gray-900 truncate leading-snug">
+                                            {{ $lab['title'] ?? __('تقرير تحليل مخبري') }}
+                                        </h4>
+                                        <div class="text-[11px] text-gray-500 truncate mt-1">
+                                            @if(!empty($lab['lab_name']))
+                                                <span>🔬 {{ $lab['lab_name'] }}</span>
+                                            @endif
+                                            @if(!empty($lab['analysis_date']))
+                                                <span class="mr-2">📅 {{ $lab['analysis_date'] }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <a href="{{ $pdfUrl }}" target="_blank" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    </a>
+                                    <form method="POST" action="{{ route('profile.lab_analysis.delete', $lab['id'] ?? '') }}" onsubmit="return confirm('{{ __('هل أنت تأكد من إزالة هذا الملف؟') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @else
+                    <div class="p-6 bg-gray-50/80 rounded-2xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
+                        <span class="text-2xl block mb-2">📜</span>
+                        <span>{{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة أي تحاليل مخبرية بصيغة PDF بعد.' : 'No PDF lab analysis reports added yet.' }}</span>
+                    </div>
+                @endif
+
+                <!-- Upload Modal -->
+                <div x-show="showUploadModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak style="display: none;">
+                    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="fixed inset-0 transition-opacity bg-black/60 backdrop-blur-sm" @click="showUploadModal = false"></div>
+                        <div class="inline-block align-bottom bg-white rounded-3xl text-right overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full p-6 border border-gray-100">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+                                <h3 class="text-base font-extrabold text-gray-900 flex items-center gap-2">
+                                    <span>📜</span>
+                                    <span>{{ app()->getLocale() === 'ar' ? 'إضافة تحليل مخبري جديد (PDF)' : 'Add Lab Analysis PDF' }}</span>
+                                </h3>
+                                <button @click="showUploadModal = false" class="p-1 rounded-full text-gray-400 hover:text-gray-600">
+                                    ✕
+                                </button>
+                            </div>
+
+                            <form method="POST" action="{{ route('profile.lab_analysis.upload') }}" enctype="multipart/form-data" class="space-y-4 text-right">
+                                @csrf
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">
+                                        {{ app()->getLocale() === 'ar' ? 'عنوان التحليل المخبري' : 'Analysis Title' }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: تحليل نسبة الحموضة والتأكسد 2026' : 'e.g. Acidity & Peroxide Test 2026' }}" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">
+                                        {{ app()->getLocale() === 'ar' ? 'اسم المخبر أو المؤسسة الرسمية' : 'Laboratory Name' }}
+                                    </label>
+                                    <input type="text" name="lab_name" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: المخبر الوطني لزيوت الزيتون صفاقس' : 'e.g. National Olive Oil Laboratory' }}" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">
+                                        {{ app()->getLocale() === 'ar' ? 'تاريخ إجراء التحليل' : 'Analysis Date' }}
+                                    </label>
+                                    <input type="date" name="analysis_date" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">
+                                        {{ app()->getLocale() === 'ar' ? 'ملف التحليل المخبري (PDF)' : 'PDF File' }} <span class="text-red-500">* (Max 20MB)</span>
+                                    </label>
+                                    <input type="file" name="pdf_file" accept=".pdf,application/pdf" required class="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 bg-gray-50 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700">
+                                </div>
+
+                                <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
+                                    <button type="button" @click="showUploadModal = false" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-200 transition">
+                                        {{ __('إلغاء') }}
+                                    </button>
+                                    <button type="submit" class="px-5 py-2 bg-gradient-to-r from-red-600 to-amber-600 text-white rounded-xl text-xs font-bold hover:shadow-lg transition">
+                                        {{ app()->getLocale() === 'ar' ? 'رفع وحفظ التحليل' : 'Upload PDF' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Offered Services & Products / Photo Gallery -->
             @if(in_array(Auth::user()->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
             <!-- B2B Service Cards (In place of Photo Gallery) -->
