@@ -653,11 +653,52 @@
                                 $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
                                 
                                 $rawTitle = $lab['title'] ?? '';
-                                $displayTitle = $rawTitle;
-                                if (app()->getLocale() === 'en') {
-                                    $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analysis', 'Acidity', 'Peroxide', 'Quality', 'Oil', 'Olive'], $rawTitle);
-                                } elseif (app()->getLocale() === 'fr') {
-                                    $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analyse', 'Acidité', 'Peroxyde', 'Qualité', 'Huile', 'Olive'], $rawTitle);
+                                $titleTranslations = [
+                                    'acidity_peroxide' => [
+                                        'ar' => '🧪 تحليل نسبة الحموضة والتأكسد',
+                                        'en' => '🧪 Acidity & Peroxide Value Analysis',
+                                        'fr' => '🧪 Analyse d\'Acidité & Indice de Peroxydes',
+                                    ],
+                                    'comprehensive_quality' => [
+                                        'ar' => '🏅 تحليل الجودة الشاملة والتصنيف الرسمية',
+                                        'en' => '🏅 Comprehensive Quality & Grade Certificate',
+                                        'fr' => '🏅 Certificat de Qualité Globale & Grade',
+                                    ],
+                                    'fatty_acids' => [
+                                        'ar' => '🔬 تحليل التركيب الكيميائي والأحماض الدهنية',
+                                        'en' => '🔬 Fatty Acid Profile & Composition',
+                                        'fr' => '🔬 Profil des Acides Gras & Composition',
+                                    ],
+                                    'pesticides_screen' => [
+                                        'ar' => '🌱 تحليل بقايا المبيدات والملوثات',
+                                        'en' => '🌱 Pesticide Residues & Contaminants Screen',
+                                        'fr' => '🌱 Analyse des Résidus de Pesticides',
+                                    ],
+                                    'sensory_panel' => [
+                                        'ar' => '👅 تحليل التذوق الحسي والتقييم الأورجانوستيك',
+                                        'en' => '👅 Organoleptic & Sensory Panel Evaluation',
+                                        'fr' => '👅 Profil Sensoriel & Dégustation Organoleptique',
+                                    ],
+                                    'other_lab_report' => [
+                                        'ar' => '📋 تقرير تحليل مخبري رسمي عام',
+                                        'en' => '📋 Official Laboratory Analysis Report',
+                                        'fr' => '📋 Rapport d\'Analyse de Laboratoire Officiel',
+                                    ],
+                                ];
+
+                                $locale = app()->getLocale();
+                                $displayTitle = $titleTranslations[$rawTitle][$locale] 
+                                    ?? $titleTranslations[$rawTitle]['ar'] 
+                                    ?? null;
+
+                                if (!$displayTitle) {
+                                    if (str_contains($rawTitle, 'حموضة') || str_contains(strtolower($rawTitle), 'acidity')) {
+                                        $displayTitle = $titleTranslations['acidity_peroxide'][$locale] ?? $rawTitle;
+                                    } elseif (str_contains($rawTitle, 'جودة') || str_contains(strtolower($rawTitle), 'quality')) {
+                                        $displayTitle = $titleTranslations['comprehensive_quality'][$locale] ?? $rawTitle;
+                                    } else {
+                                        $displayTitle = $rawTitle;
+                                    }
                                 }
                             @endphp
                             @if($pdfUrl)
@@ -698,15 +739,12 @@
                                 <!-- Action Buttons -->
                                 <div class="p-3 bg-gray-50 flex items-center justify-between gap-2 text-xs">
                                     <button @click="activePdfModal = '{{ $pdfUrl }}'" class="flex-1 py-1.5 px-2 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1">
-                                        👁️ {{ app()->getLocale() === 'ar' ? 'معاينة' : 'Preview' }}
+                                        👁️ {{ app()->getLocale() === 'ar' ? 'معاينة الوثيقة' : 'Preview Document' }}
                                     </button>
-                                    <a href="{{ $pdfUrl }}" download class="py-1.5 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow transition flex items-center gap-1">
-                                        📥 {{ app()->getLocale() === 'ar' ? 'تنزيل' : 'Download' }}
-                                    </a>
                                     <form method="POST" action="{{ route('profile.lab_analysis.delete', $lab['id'] ?? '') }}" onsubmit="return confirm('{{ __('هل أنت تأكد من إزالة هذا الملف؟') }}');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition">
+                                        <button type="submit" class="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition" title="{{ __('حذف') }}">
                                             🗑️
                                         </button>
                                     </form>
@@ -734,14 +772,9 @@
                                         {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمية' : 'Official PDF Laboratory Certificate' }}
                                     </h3>
                                 </div>
-                                <div class="flex items-center gap-3">
-                                    <a :href="activePdfModal" download class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
-                                        📥 <span>{{ app()->getLocale() === 'ar' ? 'تحميل' : 'Download' }}</span>
-                                    </a>
-                                    <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
-                                        ✕
-                                    </button>
-                                </div>
+                                <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                                    ✕
+                                </button>
                             </div>
                             <div class="flex-1 bg-slate-100 relative">
                                 <template x-if="activePdfModal">
@@ -771,9 +804,16 @@
                                 @csrf
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">
-                                        {{ app()->getLocale() === 'ar' ? 'عنوان التحليل المخبري' : 'Analysis Title' }} <span class="text-red-500">*</span>
+                                        {{ app()->getLocale() === 'ar' ? 'نوع ونوعية التحليل المخبري' : 'Analysis Type & Title' }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: تحليل نسبة الحموضة والتأكسد 2026' : 'e.g. Acidity & Peroxide Test 2026' }}" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
+                                    <select name="title" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-bold bg-white text-gray-800">
+                                        <option value="acidity_peroxide">{{ app()->getLocale() === 'ar' ? '🧪 تحليل نسبة الحموضة والتأكسد (Acidity & Peroxide Value)' : (app()->getLocale() === 'fr' ? '🧪 Analyse d\'Acidité & Indice de Peroxydes' : '🧪 Acidity & Peroxide Value Analysis') }}</option>
+                                        <option value="comprehensive_quality">{{ app()->getLocale() === 'ar' ? '🏅 تحليل الجودة الشاملة والتصنيف الرسمية (Full Quality & Grade)' : (app()->getLocale() === 'fr' ? '🏅 Certificat de Qualité Globale & Grade' : '🏅 Comprehensive Quality & Grade Certificate') }}</option>
+                                        <option value="fatty_acids">{{ app()->getLocale() === 'ar' ? '🔬 تحليل التركيب الكيميائي والأحماض الدهنية (Fatty Acids)' : (app()->getLocale() === 'fr' ? '🔬 Profil des Acides Gras & Composition' : '🔬 Fatty Acid Profile & Composition') }}</option>
+                                        <option value="pesticides_screen">{{ app()->getLocale() === 'ar' ? '🌱 تحليل بقايا المبيدات والملوثات (Pesticides Screen)' : (app()->getLocale() === 'fr' ? '🌱 Analyse des Résidus de Pesticides' : '🌱 Pesticide Residues & Contaminants Screen') }}</option>
+                                        <option value="sensory_panel">{{ app()->getLocale() === 'ar' ? '👅 تحليل التذوق الحسي والتقييم الأورجانوستيك (Organoleptic)' : (app()->getLocale() === 'fr' ? '👅 Profil Sensoriel & Dégustation Organoleptique' : '👅 Organoleptic & Sensory Evaluation') }}</option>
+                                        <option value="other_lab_report">{{ app()->getLocale() === 'ar' ? '📋 تقرير تحليل مخبري رسمي عام (General Official Lab Report)' : (app()->getLocale() === 'fr' ? '📋 Rapport d\'Analyse de Laboratoire Officiel' : '📋 Official Laboratory Analysis Report') }}</option>
+                                    </select>
                                 </div>
 
                                 <div>

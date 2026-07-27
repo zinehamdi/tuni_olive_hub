@@ -259,13 +259,53 @@
                                     @php
                                         $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
                                         
-                                        // Smart Translation Map for Analysis Titles
                                         $rawTitle = $lab['title'] ?? '';
-                                        $displayTitle = $rawTitle;
-                                        if (app()->getLocale() === 'en') {
-                                            $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analysis', 'Acidity', 'Peroxide', 'Quality', 'Oil', 'Olive'], $rawTitle);
-                                        } elseif (app()->getLocale() === 'fr') {
-                                            $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analyse', 'Acidité', 'Peroxyde', 'Qualité', 'Huile', 'Olive'], $rawTitle);
+                                        $titleTranslations = [
+                                            'acidity_peroxide' => [
+                                                'ar' => '🧪 تحليل نسبة الحموضة والتأكسد',
+                                                'en' => '🧪 Acidity & Peroxide Value Analysis',
+                                                'fr' => '🧪 Analyse d\'Acidité & Indice de Peroxydes',
+                                            ],
+                                            'comprehensive_quality' => [
+                                                'ar' => '🏅 تحليل الجودة الشاملة والتصنيف الرسمية',
+                                                'en' => '🏅 Comprehensive Quality & Grade Certificate',
+                                                'fr' => '🏅 Certificat de Qualité Globale & Grade',
+                                            ],
+                                            'fatty_acids' => [
+                                                'ar' => '🔬 تحليل التركيب الكيميائي والأحماض الدهنية',
+                                                'en' => '🔬 Fatty Acid Profile & Composition',
+                                                'fr' => '🔬 Profil des Acides Gras & Composition',
+                                            ],
+                                            'pesticides_screen' => [
+                                                'ar' => '🌱 تحليل بقايا المبيدات والملوثات',
+                                                'en' => '🌱 Pesticide Residues & Contaminants Screen',
+                                                'fr' => '🌱 Analyse des Résidus de Pesticides',
+                                            ],
+                                            'sensory_panel' => [
+                                                'ar' => '👅 تحليل التذوق الحسي والتقييم الأورجانوستيك',
+                                                'en' => '👅 Organoleptic & Sensory Panel Evaluation',
+                                                'fr' => '👅 Profil Sensoriel & Dégustation Organoleptique',
+                                            ],
+                                            'other_lab_report' => [
+                                                'ar' => '📋 تقرير تحليل مخبري رسمي عام',
+                                                'en' => '📋 Official Laboratory Analysis Report',
+                                                'fr' => '📋 Rapport d\'Analyse de Laboratoire Officiel',
+                                            ],
+                                        ];
+
+                                        $locale = app()->getLocale();
+                                        $displayTitle = $titleTranslations[$rawTitle][$locale] 
+                                            ?? $titleTranslations[$rawTitle]['ar'] 
+                                            ?? null;
+
+                                        if (!$displayTitle) {
+                                            if (str_contains($rawTitle, 'حموضة') || str_contains(strtolower($rawTitle), 'acidity')) {
+                                                $displayTitle = $titleTranslations['acidity_peroxide'][$locale] ?? $rawTitle;
+                                            } elseif (str_contains($rawTitle, 'جودة') || str_contains(strtolower($rawTitle), 'quality')) {
+                                                $displayTitle = $titleTranslations['comprehensive_quality'][$locale] ?? $rawTitle;
+                                            } else {
+                                                $displayTitle = $rawTitle;
+                                            }
                                         }
                                     @endphp
                                     @if($pdfUrl)
@@ -304,22 +344,18 @@
                                             <!-- Gradient Hover Overlay -->
                                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent flex flex-col items-center justify-end p-4 text-center">
                                                 <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs shadow-lg transform group-hover/pdf:scale-105 transition duration-300">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                                     <span>{{ app()->getLocale() === 'ar' ? 'معاينة وثيقة PDF بالكامل' : 'Open Full PDF Preview' }}</span>
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <!-- Action Bar -->
-                                        <div class="p-3 bg-gray-50 flex items-center justify-between gap-2 text-xs">
-                                            <button @click="activePdfModal = '{{ $pdfUrl }}'" class="flex-1 py-2 px-3 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
-                                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                <span>{{ app()->getLocale() === 'ar' ? 'تكبير الوثيقة' : 'Full Screen' }}</span>
+                                        <!-- Action Bar (View Only) -->
+                                        <div class="p-3 bg-gray-50 flex items-center justify-center text-xs">
+                                            <button @click="activePdfModal = '{{ $pdfUrl }}'" class="w-full py-2 px-3 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+                                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                <span>{{ app()->getLocale() === 'ar' ? 'تكبير واستعراض الوثيقة' : 'Full Screen Preview' }}</span>
                                             </button>
-                                            <a href="{{ $pdfUrl }}" download class="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow transition flex items-center gap-1.5">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                                <span>{{ app()->getLocale() === 'ar' ? 'تنزيل' : 'Download' }}</span>
-                                            </a>
                                         </div>
                                     </div>
                                     @endif
@@ -346,15 +382,9 @@
                                                 {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمي' : 'Official PDF Laboratory Certificate' }}
                                             </h3>
                                         </div>
-                                        <div class="flex items-center gap-3">
-                                            <a :href="activePdfModal" download class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                                <span>{{ app()->getLocale() === 'ar' ? 'تحميل الملف' : 'Download PDF' }}</span>
-                                            </a>
-                                            <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
-                                                ✕
-                                            </button>
-                                        </div>
+                                        <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                                            ✕
+                                        </button>
                                     </div>
 
                                     <!-- PDF Viewer Iframe Body -->
