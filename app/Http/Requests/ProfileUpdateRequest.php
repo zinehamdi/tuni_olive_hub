@@ -37,6 +37,11 @@ class ProfileUpdateRequest extends FormRequest
             'services' => ['nullable', 'string'],
             'show_contact_info' => ['sometimes', 'boolean'],
             'show_address' => ['sometimes', 'boolean'],
+
+            // Address & Location fields - العنوان والولاية
+            'governorate' => ['nullable', 'string', 'max:255'],
+            'delegation' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
             
             // Farmer fields - حقول المزارع
             'farm_name' => ['nullable', 'string', 'max:255'],

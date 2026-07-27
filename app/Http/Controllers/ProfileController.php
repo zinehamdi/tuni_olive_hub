@@ -127,8 +127,8 @@ class ProfileController extends Controller
         $activeListings  = $user->listings()->where('status', 'active')->count();
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
-        $showContact = (bool) ($user->show_contact_info ?? false);
-        $showAddress = (bool) ($user->show_address ?? false);
+        $showContact = (bool) ($user->show_contact_info ?? true);
+        $showAddress = (bool) ($user->show_address ?? true);
 
         if (!$showContact) {
             $contactInfo = ['phone' => null, 'email' => null];
@@ -197,8 +197,25 @@ class ProfileController extends Controller
         $data['cover_photos'] = $currentCovers;
 
         $user->fill($data);
-        $user->show_contact_info = $data['show_contact_info'];
-        $user->show_address = $data['show_address'];
+        $user->show_contact_info = true; // Always enable contact info
+        $user->show_address = true; // Always enable address info
+
+        // Handle Address & Location saving
+        if ($request->has('governorate') || $request->has('address') || $request->has('delegation')) {
+            $user->governorate = $request->input('governorate');
+            $user->farm_location = $request->input('governorate');
+            $user->address = $request->input('address');
+
+            $firstAddr = $user->addresses()->first();
+            if (!$firstAddr) {
+                $firstAddr = new \App\Models\Address();
+                $firstAddr->user_id = $user->id;
+            }
+            $firstAddr->governorate = $request->input('governorate');
+            $firstAddr->delegation = $request->input('delegation');
+            $firstAddr->address = $request->input('address');
+            $firstAddr->save();
+        }
 
         if (in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
             $services = [];

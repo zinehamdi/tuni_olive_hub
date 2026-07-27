@@ -328,6 +328,69 @@
             </div>
         </div>
 
+        <!-- Address & Location Section -->
+        @php
+            $currentGov = old('governorate', $user->addresses()->first()?->governorate ?? $user->governorate ?? '');
+            $currentDeleg = old('delegation', $user->addresses()->first()?->delegation ?? '');
+            $currentAddr = old('address', $user->addresses()->first()?->address ?? $user->address ?? '');
+            $govsList = config('governorates', [
+                'أريانة', 'باجة', 'بن عروس', 'بنزرت', 'قابس', 'قفصة', 'جندوبة', 'القيروان', 
+                'القصرين', 'قبلي', 'الكاف', 'المهدية', 'منوبة', 'مدنين', 'المنستير', 'نابل', 
+                'صفاقس', 'سيدي بوزيد', 'سليانة', 'سوسة', 'تطاوين', 'توزر', 'تونس', 'زغوان'
+            ]);
+        @endphp
+        <div class="bg-gradient-to-br from-rose-50 via-white to-rose-50/50 p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-rose-100 shadow-sm mt-6">
+            <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{{ app()->getLocale() === 'ar' ? '📍 العنوان والموقع الجغرافي' : '📍 Location & Address' }}</h3>
+                    <p class="text-sm sm:text-base text-gray-600">{{ app()->getLocale() === 'ar' ? 'حدد الولاية والمعتمدية والعنوان الكامل ليظهر في بروفايلك للزوار والعملاء' : 'Set your governorate, delegation, and full address' }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Governorate Select -->
+                <div>
+                    <label for="governorate" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
+                        {{ app()->getLocale() === 'ar' ? 'الولاية' : 'Governorate' }} <span class="text-red-500">*</span>
+                    </label>
+                    <select id="governorate" name="governorate" required class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-bold bg-white text-gray-800">
+                        <option value="">-- {{ app()->getLocale() === 'ar' ? 'اختر الولاية' : 'Select Governorate' }} --</option>
+                        @foreach($govsList as $gov)
+                            <option value="{{ $gov }}" {{ $currentGov === $gov ? 'selected' : '' }}>{{ $gov }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Delegation Input -->
+                <div>
+                    <label for="delegation" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
+                        {{ app()->getLocale() === 'ar' ? 'المعتمدية / المنطقة' : 'Delegation / City' }}
+                    </label>
+                    <input type="text" id="delegation" name="delegation" 
+                        value="{{ $currentDeleg }}"
+                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: طينة، صفاقس الجنوبية، بوحجلة...' : 'e.g. Thyna, Bouhajla' }}"
+                        class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-medium bg-white">
+                </div>
+
+                <!-- Full Street Address -->
+                <div class="md:col-span-2">
+                    <label for="address" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
+                        {{ app()->getLocale() === 'ar' ? 'العنوان التفصيلي (الشارع / طريق / الحي)' : 'Full Street Address' }}
+                    </label>
+                    <input type="text" id="address" name="address" 
+                        value="{{ $currentAddr }}"
+                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: طريق قابس كلم 4، نهج الزيتونة' : 'e.g. Route Gabes Km 4, Olive Street' }}"
+                        class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-medium bg-white">
+                </div>
+            </div>
+        </div>
+
         {{-- Privacy controls (global) --}}
         <div class="mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl border border-gray-200 bg-gray-50">
             <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-3">{{ __('Privacy & visibility') }}</h4>
