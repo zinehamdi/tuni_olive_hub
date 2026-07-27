@@ -239,8 +239,8 @@
 
                                 <!-- Location & Full Address -->
                                 @php
-                                    $userStreet = $addresses->first()?->address ?? $user->address ?? null;
-                                    $userDelegation = $addresses->first()?->delegation ?? $user->delegation ?? null;
+                                    $userStreet = $addresses->first()?->label ?? $user->meta_data['address'] ?? $user->address ?? null;
+                                    $userDelegation = $addresses->first()?->delegation ?? $user->meta_data['delegation'] ?? $user->delegation ?? null;
                                     $userGov = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
                                     
                                     $fullAddressParts = array_filter([$userStreet, $userDelegation, $userGov]);

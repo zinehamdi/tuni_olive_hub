@@ -330,9 +330,9 @@
 
         <!-- Address & Location Section -->
         @php
-            $currentGov = old('governorate', $user->addresses()->first()?->governorate ?? $user->governorate ?? '');
-            $currentDeleg = old('delegation', $user->addresses()->first()?->delegation ?? '');
-            $currentAddr = old('address', $user->addresses()->first()?->address ?? $user->address ?? '');
+            $currentGov = old('governorate', $user->addresses()->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? '');
+            $currentDeleg = old('delegation', $user->addresses()->first()?->delegation ?? $user->meta_data['delegation'] ?? $user->delegation ?? '');
+            $currentAddr = old('address', $user->addresses()->first()?->label ?? $user->meta_data['address'] ?? $user->address ?? '');
             $govsList = config('governorates', [
                 'أريانة', 'باجة', 'بن عروس', 'بنزرت', 'قابس', 'قفصة', 'جندوبة', 'القيروان', 
                 'القصرين', 'قبلي', 'الكاف', 'المهدية', 'منوبة', 'مدنين', 'المنستير', 'نابل', 

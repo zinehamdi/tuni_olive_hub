@@ -201,20 +201,26 @@ class ProfileController extends Controller
         $user->show_address = true; // Always enable address info
 
         // Handle Address & Location saving
-        if ($request->has('governorate') || $request->has('address') || $request->has('delegation')) {
-            $user->governorate = $request->input('governorate');
-            $user->farm_location = $request->input('governorate');
-            $user->address = $request->input('address');
-
+        if ($request->filled('governorate') || $request->filled('address') || $request->filled('delegation')) {
+            $govInput = $request->input('governorate') ?: ($user->addresses()->first()?->governorate ?? 'تونس');
             $firstAddr = $user->addresses()->first();
             if (!$firstAddr) {
                 $firstAddr = new \App\Models\Address();
                 $firstAddr->user_id = $user->id;
             }
-            $firstAddr->governorate = $request->input('governorate');
+            $firstAddr->governorate = $govInput;
             $firstAddr->delegation = $request->input('delegation');
-            $firstAddr->address = $request->input('address');
+            $firstAddr->label = $request->input('address');
             $firstAddr->save();
+
+            // Keep meta_data and farm_location in sync
+            $meta = $user->meta_data ?? [];
+            $meta['address'] = $request->input('address');
+            $meta['delegation'] = $request->input('delegation');
+            $user->meta_data = $meta;
+            if ($request->filled('governorate')) {
+                $user->farm_location = $request->input('governorate');
+            }
         }
 
         if (in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
