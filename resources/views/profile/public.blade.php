@@ -4,13 +4,12 @@
     $coverPhotos = ($coverPhotos ?? collect())->filter()->values();
     $profilePhotoUrl = $user->profile_picture ? Storage::url($user->profile_picture) : null;
     $isOwner = auth()->check() && auth()->id() === $user->id;
+    $phoneNum = $user->phone ?? $user->phone_number ?? $user->meta_data['phone'] ?? null;
+    $emailAddr = $user->email ?? null;
     $contactInfo = [
-        'phone' => $user->phone ?? $user->phone_number ?? null,
-        'email' => $user->email ?? null,
+        'phone' => $phoneNum,
+        'email' => $emailAddr,
     ];
-    if (isset($showContact) && !$showContact) {
-        $contactInfo = ['phone' => null, 'email' => null];
-    }
 @endphp
 
 <x-app-layout>
@@ -216,8 +215,8 @@
                                 </div>
                             @endif
 
-                            <!-- Business Details Grid -->
-                            <div class="space-y-2.5 text-xs">
+                            <!-- Business & Contact Details Grid -->
+                            <div class="space-y-3 text-xs">
                                 @if($user->role === 'farmer' && !empty($user->tree_number))
                                     <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
                                         <span class="text-gray-600 font-bold flex items-center gap-1.5">
@@ -238,53 +237,71 @@
                                     </div>
                                 @endif
 
-                                <!-- Location / Governorate -->
+                                <!-- Location & Full Address -->
                                 @php
-                                    $userLocation = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
-                                    $userDelegation = $addresses->first()?->delegation ?? null;
+                                    $userStreet = $addresses->first()?->address ?? $user->address ?? null;
+                                    $userDelegation = $addresses->first()?->delegation ?? $user->delegation ?? null;
+                                    $userGov = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
+                                    
+                                    $fullAddressParts = array_filter([$userStreet, $userDelegation, $userGov]);
+                                    $fullAddressStr = !empty($fullAddressParts) ? implode(' - ', $fullAddressParts) : ($userGov ?? (app()->getLocale() === 'ar' ? 'تونس' : 'Tunisia'));
                                 @endphp
-                                @if($userLocation)
-                                    <div class="flex items-center gap-2.5 text-gray-700 pt-1">
-                                        <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                                            📍
-                                        </div>
-                                        <span class="font-bold">{{ $userLocation }} @if($userDelegation) — {{ $userDelegation }} @endif</span>
+                                <div class="flex items-start gap-2.5 text-gray-800 bg-gray-50/80 p-3 rounded-2xl border border-gray-100">
+                                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 shadow-sm font-bold text-sm">
+                                        📍
                                     </div>
-                                @endif
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'العنوان والموقع' : 'Address & Location' }}</span>
+                                        <span class="font-extrabold text-xs text-gray-900 leading-snug">{{ $fullAddressStr }}</span>
+                                    </div>
+                                </div>
 
-                                @if($contactInfo['phone'])
-                                <div class="flex items-center gap-2.5 pt-1">
-                                    <div class="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                                        📞
+                                <!-- Phone & Direct WhatsApp Action -->
+                                @if($phoneNum)
+                                @php
+                                    $cleanWhatsapp = preg_replace('/[^0-9]/', '', $phoneNum);
+                                @endphp
+                                <div class="flex items-center justify-between gap-2 bg-emerald-50/70 p-3 rounded-2xl border border-emerald-100/80">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm font-bold text-sm">
+                                            📞
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-[10px] font-bold text-emerald-800/80 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'الهاتف والواتساب' : 'Phone & WhatsApp' }}</span>
+                                            @auth
+                                                <a href="tel:{{ $phoneNum }}" class="font-extrabold text-xs text-emerald-950 hover:text-emerald-700 transition" dir="ltr">{{ $phoneNum }}</a>
+                                            @else
+                                                <span class="font-bold text-gray-400 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
+                                            @endauth
+                                        </div>
                                     </div>
                                     @auth
-                                        <a href="tel:{{ $contactInfo['phone'] }}" class="font-bold text-gray-800 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
+                                        <a href="https://wa.me/{{ $cleanWhatsapp }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-extrabold shadow-sm transition flex items-center gap-1 shrink-0">
+                                            <span>💬</span>
+                                            <span>{{ app()->getLocale() === 'ar' ? 'واتساب' : 'WhatsApp' }}</span>
+                                        </a>
                                     @else
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-gray-400 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
-                                            <a href="{{ route('register') }}" class="text-[10px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
-                                                🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
-                                            </a>
-                                        </div>
+                                        <a href="{{ route('register') }}" class="text-[10px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-lg transition shrink-0">
+                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل' : 'Register' }}
+                                        </a>
                                     @endauth
                                 </div>
                                 @endif
 
-                                @if($contactInfo['email'])
-                                <div class="flex items-center gap-2.5 pt-1">
-                                    <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                <!-- Email Address -->
+                                @if($emailAddr)
+                                <div class="flex items-center gap-2.5 bg-blue-50/70 p-3 rounded-2xl border border-blue-100/80">
+                                    <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm font-bold text-sm">
                                         ✉️
                                     </div>
-                                    @auth
-                                        <a href="mailto:{{ $contactInfo['email'] }}" class="font-bold text-gray-800 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
-                                    @else
-                                        <div class="flex items-center gap-2">
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="text-[10px] font-bold text-blue-800/80 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'البريد الإلكتروني' : 'Email Address' }}</span>
+                                        @auth
+                                            <a href="mailto:{{ $emailAddr }}" class="font-extrabold text-xs text-blue-950 hover:text-blue-700 transition truncate">{{ $emailAddr }}</a>
+                                        @else
                                             <span class="font-bold text-gray-400 blur-[2px] select-none">contact@******.com</span>
-                                            <a href="{{ route('register') }}" class="text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
-                                                🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
-                                            </a>
-                                        </div>
-                                    @endauth
+                                        @endauth
+                                    </div>
                                 </div>
                                 @endif
                             </div>
