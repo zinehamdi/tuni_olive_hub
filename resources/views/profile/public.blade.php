@@ -184,13 +184,13 @@
                     @endif
 
                     <!-- About Us (من نحن) Card -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
-                                <span class="text-lg">ℹ️</span>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <span class="text-base">ℹ️</span>
                                 <span>{{ __('About') }}</span>
                             </h3>
-                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                            <span class="px-2.5 py-0.5 bg-white/20 rounded-lg text-[11px] text-white font-bold tracking-wider">
                                 @if($user->role === 'farmer')
                                     🌾 {{ app()->getLocale() === 'ar' ? 'مزارع زيتون' : 'Olive Grower' }}
                                 @elseif($user->role === 'mill')
@@ -205,110 +205,103 @@
                             </span>
                         </div>
 
-                        <!-- Farm / Business Summary -->
-                        @php
-                            $userBio = $user->meta_data['service_description'] ?? $user->farm_location ?? $user->bio ?? null;
-                        @endphp
-                        @if($userBio)
-                            <div class="text-xs text-gray-700 bg-gray-50 rounded-xl p-3.5 border border-gray-100 leading-relaxed font-medium">
-                                {{ $userBio }}
-                            </div>
-                        @endif
-
-                        <!-- Business Details Grid -->
-                        <div class="space-y-2.5 text-xs">
-                            @if($user->role === 'farmer' && !empty($user->tree_number))
-                                <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
-                                    <span class="text-gray-600 font-bold flex items-center gap-1.5">
-                                        <span>🌳</span>
-                                        <span>{{ app()->getLocale() === 'ar' ? 'عدد أشجار الزيتون' : 'Olive Trees' }}</span>
-                                    </span>
-                                    <span class="font-extrabold text-emerald-900">{{ number_format($user->tree_number) }} {{ app()->getLocale() === 'ar' ? 'شجرة' : 'trees' }}</span>
-                                </div>
-                            @endif
-
-                            @if($user->role === 'mill' && !empty($user->mill_name))
-                                <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
-                                    <span class="text-gray-600 font-bold flex items-center gap-1.5">
-                                        <span>🏭</span>
-                                        <span>{{ app()->getLocale() === 'ar' ? 'اسم المعصرة' : 'Mill Name' }}</span>
-                                    </span>
-                                    <span class="font-extrabold text-emerald-900">{{ $user->mill_name }}</span>
-                                </div>
-                            @endif
-
-                            <!-- Location / Governorate -->
+                        <div class="p-5 space-y-4">
+                            <!-- Farm / Business Summary -->
                             @php
-                                $userLocation = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
-                                $userDelegation = $addresses->first()?->delegation ?? null;
+                                $userBio = $user->meta_data['service_description'] ?? $user->farm_location ?? $user->bio ?? null;
                             @endphp
-                            @if($userLocation)
-                                <div class="flex items-center gap-2.5 text-gray-700 pt-1">
-                                    <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                                        📍
-                                    </div>
-                                    <span class="font-bold">{{ $userLocation }} @if($userDelegation) — {{ $userDelegation }} @endif</span>
+                            @if($userBio)
+                                <div class="text-xs text-gray-700 bg-gray-50 rounded-xl p-3.5 border border-gray-100 leading-relaxed font-medium">
+                                    {{ $userBio }}
                                 </div>
                             @endif
 
-                            @if($contactInfo['phone'])
-                            <div class="flex items-center gap-2.5 pt-1">
-                                <div class="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                                    📞
-                                </div>
-                                @auth
-                                    <a href="tel:{{ $contactInfo['phone'] }}" class="font-bold text-gray-800 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
-                                @else
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-gray-400 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
-                                        <a href="{{ route('register') }}" class="text-[10px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
-                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
-                                        </a>
+                            <!-- Business Details Grid -->
+                            <div class="space-y-2.5 text-xs">
+                                @if($user->role === 'farmer' && !empty($user->tree_number))
+                                    <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
+                                        <span class="text-gray-600 font-bold flex items-center gap-1.5">
+                                            <span>🌳</span>
+                                            <span>{{ app()->getLocale() === 'ar' ? 'عدد أشجار الزيتون' : 'Olive Trees' }}</span>
+                                        </span>
+                                        <span class="font-extrabold text-emerald-900">{{ number_format($user->tree_number) }} {{ app()->getLocale() === 'ar' ? 'شجرة' : 'trees' }}</span>
                                     </div>
-                                @endauth
-                            </div>
-                            @endif
+                                @endif
 
-                            @if($contactInfo['email'])
-                            <div class="flex items-center gap-2.5 pt-1">
-                                <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                                    ✉️
-                                </div>
-                                @auth
-                                    <a href="mailto:{{ $contactInfo['email'] }}" class="font-bold text-gray-800 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
-                                @else
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-gray-400 blur-[2px] select-none">contact@******.com</span>
-                                        <a href="{{ route('register') }}" class="text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
-                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
-                                        </a>
+                                @if($user->role === 'mill' && !empty($user->mill_name))
+                                    <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
+                                        <span class="text-gray-600 font-bold flex items-center gap-1.5">
+                                            <span>🏭</span>
+                                            <span>{{ app()->getLocale() === 'ar' ? 'اسم المعصرة' : 'Mill Name' }}</span>
+                                        </span>
+                                        <span class="font-extrabold text-emerald-900">{{ $user->mill_name }}</span>
                                     </div>
-                                @endauth
+                                @endif
+
+                                <!-- Location / Governorate -->
+                                @php
+                                    $userLocation = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
+                                    $userDelegation = $addresses->first()?->delegation ?? null;
+                                @endphp
+                                @if($userLocation)
+                                    <div class="flex items-center gap-2.5 text-gray-700 pt-1">
+                                        <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                                            📍
+                                        </div>
+                                        <span class="font-bold">{{ $userLocation }} @if($userDelegation) — {{ $userDelegation }} @endif</span>
+                                    </div>
+                                @endif
+
+                                @if($contactInfo['phone'])
+                                <div class="flex items-center gap-2.5 pt-1">
+                                    <div class="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+                                        📞
+                                    </div>
+                                    @auth
+                                        <a href="tel:{{ $contactInfo['phone'] }}" class="font-bold text-gray-800 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
+                                    @else
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-gray-400 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
+                                            <a href="{{ route('register') }}" class="text-[10px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
+                                                🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
+                                            </a>
+                                        </div>
+                                    @endauth
+                                </div>
+                                @endif
+
+                                @if($contactInfo['email'])
+                                <div class="flex items-center gap-2.5 pt-1">
+                                    <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                        ✉️
+                                    </div>
+                                    @auth
+                                        <a href="mailto:{{ $contactInfo['email'] }}" class="font-bold text-gray-800 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
+                                    @else
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-gray-400 blur-[2px] select-none">contact@******.com</span>
+                                            <a href="{{ route('register') }}" class="text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
+                                                🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
+                                            </a>
+                                        </div>
+                                    @endauth
+                                </div>
+                                @endif
                             </div>
-                            @endif
                         </div>
                     </div>
 
-                    <!-- Certified PDF Laboratory Analysis Card (Under About Us with Live PDF Preview & Full Screen Viewer) -->
+                    <!-- Certified PDF Laboratory Analysis & Awards Card (Matching Gradient Banner Header Style) -->
                     @php
                         $userLabAnalyses = collect($user->lab_analyses ?? [])->filter()->values();
                     @endphp
-                    <div class="bg-white rounded-3xl shadow-xl border border-amber-100/80 overflow-hidden space-y-4" x-data="{ activePdfModal: null }">
-                        <div class="px-5 py-4 bg-gradient-to-r from-amber-500/10 via-emerald-500/5 to-amber-500/10 border-b border-amber-100 flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-emerald-600 flex items-center justify-center text-white text-lg shadow-md font-bold">
-                                    📜
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-1.5">
-                                        <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية' : 'Certified Lab Reports' }}</span>
-                                    </h3>
-                                    <p class="text-[11px] text-amber-800/80 font-medium">
-                                        🛡️ {{ app()->getLocale() === 'ar' ? 'شهادات جودة معتمدة رسمياً' : 'Officially Verified Quality Certificates' }}
-                                    </p>
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-black bg-red-600 text-white px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ activePdfModal: null }">
+                        <div class="px-4 py-3 bg-gradient-to-r from-amber-600 via-emerald-600 to-teal-600 flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <span class="text-base">📜</span>
+                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المعتمدة' : 'Certified Reports & Awards' }}</span>
+                            </h3>
+                            <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-black uppercase tracking-wider shadow-sm">
                                 PDF
                             </span>
                         </div>
@@ -469,15 +462,16 @@
                     </div>
                 </aside>
 
-                <!-- MIDDLE COLUMN: PRODUCTS (LISTINGS) -->
-                <main class="flex-1 min-w-0 w-full order-2 xl:order-2">
+                <!-- MIDDLE COLUMN: PRODUCTS & SERVICES LISTINGS -->
+                <main class="flex-1 min-w-0 w-full order-2 xl:order-2 space-y-6">
                     @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                        <div class="px-5 py-4 border-b border-gray-100 bg-[#6A8F3B]/5">
-                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <span class="text-xl">💼</span>
-                                {{ app()->getLocale() === 'ar' ? 'الخدمات والعروض المتوفرة' : 'Services & Solutions Offered' }}
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-700 flex justify-between items-center">
+                            <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                                <span class="text-base">💼</span>
+                                <span>{{ app()->getLocale() === 'ar' ? 'الخدمات والعروض المتوفرة' : 'Services & Solutions Offered' }}</span>
                             </h2>
+                            <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-bold uppercase tracking-wider">PRO</span>
                         </div>
                         
                         <div class="p-6 space-y-6">
@@ -569,12 +563,13 @@
                     </div>
                     @endif
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                        <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                                {{ __('Products & Listings') }}
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 flex justify-between items-center">
+                            <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                <span>{{ __('Products & Listings') }}</span>
                             </h2>
+                            <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-bold uppercase tracking-wider">{{ __('Marketplace') }}</span>
                         </div>
                         
                         <div class="p-4">
@@ -645,7 +640,7 @@
                     
                     <!-- Trees Highlight (for farmers) -->
                     @if($user->role === 'farmer' && $user->tree_number)
-                    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl shadow-md overflow-hidden mb-6 text-white relative">
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl shadow-md overflow-hidden text-white relative">
                         <div class="absolute inset-0 bg-black/10"></div>
                         <div class="relative p-6 sm:p-8 flex items-center justify-between">
                             <div>
@@ -678,7 +673,7 @@
                         <div class="px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 flex justify-between items-center">
                             <h2 class="font-bold text-white text-sm flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                                {{ __('Stories') }}
+                                <span>{{ __('Stories') }}</span>
                             </h2>
                             <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-bold uppercase tracking-wider">{{ __('Live') }}</span>
                         </div>
@@ -732,13 +727,16 @@
                         </div>
                     </div>
 
-                    <!-- Gallery Widget -->
+                    <!-- Gallery Widget (Matching Gradient Banner Header Style) -->
                     @if($coverPhotos->count() > 0)
                     @php $galleryPhotos = $coverPhotos->take(6); @endphp
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ photos: {{ json_encode($galleryPhotos->values()->toArray()) }}, selectedPhoto: null, selectedIndex: 0 }" @keydown.escape.window="selectedPhoto = null" @keydown.arrow-right.window="selectedPhoto && selectedIndex < photos.length - 1 && (selectedIndex++, selectedPhoto = photos[selectedIndex])" @keydown.arrow-left.window="selectedPhoto && selectedIndex > 0 && (selectedIndex--, selectedPhoto = photos[selectedIndex])">
-                        <div class="px-4 py-3 border-b border-gray-100 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <h3 class="text-sm font-bold text-gray-900">{{ __('Photo Gallery') }}</h3>
+                        <div class="px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span>{{ __('Photo Gallery') }}</span>
+                            </h3>
+                            <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-bold uppercase tracking-wider">HD</span>
                         </div>
                         <div class="p-4 grid grid-cols-2 gap-2">
                             @foreach($galleryPhotos as $index => $photo)
