@@ -239,6 +239,10 @@ class MessageController extends Controller
      */
     public function unreadCount(): JsonResponse
     {
+        if (session()->isStarted()) {
+            session()->save();
+        }
+
         $user = auth()->user();
         if (!$user) {
             return response()->json(['count' => 0]);

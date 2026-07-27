@@ -46,7 +46,7 @@ class TrackVisitor
                             // Check if GeoIP is already cached for this IP to prevent duplicate calls
                             $geoCacheKey = "geoip_{$ip}";
                             $geoData = Cache::remember($geoCacheKey, now()->addHours(24), function () use ($ip) {
-                                $geoResponse = \Illuminate\Support\Facades\Http::timeout(3)->get("http://ip-api.com/json/{$ip}");
+                                $geoResponse = \Illuminate\Support\Facades\Http::timeout(1.0)->get("http://ip-api.com/json/{$ip}");
                                 if ($geoResponse->successful() && $geoResponse->json('status') === 'success') {
                                     return [
                                         'country' => $geoResponse->json('country'),

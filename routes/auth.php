@@ -23,9 +23,9 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    // Limit login attempts to 50 per minute per IP
+    // Limit login attempts to 120 per minute per IP (accommodates shared mobile 4G IPs in Tunisia)
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
-        ->middleware('throttle:50,1');
+        ->middleware('throttle:120,1');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
