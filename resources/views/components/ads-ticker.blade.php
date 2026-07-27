@@ -13,16 +13,23 @@
         align-items: center;
         overflow: hidden;
         position: relative;
+        padding-inline-end: 80px;
     }
     .ads-ticker-content {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         white-space: nowrap;
-        animation: ads-scroll-marquee 50s linear infinite;
+        flex-shrink: 0;
+        width: max-content;
+        min-width: max-content;
+        animation: ads-scroll-marquee 60s linear infinite;
         will-change: transform;
     }
-    .ads-ticker-bar:hover .ads-ticker-content {
+    [dir="rtl"] .ads-ticker-content {
+        animation: ads-scroll-marquee-rtl 60s linear infinite;
+    }
+    .ads-ticker-wrapper:hover .ads-ticker-content {
         animation-play-state: paused;
     }
     .ads-ticker-logo {
@@ -50,7 +57,7 @@
     }
     .ads-ticker-text-wrapper {
         white-space: nowrap;
-        max-width: 220px;
+        max-width: 240px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -126,6 +133,10 @@
     @keyframes ads-scroll-marquee {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
+    }
+    @keyframes ads-scroll-marquee-rtl {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(50%); }
     }
 </style>
 
