@@ -443,6 +443,69 @@ class ProfileController extends Controller
     }
 
     /**
+     * POST /profile/lab-analysis
+     */
+    public function uploadLabAnalysis(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'lab_name' => 'nullable|string|max:255',
+            'analysis_date' => 'nullable|date',
+            'pdf_file' => 'required|mimes:pdf|max:20480', // max 20MB
+        ], [
+            'pdf_file.required' => app()->getLocale() === 'ar' ? 'يرجى اختيار ملف التحليل بصيغة PDF.' : 'Please select a PDF file.',
+            'pdf_file.mimes' => app()->getLocale() === 'ar' ? 'يجب أن يكون الملف بصيغة PDF فقط.' : 'File must be a PDF document.',
+            'pdf_file.max' => app()->getLocale() === 'ar' ? 'حجم الملف يجب ألا يتجاوز 20 ميغابايت.' : 'PDF file size must not exceed 20MB.',
+        ]);
+
+        $user = $request->user();
+        $file = $request->file('pdf_file');
+
+        $filename = 'lab_' . time() . '_' . \Illuminate\Support\Str::random(6) . '.pdf';
+        $path = $file->storeAs('lab_analyses/' . $user->id, $filename, 'public');
+
+        $analyses = $user->lab_analyses ?? [];
+        $analysisId = 'lab_' . \Illuminate\Support\Str::random(8);
+
+        $newAnalysis = [
+            'id' => $analysisId,
+            'title' => strip_tags($request->input('title')),
+            'lab_name' => strip_tags($request->input('lab_name', '')),
+            'analysis_date' => $request->input('analysis_date'),
+            'file_path' => $path,
+            'file_size' => round($file->getSize() / 1024 / 1024, 2) . ' MB',
+            'uploaded_at' => now()->toDateTimeString(),
+        ];
+
+        $analyses[] = $newAnalysis;
+        $user->lab_analyses = $analyses;
+        $user->save();
+
+        return back()->with('success', app()->getLocale() === 'ar' ? 'تم إضافة ملف التحليل المخبري بنجاح! 🎉' : 'Lab analysis PDF added successfully!');
+    }
+
+    /**
+     * DELETE /profile/lab-analysis/{id}
+     */
+    public function deleteLabAnalysis(Request $request, string $id)
+    {
+        $user = $request->user();
+        $analyses = collect($user->lab_analyses ?? []);
+
+        $target = $analyses->firstWhere('id', $id);
+
+        if ($target && !empty($target['file_path'])) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($target['file_path']);
+        }
+
+        $filtered = $analyses->reject(fn($item) => ($item['id'] ?? '') === $id)->values()->all();
+        $user->lab_analyses = $filtered;
+        $user->save();
+
+        return back()->with('success', app()->getLocale() === 'ar' ? 'تم حذف ملف التحليل المخبري بنجاح.' : 'Lab analysis PDF deleted successfully.');
+    }
+
+    /**
      * نسبة اكتمال البروفايل
      */
     private function calculateProfileCompletion(User $user): int

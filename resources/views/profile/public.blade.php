@@ -123,76 +123,169 @@
                     </div>
                     @endif
 
-                    <!-- Contact & Location Info -->
+                    <!-- About Us (من نحن) Card -->
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
-                        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">{{ __('About') }}</h3>
-                        
-                        @if($contactInfo['phone'])
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            </div>
-                            @auth
-                                <a href="tel:{{ $contactInfo['phone'] }}" class="text-sm font-medium text-gray-700 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
-                            @else
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm font-medium text-gray-500 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
-                                    <a href="{{ route('register') }}" class="text-[11px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
-                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
-                                    </a>
-                                </div>
-                            @endauth
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                                <span class="text-lg">ℹ️</span>
+                                <span>{{ __('About') }}</span>
+                            </h3>
+                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                                @if($user->role === 'farmer')
+                                    🌾 {{ app()->getLocale() === 'ar' ? 'مزارع زيتون' : 'Olive Grower' }}
+                                @elseif($user->role === 'mill')
+                                    🏭 {{ app()->getLocale() === 'ar' ? 'معصرة زيتون' : 'Oil Mill' }}
+                                @elseif($user->role === 'packer')
+                                    📦 {{ app()->getLocale() === 'ar' ? 'وحدة تعبئة' : 'Packaging' }}
+                                @elseif($user->role === 'carrier')
+                                    🚛 {{ app()->getLocale() === 'ar' ? 'ناقل بري' : 'Transporter' }}
+                                @else
+                                    ✨ {{ app()->getLocale() === 'ar' ? 'عضو منصة الزين' : 'Member' }}
+                                @endif
+                            </span>
                         </div>
+
+                        <!-- Farm / Business Summary -->
+                        @php
+                            $userBio = $user->meta_data['service_description'] ?? $user->farm_location ?? $user->bio ?? null;
+                        @endphp
+                        @if($userBio)
+                            <div class="text-xs text-gray-700 bg-gray-50 rounded-xl p-3.5 border border-gray-100 leading-relaxed font-medium">
+                                {{ $userBio }}
+                            </div>
                         @endif
 
-                        @if($contactInfo['email'])
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            </div>
-                            @auth
-                                <a href="mailto:{{ $contactInfo['email'] }}" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
-                            @else
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm font-medium text-gray-500 blur-[2px] select-none">contact@******.com</span>
-                                    <a href="{{ route('register') }}" class="text-[11px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
-                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
-                                    </a>
+                        <!-- Business Details Grid -->
+                        <div class="space-y-2.5 text-xs">
+                            @if($user->role === 'farmer' && !empty($user->tree_number))
+                                <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
+                                    <span class="text-gray-600 font-bold flex items-center gap-1.5">
+                                        <span>🌳</span>
+                                        <span>{{ app()->getLocale() === 'ar' ? 'عدد أشجار الزيتون' : 'Olive Trees' }}</span>
+                                    </span>
+                                    <span class="font-extrabold text-emerald-900">{{ number_format($user->tree_number) }} {{ app()->getLocale() === 'ar' ? 'شجرة' : 'trees' }}</span>
                                 </div>
-                            @endauth
-                        </div>
-                        @endif
+                            @endif
 
-                        @if($addresses->count() > 0)
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            @if($user->role === 'mill' && !empty($user->mill_name))
+                                <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
+                                    <span class="text-gray-600 font-bold flex items-center gap-1.5">
+                                        <span>🏭</span>
+                                        <span>{{ app()->getLocale() === 'ar' ? 'اسم المعصرة' : 'Mill Name' }}</span>
+                                    </span>
+                                    <span class="font-extrabold text-emerald-900">{{ $user->mill_name }}</span>
+                                </div>
+                            @endif
+
+                            <!-- Location / Governorate -->
+                            @php
+                                $userLocation = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
+                                $userDelegation = $addresses->first()?->delegation ?? null;
+                            @endphp
+                            @if($userLocation)
+                                <div class="flex items-center gap-2.5 text-gray-700 pt-1">
+                                    <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                                        📍
+                                    </div>
+                                    <span class="font-bold">{{ $userLocation }} @if($userDelegation) — {{ $userDelegation }} @endif</span>
+                                </div>
+                            @endif
+
+                            @if($contactInfo['phone'])
+                            <div class="flex items-center gap-2.5 pt-1">
+                                <div class="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+                                    📞
+                                </div>
+                                @auth
+                                    <a href="tel:{{ $contactInfo['phone'] }}" class="font-bold text-gray-800 hover:text-green-600 transition" dir="ltr">{{ $contactInfo['phone'] }}</a>
+                                @else
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-gray-400 blur-[2px] select-none" dir="ltr">+216 XX XXX XXX</span>
+                                        <a href="{{ route('register') }}" class="text-[10px] font-bold bg-[#6A8F3B]/10 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white px-2 py-0.5 rounded-md transition">
+                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الرقم' : 'Register to unlock' }}
+                                        </a>
+                                    </div>
+                                @endauth
                             </div>
-                            <div class="text-sm font-medium text-gray-700 pt-1">
-                                @foreach($addresses as $address)
-                                    <p class="mb-1">{{ $address->governorate }}, {{ $address->delegation }}</p>
+                            @endif
+
+                            @if($contactInfo['email'])
+                            <div class="flex items-center gap-2.5 pt-1">
+                                <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                    ✉️
+                                </div>
+                                @auth
+                                    <a href="mailto:{{ $contactInfo['email'] }}" class="font-bold text-gray-800 hover:text-blue-600 transition truncate">{{ $contactInfo['email'] }}</a>
+                                @else
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-gray-400 blur-[2px] select-none">contact@******.com</span>
+                                        <a href="{{ route('register') }}" class="text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-2 py-0.5 rounded-md transition">
+                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل لإظهار الإيميل' : 'Register to unlock' }}
+                                        </a>
+                                    </div>
+                                @endauth
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Certified PDF Laboratory Analysis Card (Directly Under About Us) -->
+                    @php
+                        $userLabAnalyses = collect($user->lab_analyses ?? [])->filter()->values();
+                    @endphp
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                            <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                <span class="text-lg">📜</span>
+                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية' : 'Certified Lab Analyses' }}</span>
+                            </h3>
+                            <span class="text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                                PDF
+                            </span>
+                        </div>
+
+                        @if($userLabAnalyses->count() > 0)
+                            <div class="space-y-3">
+                                @foreach($userLabAnalyses as $lab)
+                                    @php
+                                        $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
+                                    @endphp
+                                    @if($pdfUrl)
+                                    <div class="p-3.5 bg-gradient-to-br from-red-50/50 via-white to-amber-50/30 rounded-xl border border-red-100 flex items-center justify-between gap-3 group hover:border-red-300 transition">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center shrink-0 shadow-sm font-black text-xs">
+                                                PDF
+                                            </div>
+                                            <div class="min-w-0">
+                                                <h4 class="text-xs font-extrabold text-gray-900 truncate leading-snug">
+                                                    {{ $lab['title'] ?? __('تقرير تحليل مخبري') }}
+                                                </h4>
+                                                <div class="text-[11px] text-gray-500 truncate mt-0.5">
+                                                    @if(!empty($lab['lab_name']))
+                                                        <span>🔬 {{ $lab['lab_name'] }}</span>
+                                                    @endif
+                                                    @if(!empty($lab['analysis_date']))
+                                                        <span class="mr-2">📅 {{ $lab['analysis_date'] }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            <a href="{{ $pdfUrl }}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] shadow transition flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                <span>{{ app()->getLocale() === 'ar' ? 'عرض' : 'View' }}</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endif
                                 @endforeach
                             </div>
-                        </div>
+                        @else
+                            <div class="p-4 bg-gray-50 rounded-xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
+                                {{ app()->getLocale() === 'ar' ? 'لا تتوفر شهادات أو تحاليل مخبرية مرفوعة حالياً.' : 'No lab analysis PDF reports uploaded yet.' }}
+                            </div>
                         @endif
                     </div>
-
-                    <!-- Role specific details -->
-                    @if(count($roleInfo) > 0)
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">{{ __('Additional Details') }}</h3>
-                        <div class="space-y-3">
-                            @foreach($roleInfo as $key => $value)
-                                @if($value)
-                                <div class="flex flex-col">
-                                    <span class="text-xs text-gray-400 font-bold uppercase">{{ __(\Illuminate\Support\Str::title(str_replace('_', ' ', $key))) }}</span>
-                                    <span class="text-sm font-medium text-gray-800">{{ $value }}</span>
-                                </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
                 </aside>
 
                 <!-- MIDDLE COLUMN: PRODUCTS (LISTINGS) -->

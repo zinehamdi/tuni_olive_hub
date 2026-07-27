@@ -206,6 +206,10 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::post('/profile/service-card', [ProfileController::class, 'addServiceCard'])->name('profile.add.service-card');
     Route::post('/profile/service-card/update', [ProfileController::class, 'updateServiceCard'])->name('profile.update.service-card');
     
+    // Lab Analysis PDF upload & delete
+    Route::post('/profile/lab-analysis', [ProfileController::class, 'uploadLabAnalysis'])->name('profile.lab_analysis.upload');
+    Route::delete('/profile/lab-analysis/{id}', [ProfileController::class, 'deleteLabAnalysis'])->name('profile.lab_analysis.delete');
+    
     // Messaging routes
     Route::get('/messages', [\App\Http\Controllers\MessageController::class, 'inbox'])->name('messages.inbox');
     Route::get('/messages/unread-count', [\App\Http\Controllers\MessageController::class, 'unreadCount'])->name('messages.unread');

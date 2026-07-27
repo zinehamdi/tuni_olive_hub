@@ -31,6 +31,7 @@ class User extends Authenticatable
         'show_contact_info',
         'show_address',
         'interest',
+        'lab_analyses',
     ];
 
     /**
@@ -54,6 +55,7 @@ class User extends Authenticatable
         'show_contact_info' => 'boolean',
         'show_address' => 'boolean',
         'meta_data' => 'array',
+        'lab_analyses' => 'array',
     ];
 
     /**
