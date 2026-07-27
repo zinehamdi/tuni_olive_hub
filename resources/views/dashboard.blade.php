@@ -619,7 +619,7 @@
             </div>
 
             <!-- Certified PDF Laboratory Analyses Management Card -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-6 space-y-5" x-data="{ showUploadModal: false }">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-6 space-y-5" x-data="{ showUploadModal: false, activePdfModal: null }">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-500 to-amber-600 flex items-center justify-center shadow-lg text-white font-bold text-lg">
@@ -651,36 +651,63 @@
                         @foreach($myLabAnalyses as $lab)
                             @php
                                 $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
+                                
+                                $rawTitle = $lab['title'] ?? '';
+                                $displayTitle = $rawTitle;
+                                if (app()->getLocale() === 'en') {
+                                    $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analysis', 'Acidity', 'Peroxide', 'Quality', 'Oil', 'Olive'], $rawTitle);
+                                } elseif (app()->getLocale() === 'fr') {
+                                    $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analyse', 'Acidité', 'Peroxyde', 'Qualité', 'Huile', 'Olive'], $rawTitle);
+                                }
                             @endphp
                             @if($pdfUrl)
-                            <div class="p-4 bg-gradient-to-br from-red-50/40 via-white to-amber-50/20 rounded-2xl border border-red-100/80 flex items-center justify-between gap-3 hover:border-red-300 transition shadow-sm">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-11 h-11 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0 font-black text-xs shadow-sm">
-                                        PDF
-                                    </div>
-                                    <div class="min-w-0">
-                                        <h4 class="text-xs font-extrabold text-gray-900 truncate leading-snug">
-                                            {{ $lab['title'] ?? __('تقرير تحليل مخبري') }}
+                            <div class="bg-gradient-to-b from-gray-50 to-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition group">
+                                <div class="p-4 border-b border-gray-100 bg-white">
+                                    <div class="flex items-start justify-between gap-2 mb-2">
+                                        <h4 class="text-xs font-black text-gray-900 leading-snug group-hover:text-emerald-700 transition">
+                                            📄 {{ $displayTitle }}
                                         </h4>
-                                        <div class="text-[11px] text-gray-500 truncate mt-1">
-                                            @if(!empty($lab['lab_name']))
-                                                <span>🔬 {{ $lab['lab_name'] }}</span>
-                                            @endif
-                                            @if(!empty($lab['analysis_date']))
-                                                <span class="mr-2">📅 {{ $lab['analysis_date'] }}</span>
-                                            @endif
-                                        </div>
+                                        <span class="text-[10px] font-bold text-gray-400 shrink-0 bg-gray-100 px-2 py-0.5 rounded-md">
+                                            {{ $lab['file_size'] ?? 'PDF' }}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-2 text-[11px] text-gray-600 font-medium">
+                                        @if(!empty($lab['lab_name']))
+                                            <span class="bg-amber-50 text-amber-800 border border-amber-100 px-2 py-0.5 rounded-md font-bold">
+                                                🔬 {{ $lab['lab_name'] }}
+                                            </span>
+                                        @endif
+                                        @if(!empty($lab['analysis_date']))
+                                            <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md">
+                                                📅 {{ $lab['analysis_date'] }}
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <a href="{{ $pdfUrl }}" target="_blank" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+
+                                <!-- Live PDF Embedded Preview Box -->
+                                <div class="relative h-44 bg-slate-900 overflow-hidden group/pdf cursor-pointer" @click="activePdfModal = '{{ $pdfUrl }}'">
+                                    <iframe src="{{ $pdfUrl }}#toolbar=0&navpanes=0&scrollbar=0" class="w-full h-full border-0 pointer-events-none opacity-85 group-hover/pdf:opacity-100 group-hover/pdf:scale-105 transition-all duration-500"></iframe>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent flex flex-col items-center justify-end p-3 text-center">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs shadow-lg">
+                                            👁️ {{ app()->getLocale() === 'ar' ? 'معاينة PDF بالكامل' : 'Open PDF Preview' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="p-3 bg-gray-50 flex items-center justify-between gap-2 text-xs">
+                                    <button @click="activePdfModal = '{{ $pdfUrl }}'" class="flex-1 py-1.5 px-2 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1">
+                                        👁️ {{ app()->getLocale() === 'ar' ? 'معاينة' : 'Preview' }}
+                                    </button>
+                                    <a href="{{ $pdfUrl }}" download class="py-1.5 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow transition flex items-center gap-1">
+                                        📥 {{ app()->getLocale() === 'ar' ? 'تنزيل' : 'Download' }}
                                     </a>
                                     <form method="POST" action="{{ route('profile.lab_analysis.delete', $lab['id'] ?? '') }}" onsubmit="return confirm('{{ __('هل أنت تأكد من إزالة هذا الملف؟') }}');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        <button type="submit" class="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition">
+                                            🗑️
                                         </button>
                                     </form>
                                 </div>
@@ -694,6 +721,36 @@
                         <span>{{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة أي تحاليل مخبرية بصيغة PDF بعد.' : 'No PDF lab analysis reports added yet.' }}</span>
                     </div>
                 @endif
+
+                <!-- Fullscreen Interactive PDF Viewer Modal -->
+                <div x-show="activePdfModal" class="fixed inset-0 z-[200] overflow-y-auto" x-cloak style="display: none;">
+                    <div class="flex items-center justify-center min-h-screen p-2 sm:p-4 text-center">
+                        <div class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity" @click="activePdfModal = null"></div>
+                        <div class="inline-block bg-white rounded-3xl text-right overflow-hidden shadow-2xl transform transition-all max-w-5xl w-full h-[90vh] flex flex-col z-10 relative border border-gray-100">
+                            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                                <div class="flex items-center gap-3">
+                                    <span class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-black text-xs">PDF</span>
+                                    <h3 class="font-bold text-sm sm:text-base text-white">
+                                        {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمية' : 'Official PDF Laboratory Certificate' }}
+                                    </h3>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <a :href="activePdfModal" download class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                                        📥 <span>{{ app()->getLocale() === 'ar' ? 'تحميل' : 'Download' }}</span>
+                                    </a>
+                                    <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                                        ✕
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex-1 bg-slate-100 relative">
+                                <template x-if="activePdfModal">
+                                    <iframe :src="activePdfModal" class="w-full h-full border-0"></iframe>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Upload Modal -->
                 <div x-show="showUploadModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak style="display: none;">

@@ -229,62 +229,143 @@
                         </div>
                     </div>
 
-                    <!-- Certified PDF Laboratory Analysis Card (Directly Under About Us) -->
+                    <!-- Certified PDF Laboratory Analysis Card (Under About Us with Live PDF Preview & Full Screen Viewer) -->
                     @php
                         $userLabAnalyses = collect($user->lab_analyses ?? [])->filter()->values();
                     @endphp
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                            <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                <span class="text-lg">📜</span>
-                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية' : 'Certified Lab Analyses' }}</span>
-                            </h3>
-                            <span class="text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                    <div class="bg-white rounded-3xl shadow-xl border border-amber-100/80 overflow-hidden space-y-4" x-data="{ activePdfModal: null }">
+                        <div class="px-5 py-4 bg-gradient-to-r from-amber-500/10 via-emerald-500/5 to-amber-500/10 border-b border-amber-100 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-emerald-600 flex items-center justify-center text-white text-lg shadow-md font-bold">
+                                    📜
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-1.5">
+                                        <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية' : 'Certified Lab Reports' }}</span>
+                                    </h3>
+                                    <p class="text-[11px] text-amber-800/80 font-medium">
+                                        🛡️ {{ app()->getLocale() === 'ar' ? 'شهادات جودة معتمدة رسمياً' : 'Officially Verified Quality Certificates' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-black bg-red-600 text-white px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                 PDF
                             </span>
                         </div>
 
-                        @if($userLabAnalyses->count() > 0)
-                            <div class="space-y-3">
-                                @foreach($userLabAnalyses as $lab)
+                        <div class="p-4 space-y-4">
+                            @if($userLabAnalyses->count() > 0)
+                                @foreach($userLabAnalyses as $index => $lab)
                                     @php
                                         $pdfUrl = !empty($lab['file_path']) ? Storage::disk('public')->url($lab['file_path']) : null;
+                                        
+                                        // Smart Translation Map for Analysis Titles
+                                        $rawTitle = $lab['title'] ?? '';
+                                        $displayTitle = $rawTitle;
+                                        if (app()->getLocale() === 'en') {
+                                            $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analysis', 'Acidity', 'Peroxide', 'Quality', 'Oil', 'Olive'], $rawTitle);
+                                        } elseif (app()->getLocale() === 'fr') {
+                                            $displayTitle = str_replace(['تحليل', 'حموضة', 'تأكسد', 'جودة', 'زيت', 'زيتون'], ['Analyse', 'Acidité', 'Peroxyde', 'Qualité', 'Huile', 'Olive'], $rawTitle);
+                                        }
                                     @endphp
                                     @if($pdfUrl)
-                                    <div class="p-3.5 bg-gradient-to-br from-red-50/50 via-white to-amber-50/30 rounded-xl border border-red-100 flex items-center justify-between gap-3 group hover:border-red-300 transition">
-                                        <div class="flex items-center gap-3 min-w-0">
-                                            <div class="w-10 h-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center shrink-0 shadow-sm font-black text-xs">
-                                                PDF
-                                            </div>
-                                            <div class="min-w-0">
-                                                <h4 class="text-xs font-extrabold text-gray-900 truncate leading-snug">
-                                                    {{ $lab['title'] ?? __('تقرير تحليل مخبري') }}
+                                    <div class="bg-gradient-to-b from-gray-50 to-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition group">
+                                        
+                                        <!-- PDF Document Header Info -->
+                                        <div class="p-4 border-b border-gray-100 bg-white">
+                                            <div class="flex items-start justify-between gap-2 mb-2">
+                                                <h4 class="text-xs font-black text-gray-900 leading-snug group-hover:text-emerald-700 transition">
+                                                    📄 {{ $displayTitle }}
                                                 </h4>
-                                                <div class="text-[11px] text-gray-500 truncate mt-0.5">
-                                                    @if(!empty($lab['lab_name']))
-                                                        <span>🔬 {{ $lab['lab_name'] }}</span>
-                                                    @endif
-                                                    @if(!empty($lab['analysis_date']))
-                                                        <span class="mr-2">📅 {{ $lab['analysis_date'] }}</span>
-                                                    @endif
-                                                </div>
+                                                <span class="text-[10px] font-bold text-gray-400 shrink-0 bg-gray-100 px-2 py-0.5 rounded-md">
+                                                    {{ $lab['file_size'] ?? 'PDF' }}
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex flex-wrap items-center gap-2 text-[11px] text-gray-600 font-medium">
+                                                @if(!empty($lab['lab_name']))
+                                                    <span class="bg-amber-50 text-amber-800 border border-amber-100 px-2 py-0.5 rounded-md font-bold">
+                                                        🔬 {{ $lab['lab_name'] }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($lab['analysis_date']))
+                                                    <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md">
+                                                        📅 {{ $lab['analysis_date'] }}
+                                                    </span>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="flex items-center gap-1.5 shrink-0">
-                                            <a href="{{ $pdfUrl }}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] shadow transition flex items-center gap-1">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                <span>{{ app()->getLocale() === 'ar' ? 'عرض' : 'View' }}</span>
+
+                                        <!-- Visual PDF Document Embedded Live Preview Box -->
+                                        <div class="relative h-44 sm:h-52 bg-slate-900 overflow-hidden group/pdf cursor-pointer" @click="activePdfModal = '{{ $pdfUrl }}'">
+                                            <!-- Live Iframe / Object Preview -->
+                                            <iframe src="{{ $pdfUrl }}#toolbar=0&navpanes=0&scrollbar=0" class="w-full h-full border-0 pointer-events-none opacity-85 group-hover/pdf:opacity-100 group-hover/pdf:scale-105 transition-all duration-500"></iframe>
+                                            
+                                            <!-- Gradient Hover Overlay -->
+                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent flex flex-col items-center justify-end p-4 text-center">
+                                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs shadow-lg transform group-hover/pdf:scale-105 transition duration-300">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                    <span>{{ app()->getLocale() === 'ar' ? 'معاينة وثيقة PDF بالكامل' : 'Open Full PDF Preview' }}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Bar -->
+                                        <div class="p-3 bg-gray-50 flex items-center justify-between gap-2 text-xs">
+                                            <button @click="activePdfModal = '{{ $pdfUrl }}'" class="flex-1 py-2 px-3 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+                                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                <span>{{ app()->getLocale() === 'ar' ? 'تكبير الوثيقة' : 'Full Screen' }}</span>
+                                            </button>
+                                            <a href="{{ $pdfUrl }}" download class="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow transition flex items-center gap-1.5">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                <span>{{ app()->getLocale() === 'ar' ? 'تنزيل' : 'Download' }}</span>
                                             </a>
                                         </div>
                                     </div>
                                     @endif
                                 @endforeach
+                            @else
+                                <div class="p-6 bg-gray-50/80 rounded-2xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
+                                    <span class="text-3xl block mb-2">📜</span>
+                                    <span>{{ app()->getLocale() === 'ar' ? 'لا تتوفر تحاليل مخبرية مرفوعة حالياً لهذا البروفايل.' : 'No PDF lab analysis reports available yet.' }}</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Fullscreen Interactive PDF Viewer Modal -->
+                        <div x-show="activePdfModal" class="fixed inset-0 z-[200] overflow-y-auto" x-cloak style="display: none;">
+                            <div class="flex items-center justify-center min-h-screen p-2 sm:p-4 text-center">
+                                <div class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity" @click="activePdfModal = null"></div>
+                                
+                                <div class="inline-block bg-white rounded-3xl text-right overflow-hidden shadow-2xl transform transition-all max-w-5xl w-full h-[90vh] flex flex-col z-10 relative border border-gray-100">
+                                    <!-- Modal Header -->
+                                    <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                                        <div class="flex items-center gap-3">
+                                            <span class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-black text-xs">PDF</span>
+                                            <h3 class="font-bold text-sm sm:text-base text-white">
+                                                {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمي' : 'Official PDF Laboratory Certificate' }}
+                                            </h3>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <a :href="activePdfModal" download class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                <span>{{ app()->getLocale() === 'ar' ? 'تحميل الملف' : 'Download PDF' }}</span>
+                                            </a>
+                                            <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                                                ✕
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- PDF Viewer Iframe Body -->
+                                    <div class="flex-1 bg-slate-100 relative">
+                                        <template x-if="activePdfModal">
+                                            <iframe :src="activePdfModal" class="w-full h-full border-0"></iframe>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
-                        @else
-                            <div class="p-4 bg-gray-50 rounded-xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
-                                {{ app()->getLocale() === 'ar' ? 'لا تتوفر شهادات أو تحاليل مخبرية مرفوعة حالياً.' : 'No lab analysis PDF reports uploaded yet.' }}
-                            </div>
-                        @endif
+                        </div>
                     </div>
                 </aside>
 
