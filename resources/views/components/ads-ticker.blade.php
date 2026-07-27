@@ -12,19 +12,23 @@
         display: flex;
         align-items: center;
         overflow: hidden;
-        padding-right: 70px;
+        position: relative;
     }
     .ads-ticker-content {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         white-space: nowrap;
-        animation: ads-scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 75s linear infinite;
-        padding-left: 100%;
+        animation: ads-scroll-marquee 50s linear infinite;
+        will-change: transform;
+    }
+    .ads-ticker-bar:hover .ads-ticker-content {
+        animation-play-state: paused;
     }
     .ads-ticker-logo {
         width: 26px;
         height: 26px;
+        flex-shrink: 0;
     }
     .ads-ticker-item {
         display: inline-flex;
@@ -37,22 +41,34 @@
         border-radius: 9999px;
         padding: 0.3rem 0.8rem;
         box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        transition: all 0.2s;
+        transition: all 0.2s ease;
+        white-space: nowrap;
     }
     .ads-ticker-item:hover {
         background-color: #b5d691;
         transform: translateY(-1px);
     }
     .ads-ticker-text-wrapper {
-        white-space: normal;
-        max-width: 190px;
+        white-space: nowrap;
+        max-width: 220px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     .ads-ticker-title {
         font-size: 0.68rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .ads-ticker-desc {
         font-size: 0.6rem;
         margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0.85;
     }
     .ads-ticker-icon {
         font-size: 1rem;
@@ -84,7 +100,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
         .ads-ticker-text-wrapper {
-            max-width: 360px;
+            max-width: 380px;
         }
         .ads-ticker-title {
             font-size: 0.95rem;
@@ -107,13 +123,9 @@
         }
     }
 
-    @keyframes ads-scroll-ltr {
+    @keyframes ads-scroll-marquee {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
-    }
-    @keyframes ads-scroll-rtl {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(50%); }
     }
 </style>
 

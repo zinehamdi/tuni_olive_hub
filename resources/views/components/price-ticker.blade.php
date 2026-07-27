@@ -47,15 +47,18 @@
         display: flex;
         align-items: center;
         overflow: hidden;
-        padding-right: 80px;
+        position: relative;
     }
     .ticker-content {
         display: flex;
         align-items: center;
         gap: 1rem;
         white-space: nowrap;
-        animation: scroll-{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }} 60s linear infinite;
-        padding-left: 100%;
+        animation: price-scroll-marquee 50s linear infinite;
+        will-change: transform;
+    }
+    .ticker-wrapper:hover .ticker-content {
+        animation-play-state: paused;
     }
     .ticker-item {
         display: flex;
@@ -68,16 +71,9 @@
         font-size: 0.75rem;
         flex-shrink: 0;
     }
-    @keyframes scroll-ltr {
+    @keyframes price-scroll-marquee {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
-    }
-    @keyframes scroll-rtl {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(50%); }
-    }
-    .ticker-wrapper:hover .ticker-content {
-        animation-play-state: paused;
     }
 </style>
 
