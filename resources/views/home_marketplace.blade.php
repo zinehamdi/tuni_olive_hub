@@ -784,7 +784,7 @@
 
                                 <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
                                     <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
-                                        <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">{{ $locale === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
+                                        <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">{{ app()->getLocale() === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                     </template>
                                     <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
                                         <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
@@ -924,7 +924,7 @@
                                 <div class="text-center md:text-left">
                                     <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
                                         <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
-                                            <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">{{ $locale === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
+                                            <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">{{ app()->getLocale() === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                         </template>
                                         <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
                                             <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
