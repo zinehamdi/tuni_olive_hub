@@ -633,7 +633,18 @@
                                     <div class="p-4 flex flex-col flex-1">
                                         <h3 class="font-bold text-gray-900 group-hover:text-emerald-600 transition text-sm mb-1 truncate">{{ $listing->product?->variety ?? __('Product') }}@if($listing->product?->quality)<span class="text-xs text-gray-400 font-normal"> — {{ $listing->product->quality }}</span>@endif</h3>
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="text-emerald-600 font-bold">{{ $listing->price ?? '-' }} <span class="text-xs text-gray-400">{{ $listing->currency ?? 'TND' }}</span></span>
+                                            @php
+                                                $displayPrice = $listing->price > 0
+                                                    ? app(\App\Services\CurrencyConverter::class)->forLocale(
+                                                        (float)$listing->price,
+                                                        $listing->currency ?? 'TND',
+                                                        app()->getLocale()
+                                                      )
+                                                    : null;
+                                            @endphp
+                                            <span class="text-emerald-600 font-bold">
+                                                {{ $displayPrice ?? __('Price on request') }}
+                                            </span>
                                             <span class="text-gray-400 text-xs">{{ $listing->product?->quantity ?? '-' }} {{ __('units') }}</span>
                                         </div>
                                         <p class="text-xs text-gray-400 mb-3">{{ $listing->created_at->diffForHumans() }}</p>

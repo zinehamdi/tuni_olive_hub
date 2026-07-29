@@ -18,6 +18,18 @@ class TrackVisitor
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // ─── EARLY BOT BAIL-OUT ───────────────────────────────────────────────────
+        // Meta (Facebook/WhatsApp) and other social scrapers send OG-prefetch
+        // requests BEFORE the user even clicks the link. These crawlers have no
+        // session cookie, so every request triggers a new DB+GeoIP write, causing
+        // the server queue to back up → 25-second "site inaccessible" for real users.
+        // We detect scrapers early and skip ALL tracking for them.
+        $userAgentRaw = $request->header('User-Agent', '');
+        if ($this->isSocialScraper($userAgentRaw)) {
+            return $next($request);
+        }
+        // ─────────────────────────────────────────────────────────────────────────
+
         $deviceUuid = $request->cookie('zintoop_device_uuid');
         if (!$deviceUuid) {
             $deviceUuid = (string) \Illuminate\Support\Str::uuid();
@@ -32,7 +44,7 @@ class TrackVisitor
             
             if (!Cache::has($cacheKey)) {
                 try {
-                    $userAgent = $request->header('User-Agent');
+                    $userAgent = $userAgentRaw;
                     $truncatedUserAgent = $userAgent ? substr($userAgent, 0, 255) : null;
                     $device = $this->detectDevice($userAgent);
                     $isBot = $this->detectBot($userAgent);
@@ -92,6 +104,40 @@ class TrackVisitor
 
         return $response;
     }
+
+    /**
+     * Detect social media scrapers and link-preview crawlers.
+     * These fire before the user even clicks, causing server load spikes.
+     */
+    private function isSocialScraper(string $userAgent): bool
+    {
+        if (empty($userAgent)) return false;
+        
+        $scraperPatterns = [
+            'facebookexternalhit',  // Facebook link preview
+            'facebookcatalog',       // Facebook catalog crawler
+            'WhatsApp',              // WhatsApp link preview
+            'Twitterbot',            // Twitter card crawler
+            'LinkedInBot',           // LinkedIn preview
+            'TelegramBot',           // Telegram preview
+            'Slackbot',              // Slack unfurl
+            'Discordbot',            // Discord embeds
+            'SkypeUriPreview',       // Skype preview
+            'viber',                 // Viber preview
+            'ia_archiver',           // Wayback Machine
+            'Applebot',              // Apple bot
+            'DuckDuckBot',           // DuckDuckGo
+        ];
+
+        foreach ($scraperPatterns as $pattern) {
+            if (stripos($userAgent, $pattern) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     private function detectDevice($userAgent)
     {

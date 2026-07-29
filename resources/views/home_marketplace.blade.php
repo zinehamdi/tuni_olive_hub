@@ -784,13 +784,10 @@
 
                                 <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
                                     <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
-                                        <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">السعر عند الطلب</span>
+                                        <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">{{ $locale === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                     </template>
                                     <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
-                                        <div>
-                                            <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                            <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
-                                        </div>
+                                        <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
                                     </template>
                                 </div>
 
@@ -927,13 +924,10 @@
                                 <div class="text-center md:text-left">
                                     <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
                                         <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
-                                            <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">السعر عند الطلب</span>
+                                            <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">{{ $locale === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                         </template>
                                         <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
-                                            <div>
-                                                <span x-text="Number(listing.price || listing.product?.price || 0).toFixed(2)"></span>
-                                                <span class="text-sm text-gray-600" x-text="listing.currency === 'USD' ? '$' : (listing.currency === 'EUR' ? '€' : '{{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}')"></span>
-                                            </div>
+                                            <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
                                         </template>
                                     </div>
                                     <div class="flex gap-2">
@@ -1088,6 +1082,58 @@ document.addEventListener('alpine:init', () => {
         showFilters: window.innerWidth >= 1024,
         articleModalOpen: false,
         locale: '{{ app()->getLocale() }}',
+
+        // ── Live currency rates (injected from CurrencyConverter, cached 3h) ──
+        // Rate: how many USD = 1 unit of source currency
+        tndToUsd: {{ number_format(app(\App\Services\CurrencyConverter::class)->getTndToUsd(), 6, '.', '') }},
+        eurToUsd: {{ number_format(app(\App\Services\CurrencyConverter::class)->getEurToUsd(), 6, '.', '') }},
+        sarToUsd: 0.2667, // SAR is pegged — rarely changes
+
+        /**
+         * Convert a listing price from its stored currency to the display currency.
+         *
+         * Rules:
+         *   locale = 'ar' → display in TND
+         *   locale = 'en'|'fr' → display in USD
+         *
+         * The listing may be stored in TND, USD, EUR, SAR, etc.
+         * We normalise everything through USD then to the display currency.
+         *
+         * @param {number|string} amount
+         * @param {string}        storedCurrency  e.g. 'TND', 'USD', 'EUR'
+         * @returns {string}  formatted price string, e.g. '$3.97' or '12.50 TND'
+         */
+        formatPrice(amount, storedCurrency) {
+            const num = parseFloat(amount);
+            if (!num || num <= 0) return '';
+
+            const src = (storedCurrency || 'TND').toUpperCase();
+            const displayAr = this.locale === 'ar';
+
+            // Step 1: normalise to USD
+            let amountInUsd;
+            if (src === 'USD') {
+                amountInUsd = num;
+            } else if (src === 'TND') {
+                amountInUsd = num * this.tndToUsd;
+            } else if (src === 'EUR') {
+                amountInUsd = num * this.eurToUsd;
+            } else if (src === 'SAR') {
+                amountInUsd = num * this.sarToUsd;
+            } else {
+                // Unknown currency — display as-is with its code
+                return num.toFixed(2) + ' ' + src;
+            }
+
+            if (displayAr) {
+                // Arabic → TND
+                const tnd = amountInUsd / this.tndToUsd;
+                return tnd.toFixed(2) + ' دينار';
+            } else {
+                // English / French → USD
+                return '$' + amountInUsd.toFixed(2);
+            }
+        },
         currentArticle: {
             id: null,
             title: {},

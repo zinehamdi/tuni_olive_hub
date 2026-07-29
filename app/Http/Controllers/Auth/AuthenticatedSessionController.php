@@ -21,16 +21,31 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     *
+     * We intentionally regenerate the session token BEFORE authentication
+     * so users arriving from Facebook/WhatsApp links (which carry a prefetch
+     * session with a stale CSRF token) get a fresh session, eliminating the
+     * "login fails on first attempt" issue.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Capture intended URL BEFORE regenerating session (it lives in the session)
+        $intended = $request->session()->get('url.intended');
+
+        // Skip the internal unread-count redirect trap
+        if ($intended && str_contains($intended, '/messages/unread-count')) {
+            $intended = null;
+        }
+
+        // Authenticate the user
         $request->authenticate();
 
+        // Regenerate session to prevent session fixation
         $request->session()->regenerate();
 
-        $intended = session()->get('url.intended');
-        if ($intended && str_contains($intended, '/messages/unread-count')) {
-            session()->forget('url.intended');
+        // Re-store intended URL after regeneration if it was valid
+        if ($intended) {
+            $request->session()->put('url.intended', $intended);
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

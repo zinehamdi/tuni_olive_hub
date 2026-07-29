@@ -1,5 +1,16 @@
 @php
-    // Get ALL Tunisian Souk Prices with Cache to eliminate page load lag
+    $locale = app()->getLocale();
+
+    // ─── Live Currency Conversion ─────────────────────────────────────────────
+    // Souk prices are stored in TND. World prices are stored in EUR.
+    // When locale = en/fr  → display in USD ($)
+    // When locale = ar     → display in TND (دينار)
+    $converter      = app(\App\Services\CurrencyConverter::class);
+    $displayCurrency = $converter->displayCurrency($locale); // 'TND' or 'USD'
+    $tndToDisplay   = ($displayCurrency === 'USD') ? $converter->getTndToUsd() : 1.0;
+    $eurToDisplay   = ($displayCurrency === 'USD') ? $converter->getEurToUsd() : 3.15; // EUR→TND fallback
+
+    // ─── Souk Data ────────────────────────────────────────────────────────────
     $allSoukPrices = \Illuminate\Support\Facades\Cache::remember('price_ticker_souk_prices', 300, function() {
         return \App\Models\SoukPrice::where('is_active', true)
             ->where('date', '>=', now()->subDays(7))
@@ -12,32 +23,47 @@
             ->get();
     });
     
-    // Get world prices with Cache
+    // Get world prices (stored in EUR)
     $worldAvgEUR = \Illuminate\Support\Facades\Cache::remember('price_ticker_world_avg', 300, function() {
         return \App\Models\WorldOlivePrice::where('date', '>=', now()->subDays(7))
             ->where('quality', 'EVOO')
             ->avg('price');
     });
-    
-    // Currency conversion
-    $tndToEur = 0.30;
-    $eurToTnd = 3.33;
-    $worldAvgTND = $worldAvgEUR ? round($worldAvgEUR * $eurToTnd, 2) : null;
-    
-    // Souk name translations
+
+    // ─── Souk name translations ───────────────────────────────────────────────
     $soukNames = [
-        'Sfax' => 'صفاقس',
-        'Tunis' => 'تونس',
-        'Sousse' => 'سوسة',
-        'Monastir' => 'المنستير',
-        'Mahdia' => 'المهدية',
-        'Kairouan' => 'القيروان',
-        'Medenine' => 'مدنين',
-        'Zarzis' => 'جرجيس',
-        'Djerba' => 'جربة',
-        'Gabes' => 'قابس',
+        'Sfax'     => 'صفاقس',   'Tunis'    => 'تونس',
+        'Sousse'   => 'سوسة',    'Monastir' => 'المنستير',
+        'Mahdia'   => 'المهدية', 'Kairouan' => 'القيروان',
+        'Medenine' => 'مدنين',   'Zarzis'   => 'جرجيس',
+        'Djerba'   => 'جربة',    'Gabes'    => 'قابس',
     ];
+
+    /**
+     * Format a souk price (stored in TND) into the display currency.
+     * Souk prices are always stored in TND.
+     */
+    $formatSoukPrice = function(float $tndAmount) use ($displayCurrency, $tndToDisplay) {
+        $converted = round($tndAmount * $tndToDisplay, 2);
+        if ($displayCurrency === 'USD') {
+            return '$' . number_format($converted, 2);
+        }
+        return number_format($converted, 2) . ' TND';
+    };
+
+    /**
+     * Format a world price (stored in EUR) into the display currency.
+     */
+    $formatWorldPrice = function(?float $eurAmount) use ($displayCurrency, $eurToDisplay) {
+        if (!$eurAmount) return null;
+        $converted = round($eurAmount * $eurToDisplay, 2);
+        if ($displayCurrency === 'USD') {
+            return '$' . number_format($converted, 2) . '/kg';
+        }
+        return number_format($converted, 2) . ' TND/kg';
+    };
 @endphp
+
 
 <style>
     /* Horizontal Scrolling Ticker (News Channel Style - All Screens) */
@@ -114,7 +140,7 @@
                             @endif
                         </span>
                         <span class="text-sm font-black text-gray-950">
-                            {{ app()->getLocale() === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
+                            {{ $locale === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
                         </span>
                         <span class="text-xs font-bold text-gray-800">
                             @if($price->product_type === 'olive')
@@ -124,7 +150,7 @@
                             @endif
                         </span>
                         <span class="bg-white/40 text-gray-950 px-2.5 py-1 rounded-lg font-black text-sm whitespace-nowrap shadow-sm">
-                            {{ number_format($price->avg_price, 2) }} TND
+                            {{ $formatSoukPrice((float)$price->avg_price) }}
                         </span>
                     </div>
                     
@@ -132,14 +158,14 @@
                 @endforeach
                 
                 <!-- World Market -->
-                @if($worldAvgEUR)
+@php $worldFormatted = $formatWorldPrice($worldAvgEUR ? (float)$worldAvgEUR : null); @endphp
+                @if($worldFormatted)
                     <div class="ticker-item">
                         <span class="text-lg">🌍</span>
                         <span class="text-sm font-black text-gray-950">{{ __('World Market') }}</span>
                         <span class="bg-white/40 text-gray-950 px-2.5 py-1 rounded-lg font-black text-sm whitespace-nowrap shadow-sm">
-                            {{ number_format($worldAvgEUR, 2) }} EUR/kg
+                            {{ $worldFormatted }}
                         </span>
-                        <span class="text-xs font-bold text-gray-800">({{ number_format($worldAvgTND, 2) }} TND)</span>
                     </div>
                     
                     <div class="ticker-separator">●</div>
@@ -163,7 +189,7 @@
                             @endif
                         </span>
                         <span class="text-xs font-bold text-gray-900">
-                            {{ app()->getLocale() === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
+                            {{ $locale === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
                         </span>
                         <span class="text-xs opacity-75 text-gray-800">
                             @if($price->product_type === 'olive')
@@ -173,21 +199,20 @@
                             @endif
                         </span>
                         <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
-                            {{ number_format($price->avg_price, 2) }} TND
+                            {{ $formatSoukPrice((float)$price->avg_price) }}
                         </span>
                     </div>
                     
                     <div class="ticker-separator">|</div>
                 @endforeach
                 
-                @if($worldAvgEUR)
+@if($worldFormatted)
                     <div class="ticker-item">
                         <span class="text-base">🌍</span>
                         <span class="text-xs font-bold text-gray-900">{{ __('World Market') }}</span>
                         <span class="bg-white/30 text-gray-900 px-2 py-0.5 rounded font-bold text-xs whitespace-nowrap backdrop-blur-sm">
-                            {{ number_format($worldAvgEUR, 2) }} EUR/kg
+                            {{ $worldFormatted }}
                         </span>
-                        <span class="text-xs opacity-75 text-gray-800">({{ number_format($worldAvgTND, 2) }} TND)</span>
                     </div>
                 @endif
             </div>
