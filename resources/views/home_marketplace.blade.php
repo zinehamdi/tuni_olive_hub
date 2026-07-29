@@ -802,7 +802,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
-                                        <span x-text="listing.seller?.location || listing.seller?.farm_location || ''"></span>
+                                        <span x-text="translateLocation(listing.seller?.location || listing.seller?.farm_location || '')"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -911,7 +911,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             </svg>
-                                            <span x-text="listing.seller?.location || listing.seller?.farm_location || ''"></span>
+                                            <span x-text="translateLocation(listing.seller?.location || listing.seller?.farm_location || '')"></span>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1230,40 +1230,266 @@ document.addEventListener('alpine:init', () => {
             'Zalmati Olives': '{{ __("Zalmati Olives") }}',
             'Fresh Olives': '{{ __("Fresh Olives") }}',
             'Table Olives': '{{ __("Table Olives") }}',
-            // Lowercase keys for direct matches from API/data
+            // Varieties
             'chemlali': '{{ __("chemlali") }}',
-            'gerboui': '{{ __("gerboui") }}',
+            'gerboui':  '{{ __("gerboui") }}',
+            'chetoui':  '{{ __("chetoui") }}',
+            'meski':    '{{ __("meski") }}',
+            'zalmati':  '{{ __("zalmati") }}',
+            'koroneiki':'{{ __("koroneiki") }}',
+            'jemlati':  '{{ __("jemlati") }}',
+            'barouni':  '{{ __("barouni") }}',
+            // Quality grades (Arabic keys)
             'بكر ممتاز (evoo)': '{{ app()->getLocale() === "ar" ? "بكر ممتاز (EVOO)" : (app()->getLocale() === "fr" ? "Vierge Extra (EVOO)" : "Extra Virgin (EVOO)") }}',
             'بكر (virgin)': '{{ app()->getLocale() === "ar" ? "بكر (Virgin)" : (app()->getLocale() === "fr" ? "Vierge" : "Virgin") }}',
-            'بكر عادي (ordinary virgin)': '{{ app()->getLocale() === "ar" ? "بكر عادي (Ordinary Virgin)" : (app()->getLocale() === "fr" ? "Vierge Courante" : "Ordinary Virgin") }}',
+            'بكر عادي (ordinary virgin)': '{{ app()->getLocale() === "ar" ? "بكر عادي" : (app()->getLocale() === "fr" ? "Vierge Courante" : "Ordinary Virgin") }}',
             'وقاد (lampante)': '{{ app()->getLocale() === "ar" ? "وقاد (Lampante)" : "Lampante" }}',
             'بيولوجي (organic)': '{{ app()->getLocale() === "ar" ? "بيولوجي (Organic)" : (app()->getLocale() === "fr" ? "Biologique (Bio)" : "Organic") }}',
+            // Packaging
             'صبّة (vrac)': '{{ app()->getLocale() === "ar" ? "صبّة (Vrac)" : (app()->getLocale() === "fr" ? "En Vrac" : "Bulk (Vrac)") }}',
             'معلّب (packaged)': '{{ app()->getLocale() === "ar" ? "معلّب (Packaged)" : (app()->getLocale() === "fr" ? "Emballé" : "Packaged") }}',
             'جملة (gros)': '{{ app()->getLocale() === "ar" ? "جملة (Gros)" : (app()->getLocale() === "fr" ? "En Gros" : "Wholesale") }}',
             'تفصيل (détail)': '{{ app()->getLocale() === "ar" ? "تفصيل (Détail)" : (app()->getLocale() === "fr" ? "Détail" : "Retail") }}',
-            'chetoui': '{{ __("chetoui") }}',
-            'meski': '{{ __("meski") }}',
-            'zalmati': '{{ __("zalmati") }}',
-            'koroneiki': '{{ __("koroneiki") }}',
-            'jemlati': '{{ __("jemlati") }}',
-            'barouni': '{{ __("barouni") }}',
+            'جملة / صب (vrac)': '{{ app()->getLocale() === "ar" ? "جملة / صبّة" : (app()->getLocale() === "fr" ? "Gros / En Vrac" : "Wholesale / Bulk") }}',
+            'جملة / صب': '{{ app()->getLocale() === "ar" ? "جملة / صبّة" : (app()->getLocale() === "fr" ? "Gros / En Vrac" : "Wholesale / Bulk") }}',
+            // Misc UI
             "This website is secure and does not have redirected links that bother users.": "{{ __('This website is secure and does not have redirected links that bother users.') }}",
             "ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.": "{{ __('ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.') }}",
             "Use the search bar and location filters to find the best quality oil near you.": "{{ __('Use the search bar and location filters to find the best quality oil near you.') }}",
             "Our vision is to digitize the olive oil sector and ensure fair trade for every producer.": "{{ __('Our vision is to digitize the olive oil sector and ensure fair trade for every producer.') }}"
         },
 
+        /**
+         * Comprehensive Arabic ↔ Latin dictionary for Tunisian locations.
+         * Keys are Arabic, values are [en, fr] pair.
+         * Used by translateLocation() and translate() for substring replacement.
+         *
+         * Covers all 24 governorates + ~120 major delegations.
+         */
+        locationDict: {
+            // ── Governorates ──────────────────────────────────────────────────
+            'تونس':        ['Tunis',        'Tunis'],
+            'أريانة':      ['Ariana',       'Ariana'],
+            'بن عروس':     ['Ben Arous',    'Ben Arous'],
+            'منوبة':       ['Manouba',      'Manouba'],
+            'نابل':        ['Nabeul',       'Nabeul'],
+            'زغوان':       ['Zaghouan',     'Zaghouan'],
+            'بنزرت':       ['Bizerte',      'Bizerte'],
+            'باجة':        ['Béja',         'Béja'],
+            'جندوبة':      ['Jendouba',     'Jendouba'],
+            'الكاف':       ['Le Kef',       'Le Kef'],
+            'سليانة':      ['Siliana',      'Siliana'],
+            'سوسة':        ['Sousse',       'Sousse'],
+            'المنستير':    ['Monastir',     'Monastir'],
+            'المهدية':     ['Mahdia',       'Mahdia'],
+            'صفاقس':       ['Sfax',         'Sfax'],
+            'القيروان':    ['Kairouan',     'Kairouan'],
+            'القصرين':     ['Kasserine',    'Kasserine'],
+            'سيدي بوزيد':  ['Sidi Bouzid',  'Sidi Bouzid'],
+            'قابس':        ['Gabes',        'Gabès'],
+            'مدنين':       ['Medenine',     'Médenine'],
+            'تطاوين':      ['Tataouine',    'Tataouine'],
+            'قفصة':        ['Gafsa',        'Gafsa'],
+            'توزر':        ['Tozeur',       'Tozeur'],
+            'قبلي':        ['Kebili',       'Kébili'],
+            // ── Major Delegations / Cities ────────────────────────────────────
+            'العاصمة':     ['Tunis City',   'Ville de Tunis'],
+            'باب بحر':     ['Bab Bhar',     'Bab Bhar'],
+            'باب سويقة':   ['Bab Souika',   'Bab Souika'],
+            'المرسى':      ['La Marsa',     'La Marsa'],
+            'سيدي بوسعيد': ['Sidi Bou Said','Sidi Bou Saïd'],
+            'قرطاج':       ['Carthage',     'Carthage'],
+            'حمام الشط':   ['Hammam Lif',   'Hammam Lif'],
+            'رادس':        ['Rades',        'Radès'],
+            'مقرين':       ['Mourouj',      'Mourouj'],
+            'حمام الأنف':  ['Hammam Lif',   'Hammam Lif'],
+            'الزهراء':     ['Zahra',        'Zahra'],
+            'برج العامري': ['Borj El Amri', 'Borj El Amri'],
+            'دوار هيشر':   ['Douar Hicher', 'Douar Hicher'],
+            'الوردية':     ['El Ouardia',   'El Ouardia'],
+            'حمام الأنف':  ['Hammam-Lif',   'Hammam-Lif'],
+            'الكرم':       ['El Kram',      'El Kram'],
+            'الحمامات':    ['Hammamet',     'Hammamet'],
+            'نابل':        ['Nabeul',       'Nabeul'],
+            'قربة':        ['Korba',        'Korba'],
+            'كرمبالية':    ['Kelibia',      'Kélibia'],
+            'منزل تميم':   ['Menzel Temime','Menzel Temime'],
+            'منزل بوزلفة': ['Menzel Bou Zelfa','Menzel Bou Zelfa'],
+            'بئر بورقبة':  ['Bir Bou Rekba','Bir Bou Rekba'],
+            'سوسة المدينة':['Sousse City',  'Sousse Ville'],
+            'القلعة الكبرى':['Kalaa Kebira','Kalaa Kebira'],
+            'القلعة الصغرى':['Kalaa Sghira','Kalaa Sghira'],
+            'أكودة':       ['Akouda',       'Akouda'],
+            'هرقلة':       ['Hergla',       'Hergla'],
+            'النفيضة':     ['Enfidha',      'Enfidha'],
+            'زاوية سوسة':  ['Zaouia Sousse','Zaouia Sousse'],
+            'سيدي الهاني': ['Sidi El Heni', 'Sidi El Héni'],
+            'المسعدين':    ['Msaken',       'M\'saken'],
+            'القنطاوي':    ['Kantaoui',     'Kantaoui'],
+            'المنستير مدينة':['Monastir City','Monastir Ville'],
+            'قصر هلال':    ['Ksar Hellal',  'Ksar Hellal'],
+            'طبلبة':       ['Teboulba',     'Téboulba'],
+            'جمال':        ['Jemmal',       'Jemmal'],
+            'المكنين':     ['Moknine',      'Moknine'],
+            'بنبلة':       ['Bembla',       'Bembla'],
+            'خنيس':        ['Khniss',       'Khniss'],
+            'ساقية الداير':['Saket El Daïer','Saket El Daïer'],
+            'بو حجر':      ['Bouhjar',      'Bouhjar'],
+            'المهدية مدينة':['Mahdia City', 'Mahdia Ville'],
+            'قصور الساف':  ['Ksour Essef',  'Ksour Essef'],
+            'الجم':        ['El Jem',       'El Djem'],
+            'الشابة':      ['Chebba',       'Chebba'],
+            'بومرداس':     ['Bou Merdès',   'Bou Merdès'],
+            'سيدي علوان':  ['Sidi Alouane', 'Sidi Alouane'],
+            'صفاقس المدينة':['Sfax City',   'Sfax Ville'],
+            'صفاقس الجنوب':['Sfax South',   'Sfax Sud'],
+            'الساحل':      ['Sahel',        'Sahel'],
+            'العين':       ['El Ain',       'El Ain'],
+            'جبنيانة':     ['Djebeniana',   'Djebeniana'],
+            'الحنشة':      ['El Hencha',    'El Hencha'],
+            'منزل شاكر':   ['Menzel Chaker','Menzel Chaker'],
+            'الصخيرة':     ['Skhira',       'Skhira'],
+            'محرس':        ['Mahres',       'Mahres'],
+            'قرقنة':       ['Kerkennah',    'Kerkennah'],
+            'العلا':       ['Al-Ala',       'El Ala'],
+            'حفوز':        ['Haffouz',      'Haffouz'],
+            'الشبيكة':     ['Chebia',       'Chebia'],
+            'السبيخة':     ['Sbikha',       'Sbikha'],
+            'نصر الله':    ['Nasrallah',    'Nasrallah'],
+            'بوحجلة':      ['Bouhajla',     'Bouhajla'],
+            'المناصف':     ['Mnassef',      'M\'nassef'],
+            'الوسلاتية':   ['Oueslatia',    'Oueslatia'],
+            'كرواة':       ['Krouaa',       'Krouaa'],
+            'الشريعة':     ['Cheraia',      'Chéraia'],
+            'العيون':      ['El Ayoun',     'El Ayoun'],
+            'حيدرة':       ['Haidra',       'Haïdra'],
+            'قصر الزيت':   ['Ksour Zbib',   'Ksour Zbib'],
+            'جلمة':        ['Jelma',        'Jelma'],
+            'مكثر':        ['Makthar',      'Makthar'],
+            'سليانة مدينة':['Siliana City', 'Siliana Ville'],
+            'روحية':       ['Rohia',        'Rohia'],
+            'سيدي بورويس': ['Sidi Bou Rouis','Sidi Bou Rouis'],
+            'قعفور':       ['Gaafour',      'Gaâfour'],
+            'الكريب':      ['El Krib',      'El Krib'],
+            'باجة مدينة':  ['Beja City',    'Béja Ville'],
+            'نفزة':        ['Nefza',        'Nefza'],
+            'تبرسق':       ['Teboursouk',   'Téboursouk'],
+            'قبة الكوش':   ['Testour',      'Testour'],
+            'تستور':       ['Testour',      'Testour'],
+            'عين الدراهم': ['Ain Draham',   'Aïn Draham'],
+            'جندوبة مدينة':['Jendouba City','Jendouba Ville'],
+            'بوسالم':      ['Bou Salem',    'Bou Salem'],
+            'طبرقة':       ['Tabarka',      'Tabarka'],
+            'الكاف مدينة': ['Le Kef City',  'Le Kef Ville'],
+            'الدهماني':    ['Dahmani',      'Dahmani'],
+            'نبر':         ['Nebeur',       'Nebeur'],
+            'الجريصة':     ['Jerissa',      'Jérissa'],
+            'القصرين مدينة':['Kasserine City','Kasserine Ville'],
+            'سبيطلة':      ['Sbeitla',      'Sbeïtla'],
+            'فريانة':      ['Feriana',      'Fériana'],
+            'تالة':        ['Thala',        'Thala'],
+            'حيدرة':       ['Haidra',       'Haïdra'],
+            'أم العرائس':  ['Oum El Arayess','Oum El Arayès'],
+            'سيدي بوزيد مدينة':['Sidi Bouzid City','Sidi Bouzid Ville'],
+            'بئر الحفي':   ['Bir El Hafay', 'Bir El Hafey'],
+            'سيدي علي بن عون':['Sidi Ali Ben Aoun','Sidi Ali Ben Aoun'],
+            'المزونة':     ['Mezzouna',     'Mezzouna'],
+            'الرقاب':      ['Regueb',       'Regueb'],
+            'قابس مدينة':  ['Gabès City',   'Gabès Ville'],
+            'مطماطة':      ['Matmata',      'Matmata'],
+            'مدنين مدينة': ['Médenine City','Médenine Ville'],
+            'جرجيس':       ['Zarzis',       'Zarzis'],
+            'جربة':        ['Djerba',       'Djerba'],
+            'جربة الحومة': ['Djerba Houmt Souk','Djerba Houmt Souk'],
+            'بن قردان':    ['Ben Guerdane', 'Ben Guerdane'],
+            'تطاوين مدينة':['Tataouine City','Tataouine Ville'],
+            'غمراسن':      ['Ghomrassen',   'Ghomrassen'],
+            'بني خداش':    ['Beni Khedache','Beni Khédache'],
+            'الصمار':      ['Smar',         'Smar'],
+            'قفصة مدينة':  ['Gafsa City',   'Gafsa Ville'],
+            'المتلوي':      ['Metlaoui',     'Métlaoui'],
+            'الرديف':      ['Redeyef',      'Redeyef'],
+            'أم العرائس':  ['Oum El Arayess','Oum El Arayès'],
+            'ذهيبة':       ['Dhibat',       'Dhiba'],
+            'توزر مدينة':  ['Tozeur City',  'Tozeur Ville'],
+            'نفطة':        ['Nefta',        'Nefta'],
+            'قبلي مدينة':  ['Kebili City',  'Kébili Ville'],
+            'دوز':         ['Douz',         'Douz'],
+            'برج الخضراء': ['Borj El Khadra','Borj El Khadra'],
+        },
+
+        /**
+         * Detect if a string contains Arabic characters.
+         */
+        hasArabic(text) {
+            return /[\u0600-\u06FF\u0750-\u077F]/.test(text);
+        },
+
+        /**
+         * Translate a location/address string to the display language.
+         *
+         * Works on:
+         *   - Pure Arabic strings:   "القيروان" → "Kairouan"
+         *   - Mixed strings:         "العلا القيروان" → "Al-Ala, Kairouan"
+         *   - Already Latin strings: returned unchanged
+         *
+         * For Arabic locale: returns the original Arabic text as-is.
+         */
+        translateLocation(text) {
+            if (!text) return '';
+            const isAr = this.locale === 'ar';
+            const isFr = this.locale === 'fr';
+
+            // Arabic locale — show original Arabic
+            if (isAr) return text;
+
+            // No Arabic content — return as-is (already Latin)
+            if (!this.hasArabic(text)) return text;
+
+            // Try a full-string match first (most common: single governorate)
+            const fullKey = text.trim();
+            if (this.locationDict[fullKey]) {
+                return isFr ? this.locationDict[fullKey][1] : this.locationDict[fullKey][0];
+            }
+
+            // Multi-word: split on spaces and commas, translate each Arabic token
+            let result = text;
+            // Sort keys by length descending so longer phrases match before shorter ones
+            const sortedKeys = Object.keys(this.locationDict).sort((a, b) => b.length - a.length);
+            for (const key of sortedKeys) {
+                if (result.includes(key)) {
+                    const replacement = isFr ? this.locationDict[key][1] : this.locationDict[key][0];
+                    result = result.split(key).join(replacement);
+                }
+            }
+
+            // If result still has Arabic (unknown terms), leave them as-is
+            return result.trim();
+        },
+
+        /**
+         * Enhanced translate() — handles both the existing key-value lookup
+         * AND Arabic substring replacement for mixed-language text.
+         */
         translate(text) {
             if (!text) return '';
-            const lower = text.toLowerCase();
-            return this.translations[text] || this.translations[lower] || text;
+            const lower = text.toLowerCase().trim();
+
+            // 1. Exact match in translations dict
+            if (this.translations[text]) return this.translations[text];
+            if (this.translations[lower]) return this.translations[lower];
+
+            // 2. If no Arabic, return as-is
+            if (!this.hasArabic(text)) return text;
+
+            // 3. Arabic location token replacement (for mixed strings like "from القيروان")
+            return this.translateLocation(text);
         },
 
         getEnhancedTitle(listing) {
-            const isAr = '{{ app()->getLocale() }}' === 'ar';
-            const isFr = '{{ app()->getLocale() }}' === 'fr';
-            
+            const isAr = this.locale === 'ar';
+            const isFr = this.locale === 'fr';
+
             let typeLabel = '';
             if (listing.product?.type === 'olive') {
                 typeLabel = isAr ? 'زيتون' : (isFr ? 'Olives' : 'Olives');
@@ -1273,19 +1499,27 @@ document.addEventListener('alpine:init', () => {
 
             const variety = this.translate(listing.product?.variety) || '';
             const quality = listing.product?.quality ? ' ' + this.translate(listing.product.quality) : '';
-            
+
             let organic = '';
             if (listing.product?.is_organic && listing.product?.quality !== 'بيولوجي (Organic)') {
                 organic = isAr ? ' عضوي' : (isFr ? ' Biologique' : ' Organic');
             }
-            
+
             let city = '';
             if (listing.seller?.addresses?.length > 0 && listing.seller.addresses[0]?.governorate) {
-                city = (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + (listing.seller.addresses[0]?.governorate || '');
+                const rawCity = listing.seller.addresses[0]?.governorate || '';
+                const translatedCity = this.translateLocation(rawCity);
+                city = (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + translatedCity;
+            } else if (listing.seller?.location || listing.seller?.farm_location) {
+                // Fallback to seller.location if no address object
+                const rawCity = listing.seller?.location || listing.seller?.farm_location || '';
+                const translatedCity = this.translateLocation(rawCity);
+                city = rawCity ? (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + translatedCity : '';
             }
-            
-            return `${typeLabel} ${variety}${quality}${organic}${city}`;
+
+            return `${typeLabel} ${variety}${quality}${organic}${city}`.trim();
         },
+
 
         init() {
             // Always show filters on desktop (>= 1024px)
