@@ -360,6 +360,35 @@
                 {{ app()->getLocale() === 'ar' ? 'الإعدادات' : __('Settings') }}
             </a>
         </nav>
+
+        {{-- ── Recent Activity (under Navigation) ─────────────────────────────── --}}
+        <div class="mx-3 mb-3 bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden">
+            <div class="flex items-center gap-2 px-4 py-2.5 bg-gray-800">
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <h3 class="text-xs font-bold text-white">{{ __('Activity') }}</h3>
+            </div>
+            <div class="p-3">
+                @if(Auth::user()->notifications->count() > 0)
+                <div class="space-y-2">
+                    @foreach(Auth::user()->notifications()->latest()->limit(4)->get() as $notif)
+                    <a href="{{ $notif->data['url'] ?? (Auth::user()->role === 'admin' ? route('admin.marketing.index') : route('dashboard')) }}"
+                       class="flex gap-2.5 pb-2 border-b border-gray-100 last:border-0 last:pb-0 hover:bg-white rounded-xl px-1 py-1 transition group cursor-pointer block">
+                        <div class="w-7 h-7 rounded-full bg-[#6A8F3B]/10 flex items-center justify-center flex-shrink-0 text-xs group-hover:bg-[#6A8F3B]/20 transition">
+                            {{ $notif->data['type'] === 'appointment' ? '📅' : ($notif->data['type'] === 'message' ? '💬' : '🔔') }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[11px] text-gray-800 leading-relaxed line-clamp-2">{{ $notif->data['body'] ?? '' }}</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">{{ $notif->created_at->diffForHumans() }}</p>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-center text-gray-400 text-[11px] py-3">{{ __('No recent activity') }}</p>
+                @endif
+            </div>
+        </div>
+
         <div class="p-4 border-t border-gray-100">
             <button @click="openEdit('more')" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl hover:shadow-lg transition text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
@@ -1462,27 +1491,6 @@
 
 
 
-        <!-- Notifications -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="flex items-center gap-2 px-4 py-3 bg-gray-900">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                <h3 class="text-sm font-bold text-white">{{ __('Activity') }}</h3>
-            </div>
-            <div class="p-4">
-                @if(Auth::user()->notifications->count() > 0)
-                <div class="space-y-3">
-                    @foreach(Auth::user()->notifications()->latest()->limit(4)->get() as $notification)
-                    <div class="flex gap-3 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
-                        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 text-sm">🔔</div>
-                        <div class="min-w-0"><p class="text-xs text-gray-900 leading-relaxed">{{ $notification->data['body'] ?? '' }}</p><p class="text-[10px] text-gray-400 mt-0.5">{{ $notification->created_at->diffForHumans() }}</p></div>
-                    </div>
-                    @endforeach
-                </div>
-                @else
-                <p class="text-center text-gray-400 text-xs py-4">{{ __('No recent activity') }}</p>
-                @endif
-            </div>
-        </div>
 
         <!-- Tip -->
         <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4">

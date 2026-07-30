@@ -379,7 +379,7 @@
                         <!-- Notification Bell -->
                         @auth
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition relative">
+                            <button @click="open = !open; markNotificationsAsRead()" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition relative">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
@@ -399,7 +399,15 @@
                                 </div>
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-for="n in notifications" :key="n.id">
-                                        <a :href="(n.data.type === 'transport_deal' && n.data.load_id) ? '/mobile/trip?id=' + n.data.load_id : (n.data.url ? n.data.url : (n.data.type === 'message' ? '/messages' : (n.data.type === 'appointment' ? '{{ route('admin.marketing.index') }}' : '/dashboard')))" 
+                                        <a :href="
+                                                (n.data.type === 'transport_deal' && n.data.load_id)
+                                                    ? '/mobile/trip?id=' + n.data.load_id
+                                                : (n.data.type === 'message')
+                                                    ? '/messages'
+                                                : (n.data.type === 'appointment' || (n.data.url === '/dashboard' && {{ Auth::user()->role === 'admin' ? 'true' : 'false' }}))
+                                                    ? '{{ route('admin.marketing.index') }}'
+                                                : (n.data.url || '/dashboard')
+                                            " 
                                            @click="markOneAsRead(n.id)"
                                            :class="!n.read_at ? 'bg-green-100 hover:bg-green-200/60 font-bold {{ app()->getLocale() === "ar" ? "border-r-4 border-r-[#6A8F3B]" : "border-l-4 border-l-[#6A8F3B]" }}' : 'bg-white hover:bg-gray-50 {{ app()->getLocale() === "ar" ? "border-r-4 border-r-transparent" : "border-l-4 border-l-transparent" }}'"
                                            class="block px-4 py-3 transition border-b border-gray-50 last:border-0 relative group">
