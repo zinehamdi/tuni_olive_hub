@@ -730,18 +730,28 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </svg>
                     </button>
 
-                    <!-- Submit Button (Step 9 only) -->
                     <button type="submit" x-show="currentStep === 9" :disabled="isSubmitting"
-                        :class="isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-2xl hover:scale-105'"
-                        class="px-10 py-4 bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] text-white rounded-xl transition font-bold text-xl flex items-center transform">
-                        <svg x-show="!isSubmitting" class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        <svg x-show="isSubmitting" class="animate-spin h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span x-text="isSubmitting ? 'جاري النشر...' : 'نشر العرض 🚀'"></span>
+                        :class="isSubmitting ? 'opacity-75 cursor-not-allowed' : 'hover:shadow-2xl hover:scale-105'"
+                        class="px-10 py-4 bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] text-white rounded-xl transition font-bold text-xl flex flex-col items-center transform min-w-[200px]">
+                        <span class="flex items-center gap-2">
+                            <svg x-show="!isSubmitting" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <svg x-show="isSubmitting" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span x-text="
+                                !isSubmitting ? 'نشر العرض 🚀' :
+                                uploadPhase === 'compressing' ? 'ضغط الصور...' :
+                                uploadPhase === 'uploading' ? 'رفع (' + uploadProgress + '%)' :
+                                'جاري المعالجة...'
+                            "></span>
+                        </span>
+                        <!-- Real upload progress bar -->
+                        <div x-show="isSubmitting && uploadPhase === 'uploading'" class="w-full mt-2 bg-white/20 rounded-full h-1.5 overflow-hidden">
+                            <div class="h-full bg-white rounded-full transition-all duration-300" :style="'width:' + uploadProgress + '%'"></div>
+                        </div>
                     </button>
                 </div>
             </form>
@@ -755,6 +765,8 @@ document.addEventListener('alpine:init', () => {
         currentStep: 1,
         totalSteps: 8,
         isSubmitting: false,
+        uploadProgress: 0,          // 0-100 real upload percentage
+        uploadPhase: '',             // 'compressing' | 'uploading' | 'processing'
         isAnalyzingOlive: false,
         isAnalyzingVariety: false,
         errorMessage: '',
@@ -1144,52 +1156,100 @@ document.addEventListener('alpine:init', () => {
         
         handleSubmit(event) {
             event.preventDefault();
-            
-            console.log('🚀 Form submission started');
-            console.log('📝 Current step:', this.currentStep);
-            console.log('📦 Form data:', this.formData);
-            
+
             // Clear any previous errors
             this.errorMessage = '';
-            
-            // Validate the current step
-            console.log('✅ Validating step', this.currentStep);
+
+            // Validate current step
             if (!this.validateStep()) {
-                console.error('❌ Validation failed for step', this.currentStep);
                 this.errorMessage = 'الرجاء التأكد من ملء جميع الحقول المطلوبة';
                 return;
             }
-            
-            console.log('✅ Validation passed!');
-            
-            // Validate required fields one more time
+
             if (!this.formData.variety) {
-                console.error('❌ Variety is missing');
                 this.errorMessage = 'الرجاء اختيار الصنف';
                 return;
             }
-            
-            if (!this.formData.price) {
-                console.error('❌ Price is missing');
+
+            if (!this.formData.price && !this.formData.price_on_request) {
                 this.errorMessage = 'الرجاء إدخال السعر';
                 return;
             }
-            
-            console.log('✅ All required fields are present');
-            console.log('📤 Submitting form to server...');
-            
-            // Show loading state
+
+            // Start submission flow
             this.isSubmitting = true;
-            
-            // Submit the form
-            try {
-                event.target.submit();
-                console.log('✅ Form submitted successfully!');
-            } catch (error) {
-                console.error('❌ Form submission error:', error);
-                this.errorMessage = 'حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.';
-                this.isSubmitting = false;
-            }
+            this.uploadProgress = 0;
+            this.uploadPhase = 'compressing';
+
+            const form = event.target;
+            const action = form.action;
+            const csrfToken = form.querySelector('[name=_token]').value;
+
+            // Build FormData from all hidden inputs first
+            const fd = new FormData(form);
+            // Remove file input contents (we'll add compressed versions)
+            fd.delete('images[]');
+
+            // Compress all images client-side, then upload via XHR
+            const images = this.formData.images || [];
+
+            Promise.all(images.map(file => this.compressImage(file, 1200)))
+                .then(compressedImages => {
+                    compressedImages.forEach(img => fd.append('images[]', img));
+                    this.uploadPhase = 'uploading';
+                    return this.uploadWithProgress(fd, action, csrfToken);
+                })
+                .then(finalUrl => {
+                    this.uploadPhase = 'processing';
+                    // Navigate to the redirect target
+                    window.location.href = finalUrl || '{{ route("home") }}';
+                })
+                .catch(err => {
+                    console.error('Upload failed:', err);
+                    this.errorMessage = err.message || 'حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.';
+                    this.isSubmitting = false;
+                    this.uploadProgress = 0;
+                    this.uploadPhase = '';
+                });
+        },
+
+        uploadWithProgress(formData, url, csrfToken) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                xhr.timeout = 180000; // 3 minutes
+
+                // Real upload progress
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        this.uploadProgress = Math.min(99, Math.round((e.loaded / e.total) * 100));
+                    }
+                };
+
+                xhr.onload = () => {
+                    this.uploadProgress = 100;
+                    // XHR follows redirects transparently; responseURL = final destination
+                    if (xhr.status >= 200 && xhr.status < 400) {
+                        resolve(xhr.responseURL);
+                    } else {
+                        // Try to extract validation errors from response
+                        let msg = 'فشل الإرسال. الرجاء المحاولة مرة أخرى.';
+                        try {
+                            const json = JSON.parse(xhr.responseText);
+                            if (json.message) msg = json.message;
+                            if (json.errors) msg = Object.values(json.errors).flat().join(' | ');
+                        } catch (e) {}
+                        reject(new Error(msg));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error('خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.'));
+                xhr.ontimeout = () => reject(new Error('انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.'));
+
+                xhr.send(formData);
+            });
         }
     }));
 });

@@ -193,18 +193,58 @@ class ListingController extends Controller
             // Create the listing
             $listing = Listing::create($validated);
             
-            // Handle image uploads with optimization
+            // Handle image uploads: store raw immediately for fast response,
+            // then optimize to WebP in background after redirect
             if ($request->hasFile('images')) {
-                $imageOptimizer = new ImageOptimizationService();
-                $imagePaths = [];
+                $rawPaths = [];
                 foreach ($request->file('images') as $image) {
-                    // Optimize and resize image to WebP format (max 1200px, 85% quality)
-                    $path = $imageOptimizer->optimizeListingImage($image, (string)$listing->id);
-                    $imagePaths[] = $path;
+                    // Store raw (fast: just moves temp file to disk)
+                    $rawPath = $image->store('listings/' . $listing->id . '/raw', 'public');
+                    $rawPaths[] = $rawPath;
                 }
-                // Save optimized image paths to the listing
-                $listing->update(['media' => $imagePaths]);
-                Log::info('Images Optimized and Saved:', ['paths' => $imagePaths, 'listing_id' => $listing->id]);
+                // Save raw paths immediately so listing is viewable right away
+                $listing->update(['media' => $rawPaths]);
+
+                // Optimize to WebP after response is sent (non-blocking)
+                $listingId = $listing->id;
+                dispatch(function () use ($rawPaths, $listingId) {
+                    try {
+                        $imageOptimizer = new \App\Services\ImageOptimizationService();
+                        $optimizedPaths = [];
+                        foreach ($rawPaths as $rawPath) {
+                            $fullRaw = storage_path('app/public/' . $rawPath);
+                            if (!file_exists($fullRaw)) continue;
+                            // Create a fake UploadedFile from the stored raw file
+                            $file = new \Illuminate\Http\UploadedFile(
+                                $fullRaw,
+                                basename($rawPath),
+                                mime_content_type($fullRaw),
+                                null,
+                                true // test mode
+                            );
+                            $optimized = $imageOptimizer->optimizeListingImage($file, (string)$listingId);
+                            $optimizedPaths[] = $optimized;
+                            // Delete raw file after optimization
+                            @unlink($fullRaw);
+                        }
+                        // Update listing with optimized WebP paths
+                        \App\Models\Listing::find($listingId)?->update(['media' => $optimizedPaths]);
+                        \Illuminate\Support\Facades\Log::info('✅ Images optimized afterResponse', [
+                            'listing_id' => $listingId,
+                            'count' => count($optimizedPaths)
+                        ]);
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::error('Image optimization failed', [
+                            'listing_id' => $listingId,
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                })->afterResponse();
+
+                Log::info('Images stored raw, optimization queued afterResponse', [
+                    'listing_id' => $listing->id,
+                    'count' => count($rawPaths)
+                ]);
             }
             
             Log::info('✅ Listing Created Successfully:', [

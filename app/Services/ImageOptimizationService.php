@@ -112,6 +112,12 @@ class ImageOptimizationService
         
         $image->toWebp(80)->save($path);
 
+        // ── Free memory immediately ─────────────────────────────────────────────
+        // Intervention Image keeps the decoded bitmap in RAM. For large HEIC/RAW
+        // files this can be 30-50MB per image. Unset + GC prevents OOM on batches.
+        unset($image);
+        gc_collect_cycles();
+
         return 'listings/' . $listingId . '/' . $filename;
     }
     
