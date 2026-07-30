@@ -292,6 +292,9 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
 });
 
+// Dynamic OG Image for listings
+Route::get('/og-image/listing/{id}', [\App\Http\Controllers\OgImageController::class, 'generate'])->name('og.listing.image');
+
 require __DIR__.'/auth.php';
 
 \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['web']]);

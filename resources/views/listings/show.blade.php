@@ -9,8 +9,7 @@
     $shareTitle = trim($variety . ' - ' . $priceText . ' (' . $city . ') | ZinToop');
     $shareDesc = trim('عرض ' . $variety . ' في ' . $city . ' على منصة الزين لزيت الزيتون التونسي. تواصل مباشرة مع المنتج بدون وسطاء.');
     
-    $rawImage = !empty($listing->media) && is_array($listing->media) ? $listing->media[0] : null;
-    $shareImage = $rawImage ? asset('storage/' . $rawImage) : asset('images/zintoop-logo.png');
+    $shareImage = route('og.listing.image', ['id' => $listing->id]);
     if (str_starts_with($shareImage, 'http://')) {
         $shareImage = str_replace('http://', 'https://', $shareImage);
     }
@@ -25,6 +24,14 @@
 @section('twitter_title', $shareTitle)
 @section('twitter_description', $shareDesc)
 @section('twitter_image', $shareImage)
+
+@section('og_product_tags')
+    <meta property="product:price:amount" content="{{ $listing->price }}">
+    <meta property="product:price:currency" content="{{ $listing->currency ?? 'TND' }}">
+    <meta property="product:availability" content="in stock">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+@endsection
 
 @push('head')
     <!-- JSON-LD Product Schema for Google & Facebook SEO -->
