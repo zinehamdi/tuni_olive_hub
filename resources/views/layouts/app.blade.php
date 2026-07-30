@@ -39,7 +39,6 @@
     <meta property="og:image" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
     <meta property="og:image:secure_url" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
     <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
-    <meta property="fb:app_id" content="{{ env('FB_APP_ID', '1234567890123456') }}"> <!-- Set a default valid looking fallback or let user configure -->
     @yield('og_product_tags')
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
