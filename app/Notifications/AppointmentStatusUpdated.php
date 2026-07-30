@@ -27,9 +27,9 @@ class AppointmentStatusUpdated extends Notification
         $status = __($this->appointment->status);
         return [
             'appointment_id' => $this->appointment->id,
-            'body' => __('Your appointment status has been updated to: ') . $status,
-            'type' => 'appointment',
-            'url' => route('dashboard')
+            'body'           => __('Your appointment status has been updated to: ') . $status,
+            'type'           => 'appointment',
+            'url'            => route('admin.marketing.index'),
         ];
     }
 

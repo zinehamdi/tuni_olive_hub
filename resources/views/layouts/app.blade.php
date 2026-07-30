@@ -399,7 +399,7 @@
                                 </div>
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-for="n in notifications" :key="n.id">
-                                        <a :href="(n.data.type === 'transport_deal' && n.data.load_id) ? '/mobile/trip?id=' + n.data.load_id : (n.data.url || (n.data.type === 'message' ? '/messages' : '/dashboard'))" 
+                                        <a :href="(n.data.type === 'transport_deal' && n.data.load_id) ? '/mobile/trip?id=' + n.data.load_id : (n.data.url ? n.data.url : (n.data.type === 'message' ? '/messages' : (n.data.type === 'appointment' ? '{{ route('admin.marketing.index') }}' : '/dashboard')))" 
                                            @click="markOneAsRead(n.id)"
                                            :class="!n.read_at ? 'bg-green-100 hover:bg-green-200/60 font-bold {{ app()->getLocale() === "ar" ? "border-r-4 border-r-[#6A8F3B]" : "border-l-4 border-l-[#6A8F3B]" }}' : 'bg-white hover:bg-gray-50 {{ app()->getLocale() === "ar" ? "border-r-4 border-r-transparent" : "border-l-4 border-l-transparent" }}'"
                                            class="block px-4 py-3 transition border-b border-gray-50 last:border-0 relative group">

@@ -33,8 +33,10 @@ class MarketingAppointmentController extends Controller
 
         $appointment->update($data);
 
-        // Notify user
-        $appointment->user->notify(new AppointmentStatusUpdated($appointment));
+        // Notify user if they have an account
+        if ($appointment->user) {
+            $appointment->user->notify(new AppointmentStatusUpdated($appointment));
+        }
 
         return redirect()->route('admin.marketing.index')->with('success', __('Marketing appointment updated successfully.'));
     }
@@ -44,8 +46,10 @@ class MarketingAppointmentController extends Controller
         $request->validate(['status' => 'required|string|in:pending,confirmed,completed,cancelled']);
         $appointment->update(['status' => $request->status]);
 
-        // Notify user
-        $appointment->user->notify(new AppointmentStatusUpdated($appointment));
+        // Notify user if they have an account
+        if ($appointment->user) {
+            $appointment->user->notify(new AppointmentStatusUpdated($appointment));
+        }
 
         return back()->with('success', __('Status updated successfully.'));
     }
