@@ -450,6 +450,24 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             </div>
                             <input type="checkbox" :checked="formData.delivery_options.includes('local_delivery')" class="w-6 h-6 rounded">
                         </button>
+
+                        <!-- خيار التصدير الدولي (يظهر فقط لزيت الزيتون) -->
+                        <button type="button" @click="toggleDeliveryOption('export')"
+                            x-show="formData.category === 'oil'"
+                            :class="formData.delivery_options.includes('export') ? 'bg-[#C8A356] text-white border-[#C8A356]' : 'bg-white text-gray-700 border-gray-200'"
+                            class="w-full border-2 rounded-xl p-5 transition-all text-right flex items-center justify-between hover:shadow-lg"
+                            x-cloak>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center ml-4">
+                                    <span class="text-2xl">✈️</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">تصدير دولي</h4>
+                                    <p class="text-sm opacity-80">الشحن إلى خارج البلاد</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" :checked="formData.delivery_options.includes('export')" class="w-6 h-6 rounded">
+                        </button>
                     </div>
                 </div>
 
@@ -662,11 +680,11 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </div>
                         <div class="flex justify-between items-start py-3 border-b border-gray-300">
                             <span class="text-gray-600">طرق الدفع</span>
-                            <span class="font-bold text-left" x-text="formData.payment_methods.length > 0 ? formData.payment_methods.join('، ') : 'غير محدد'"></span>
+                            <span class="font-bold text-left" x-text="formData.payment_methods.length > 0 ? formData.payment_methods.map(pm => ({cash: 'نقداً', bank_transfer: 'تحويل بنكي', check: 'شيك', cod: 'الدفع عند التسليم', stripe: 'بطاقة بنكية', flouci: 'Flouci', d17: 'D17', bank_lc: 'اعتماد مستندي (LC)'}[pm] || pm)).join('، ') : 'غير محدد'"></span>
                         </div>
                         <div class="flex justify-between items-start py-3 border-b border-gray-300">
                             <span class="text-gray-600">التسليم</span>
-                            <span class="font-bold text-left" x-text="formData.delivery_options.length > 0 ? formData.delivery_options.join('، ') : 'غير محدد'"></span>
+                            <span class="font-bold text-left" x-text="formData.delivery_options.length > 0 ? formData.delivery_options.map(opt => ({pickup: 'استلام من الموقع', local_delivery: 'توصيل محلي', export: 'تصدير دولي', carrier: 'عبر ناقل'}[opt] || opt)).join('، ') : 'غير محدد'"></span>
                         </div>
                         <div x-show="formData.location_text || formData.governorate" class="flex justify-between items-start py-3 border-b border-gray-300">
                             <span class="text-gray-600 flex items-center gap-2">
@@ -814,6 +832,11 @@ document.addEventListener('alpine:init', () => {
                 this.formData.estimated_oil_yield = null;
                 if (!['kg', 'ton'].includes(this.formData.unit)) {
                     this.formData.unit = 'kg';
+                }
+                // إزالة خيار التصدير تلقائياً عند تغيير التصنيف إلى زيتون خام
+                const idx = this.formData.delivery_options.indexOf('export');
+                if (idx > -1) {
+                    this.formData.delivery_options.splice(idx, 1);
                 }
             }
         },

@@ -53,6 +53,12 @@ export default function registerWizardComponent(Alpine) {
     selectCategory(category) {
         this.formData.category = category;
         this.formData.variety = '';
+        if (category === 'olive') {
+            const idx = this.formData.delivery_options.indexOf('export');
+            if (idx > -1) {
+                this.formData.delivery_options.splice(idx, 1);
+            }
+        }
     },
 
     togglePaymentMethod(method) {
@@ -205,8 +211,10 @@ export default function registerWizardComponent(Alpine) {
         ev.preventDefault();
         this.errorMessage = '';
         if (!this.validateStep()) return;
-        if (!this.formData.product_id) { this.errorMessage = 'الرجاء اختيار المنتج'; return; }
-        if (!this.formData.price) { this.errorMessage = 'الرجاء إدخال السعر'; return; }
+        // Wizard uses variety + category (product is found/created server-side, no product_id needed)
+        if (!this.formData.variety) { this.errorMessage = 'الرجاء اختيار الصنف'; return; }
+        if (!this.formData.category) { this.errorMessage = 'الرجاء اختيار نوع المنتج'; return; }
+        if (!this.formData.price_on_request && !this.formData.price) { this.errorMessage = 'الرجاء إدخال السعر'; return; }
         this.isSubmitting = true;
         if (this.debug) {
             console.log('[wizard] submitting FormData to server');

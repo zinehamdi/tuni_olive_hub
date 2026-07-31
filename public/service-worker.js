@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zintoop-cache-v4';
+const CACHE_NAME = 'zintoop-cache-v5';
 const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/icons/zintoop-192.png',
@@ -37,7 +37,10 @@ self.addEventListener('fetch', (event) => {
     // Network-first for HTML - always get fresh content for auth state
     event.respondWith(
       fetch(event.request)
-        .catch(() => caches.match('/offline.html') || new Response('Offline', { status: 503 }))
+        .catch(async () => {
+          const cachedOffline = await caches.match('/offline.html');
+          return cachedOffline || new Response('Offline', { status: 503 });
+        })
     );
     return;
   }
@@ -53,6 +56,17 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
         return response;
+      }).catch(() => {
+        // Must return a valid Response — never reject from respondWith
+        return new Response('Asset unavailable.', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain' }
+        });
+      });
+    }).catch(() => {
+      return new Response('Cache error.', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain' }
       });
     })
   );
