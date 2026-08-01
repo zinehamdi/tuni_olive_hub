@@ -1,4 +1,4 @@
-<div x-data="ezzitouniChat()" class="fixed bottom-6 left-6 z-[9999]">
+<div x-data="ezzitouniChat()" class="fixed bottom-20 md:bottom-6 left-4 md:left-6 z-[9999]">
     
     <!-- Chat Toggle Button (Ezzitouni Avatar or Close Icon) -->
     <button @click="toggleChat()" 
@@ -20,7 +20,7 @@
     <!-- Welcome Tooltip (Shows when chat is closed) -->
     <div x-show="!isOpen && showTooltip" 
          x-transition.opacity.duration.500ms
-         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-auto origin-bottom-left" style="display: none;">
+         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-auto origin-bottom-left hidden md:block" style="display: none;">
         
         <div class="flex items-center justify-between gap-2 mb-2">
             <div class="flex items-center gap-2">
