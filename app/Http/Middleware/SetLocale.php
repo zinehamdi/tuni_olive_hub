@@ -57,8 +57,10 @@ class SetLocale
 
         $response = $next($request);
         if (method_exists($response, 'header')) {
-            $response->header('X-LiteSpeed-Cache-Control', 'no-cache');
-            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            // Prevent LiteSpeed from caching pages globally across different user languages,
+            // but allow individual user browsers to cache content for performance.
+            $response->header('X-LiteSpeed-Cache-Control', 'private, max-age=60');
+            $response->header('Cache-Control', 'private, no-transform, max-age=60');
         }
         return $response;
     }

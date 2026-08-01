@@ -20,9 +20,9 @@
                 default => 'Log in or create your free ZinToop account to connect directly with olive oil producers and mills in Tunisia.',
             };
             $defaultGuestKeywords = match($locale) {
-                'ar' => 'أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت الزيتون التونسي, سوق زيت الزيتون, زين توب',
-                'fr' => 'meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, zintoop',
-                default => 'best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, zintoop',
+                'ar' => 'الشملالي, الشتوي, سلالات الزيتون في تونس, أنواع الزيتون التونسي, أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت الزيتون التونسي, سوق زيت الزيتون, زين توب',
+                'fr' => 'variétés d\'olives tunisiennes, chemlali, chetoui, olives en tunisie, meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, zintoop',
+                default => 'chemlali, chetoui, tunisian olive varieties, varieties of olives in tunisia, best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, zintoop',
             };
         @endphp
         <title>@yield('title', $defaultGuestTitle . ' - ' . config('app.name'))</title>
@@ -53,7 +53,13 @@
         <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
         
         <!-- Canonical URL -->
-        <link rel="canonical" href="{{ url()->current() }}">
+        @php
+            $currentLocale = app()->getLocale();
+            $canonicalUrl = $currentLocale === 'ar' 
+                ? url()->current() 
+                : url()->current() . '?lang=' . $currentLocale;
+        @endphp
+        <link rel="canonical" href="{{ $canonicalUrl }}">
         
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">

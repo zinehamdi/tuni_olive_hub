@@ -15,6 +15,11 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>{{ route('article.varieties') }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- Dynamic Listings -->
   @foreach($listings as $listing)

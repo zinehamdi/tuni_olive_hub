@@ -20,9 +20,9 @@
             default => 'ZinToop - Premier Tunisian Olive Oil Marketplace & B2B Directory. Connect directly with farmers and oil mills without commissions.',
         };
         $defaultKeywords = match($locale) {
-            'ar' => 'أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت زيتون, معصرة زيتون, تونس, فلاح, زيت بكر ممتاز, سوق الزيتون, زين توب',
-            'fr' => 'meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, moulin à huile, zintoop',
-            default => 'best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, extra virgin olive oil, zintoop',
+            'ar' => 'الشملالي, الشتوي, سلالات الزيتون في تونس, أنواع الزيتون التونسي, أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت زيتون, معصرة زيتون, تونس, فلاح, زيت بكر ممتاز, سوق الزيتون, زين توب',
+            'fr' => 'variétés d\'olives tunisiennes, chemlali, chetoui, olives en tunisie, meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, moulin à huile, zintoop',
+            default => 'chemlali, chetoui, tunisian olive varieties, varieties of olives in tunisia, best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, extra virgin olive oil, zintoop',
         };
     @endphp
     <title>{{ config('app.name') }} - @yield('title', $defaultTitle)</title>
@@ -80,7 +80,13 @@
     <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{{ url()->current() }}">
+    @php
+        $currentLocale = app()->getLocale();
+        $canonicalUrl = $currentLocale === 'ar' 
+            ? url()->current() 
+            : url()->current() . '?lang=' . $currentLocale;
+    @endphp
+    <link rel="canonical" href="{{ $canonicalUrl }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
