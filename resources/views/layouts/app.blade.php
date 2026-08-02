@@ -587,6 +587,18 @@
                     
                     <!-- Drawer Content (Scrollable) -->
                     <div class="flex-1 overflow-y-auto flex flex-col gap-1 px-4 py-6 relative z-10 bg-[#1B2A1B]">
+                        <a href="{{ route('services.index') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
+                            <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
+                                <span class="text-lg">🛠</span>
+                            </div>
+                            <span>{{ app()->getLocale() === 'ar' ? 'مركز الخدمات' : (app()->getLocale() === 'fr' ? 'Centre de Services' : 'Service Hub') }}</span>
+                        </a>
+                        <a href="{{ route('services.pricing') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
+                            <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
+                                <span class="text-lg">📣</span>
+                            </div>
+                            <span>{{ app()->getLocale() === 'ar' ? 'خدماتنا الرقمية' : (app()->getLocale() === 'fr' ? 'Nos Services Digitaux' : 'Our Digital Services') }}</span>
+                        </a>
                         <a href="{{ route('how-it-works') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>

@@ -23,17 +23,20 @@
             .catch(err => console.error(err));
     }
 }">
-<div class="min-h-screen bg-cover bg-center" style="background-image: url('{{ asset('images/growpagepicture.png') }}'); background-color: #f8f9fa;">
-    <div class="min-h-screen bg-black/60 pb-20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-    {{-- ─── HERO ─── --}}
-    <div class="relative overflow-hidden pt-32 pb-16 px-4 text-center">
-        <div class="relative max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#6A8F3B]/20 border border-[#6A8F3B]/40 text-[#a8d060] text-xs font-semibold mb-6 backdrop-blur-sm">
-                <span class="w-2 h-2 rounded-full bg-[#6A8F3B] animate-pulse"></span>
+    {{-- ─── 1. World-Class Glassmorphism Hero Banner ─── --}}
+    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#0C1A0F] via-[#142E18] to-[#0C1A0F] border border-[#C8A356]/30 shadow-2xl p-6 sm:p-10 text-right mb-6">
+        <!-- Background Ambient Lighting -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,163,86,0.2)_0%,transparent_60%)] pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-[#6A8F3B]/20 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#C8A356]/20 text-[#F5E5C0] border border-[#C8A356]/40 backdrop-blur-md mb-4">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1.5 mr-1.5"></span>
                 {{ app()->getLocale() === 'ar' ? 'نمو وتطوير قطاع زيت الزيتون' : (app()->getLocale() === 'fr' ? 'Croissance & Tech Huile d\'Olive' : 'Olive Oil Growth & Tech Solutions') }}
-            </div>
-            <h1 class="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
+            </span>
+            <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight">
                 @if(app()->getLocale() === 'ar')
                     حلول رقمية لتنمية <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#6A8F3B] to-[#C8A356]">صادراتك ومبيعاتك</span>
                 @elseif(app()->getLocale() === 'fr')
@@ -42,7 +45,7 @@
                     Digital Solutions for <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#6A8F3B] to-[#C8A356]">Export & Sales Growth</span>
                 @endif
             </h1>
-            <p class="text-white/60 text-base md:text-lg max-w-2xl mx-auto">
+            <p class="text-xs sm:text-sm text-gray-300 mt-2 max-w-3xl leading-relaxed">
                 {{ app()->getLocale() === 'ar'
                     ? 'زد أرباحك، وسّع نطاق عملائك، وابنِ حضوراً محلياً ودولياً متميزاً مع أفضل المتخصصين في تكنولوجيا زيت الزيتون.'
                     : (app()->getLocale() === 'fr'
@@ -51,123 +54,8 @@
             </p>
         </div>
     </div>
-
-
-
-    {{-- ─── BILLING TOGGLE ─── --}}
-    @if(session('success'))
-        <div class="max-w-4xl mx-auto px-4 mt-8" x-data="{ show: true }" x-show="show" x-transition>
-            <div class="bg-green-500/10 border border-green-500/50 text-green-400 p-4 rounded-xl flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span class="font-bold">{{ session('success') }}</span>
-                </div>
-                <button @click="show = false" class="text-green-400 hover:text-green-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-        </div>
-        
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                if(typeof fbq !== 'undefined') {
-                    fbq('track', 'Schedule');
-                    fbq('track', 'Lead');
-                }
-            });
-        </script>
-    @endif
-
-    <div class="flex justify-center mb-10 mt-8 px-4" x-data="{ annual: false }">
-        <div class="inline-flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-1.5 backdrop-blur-sm">
-            <button @click="annual = false"
-                :class="!annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-white/50 hover:text-white'"
-                class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
-                {{ app()->getLocale() === 'ar' ? 'شهري' : (app()->getLocale() === 'fr' ? 'Mensuel' : 'Monthly') }}
-            </button>
-            <button @click="annual = true"
-                :class="annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-white/50 hover:text-white'"
-                class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2">
-                {{ app()->getLocale() === 'ar' ? 'سنوي' : (app()->getLocale() === 'fr' ? 'Annuel' : 'Annual') }}
-                <span class="px-2 py-0.5 bg-[#C8A356] text-black text-[10px] font-black rounded-full">-20%</span>
-            </button>
-        </div>
-
-        {{-- ─── PRICING CARDS ─── --}}
-        <div class="hidden"><!-- alpine bridge --></div>
-    </div>
-
-    <div x-data="{ annual: false }" class="max-w-7xl mx-auto px-4 pb-20">
-
-        {{-- Toggle (hidden, controlled by outer) --}}
-        {{-- We use a self-contained alpine scope here --}}
-
-        {{-- SECTION: Marketing --}}
-        <div class="mb-16">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#C8A356] to-amber-600 shadow-lg">
-                    <span class="text-xl">📣</span>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-white">
-                        {{ app()->getLocale() === 'ar' ? 'خدمات التسويق الرقمي' : (app()->getLocale() === 'fr' ? 'Marketing Digital' : 'Digital Marketing') }}
-                    </h2>
-                    <p class="text-white/40 text-xs">{{ app()->getLocale() === 'ar' ? 'حضور قوي على الإنترنت' : 'Strong online presence' }}</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                @php
-                $marketingServices = \App\Models\MarketingService::all();
-                @endphp
-                @foreach($marketingServices as $service)
-                {{-- Service Card --}}
-                <div class="group relative bg-white border border-gray-100 shadow-xl rounded-3xl p-7 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#6A8F3B]/20 transition-all duration-300 flex flex-col overflow-hidden isolate">
-                    <!-- Background Decorative Icon -->
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 invert z-0">
-                        <img src="{{ asset('icons/eye-browse-svg.svg') }}" class="w-full h-full object-contain">
-                    </div>
-                    <div class="relative z-10 flex flex-col flex-1">
-                        <div class="mb-4">
-                            <span class="text-3xl">{{ $service->icon_url }}</span>
-                            <div class="relative z-10 bg-white/90 bg-[#6A8F3B]/5 border border-[#6A8F3B]/10 backdrop-blur-sm rounded-2xl p-4 mt-3">
-                                <h3 class="text-base font-bold text-black">
-                                    {{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="mb-6 flex-grow">
-                            <div class="text-3xl font-black text-[#C8A356] mb-4">
-                                {{ number_format($service->price_tnd_weekly, 0) }} 
-                                <span class="text-base font-normal text-gray-700">
-                                    {{ $service->currency }}
-                                    @if($service->id == 5)
-                                        <span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'خدمة' : (app()->getLocale() === 'fr' ? 'service' : 'service') }}</span>
-                                    @else
-                                        <span class="text-xs">/{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}</span>
-                                    @endif
-                                </span>
-                            </div>
-                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <p class="text-sm text-[#6A8F3B] font-bold">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
-                                <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">
-                                    {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <button @click="openModal('{{ $service->id }}', '{{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}', '{{ number_format($service->price_tnd_weekly, 0) }}', '{{ $service->icon_url }}')" 
-                                class="w-full text-center py-3 rounded-xl border border-[#6A8F3B]/20 bg-[#6A8F3B]/5 text-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white transition-all duration-200 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
-                            <span>📅</span>
-                            {{ app()->getLocale() === 'ar' ? 'احجز موعد' : 'Book Appointment' }}
-                        </button>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- ─── VIRAL INTERACTIVE CALCULATOR (YIELD & PROFIT) ─── --}}
+    
+    {{-- ─── VIRAL INTERACTIVE CALCULATOR (YIELD & PROFIT) ─── --}}
         <div class="mb-16">
             <div class="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-r from-[#6A8F3B] via-[#C8A356] to-[#6A8F3B] shadow-2xl">
                 <div class="bg-gradient-to-br from-[#0c180d] to-[#122413] rounded-3xl p-6 md:p-10 relative">
@@ -178,7 +66,7 @@
                             <h2 class="text-2xl md:text-3xl font-black text-white mt-2">
                                 {{ app()->getLocale() === 'ar' ? 'حاسبة ربح التبويز' : 'Tunisian Tabouiz Profit Calculator' }}
                             </h2>
-                            <p class="text-white/60 text-xs md:text-sm mt-2 max-w-xl mx-auto">
+                            <p class="text-gray-600 text-xs md:text-sm mt-2 max-w-xl mx-auto">
                                 {{ app()->getLocale() === 'ar'
                                     ? 'أدخل وزن الزيتون ونسبة استخلاص معصرتك لتقدير إنتاجك من الزيت والأرباح الصافية المتوقعة فوراً!'
                                     : 'Estimate your oil yield in kg/liters and your projected tabouiz profit based on standard milling parameters.' }}
@@ -265,23 +153,23 @@
                             <div class="bg-[#172d19] border border-[#6A8F3B]/30 rounded-2xl p-6 flex flex-col justify-between">
                                 <div class="space-y-4">
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
+                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
                                         <span class="text-white font-black text-lg" x-text="oilKg + ' كجم'"></span>
                                     </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
+                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
                                         <span class="text-white/70 font-semibold text-base" x-text="oilLiters + ' لتر'"></span>
                                     </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
+                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
                                         <span class="text-white font-black text-lg" x-text="totalValue + ' د.ت'"></span>
                                     </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2" x-show="olivePricePerKg > 0">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
+                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
                                         <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalOliveCost + ' د.ت'"></span>
                                     </div>
                                     <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-white/60 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
+                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
                                         <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalMilling + ' د.ت'"></span>
                                     </div>
                                     <div class="flex justify-between items-center bg-[#C8A356]/10 p-3 rounded-xl border border-[#C8A356]/20">
@@ -307,6 +195,135 @@
             </div>
         </div>
 
+    {{-- ─── BILLING TOGGLE ─── --}}
+    @if(session('success'))
+        <div class="max-w-4xl mx-auto px-4 mt-8" x-data="{ show: true }" x-show="show" x-transition>
+            <div class="bg-green-500/10 border border-green-500/50 text-green-400 p-4 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-bold">{{ session('success') }}</span>
+                </div>
+                <button @click="show = false" class="text-green-400 hover:text-green-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if(typeof fbq !== 'undefined') {
+                    fbq('track', 'Schedule');
+                    fbq('track', 'Lead');
+                }
+            });
+        </script>
+    @endif
+
+    <div class="flex justify-center mb-10 mt-8 px-4" x-data="{ annual: false }">
+        <div class="inline-flex items-center gap-4 bg-white border border-gray-150 rounded-2xl p-1.5 shadow-sm">
+            <button @click="annual = false"
+                :class="!annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-gray-500 hover:text-white'"
+                class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
+                {{ app()->getLocale() === 'ar' ? 'شهري' : (app()->getLocale() === 'fr' ? 'Mensuel' : 'Monthly') }}
+            </button>
+            <button @click="annual = true"
+                :class="annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-gray-500 hover:text-white'"
+                class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2">
+                {{ app()->getLocale() === 'ar' ? 'سنوي' : (app()->getLocale() === 'fr' ? 'Annuel' : 'Annual') }}
+                <span class="px-2 py-0.5 bg-[#C8A356] text-black text-[10px] font-black rounded-full">-20%</span>
+            </button>
+        </div>
+
+        {{-- ─── PRICING CARDS ─── --}}
+        <div class="hidden"><!-- alpine bridge --></div>
+    </div>
+
+    <div x-data="{ annual: false }" class="max-w-7xl mx-auto px-4 pb-20">
+
+        {{-- Toggle (hidden, controlled by outer) --}}
+        {{-- We use a self-contained alpine scope here --}}
+
+        {{-- SECTION: Marketing --}}
+        <div class="mb-16">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#C8A356] to-amber-600 shadow-lg">
+                    <span class="text-xl">📣</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-[#1B2A1B]">
+                        {{ app()->getLocale() === 'ar' ? 'خدمات التسويق الرقمي' : (app()->getLocale() === 'fr' ? 'Marketing Digital' : 'Digital Marketing') }}
+                    </h2>
+                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'حضور قوي على الإنترنت' : 'Strong online presence' }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                @php
+                $marketingServices = \App\Models\MarketingService::all();
+                @endphp
+                @foreach($marketingServices as $service)
+                {{-- Service Card --}}
+                <div class="group bg-white border border-gray-150 hover:border-[#6A8F3B]/30 shadow-md rounded-2xl hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden text-right relative cursor-pointer"
+                     @click="openModal('{{ $service->id }}', '{{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}', '{{ number_format($service->price_tnd_weekly, 0) }}', '{{ $service->icon_url }}')">
+                    
+                    <!-- Premium Dark Green Top Header Banner -->
+                    <div class="bg-gradient-to-r from-[#0C1A0F] to-[#142E18] text-white px-4 py-3 flex items-center justify-between text-xs font-semibold relative overflow-hidden shrink-0">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,163,86,0.15),transparent_50%)]"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-1">
+                            <span class="text-[#a8d060] font-black">{{ app()->getLocale() === 'ar' ? 'تسويق رقمي' : (app()->getLocale() === 'fr' ? 'Marketing' : 'Marketing') }}</span>
+                            <span>📣</span>
+                        </div>
+                        
+                        <div class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">{{ $service->icon_url }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Content Body -->
+                    <div class="p-4 flex flex-col flex-grow space-y-3">
+                        <h3 class="font-bold text-gray-900 text-xs md:text-sm leading-tight text-right line-clamp-1 flex-grow">
+                            {{ app()->getLocale() === 'ar' ? $service->title_ar : (app()->getLocale() === 'fr' ? $service->title_fr : $service->title_en) }}
+                        </h3>
+
+                        <!-- Results -->
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-150 text-right flex-grow mb-1">
+                            <p class="text-[10px] text-[#6A8F3B] font-bold mb-1">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
+                            <p class="text-gray-700 text-[11px] leading-relaxed font-medium line-clamp-3">
+                                {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
+                            </p>
+                        </div>
+
+                        <!-- Price Display Container -->
+                        <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#6A8F3B]"></span>
+                                {{ app()->getLocale() === 'ar' ? 'الميزانية المقدرة' : 'Estimated Budget' }}
+                            </span>
+                            <div class="text-base font-black text-[#C8A356] tracking-tight">
+                                {{ number_format($service->price_tnd_weekly, 0) }} 
+                                <span class="text-[10px] font-normal text-gray-500">
+                                    {{ $service->currency }}
+                                    @if($service->id == 5)
+                                        /{{ app()->getLocale() === 'ar' ? 'خدمة' : 'service' }}
+                                    @else
+                                        /{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <button type="button" class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
+                            <span>📅</span>
+                            {{ app()->getLocale() === 'ar' ? 'احجز موعد' : 'Book Appointment' }}
+                        </button>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
         {{-- SECTION: Consulting & Trade --}}
         <div class="mb-16">
             <div class="flex items-center gap-3 mb-8">
@@ -314,10 +331,10 @@
                     <span class="text-xl">⚖️</span>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-white">
+                    <h2 class="text-xl font-bold text-[#1B2A1B]">
                         {{ app()->getLocale() === 'ar' ? 'الاستشارات وخدمات التصدير' : (app()->getLocale() === 'fr' ? 'Conseil & Export' : 'Consulting & Export Services') }}
                     </h2>
-                    <p class="text-white/40 text-xs">{{ app()->getLocale() === 'ar' ? 'مرافقة احترافية للأسواق العالمية' : 'Professional guidance for global markets' }}</p>
+                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'مرافقة احترافية للأسواق العالمية' : 'Professional guidance for global markets' }}</p>
                 </div>
             </div>
 
@@ -332,33 +349,60 @@
                 @endphp
 
                 @foreach($consultingPlans as $plan)
-                <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 flex flex-col relative overflow-hidden isolate">
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
-                        @if($plan['icon'] === '🌍')
-                            <img src="{{ asset('icons/cloud-acceleration-svg.svg') }}" class="w-full h-full object-contain">
-                        @elseif($plan['icon'] === '✍️')
-                            <img src="{{ asset('icons/target-svg.svg') }}" class="w-full h-full object-contain">
-                        @else
-                            <img src="{{ asset('icons/interface-control-svggraphscreen.svg') }}" class="w-full h-full object-contain">
-                        @endif
-                    </div>
-                    <div class="relative z-10 flex flex-col flex-1">
-                        <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
-                        <div class="relative z-10 bg-white/90 bg-emerald-500/5 border border-emerald-500/10 backdrop-blur-sm rounded-2xl p-4 mb-4">
-                            <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
-                            <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
+                <div class="group bg-white border border-gray-150 hover:border-[#6A8F3B]/30 shadow-md rounded-2xl hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden text-right relative cursor-pointer"
+                     @click="window.location.href='{{ route('public.contact') }}'">
+                    
+                    <!-- Premium Dark Green Top Header Banner -->
+                    <div class="bg-gradient-to-r from-[#0C1A0F] to-[#142E18] text-white px-4 py-3 flex items-center justify-between text-xs font-semibold relative overflow-hidden shrink-0">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,163,86,0.15),transparent_50%)]"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-1">
+                            <span class="text-white/90 font-black">{{ $locale === 'ar' ? 'استشارات وتصدير' : ($locale === 'fr' ? 'Conseil & Export' : 'Consulting') }}</span>
+                            <span>⚖️</span>
                         </div>
-                        <div class="text-2xl font-black text-emerald-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
-                        <p class="text-gray-500 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر الخدمة' : 'service price' }}</p>
-                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
-                            @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
-                            <li class="flex items-start gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                {{ $f }}
-                            </li>
-                            @endforeach
-                        </ul>
-                        <a href="{{ route('public.contact') }}" class="block w-full text-center py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all duration-200 text-xs font-bold">
+                        
+                        <div class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-lg">{{ $plan['icon'] }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Content Body -->
+                    <div class="p-4 flex flex-col flex-grow space-y-3">
+                        <h3 class="font-bold text-gray-900 text-xs md:text-sm leading-tight text-right line-clamp-1">
+                            {{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}
+                        </h3>
+
+                        <!-- Description -->
+                        <p class="text-gray-500 text-[11px] leading-relaxed text-right line-clamp-2">
+                            {{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}
+                        </p>
+
+                        <!-- Features List -->
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-150 text-right flex-grow mb-1">
+                            <ul class="space-y-1.5 text-[10px] text-gray-700 font-medium">
+                                @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
+                                <li class="flex items-start justify-end gap-1.5">
+                                    <span class="text-[10px]">{{ $f }}</span>
+                                    <svg class="w-3 h-3 text-emerald-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <!-- Price Display Container -->
+                        <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#6A8F3B]"></span>
+                                {{ $locale === 'ar' ? 'سعر الخدمة' : 'Service Price' }}
+                            </span>
+                            <div class="text-base font-black text-[#C8A356] tracking-tight">
+                                {{ $plan['price'] }} <span class="text-[10px] font-normal text-gray-500">TND</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <a href="{{ route('public.contact') }}" class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
+                            <span>⚖️</span>
                             {{ $locale === 'ar' ? 'اطلب الخدمة الآن' : 'Request Service Now' }}
                         </a>
                     </div>
@@ -374,10 +418,10 @@
                     <span class="text-xl">⚙️</span>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-white">
+                    <h2 class="text-xl font-bold text-[#1B2A1B]">
                         {{ app()->getLocale() === 'ar' ? 'خدمات التطوير التقني' : (app()->getLocale() === 'fr' ? 'Développement Technique' : 'Technical Development') }}
                     </h2>
-                    <p class="text-white/40 text-xs">{{ app()->getLocale() === 'ar' ? 'حلول برمجية متخصصة' : 'Specialized software solutions' }}</p>
+                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'حلول برمجية متخصصة' : 'Specialized software solutions' }}</p>
                 </div>
             </div>
 
@@ -394,36 +438,60 @@
                 @endphp
 
                 @foreach($devPlans as $plan)
-                <div class="group bg-white border border-gray-100 shadow-xl rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 flex flex-col relative overflow-hidden isolate">
-                    <!-- Background Decorative Icon -->
-                    <div class="absolute -right-6 -top-6 w-40 h-40 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700 invert z-0">
-                        @if($plan['icon'] === '🌐')
-                            <img src="{{ asset('icons/cloud-acceleration-svg.svg') }}" class="w-full h-full object-contain">
-                        @elseif($plan['icon'] === '🛒')
-                            <img src="{{ asset('icons/online-delivery-svg.svg') }}" class="w-full h-full object-contain">
-                        @elseif($plan['icon'] === '📱')
-                            <img src="{{ asset('icons/target-svg.svg') }}" class="w-full h-full object-contain">
-                        @else
-                            <img src="{{ asset('icons/ddos-protection-svg.svg') }}" class="w-full h-full object-contain">
-                        @endif
-                    </div>
-                    <div class="relative z-10 flex flex-col flex-1">
-                        <div class="text-3xl mb-3">{{ $plan['icon'] }}</div>
-                        <div class="relative z-10 bg-white/90 bg-blue-500/5 border border-blue-500/10 backdrop-blur-sm rounded-2xl p-4 mb-4">
-                            <h3 class="text-base font-bold text-black">{{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}</h3>
-                            <p class="text-gray-800 text-xs mt-1 leading-relaxed font-medium">{{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}</p>
+                <div class="group bg-white border border-gray-150 hover:border-blue-500/30 shadow-md rounded-2xl hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden text-right relative cursor-pointer"
+                     @click="window.location.href='{{ route('public.contact') }}'">
+                    
+                    <!-- Premium Dark Green/Blue Top Header Banner -->
+                    <div class="bg-gradient-to-r from-[#0C1A0F] to-[#142E18] text-white px-4 py-3 flex items-center justify-between text-xs font-semibold relative overflow-hidden shrink-0">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_50%)]"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-1">
+                            <span class="text-blue-400 font-black">{{ $locale === 'ar' ? 'تطوير تقني' : ($locale === 'fr' ? 'Développement' : 'Development') }}</span>
+                            <span>⚙️</span>
                         </div>
-                        <div class="text-2xl font-black text-blue-600 mb-1">{{ $plan['price'] }} <span class="text-sm font-normal text-gray-500">TND</span></div>
-                        <p class="text-gray-505 text-[11px] mb-5 font-medium">{{ $locale === 'ar' ? 'سعر المشروع' : 'project price' }}</p>
-                        <ul class="space-y-2 mb-6 flex-1 text-xs text-gray-800 font-medium">
-                            @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
-                            <li class="flex items-start gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                {{ $f }}
-                            </li>
-                            @endforeach
-                        </ul>
-                        <a href="{{ route('public.contact') }}" class="block w-full text-center py-2.5 rounded-xl border border-blue-500/30 bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white transition-all duration-200 text-xs font-bold">
+                        
+                        <div class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-lg">{{ $plan['icon'] }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Content Body -->
+                    <div class="p-4 flex flex-col flex-grow space-y-3">
+                        <h3 class="font-bold text-gray-900 text-xs md:text-sm leading-tight text-right line-clamp-1">
+                            {{ $locale === 'ar' ? $plan['name_ar'] : ($locale === 'fr' ? $plan['name_fr'] : $plan['name_en']) }}
+                        </h3>
+
+                        <!-- Description -->
+                        <p class="text-gray-500 text-[11px] leading-relaxed text-right line-clamp-2">
+                            {{ $locale === 'ar' ? $plan['desc_ar'] : $plan['desc_en'] }}
+                        </p>
+
+                        <!-- Features List -->
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-150 text-right flex-grow mb-1">
+                            <ul class="space-y-1.5 text-[10px] text-gray-700 font-medium">
+                                @foreach(($locale === 'ar' ? $plan['features_ar'] : $plan['features_en']) as $f)
+                                <li class="flex items-start justify-end gap-1.5">
+                                    <span class="text-[10px]">{{ $f }}</span>
+                                    <svg class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <!-- Price Display Container -->
+                        <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                {{ $locale === 'ar' ? 'سعر المشروع' : 'Project Price' }}
+                            </span>
+                            <div class="text-base font-black text-[#C8A356] tracking-tight">
+                                {{ $plan['price'] }} <span class="text-[10px] font-normal text-gray-500">TND</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <a href="{{ route('public.contact') }}" class="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-750 hover:to-indigo-850 text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
+                            <span>💬</span>
                             {{ $locale === 'ar' ? 'احجز استشارة' : 'Book a Consultation' }}
                         </a>
                     </div>
@@ -441,7 +509,7 @@
                 <h3 class="text-2xl font-black text-white mb-3">
                     {{ $locale === 'ar' ? 'مشروع مخصص؟' : 'Need a Custom Quote?' }}
                 </h3>
-                <p class="text-white/50 mb-7 max-w-xl mx-auto text-sm">
+                <p class="text-gray-500 mb-7 max-w-xl mx-auto text-sm">
                     {{ $locale === 'ar'
                         ? 'لديك متطلبات خاصة؟ تواصل معنا وسنبني لك حلاً مخصصاً بسعر مناسب.'
                         : 'Have specific requirements? Contact us and we\'ll build a tailored solution that fits your budget.' }}
@@ -479,7 +547,7 @@
     <div class="fixed inset-0 bg-black/75 backdrop-blur-md" @click="modalOpen = false"></div>
 
     <!-- Modal Card -->
-    <div class="relative w-full max-w-lg bg-gradient-to-br from-[#0c180d] to-[#122413] border border-white/10 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 overflow-hidden z-10"
+    <div class="relative w-full max-w-lg bg-white border border-gray-100 rounded-[2.5rem] shadow-2xl p-6 sm:p-8 overflow-hidden z-10"
          x-transition:enter="transition ease-out duration-300 transform"
          x-transition:enter-start="opacity-0 scale-95 translate-y-4"
          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -488,34 +556,34 @@
          x-transition:leave-end="opacity-0 scale-95 translate-y-4">
         
         <!-- Premium decorative background light -->
-        <div class="absolute -right-16 -top-16 w-48 h-48 bg-[#6A8F3B]/25 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-[#C8A356]/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-16 -top-16 w-48 h-48 bg-[#6A8F3B]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-[#C8A356]/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <!-- Header -->
         <div class="flex items-center justify-between mb-6 relative z-10">
             <div class="flex items-center gap-3">
                 <span class="text-3xl" x-text="activeServiceIcon">📦</span>
                 <div>
-                    <h3 class="text-xl font-black text-white" x-text="activeServiceName">باقة التسويق</h3>
-                    <p class="text-xs text-white/50 mt-0.5">
+                    <h3 class="text-xl font-black text-gray-900" x-text="activeServiceName">باقة التسويق</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">
                         {{ app()->getLocale() === 'ar' ? 'أدخل تفاصيلك لتأكيد الحجز وبدء الحملة فوراً' : 'Fill details to confirm your instant booking' }}
                     </p>
                 </div>
             </div>
-            <button @click="modalOpen = false" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition">
+            <button @click="modalOpen = false" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-700 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
         <!-- Price display -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 mb-6 flex items-center justify-between relative z-10">
-            <span class="text-sm font-semibold text-white/60">
+        <div class="bg-gray-50 border border-gray-150 rounded-2xl p-4 mb-6 flex items-center justify-between relative z-10">
+            <span class="text-sm font-semibold text-gray-600">
                 <span x-show="activeServiceId == 5">{{ app()->getLocale() === 'ar' ? 'الميزانية المقدرة:' : 'Estimated Budget:' }}</span>
                 <span x-show="activeServiceId != 5">{{ app()->getLocale() === 'ar' ? 'الميزانية الأسبوعية المقدرة:' : 'Estimated Weekly Budget:' }}</span>
             </span>
             <div class="text-2xl font-black text-[#C8A356] flex items-baseline gap-1">
                 <span x-text="activeServicePrice">0</span>
-                <span class="text-xs font-normal text-white/50">TND</span>
+                <span class="text-xs font-normal text-gray-500">TND</span>
             </div>
         </div>
 
@@ -524,29 +592,29 @@
             @csrf
             
             <div>
-                <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'الاسم بالكامل أو اسم النشاط التجاري' : 'Full Name / Business Name' }} <span class="text-red-400">*</span></label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الاسم بالكامل أو اسم النشاط التجاري' : 'Full Name / Business Name' }} <span class="text-red-400">*</span></label>
                 <input type="text" 
                        name="name" 
                        required 
                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: معصرة الزيتون الكبرى...' : 'e.g. Olive Oil Mill Co.' }}"
-                       class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
+                       class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp Number' }} <span class="text-red-400">*</span></label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp Number' }} <span class="text-red-400">*</span></label>
                 <input type="tel" 
                        name="phone" 
                        required 
                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: 216XXXXXXXX+' : 'e.g. +216XXXXXXXX' }}"
-                       class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
+                       class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-white/70 mb-2">{{ app()->getLocale() === 'ar' ? 'معلومات إضافية عن نشاطك (اختياري)' : 'Additional Info (Optional)' }}</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'معلومات إضافية عن نشاطك (اختياري)' : 'Additional Info (Optional)' }}</label>
                 <textarea name="business_info" 
                           rows="2" 
                           placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: رابط صفحة الفيسبوك أو تفاصيل المنتج...' : 'e.g. Facebook page link or product details...' }}"
-                          class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all"></textarea>
+                          class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all"></textarea>
             </div>
 
             <!-- Submit Button -->
@@ -556,15 +624,12 @@
                 {{ app()->getLocale() === 'ar' ? 'احجز الآن وتواصل عبر واتساب' : 'Book & Chat on WhatsApp' }}
             </button>
             
-            <p class="text-[10px] text-center text-white/40 mt-3 leading-relaxed">
+            <p class="text-[10px] text-center text-gray-400 mt-3 leading-relaxed">
                 {{ app()->getLocale() === 'ar' 
                     ? 'بمجرد النقر، سيتم تسجيل طلبك في نظامنا وفتح محادثة مباشرة وآمنة معك على الواتساب لإكمال التجهيز.' 
                     : 'Clicking registers your lead instantly and opens a secure live chat on WhatsApp to finalize setup.' }}
             </p>
         </form>
 
-    </div>
-</div>
-
-</div> {{-- Close Alpine Wrapper --}}
+    </div> {{-- Close Alpine Wrapper --}}
 @endsection
