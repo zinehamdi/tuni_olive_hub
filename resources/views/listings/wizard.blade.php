@@ -231,22 +231,22 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </select>
                     </div>
 
-                    <!-- Sale Mode (Only for Olive: زيتون حب / سانية للخضارة) -->
+                    <!-- Sale Mode (Only for Olive: زيتون حب / سانية للتخضير) -->
                     <div x-show="formData.category === 'olive'" class="mt-6 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6" x-cloak>
-                        <label class="block text-lg font-bold text-[#1B2A1B] mb-4">نوع البيع (زيتون حب / سانية للخضارة)</label>
+                        <label class="block text-lg font-bold text-[#1B2A1B] mb-4">نوع البيع (زيتون حب / سانية للتخضير)</label>
                         <div class="grid grid-cols-2 gap-4">
-                            <button type="button" @click="formData.sale_mode = 'grain'; formData.packaging = 'زيتون حب'"
+                            <button type="button" @click="formData.sale_mode = 'grain'; formData.packaging = 'زيتون حب';"
                                     :class="formData.sale_mode === 'grain' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
                                     class="p-5 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
                                 <span class="text-3xl">🫒</span>
                                 <span class="text-lg">زيتون حب</span>
                             </button>
 
-                            <button type="button" @click="formData.sale_mode = 'saniya'; formData.packaging = 'سانية للخضارة'"
+                            <button type="button" @click="formData.sale_mode = 'saniya'; formData.packaging = 'سانية للتخضير'; formData.unit = 'ton';"
                                     :class="formData.sale_mode === 'saniya' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
                                     class="p-5 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
                                 <span class="text-3xl">🌳</span>
-                                <span class="text-lg">سانية للخضارة</span>
+                                <span class="text-lg">سانية للتخضير</span>
                             </button>
                         </div>
                         <input type="hidden" name="sale_mode" :value="formData.sale_mode">
@@ -255,21 +255,28 @@ console.log('[wizard] Variety selection mode - no product database needed');
 
                 <!-- Step 3: Quantity & Unit -->
                 <div x-show="currentStep === 3" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-10" x-transition:enter-end="opacity-100 transform translate-x-0">
-                    <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2">كم الكمية المتوفرة؟</h2>
-                    <p class="text-gray-600 mb-8">حدد الكمية المتاحة للبيع والوحدة</p>
+                    <h2 class="text-3xl font-bold text-[#1B2A1B] mb-2" x-text="formData.sale_mode === 'saniya' ? 'كم تفاصيل السانية؟' : 'كم الكمية المتوفرة؟'"></h2>
+                    <p class="text-gray-600 mb-8" x-text="formData.sale_mode === 'saniya' ? 'حدد الكمية التقديرية للإنتاج بالطن وعدد الأشجار' : 'حدد الكمية المتاحة للبيع والوحدة'"></p>
                     
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">الكمية المتاحة</label>
+                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">
+                                <span x-show="formData.sale_mode === 'saniya'">الكمية التقديرية بالطن</span>
+                                <span x-show="formData.sale_mode !== 'saniya'">الكمية المتاحة</span>
+                            </label>
                             <input type="number" x-model="formData.quantity" step="0.01" min="0" required
                                 class="w-full text-2xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition"
-                                placeholder="مثال: 500">
+                                :placeholder="formData.sale_mode === 'saniya' ? 'مثال: 12 (طن تقديري)' : 'مثال: 500'">
                         </div>
 
                         <!-- Tree Count (Only for Olives) -->
                         <div x-show="formData.category === 'olive'" x-cloak>
-                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">عدد الأشجار (اختياري)</label>
-                            <input type="number" x-model="formData.tree_count" name="tree_count" min="1" step="1"
+                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">
+                                <span>عدد الأشجار</span>
+                                <span x-show="formData.sale_mode === 'saniya'" class="text-red-500 font-bold">*</span>
+                                <span x-show="formData.sale_mode !== 'saniya'" class="text-sm font-normal text-gray-500">(اختياري)</span>
+                            </label>
+                            <input type="number" x-model="formData.tree_count" name="tree_count" min="1" step="1" :required="formData.sale_mode === 'saniya'"
                                 class="w-full text-xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition"
                                 placeholder="مثال: 150 شجرة">
                         </div>
@@ -321,8 +328,31 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             </div>
                         </label>
 
+                        <!-- Saniya pricing mode choice (Only if sale_mode is saniya) -->
+                        <div x-show="!formData.price_on_request && formData.sale_mode === 'saniya'" class="bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6 mb-6" x-transition>
+                            <label class="block text-lg font-bold text-[#1B2A1B] mb-4">طريقة التسعير للسانية / Pricing Method</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button type="button" @click="formData.saniya_price_mode = 'per_ton'; formData.unit = 'ton';"
+                                        :class="formData.saniya_price_mode === 'per_ton' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
+                                        class="p-4 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
+                                    <span class="text-2xl">⚖️</span>
+                                    <span>سعر للطن الواحد</span>
+                                </button>
+                                <button type="button" @click="formData.saniya_price_mode = 'whole'; formData.unit = 'سانية';"
+                                        :class="formData.saniya_price_mode === 'whole' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
+                                        class="p-4 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
+                                    <span class="text-2xl">🌳</span>
+                                    <span>سعر السانية بالكامل</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <div x-show="!formData.price_on_request" x-transition>
-                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">السعر لكل <span x-text="formData.unit || 'وحدة'"></span></label>
+                            <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">
+                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole'">سعر السانية بالكامل للتفاوض</span>
+                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton'">السعر بالطن للتفاوض</span>
+                                <span x-show="formData.sale_mode !== 'saniya'">السعر لكل <span x-text="formData.unit || 'وحدة'"></span></span>
+                            </label>
                             <div class="relative">
                                 <input type="number" x-model="formData.price" step="0.01" min="0" :required="!formData.price_on_request"
                                     class="w-full text-3xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 pr-24 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition text-right"
@@ -806,7 +836,10 @@ document.addEventListener('alpine:init', () => {
             longitude: '',
             governorate: '',
             delegation: '',
-            estimated_oil_yield: null
+            estimated_oil_yield: null,
+            sale_mode: '',
+            tree_count: '',
+            saniya_price_mode: 'per_ton'
         },
         locationError: '',
         locationSuccess: false,
@@ -1033,11 +1066,15 @@ document.addEventListener('alpine:init', () => {
                     break;
                 case 3:
                     if (!this.formData.quantity || this.formData.quantity <= 0) {
-                        showToast('الرجاء إدخال الكمية المتاحة', 'error');
+                        showToast(this.formData.sale_mode === 'saniya' ? 'الرجاء إدخال الكمية التقديرية بالطن' : 'الرجاء إدخال الكمية المتاحة', 'error');
                         return false;
                     }
                     if (!this.formData.unit) {
                         showToast('الرجاء اختيار الوحدة', 'error');
+                        return false;
+                    }
+                    if (this.formData.sale_mode === 'saniya' && (!this.formData.tree_count || this.formData.tree_count <= 0)) {
+                        showToast('الرجاء إدخال عدد الأشجار للسانية', 'error');
                         return false;
                     }
                     break;
