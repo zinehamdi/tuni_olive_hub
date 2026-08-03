@@ -395,28 +395,30 @@
                             <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
                                 <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
                                     <span class="w-1.5 h-1.5 rounded-full bg-[#6A8F3B]"></span>
-                                    {{ app()->getLocale() === 'ar' ? 'السعر التقديري' : 'Estimated Price' }}
+                                    {{ app()->getLocale() === 'ar' ? 'السعر التقديري' : (app()->getLocale() === 'fr' ? 'Prix estimé' : 'Estimated Price') }}
                                 </span>
                                 <div class="text-base font-black text-[#C8A356] tracking-tight">
                                     @if(($card['price_type'] ?? 'fixed') === 'fixed' && !empty($card['price']))
                                         {{ number_format($card['price'], 0) }} <span class="text-[10px] font-normal text-gray-500">TND</span>
                                     @else
-                                        <span class="text-xs font-bold text-gray-600">{{ app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : 'Upon Request' }}</span>
+                                        <span class="text-xs font-bold text-gray-600">{{ app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : (app()->getLocale() === 'fr' ? 'Sur demande' : 'Upon Request') }}</span>
                                     @endif
                                 </div>
                             </div>
 
                             <!-- CTA Button to reveal big card details -->
-                            <button type="button" class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
+                            <button type="button" 
+                                    @click.stop="if (isGuest) { showRegisterGateModal = true; } else { activeProvider = providers[{{ $provider->id }}] || {}; showProviderModal = true; }"
+                                    class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
                                 <span>🔍</span>
-                                {{ app()->getLocale() === 'ar' ? 'عرض تفاصيل المزود' : 'Show Provider Details' }}
+                                {{ app()->getLocale() === 'ar' ? 'عرض تفاصيل المزود' : (app()->getLocale() === 'fr' ? 'Détails du prestataire' : 'Show Provider Details') }}
                             </button>
                         </div>
                     </div>
                     @empty
                 <div class="col-span-full bg-gray-50 border border-gray-200 rounded-3xl p-12 text-center text-gray-500 shadow-inner">
                     <span class="text-4xl">📭</span>
-                    <p class="mt-2 font-bold">{{ app()->getLocale() === 'ar' ? 'لا يوجد مزودي خدمات يطابقون خيارات التصفية حالياً.' : 'No service providers match the filters.' }}</p>
+                    <p class="mt-2 font-bold">{{ app()->getLocale() === 'ar' ? 'لا يوجد مزودي خدمات يطابقون خيارات التصفية حالياً.' : (app()->getLocale() === 'fr' ? 'Aucun prestataire ne correspond aux filtres.' : 'No service providers match the filters.') }}</p>
                 </div>
                     @endforelse
                 </div>
@@ -505,7 +507,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     {{-- ─── GUEST REGISTRATION GATE MODAL ─── --}}
     <div x-show="showRegisterGateModal" 
@@ -654,4 +655,5 @@
 
     </div>
 </div>
+</div> {{-- Close main Alpine x-data wrapper --}}
 @endsection
