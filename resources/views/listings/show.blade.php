@@ -323,6 +323,33 @@
 
                     <!-- Additional Details -->
                     <div class="space-y-4 mb-6">
+                        @if($listing->formatted_quantity)
+                            <div class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                                <div>
+                                    <div class="text-sm text-gray-600">{{ __('Quantity') }}</div>
+                                    <div class="font-bold text-[#1B2A1B]">
+                                        {{ $listing->formatted_quantity }} 
+                                        @if($listing->unit === 'kg')
+                                            {{ app()->getLocale() === 'ar' ? 'كغ' : (app()->getLocale() === 'fr' ? 'kg' : 'kg') }}
+                                        @elseif($listing->unit === 'ton')
+                                            {{ app()->getLocale() === 'ar' ? 'طن' : (app()->getLocale() === 'fr' ? 'tonne' : 'ton') }}
+                                        @elseif($listing->unit === 'liter')
+                                            {{ app()->getLocale() === 'ar' ? 'لتر' : (app()->getLocale() === 'fr' ? 'litre' : 'liter') }}
+                                        @elseif($listing->unit === 'bottle')
+                                            {{ app()->getLocale() === 'ar' ? 'قارورة' : (app()->getLocale() === 'fr' ? 'bouteille' : 'bottle') }}
+                                        @elseif($listing->unit === 'سانية')
+                                            {{ app()->getLocale() === 'ar' ? 'سانية' : (app()->getLocale() === 'fr' ? 'verger' : 'orchard') }}
+                                        @else
+                                            {{ $listing->unit }}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @if($listing->min_order)
                             <div class="flex items-center gap-3">
                                 <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
