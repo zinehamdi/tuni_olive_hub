@@ -150,33 +150,33 @@
                             </div>
 
                             {{-- Outputs & Share --}}
-                            <div class="bg-[#172d19] border border-[#6A8F3B]/30 rounded-2xl p-6 flex flex-col justify-between">
-                                <div class="space-y-4">
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
-                                        <span class="text-white font-black text-lg" x-text="oilKg + ' كجم'"></span>
-                                    </div>
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
-                                        <span class="text-white/70 font-semibold text-base" x-text="oilLiters + ' لتر'"></span>
-                                    </div>
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
-                                        <span class="text-white font-black text-lg" x-text="totalValue + ' د.ت'"></span>
-                                    </div>
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-2" x-show="olivePricePerKg > 0">
-                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
-                                        <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalOliveCost + ' د.ت'"></span>
-                                    </div>
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                        <span class="text-gray-600 text-xs">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
-                                        <span class="text-red-400 font-bold text-sm" x-text="'- ' + totalMilling + ' د.ت'"></span>
-                                    </div>
-                                    <div class="flex justify-between items-center bg-[#C8A356]/10 p-3 rounded-xl border border-[#C8A356]/20">
-                                        <span class="text-[#C8A356] font-bold text-sm">{{ app()->getLocale() === 'ar' ? 'صافي الأرباح المقدرة:' : 'Net Projected Profit:' }}</span>
-                                        <span class="text-white font-black text-2xl" x-text="netProfit + ' د.ت'"></span>
-                                    </div>
-                                </div>
+                             <div class="bg-[#172d19] border border-[#6A8F3B]/30 rounded-2xl p-6 flex flex-col justify-between">
+                                 <div class="space-y-4">
+                                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
+                                         <span class="text-[#a8d060] font-black text-xl md:text-2xl" x-text="oilKg + ' كجم'"></span>
+                                     </div>
+                                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
+                                         <span class="text-white font-black text-lg md:text-xl" x-text="oilLiters + ' لتر'"></span>
+                                     </div>
+                                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
+                                         <span class="text-[#C8A356] font-black text-xl md:text-2xl" x-text="totalValue + ' د.ت'"></span>
+                                     </div>
+                                     <div class="flex justify-between items-center border-b border-white/5 pb-3" x-show="olivePricePerKg > 0">
+                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
+                                         <span class="text-red-400 font-black text-base md:text-lg" x-text="'- ' + totalOliveCost + ' د.ت'"></span>
+                                     </div>
+                                     <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
+                                         <span class="text-red-400 font-black text-base md:text-lg" x-text="'- ' + totalMilling + ' د.ت'"></span>
+                                     </div>
+                                     <div class="flex justify-between items-center bg-[#C8A356]/15 p-4 rounded-xl border border-[#C8A356]/30 mt-2">
+                                         <span class="text-[#C8A356] font-extrabold text-base">{{ app()->getLocale() === 'ar' ? 'صافي الأرباح المقدرة:' : 'Net Projected Profit:' }}</span>
+                                         <span class="text-emerald-400 font-black text-2xl md:text-3xl" x-text="netProfit + ' د.ت'"></span>
+                                     </div>
+                                 </div>
 
                                 {{-- Social WhatsApp Share Loop --}}
                                 <div class="mt-6">
