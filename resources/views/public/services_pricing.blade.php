@@ -66,7 +66,7 @@
                             <h2 class="text-2xl md:text-3xl font-black text-white mt-2">
                                 {{ app()->getLocale() === 'ar' ? 'حاسبة ربح التبويز' : 'Tunisian Tabouiz Profit Calculator' }}
                             </h2>
-                            <p class="text-gray-600 text-xs md:text-sm mt-2 max-w-xl mx-auto">
+                            <p class="text-gray-300 text-xs md:text-sm mt-2 max-w-xl mx-auto">
                                 {{ app()->getLocale() === 'ar'
                                     ? 'أدخل وزن الزيتون ونسبة استخلاص معصرتك لتقدير إنتاجك من الزيت والأرباح الصافية المتوقعة فوراً!'
                                     : 'Estimate your oil yield in kg/liters and your projected tabouiz profit based on standard milling parameters.' }}
