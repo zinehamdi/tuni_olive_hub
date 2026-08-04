@@ -1081,6 +1081,33 @@ document.addEventListener('alpine:init', () => {
                 return '$' + amountInUsd.toFixed(2);
             }
         },
+
+        getDisplayPrice(amount, storedCurrency) {
+            const num = parseFloat(amount);
+            if (!num || num <= 0) return 0;
+
+            const src = (storedCurrency || 'TND').toUpperCase();
+            const displayAr = this.locale === 'ar';
+
+            let amountInUsd;
+            if (src === 'USD') {
+                amountInUsd = num;
+            } else if (src === 'TND') {
+                amountInUsd = num * this.tndToUsd;
+            } else if (src === 'EUR') {
+                amountInUsd = num * this.eurToUsd;
+            } else if (src === 'SAR') {
+                amountInUsd = num * this.sarToUsd;
+            } else {
+                return num;
+            }
+
+            if (displayAr) {
+                return amountInUsd / this.tndToUsd;
+            } else {
+                return amountInUsd;
+            }
+        },
         currentArticle: {
             id: null,
             title: {},
@@ -1483,12 +1510,12 @@ document.addEventListener('alpine:init', () => {
                 this.showFilters = true;
             }
 
-            // Close filters on downward scroll on mobile if no input is currently focused
+            // Close filters on downward scroll on mobile instantly if no input is currently focused
             let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', () => {
+            const handleMobileScroll = () => {
                 if (window.innerWidth < 1024 && this.showFilters) {
                     const currentScrollY = window.scrollY;
-                    if (currentScrollY - lastScrollY > 30) {
+                    if (currentScrollY > lastScrollY + 5) {
                         const activeEl = document.activeElement;
                         const isInputFocused = activeEl && ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeEl.tagName) && activeEl.closest('.filter-container');
                         if (!isInputFocused) {
@@ -1499,7 +1526,9 @@ document.addEventListener('alpine:init', () => {
                 } else {
                     lastScrollY = window.scrollY;
                 }
-            }, { passive: true });
+            };
+            window.addEventListener('scroll', handleMobileScroll, { passive: true });
+            window.addEventListener('touchmove', handleMobileScroll, { passive: true });
 
             this.$watch('articleModalOpen', value => {
                 if (!value && !this.dealRequestModalOpen) document.body.classList.remove('overflow-hidden');
@@ -1637,16 +1666,22 @@ document.addEventListener('alpine:init', () => {
                 });
             }
 
-            // Price range filter
-            if (this.filters.priceMin !== '') {
-                results = results.filter(listing =>
-                    Number(listing.price || listing.product?.price || 0) >= Number(this.filters.priceMin)
-                );
+            // Price range filter (converts to card display currency for accurate user filtering)
+            if (this.filters.priceMin !== '' && this.filters.priceMin !== null) {
+                const minVal = Number(this.filters.priceMin);
+                results = results.filter(listing => {
+                    const rawPrice = listing.price || listing.product?.price || 0;
+                    const displayPrice = this.getDisplayPrice(rawPrice, listing.currency);
+                    return displayPrice >= minVal;
+                });
             }
-            if (this.filters.priceMax !== '') {
-                results = results.filter(listing =>
-                    Number(listing.price || listing.product?.price || 0) <= Number(this.filters.priceMax)
-                );
+            if (this.filters.priceMax !== '' && this.filters.priceMax !== null) {
+                const maxVal = Number(this.filters.priceMax);
+                results = results.filter(listing => {
+                    const rawPrice = listing.price || listing.product?.price || 0;
+                    const displayPrice = this.getDisplayPrice(rawPrice, listing.currency);
+                    return displayPrice <= maxVal;
+                });
             }
 
             // Distance filter
