@@ -9,8 +9,7 @@
 <div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen" 
      x-data="marketplace"
      @keydown.escape.window="articleModalOpen = false"
-     @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open"
-     @scroll.window.throttle.100ms="if (window.innerWidth < 1024 && showFilters) showFilters = false">
+     @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open">
     
     @if(session('status'))
         <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[150] w-full max-w-md px-4" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
@@ -494,25 +493,40 @@
 
         <!-- Mobile Filter Toggle Button - Elegant and Positioned Above Grid -->
         <div class="lg:hidden mb-6">
-            <button @click="showFilters = !showFilters" 
-                    class="w-full flex items-center justify-between px-6 py-4 bg-white border border-gray-150 text-[#6A8F3B] rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-xl transition-all duration-300 font-bold group">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 flex items-center justify-center group-hover:bg-[#6A8F3B] group-hover:text-white transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                        </svg>
+            <div class="flex items-center gap-2">
+                <button @click="showFilters = !showFilters" 
+                        class="flex-1 flex items-center justify-between px-5 py-3.5 bg-white border border-gray-150 text-[#6A8F3B] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 font-bold group">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 flex items-center justify-center group-hover:bg-[#6A8F3B] group-hover:text-white transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                        </div>
+                        <span>{{ __('Filter Results') }}</span>
+                        <template x-if="hasActiveFilters">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#6A8F3B] animate-pulse"></span>
+                        </template>
                     </div>
-                    <span>{{ __('Filter Results') }}</span>
-                </div>
-                <svg class="w-4 h-4 transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
+                    <svg class="w-4 h-4 transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <button x-show="hasActiveFilters" 
+                        @click="resetFilters(); if (window.innerWidth < 1024) showFilters = false;" 
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-90"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        class="px-4 py-3.5 bg-gray-600 hover:bg-gray-700 text-white rounded-2xl font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                    <span>🔄</span>
+                    <span>{{ __('Reset') }}</span>
+                </button>
+            </div>
         </div>
 
 
         <!-- Horizontal Filter Bar -->
-        <div class="bg-white/95 backdrop-blur-md border border-gray-150 rounded-2xl p-6 shadow-md mb-8 lg:sticky lg:top-44 lg:z-30 relative z-20"
+        <div class="filter-container bg-white/95 backdrop-blur-md border border-gray-150 rounded-2xl p-6 shadow-md mb-8 lg:sticky lg:top-44 lg:z-30 relative z-20"
              x-show="showFilters"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-2"
@@ -1454,11 +1468,38 @@ document.addEventListener('alpine:init', () => {
         },
 
 
+        get hasActiveFilters() {
+            return this.filters.type !== 'all' ||
+                   (this.filters.qualities && this.filters.qualities.length > 0) ||
+                   (this.filters.priceMin !== '' && this.filters.priceMin !== null) ||
+                   (this.filters.priceMax !== '' && this.filters.priceMax !== null) ||
+                   this.filters.distance !== 'all' ||
+                   (this.searchQuery && this.searchQuery.trim() !== '');
+        },
+
         init() {
             // Always show filters on desktop (>= 1024px)
             if (window.innerWidth >= 1024) {
                 this.showFilters = true;
             }
+
+            // Close filters on downward scroll on mobile if no input is currently focused
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth < 1024 && this.showFilters) {
+                    const currentScrollY = window.scrollY;
+                    if (currentScrollY - lastScrollY > 30) {
+                        const activeEl = document.activeElement;
+                        const isInputFocused = activeEl && ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeEl.tagName) && activeEl.closest('.filter-container');
+                        if (!isInputFocused) {
+                            this.showFilters = false;
+                        }
+                    }
+                    lastScrollY = currentScrollY;
+                } else {
+                    lastScrollY = window.scrollY;
+                }
+            }, { passive: true });
 
             this.$watch('articleModalOpen', value => {
                 if (!value && !this.dealRequestModalOpen) document.body.classList.remove('overflow-hidden');
@@ -1577,9 +1618,23 @@ document.addEventListener('alpine:init', () => {
 
             // Quality filter
             if (this.filters.qualities.length > 0) {
-                results = results.filter(listing =>
-                    this.filters.qualities.includes(listing.product?.quality?.toLowerCase())
-                );
+                results = results.filter(listing => {
+                    const itemQuality = (listing.quality || listing.product?.quality || '').toLowerCase();
+                    if (!itemQuality) return false;
+
+                    return this.filters.qualities.some(qKey => {
+                        const key = qKey.toLowerCase();
+                        if (itemQuality === key || itemQuality.includes(key)) return true;
+
+                        if (key === 'bio' && (itemQuality.includes('organic') || itemQuality.includes('بيولوجي') || itemQuality.includes('bio'))) return true;
+                        if (key === 'evoo' && (itemQuality.includes('evoo') || itemQuality.includes('extra') || itemQuality.includes('ممتاز') || itemQuality.includes('vierge extra') || itemQuality.includes('premium'))) return true;
+                        if (key === 'virgin' && (itemQuality.includes('virgin') || itemQuality.includes('بكر') || itemQuality.includes('vierge')) && !itemQuality.includes('extra') && !itemQuality.includes('evoo') && !itemQuality.includes('ممتاز')) return true;
+                        if (key === 'raffinee' && (itemQuality.includes('raffinee') || itemQuality.includes('refined') || itemQuality.includes('مكرر'))) return true;
+                        if (key === 'pomace' && (itemQuality.includes('pomace') || itemQuality.includes('فيتورة'))) return true;
+
+                        return false;
+                    });
+                });
             }
 
             // Price range filter
