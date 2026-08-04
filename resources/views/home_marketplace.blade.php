@@ -6,10 +6,11 @@
 @section('og_description', 'تسوق زيت الزيتون التونسي الأصلي بجودة عالية من المزارعين والمعاصر مباشرة')
 
 @section('content')
-<div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gradient-to-b from-gray-50 to-white" 
+<div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen" 
      x-data="marketplace"
      @keydown.escape.window="articleModalOpen = false"
-     @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open">
+     @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open"
+     @scroll.window.throttle.100ms="if (window.innerWidth < 1024 && showFilters) showFilters = false">
     
     @if(session('status'))
         <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[150] w-full max-w-md px-4" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
@@ -80,14 +81,16 @@
         </div>
     </header>
 
+    @php
+        $slideUrls = (isset($heroSlides) && $heroSlides->isNotEmpty())
+            ? $heroSlides->map(fn($s) => $s->image_url)->toArray()
+            : [asset('images/hero_slide_1.png'), asset('images/hero_slide_2.png'), asset('images/hero_slide_3.png')];
+    @endphp
+
     <!-- Hero Section with Slideshow and Search -->
     <section class="relative bg-black text-white py-8 px-4 overflow-hidden"
              x-data="{ 
-                 slides: [
-                     '{{ asset('images/hero_slide_1.png') }}',
-                     '{{ asset('images/hero_slide_2.png') }}',
-                     '{{ asset('images/hero_slide_3.png') }}'
-                 ],
+                 slides: {{ json_encode($slideUrls) }},
                  currentSlide: 0,
                  init() {
                      setInterval(() => {
@@ -448,204 +451,9 @@
 
     <!-- Main Content -->
     <section id="products" class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex flex-col lg:flex-row gap-6">
-            
-            <!-- Sidebar Filters -->
-            <aside class="lg:w-64 flex-shrink-0 order-1 lg:order-1">
-                <!-- Mobile Filter Toggle Button - Elegant and Positioned Above Grid -->
-                <div class="lg:hidden mb-6 sticky top-20 z-30">
-                    <button @click="showFilters = !showFilters" 
-                            class="w-full flex items-center justify-between px-6 py-4 bg-white border border-gray-100 text-[#6A8F3B] rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-xl transition-all duration-300 font-bold group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 flex items-center justify-center group-hover:bg-[#6A8F3B] group-hover:text-white transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                                </svg>
-                            </div>
-                            <span>{{ __('Filter Results') }}</span>
-                        </div>
-                        <svg class="w-4 h-4 transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow-xl border border-gray-50 p-6 lg:sticky lg:top-4 max-h-[80vh] lg:max-h-[calc(100vh-2rem)] overflow-y-auto mb-8 lg:mb-0"
-                     x-show="showFilters"
-                     x-transition:enter="lg:transition-none transition ease-out duration-200"
-                     x-transition:enter-start="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="lg:transition-none transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="lg:opacity-100 lg:translate-y-0 opacity-0 -translate-y-2">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                        <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                        </svg>
-                        {{ __('Filter Results') }}
-                    </h3>
-
-                    <!-- Location Filter -->
-                    <div class="mb-6 p-4 bg-gradient-to-r from-[#6A8F3B]/10 to-[#C8A356]/10 rounded-xl" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'استخدم هذا الفلتر لعرض المنتجات القريبة منك فقط!' : 'Use this filter to show only products near you!' }}">
-                        <label class="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            </svg>
-                            {{ __('Distance') }}
-                        </label>
-                        <select x-model="filters.distance" @change="filterListings" class="w-full px-3 py-2 border-2 border-[#6A8F3B] rounded-lg focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent font-semibold">
-                            <option value="all">{{ __('All distances') }}</option>
-                            <option value="10">{{ __('Less than 10 km') }}</option>
-                            <option value="25">{{ __('Less than 25 km') }}</option>
-                            <option value="50">{{ __('Less than 50 km') }}</option>
-                            <option value="100">{{ __('Less than 100 km') }}</option>
-                        </select>
-                        <button @click="getMyLocation" class="mt-2 w-full px-3 py-2 bg-[#C8A356] text-white rounded-lg hover:bg-[#b08a3c] transition text-sm font-bold">
-                            {{ __('Get my location') }}
-                        </button>
-                    </div>
-
-                    <!-- Product Type Filter -->
-                    <div class="mb-6">
-                        <label class="block font-bold text-gray-900 mb-3">{{ __('Product Type') }}</label>
-                        <div class="space-y-3">
-                            <!-- All Products -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.type === 'all' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="radio" x-model="filters.type" value="all" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white flex-shrink-0">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('All') }}</div>
-                                    </div>
-                                    <div class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full" x-text="totalListings"></div>
-                                </div>
-                            </label>
-
-                            <!-- Olive Oil -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.type === 'oil' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="radio" x-model="filters.type" value="oil" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C8A356] to-[#b08a3c] flex items-center justify-center flex-shrink-0">
-                                        <span class="text-2xl">🫗</span>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('Olive Oil') }}</div>
-                                    </div>
-                                    <div class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full" x-text="oilCount"></div>
-                                </div>
-                            </label>
-
-                            <!-- Olives -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.type === 'olive' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="radio" x-model="filters.type" value="olive" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#10B981] to-[#059669] flex items-center justify-center flex-shrink-0">
-                                        <span class="text-2xl">🫒</span>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('Olives') }}</div>
-                                    </div>
-                                    <div class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full" x-text="oliveCount"></div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Quality Filter -->
-                    <div class="mb-6">
-                        <label class="block font-bold text-gray-900 mb-3">{{ __('Quality') }}</label>
-                        <div class="space-y-3">
-                            <!-- Premium -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.qualities.includes('premium') ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="checkbox" x-model="filters.qualities" value="premium" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] rounded w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C8A356] to-[#b08a3c] flex items-center justify-center text-white flex-shrink-0">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('Premium') }}</div>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <!-- Extra -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.qualities.includes('extra') ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="checkbox" x-model="filters.qualities" value="extra" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] rounded w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white flex-shrink-0">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('Extra') }}</div>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <!-- Standard -->
-                            <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all"
-                                   :class="filters.qualities.includes('standard') ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
-                                <input type="checkbox" x-model="filters.qualities" value="standard" @change="filterListings" class="text-[#6A8F3B] focus:ring-[#6A8F3B] rounded w-5 h-5">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#2563EB] flex items-center justify-center text-white flex-shrink-0">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="font-bold text-gray-900 text-sm">{{ __('Standard') }}</div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Price Range Filter -->
-                    <div class="mb-6">
-                        <label class="block font-bold text-gray-900 mb-3">{{ __('Price Range') }}</label>
-                        <div class="space-y-3">
-                            <div>
-                                <input type="number" x-model="filters.priceMin" @input="filterListings" placeholder="{{ __('Min') }}" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
-                            </div>
-                            <div>
-                                <input type="number" x-model="filters.priceMax" @input="filterListings" placeholder="{{ __('Max') }}" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sort Options -->
-                    <div class="mb-6">
-                        <label class="block font-bold text-gray-900 mb-3">{{ __('Sort by') }}</label>
-                        <select x-model="filters.sortBy" @change="filterListings" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
-                            <option value="nearest">{{ __('Nearest to me') }}</option>
-                            <option value="newest">{{ __('Newest') }}</option>
-                            <option value="oldest">{{ __('Oldest') }}</option>
-                            <option value="price_low">{{ __('Price: Low to High') }}</option>
-                            <option value="price_high">{{ __('Price: High to Low') }}</option>
-                        </select>
-                    </div>
-
-                    <!-- Reset Button -->
-                    <button @click="resetFilters" class="w-full px-4 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition font-bold shadow-lg">
-                        {{ __('Reset Filters') }}
-                    </button>
-                </div>
-            </aside>
-
-            <!-- Product Listings Grid -->
-            <main class="flex-1 order-2 lg:order-2">
+        
+        <!-- Product Listings Wrapper -->
+        <div class="w-full">
                 <!-- Marketplace Mission Section -->
                 <div class="mb-10 bg-gradient-to-br from-[#6A8F3B]/5 to-[#C8A356]/5 border border-[#6A8F3B]/10 rounded-2xl p-6 text-center relative overflow-hidden">
                     <div class="relative z-10 max-w-3xl mx-auto">
@@ -682,6 +490,132 @@
                     </div>
                 </div>
 
+
+
+        <!-- Mobile Filter Toggle Button - Elegant and Positioned Above Grid -->
+        <div class="lg:hidden mb-6">
+            <button @click="showFilters = !showFilters" 
+                    class="w-full flex items-center justify-between px-6 py-4 bg-white border border-gray-150 text-[#6A8F3B] rounded-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-xl transition-all duration-300 font-bold group">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 flex items-center justify-center group-hover:bg-[#6A8F3B] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                    </div>
+                    <span>{{ __('Filter Results') }}</span>
+                </div>
+                <svg class="w-4 h-4 transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+        </div>
+
+
+        <!-- Horizontal Filter Bar -->
+        <div class="bg-white/95 backdrop-blur-md border border-gray-150 rounded-2xl p-6 shadow-md mb-8 lg:sticky lg:top-44 lg:z-30 relative z-20"
+             x-show="showFilters"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end text-right" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+                
+                <!-- 1. Distance Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5 justify-end">
+                        <svg class="w-4 h-4 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        {{ __('Distance') }}
+                    </label>
+                    <select x-model="filters.distance" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                        <option value="all">{{ __('All distances') }}</option>
+                        <option value="10">{{ __('Less than 10 km') }}</option>
+                        <option value="25">{{ __('Less than 25 km') }}</option>
+                        <option value="50">{{ __('Less than 50 km') }}</option>
+                        <option value="100">{{ __('Less than 100 km') }}</option>
+                    </select>
+                </div>
+
+                <!-- 2. Product Type Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5 justify-end">
+                        <span>🚜</span>
+                        {{ __('Product Type') }}
+                    </label>
+                    <select x-model="filters.type" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                        <option value="all">{{ __('All') }}</option>
+                        <option value="oil">🫗 {{ __('Olive Oil') }}</option>
+                        <option value="olive">🫒 {{ __('Olives') }}</option>
+                    </select>
+                </div>
+
+                <!-- 3. Quality Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5 justify-end">
+                        <span>⭐</span>
+                        {{ __('Quality') }}
+                    </label>
+                    <select @change="
+                        const val = $event.target.value;
+                        filters.qualities = val === 'all' ? [] : [val];
+                        filterListings();
+                    " class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10 font-semibold">
+                        <option value="all">{{ __('All qualities') }}</option>
+                        <option value="bio">🌿 {{ __('Bio') }}</option>
+                        <option value="evoo">⭐ {{ __('Extra Virgin (EVOO)') }}</option>
+                        <option value="virgin">🏆 {{ __('Virgin') }}</option>
+                        <option value="raffinee">📦 {{ __('Raffinée') }}</option>
+                        <option value="pomace">🫒 {{ __('Pomace') }}</option>
+                    </select>
+                </div>
+
+                <!-- 4. Price Range Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5 justify-end">
+                        <span>💵</span>
+                        {{ __('Price Range') }}
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="number" x-model="filters.priceMin" @input="filterListings" placeholder="{{ __('Min') }}" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-3 py-2 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] text-center">
+                        <input type="number" x-model="filters.priceMax" @input="filterListings" placeholder="{{ __('Max') }}" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-3 py-2 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] text-center">
+                    </div>
+                </div>
+
+                <!-- 5. Sort Options -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5 justify-end">
+                        <span>📊</span>
+                        {{ __('Sort by') }}
+                    </label>
+                    <select x-model="filters.sortBy" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                        <option value="nearest">{{ __('Nearest to me') }}</option>
+                        <option value="newest">{{ __('Newest') }}</option>
+                        <option value="oldest">{{ __('Oldest') }}</option>
+                        <option value="price_low">{{ __('Price: Low to High') }}</option>
+                        <option value="price_high">{{ __('Price: High to Low') }}</option>
+                    </select>
+                </div>
+
+                <!-- 6. Control Actions -->
+                <div class="flex gap-2">
+                    <button @click="getMyLocation" class="flex-1 py-2.5 bg-[#C8A356] hover:bg-[#b08a3c] text-white rounded-xl font-bold text-xs transition duration-200 cursor-pointer shadow hover:shadow-md active:scale-95 flex items-center justify-center gap-1">
+                        <span>📍</span>
+                        <span class="truncate">{{ __('Location') }}</span>
+                    </button>
+                    <button @click="resetFilters" class="flex-1 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-bold text-xs transition duration-200 cursor-pointer shadow hover:shadow-md active:scale-95 flex items-center justify-center gap-1">
+                        <span>🔄</span>
+                        <span class="truncate">{{ __('Reset') }}</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+
                 <!-- View Toggle & Results Count -->
                 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
                     <div class="text-gray-700">
@@ -706,7 +640,7 @@
                 </div>
 
                 <!-- Products Grid View -->
-                <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <template x-for="listing in filteredListings" :key="listing.id">
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'انقر على عرض التفاصيل لرؤية المزيد عن هذا المنتج وكيفية الشراء' : 'Click View Details to learn more about this product and how to buy' }}">
                             <!-- Product Image / Seller Logo / Initial Badge -->
@@ -952,8 +886,7 @@
                         {{ __('Reset Search') }}
                     </button>
                 </div>
-            </main>
-        </div>
+            </div>
     </section>
 
     <!-- CTA Section -->

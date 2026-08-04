@@ -101,7 +101,9 @@ Route::middleware(['web', 'set.locale'])->group(function () {
                 ->get();
         });
         
-        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders'));
+        $heroSlides = \App\Models\HeroSlide::where('is_active', true)->orderBy('order', 'asc')->get();
+        
+        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides'));
     })->name('home');
     
     // Public & legal pages
@@ -290,6 +292,9 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     // User moderation
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'banUser'])->name('users.ban');
     Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
+
+    // Hero Slideshow Management
+    Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except(['show']);
 });
 
 // Dynamic OG Image for listings

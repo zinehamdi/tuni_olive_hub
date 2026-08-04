@@ -198,4 +198,27 @@ class ImageOptimizationService
 
         return 'service-cards/' . $filename;
     }
+
+    /**
+     * Optimize and save hero slide background
+     * Converts to WebP, resizes to max 1920px width, quality 85%
+     */
+    public function optimizeHeroSlide(UploadedFile $file): string
+    {
+        $filename = Str::uuid() . '.webp';
+        $directory = storage_path('app/public/hero-slides');
+        $path = $directory . '/' . $filename;
+        
+        // Ensure directory exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Read, resize, and optimize image
+        $image = Image::read($file);
+        $image->scaleDown(width: 1920);
+        $image->toWebp(85)->save($path);
+
+        return 'hero-slides/' . $filename;
+    }
 }
