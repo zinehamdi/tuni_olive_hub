@@ -313,6 +313,9 @@ Route::group([], function(){
     Route::get('feed.rss', [\App\Http\Controllers\PublicController::class, 'rss'])->name('public.rss');
     Route::get('public/feed.rss', [\App\Http\Controllers\PublicController::class, 'rss']);
     Route::get('og/products/{product}', [\App\Http\Controllers\PublicController::class, 'ogListing']);
+    // Google Shopping product feed — all active marketplace listings with correct images
+    Route::get('google-merchant-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed'])->name('google.merchant.feed');
+    Route::get('shopping-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed']);
     // Real HTML pages for storefront
     Route::get('gulf/catalog', [\App\Http\Controllers\PublicController::class, 'gulfCatalog'])->name('gulf.catalog');
     Route::get('gulf/products/{product}', [\App\Http\Controllers\PublicController::class, 'gulfProduct'])->name('gulf.product');

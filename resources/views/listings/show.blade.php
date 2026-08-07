@@ -9,10 +9,40 @@
     $shareTitle = trim($variety . ' - ' . $priceText . ' (' . $city . ') | ZinToop');
     $shareDesc = trim('عرض ' . $variety . ' في ' . $city . ' على منصة الزين لزيت الزيتون التونسي. تواصل مباشرة مع المنتج بدون وسطاء.');
     
-    $shareImage = route('og.listing.image', ['id' => $listing->id]);
+    // ── Real product image (for OG + JSON-LD + Google Merchant) ───────────────
+    // Priority: listing media → product media → logo fallback
+    $realImages = [];
+    if (!empty($listing->media) && is_array($listing->media)) {
+        foreach ($listing->media as $m) {
+            $realImages[] = url('storage/' . ltrim($m, '/'));
+        }
+    }
+    if (empty($realImages) && !empty($listing->product?->media) && is_array($listing->product->media)) {
+        foreach ($listing->product->media as $m) {
+            $realImages[] = url('storage/' . ltrim($m, '/'));
+        }
+    }
+    $shareImage = !empty($realImages) ? $realImages[0] : url('images/zintoop-logo.png');
     if (str_starts_with($shareImage, 'http://')) {
         $shareImage = str_replace('http://', 'https://', $shareImage);
     }
+
+    // ── Quality label (English) for schema ────────────────────────────────────
+    $qualityRaw = $listing->product?->quality ?? '';
+    $qLow = strtolower($qualityRaw);
+    if (str_contains($qLow,'evoo')||str_contains($qLow,'ممتاز')||str_contains($qLow,'extra')) {
+        $qualityEn = 'Extra Virgin Olive Oil (EVOO)';
+    } elseif (str_contains($qLow,'virgin')||str_contains($qLow,'بكر')||str_contains($qLow,'vierge')) {
+        $qualityEn = 'Virgin Olive Oil';
+    } elseif (str_contains($qLow,'bio')||str_contains($qLow,'organic')||str_contains($qLow,'بيولوجي')) {
+        $qualityEn = 'Organic Olive Oil';
+    } elseif (str_contains($qLow,'pomace')||str_contains($qLow,'فيتورة')) {
+        $qualityEn = 'Pomace Olive Oil';
+    } else {
+        $qualityEn = 'Premium Tunisian Olive Oil';
+    }
+    $schemaName = trim(($listing->product?->variety ?? 'Tunisian') . ' ' . $qualityEn);
+    $schemaDesc = 'Buy ' . $qualityEn . ' directly from ' . ($listing->seller?->name ?? 'Tunisian producer') . ' in ' . $city . ', Tunisia. Best olive oil prices. Bulk olive oil direct from producers. ZinToop marketplace.';
 @endphp
 
 @section('title', $shareTitle)
@@ -34,20 +64,23 @@
 @endsection
 
 @push('head')
-    <!-- JSON-LD Product Schema for Google & Facebook SEO -->
+    <!-- JSON-LD Product Schema for Google Rich Results & Shopping -->
     <script type="application/ld+json">
     {
       "@@context": "https://schema.org/",
       "@@type": "Product",
-      "name": "{{ $listing->product->variety ?? 'Tunisian' }} Olive Oil",
+      "name": "{{ addslashes($schemaName) }}",
       "image": [
-        "{{ !empty($listing->media) && is_array($listing->media) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') }}"
+        @foreach($realImages as $img)"{{ $img }}"@if(!$loop->last),@endif
+        @endforeach
+        @if(empty($realImages))"{{ url('images/zintoop-logo.png') }}"@endif
       ],
-      "description": "Premium Tunisian Olive Oil directly from producers in Tunisia.",
+      "description": "{{ addslashes($schemaDesc) }}",
       "brand": {
         "@@type": "Brand",
         "name": "ZinToop"
       },
+      "category": "Cooking Oils",
       "offers": {
         "@@type": "Offer",
         "url": "{{ url()->current() }}",
@@ -58,7 +91,14 @@
         "availability": "https://schema.org/InStock",
         "seller": {
           "@@type": "Organization",
-          "name": "{{ $listing->seller->name ?? 'ZinToop Verified Seller' }}"
+          "name": "{{ addslashes($listing->seller?->name ?? 'ZinToop Verified Seller') }}"
+        },
+        "shippingDetails": {
+          "@@type": "OfferShippingDetails",
+          "shippingDestination": {
+            "@@type": "DefinedRegion",
+            "addressCountry": "TN"
+          }
         }
       }
     }
