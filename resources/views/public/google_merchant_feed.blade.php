@@ -11,6 +11,31 @@
         $product   = $listing->product;
         $seller    = $listing->seller;
 
+        /* ── Image validation (Real photos only, NO placeholders) ──────── */
+        $allImages = [];
+        if (!empty($listing->media) && is_array($listing->media)) {
+            foreach ($listing->media as $m) {
+                if (!empty($m) && is_string($m)) {
+                    $allImages[] = url('storage/' . ltrim($m, '/'));
+                }
+            }
+        }
+        if (empty($allImages) && !empty($product?->media) && is_array($product->media)) {
+            foreach ($product->media as $m) {
+                if (!empty($m) && is_string($m)) {
+                    $allImages[] = url('storage/' . ltrim($m, '/'));
+                }
+            }
+        }
+
+        // If no real image exists, skip this item entirely (do NOT show on Google)
+        if (empty($allImages)) {
+            continue;
+        }
+
+        $imageUrl         = $allImages[0];
+        $additionalImages = array_slice($allImages, 1, 9); // Google allows up to 10 additional
+
         /* ── Product title ─────────────────────────────────────────────── */
         $variety   = $product->variety ?? 'Tunisian Olive Oil';
         $quality   = $product->quality ?? '';
@@ -47,29 +72,12 @@
             . $certStr
             . ' Best olive oil prices direct from producers. Bulk olive oil Tunisia. ZinToop marketplace.';
 
-        /* ── Image ─────────────────────────────────────────────────────── */
-        // Priority: listing media → product media → fallback placeholder
-        $imageUrl = null;
-        $allImages = [];
-        if (!empty($listing->media) && is_array($listing->media)) {
-            foreach ($listing->media as $m) {
-                $allImages[] = url('storage/' . ltrim($m, '/'));
-            }
-        }
-        if (empty($allImages) && !empty($product?->media) && is_array($product->media)) {
-            foreach ($product->media as $m) {
-                $allImages[] = url('storage/' . ltrim($m, '/'));
-            }
-        }
-        $imageUrl        = $allImages[0] ?? url('images/olive-oil-placeholder.jpg');
-        $additionalImages = array_slice($allImages, 1, 9); // Google allows up to 10 additional
-
-        /* ── Price → always output in EUR (Google-accepted, supported in all 57 target countries) ── */
+        /* ── Price → Output in USD (Google-accepted globally across all target countries) ── */
         $rawAmount    = floatval($listing->price);
         $storedCur    = strtoupper($listing->currency ?? 'TND');
-        $priceInEur   = $converter->convert($rawAmount, $storedCur, 'EUR');
-        $price        = number_format($priceInEur, 2, '.', '');
-        $currency     = 'EUR';
+        $priceInUsd   = $converter->convert($rawAmount, $storedCur, 'USD');
+        $price        = number_format($priceInUsd, 2, '.', '');
+        $currency     = 'USD';
 
         /* ── Google Product Category ───────────────────────────────────── */
         // 422 = Food, Beverages & Tobacco > Food Items > Cooking Oils
@@ -107,7 +115,9 @@
       @if($listing->sale_mode)
       <g:custom_label_1>{{ $listing->sale_mode }}</g:custom_label_1>
       @endif
-      <g:shipping_weight>{{ $product->weight_kg ?? '' }} kg</g:shipping_weight>
+      @if(!empty($product?->weight_kg) && floatval($product->weight_kg) > 0)
+      <g:shipping_weight>{{ floatval($product->weight_kg) }} kg</g:shipping_weight>
+      @endif
       <g:item_group_id>variety-{{ \Illuminate\Support\Str::slug($variety) }}</g:item_group_id>
     </item>
     @endforeach

@@ -12,8 +12,9 @@ class GoogleMerchantFeedController extends Controller
 {
     /**
      * Google Shopping XML product feed.
-     * Only includes active olive OIL listings (not olives).
-     * All prices are converted to EUR (Google-accepted currency).
+     * - Only includes active olive OIL listings (not olives).
+     * - Only includes listings with real product photos (no empty images or placeholders).
+     * - All prices are converted to USD (globally accepted by Google Merchant Center).
      */
     public function feed()
     {
@@ -21,11 +22,25 @@ class GoogleMerchantFeedController extends Controller
 
         $xml = Cache::remember('google:merchant:feed', 3600, function () use ($converter) {
             $listings = Listing::query()
-                ->with(['product', 'seller'])
+                ->with(['product', 'seller.addresses'])
                 ->where('status', 'active')
                 ->whereNotNull('price')
                 ->where('price', '>', 0)
                 ->whereHas('product', fn($q) => $q->where('type', 'oil')) // Oil only — no olives
+                ->where(function ($query) {
+                    // Must have real photos either on the listing or on the product
+                    $query->where(function ($q) {
+                        $q->whereNotNull('media')
+                          ->where('media', '!=', '[]')
+                          ->where('media', '!=', 'null')
+                          ->where('media', '!=', '[""]');
+                    })->orWhereHas('product', function ($pq) {
+                        $pq->whereNotNull('media')
+                           ->where('media', '!=', '[]')
+                           ->where('media', '!=', 'null')
+                           ->where('media', '!=', '[""]');
+                    });
+                })
                 ->latest()
                 ->get();
 
