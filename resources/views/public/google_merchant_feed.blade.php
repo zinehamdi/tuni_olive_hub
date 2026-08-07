@@ -64,9 +64,12 @@
         $imageUrl        = $allImages[0] ?? url('images/olive-oil-placeholder.jpg');
         $additionalImages = array_slice($allImages, 1, 9); // Google allows up to 10 additional
 
-        /* ── Price ─────────────────────────────────────────────────────── */
-        $price    = number_format(floatval($listing->price), 2, '.', '');
-        $currency = strtoupper($listing->currency ?? 'TND');
+        /* ── Price → always output in EUR (Google-accepted, supported in all 57 target countries) ── */
+        $rawAmount    = floatval($listing->price);
+        $storedCur    = strtoupper($listing->currency ?? 'TND');
+        $priceInEur   = $converter->convert($rawAmount, $storedCur, 'EUR');
+        $price        = number_format($priceInEur, 2, '.', '');
+        $currency     = 'EUR';
 
         /* ── Google Product Category ───────────────────────────────────── */
         // 422 = Food, Beverages & Tobacco > Food Items > Cooking Oils
