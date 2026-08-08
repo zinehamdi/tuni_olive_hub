@@ -730,12 +730,15 @@
                                     <span x-show="listing.status === 'active'" class="px-2 py-1 rounded-full bg-green-500 text-white text-xs font-semibold">{{ __('Active') }}</span>
                                 </div>
 
-                                <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
+                                <div class="text-2xl font-bold text-[#6A8F3B] mb-4 flex items-baseline gap-1">
                                     <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
                                         <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-xl animate-pulse">{{ app()->getLocale() === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                     </template>
                                     <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
-                                        <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
+                                        <span class="flex items-baseline gap-1">
+                                            <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
+                                            <span x-text="formatUnit(listing)" class="text-sm font-semibold text-gray-400"></span>
+                                        </span>
                                     </template>
                                 </div>
 
@@ -761,13 +764,11 @@
                                 </div>
 
                                 <!-- Delivery Option Pills -->
-                                <template x-if="getDeliveryPills(listing).length > 0">
-                                    <div class="flex flex-wrap gap-1 mb-3">
-                                        <template x-for="pill in getDeliveryPills(listing)" :key="pill">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
-                                        </template>
-                                    </div>
-                                </template>
+                                <div x-data="{ pills: getDeliveryPills(listing) }" x-show="pills.length > 0" class="flex flex-wrap gap-1 mb-3">
+                                    <template x-for="pill in pills" :key="pill">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
+                                    </template>
+                                </div>
 
                                 <div class="flex gap-2">
                                     <a :href="'/listings/' + listing.id" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
@@ -879,21 +880,22 @@
                                     </div>
 
                                     <!-- Delivery Option Pills (list view) -->
-                                    <template x-if="getDeliveryPills(listing).length > 0">
-                                        <div class="flex flex-wrap gap-1 mt-2">
-                                            <template x-for="pill in getDeliveryPills(listing)" :key="pill">
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
-                                            </template>
-                                        </div>
-                                    </template>
+                                    <div x-data="{ pills: getDeliveryPills(listing) }" x-show="pills.length > 0" class="flex flex-wrap gap-1 mt-2">
+                                        <template x-for="pill in pills" :key="pill">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
+                                        </template>
+                                    </div>
                                 </div>
                                 <div class="text-center md:text-left">
-                                    <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
+                                    <div class="text-3xl font-bold text-[#6A8F3B] mb-4 flex items-baseline gap-1">
                                         <template x-if="Number(listing.price || listing.product?.price || 0) === 0">
                                             <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-2xl animate-pulse">{{ app()->getLocale() === 'ar' ? 'السعر عند الطلب' : __('Price on request') }}</span>
                                         </template>
                                         <template x-if="Number(listing.price || listing.product?.price || 0) > 0">
-                                            <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
+                                            <span class="flex items-baseline gap-1">
+                                                <span x-text="formatPrice(listing.price || listing.product?.price, listing.currency)" class="font-black"></span>
+                                                <span x-text="formatUnit(listing)" class="text-sm font-semibold text-gray-400"></span>
+                                            </span>
                                         </template>
                                     </div>
                                     <div class="flex gap-2">
@@ -1098,6 +1100,29 @@ document.addEventListener('alpine:init', () => {
                 // English / French → USD
                 return '$' + amountInUsd.toFixed(2);
             }
+        },
+
+        /**
+         * Returns a short locale-aware unit label like "/ kg", "/ L", "/ ton"
+         * to display beside the price. Returns empty string for whole-farm units.
+         */
+        formatUnit(listing) {
+            const unit = listing.unit || listing.product?.unit || '';
+            const isAr = this.locale === 'ar';
+            const isFr = this.locale === 'fr';
+            const map = {
+                'kg':     isAr ? '/ كغ' : '/ kg',
+                'liter':  isAr ? '/ لتر' : (isFr ? '/ L' : '/ L'),
+                'ton':    isAr ? '/ طن' : (isFr ? '/ tonne' : '/ ton'),
+                'كغ':    '/ كغ',
+                'لتر':  isAr ? '/ لتر' : '/ L',
+                'طن':    isAr ? '/ طن' : (isFr ? '/ tonne' : '/ ton'),
+                // Whole-farm modes: show nothing (price is for entire farm)
+                'سانية': '',
+                'saniya': '',
+                'whole':  '',
+            };
+            return map[unit] !== undefined ? map[unit] : (unit ? '/ ' + unit : '');
         },
 
         getDisplayPrice(amount, storedCurrency) {
