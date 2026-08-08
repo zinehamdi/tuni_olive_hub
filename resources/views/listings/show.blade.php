@@ -272,8 +272,33 @@
                                 </span>
                             @endif
                             @if($listing->packaging)
+                                @php
+                                    $__ploc = app()->getLocale();
+                                    $__pmap = $__ploc === 'fr' ? [
+                                        'سانية للتخضير'        => '🌿 Vente sur pied',
+                                        'سانية للخضارة'        => '🌿 Vente sur pied',
+                                        'زيتون حب'             => '🫒 Olives en grain',
+                                        'صبّة (vrac)'          => 'En Vrac',
+                                        'معلّب (packaged)'     => 'Emballé',
+                                        'جملة (gros)'          => 'En Gros',
+                                        'تفصيل (détail)'       => 'Détail',
+                                        'جملة / صب (vrac)'     => 'Gros / En Vrac',
+                                        'جملة / صب'            => 'Gros / En Vrac',
+                                    ] : ($__ploc === 'en' ? [
+                                        'سانية للتخضير'        => '🌿 Standing Crop Sale',
+                                        'سانية للخضارة'        => '🌿 Standing Crop Sale',
+                                        'زيتون حب'             => '🫒 Olive Drupes',
+                                        'صبّة (vrac)'          => 'Bulk (Vrac)',
+                                        'معلّب (packaged)'     => 'Packaged',
+                                        'جملة (gros)'          => 'Wholesale',
+                                        'تفصيل (détail)'       => 'Retail',
+                                        'جملة / صب (vrac)'     => 'Wholesale / Bulk',
+                                        'جملة / صب'            => 'Wholesale / Bulk',
+                                    ] : []);
+                                    $__plabel = $__pmap[$listing->packaging] ?? $listing->packaging;
+                                @endphp
                                 <span class="px-4 py-2 rounded-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] shadow-sm text-white font-bold">
-                                    {{ __($listing->packaging) }}
+                                    {{ $__plabel }}
                                 </span>
                             @endif
                             @if($listing->status === 'active')
