@@ -437,17 +437,26 @@
                                 <div>
                                     <div class="text-sm text-gray-600">{{ __('Payment Methods') }}</div>
                                     @php
-$__map = [
+$__locale = app()->getLocale();
+$__map = $__locale === 'fr' ? [
+  "cash"=>"Espèces","bank_transfer"=>"Virement bancaire","check"=>"Chèque",
+  "cod"=>"Paiement à la livraison","flouci"=>"Flouci","d17"=>"D17",
+  "stripe"=>"Carte bancaire","bank_lc"=>"Crédit documentaire (LC)"
+] : ($__locale === 'en' ? [
+  "cash"=>"Cash","bank_transfer"=>"Bank Transfer","check"=>"Cheque",
+  "cod"=>"Cash on Delivery","flouci"=>"Flouci","d17"=>"D17",
+  "stripe"=>"Bank Card","bank_lc"=>"Letter of Credit (LC)"
+] : [
   "cash"=>"نقداً","bank_transfer"=>"تحويل بنكي","check"=>"شيك",
   "cod"=>"الدفع عند التسليم","flouci"=>"فلوسي","d17"=>"D17",
   "stripe"=>"بطاقة بنكية","bank_lc"=>"اعتماد مستندي (LC)"
-];
+]);
 $__raw = $listing->payment_methods;
 $__arr = is_array($__raw) ? $__raw
        : (is_string($__raw) ? (json_decode($__raw,true) ?: preg_split('/\s*,\s*/', $__raw,-1,PREG_SPLIT_NO_EMPTY)) : []);
 $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
 @endphp
-<div class="font-bold">{{ implode('، ', array_filter($__arr)) ?: 'غير محدد' }}</div>
+<div class="font-bold">{{ implode($__locale === 'ar' ? '، ' : ', ', array_filter($__arr)) ?: ($__locale === 'ar' ? 'غير محدد' : ($__locale === 'fr' ? 'Non spécifié' : 'Not specified')) }}</div>
                                 </div>
                             </div>
                         @endif
@@ -460,18 +469,29 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                 <div>
                                     <div class="text-sm text-gray-600">{{ __('Delivery Options') }}</div>
                                     @php
-$__map = [
-  "pickup"=>"استلام من الموقع",
-  "local_delivery"=>"توصيل محلي",
-  "carrier"=>"عبر ناقل",
-  "export"=>"تصدير"
-];
-$__raw = $listing->delivery_options;
-$__arr = is_array($__raw) ? $__raw
-       : (is_string($__raw) ? (json_decode($__raw,true) ?: preg_split('/\s*,\s*/', $__raw,-1,PREG_SPLIT_NO_EMPTY)) : []);
-$__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
+$__locale2 = app()->getLocale();
+$__dmap = $__locale2 === 'fr' ? [
+  "pickup"=>"📍 Enlèvement sur place",
+  "local_delivery"=>"🚚 Livraison locale",
+  "carrier"=>"📦 Via transporteur",
+  "export"=>"🚢 Export international (maritime)"
+] : ($__locale2 === 'en' ? [
+  "pickup"=>"📍 On-site Pickup",
+  "local_delivery"=>"🚚 Local Delivery",
+  "carrier"=>"📦 Via Carrier",
+  "export"=>"🚢 International Export (Sea Freight)"
+] : [
+  "pickup"=>"📍 استلام من الموقع",
+  "local_delivery"=>"🚚 توصيل محلي",
+  "carrier"=>"📦 عبر ناقل",
+  "export"=>"🚢 تصدير دولي (شحن بحري)"
+]);
+$__raw2 = $listing->delivery_options;
+$__arr2 = is_array($__raw2) ? $__raw2
+        : (is_string($__raw2) ? (json_decode($__raw2,true) ?: preg_split('/\s*,\s*/', $__raw2,-1,PREG_SPLIT_NO_EMPTY)) : []);
+$__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
 @endphp
-<div class="font-bold">{{ implode('، ', array_filter($__arr)) ?: 'غير محدد' }}</div>
+<div class="font-bold">{{ implode($__locale2 === 'ar' ? '، ' : ', ', array_filter($__arr2)) ?: ($__locale2 === 'ar' ? 'غير محدد' : ($__locale2 === 'fr' ? 'Non spécifié' : 'Not specified')) }}</div>
                                 </div>
                             </div>
                         @endif
@@ -482,15 +502,19 @@ $__arr = array_map(fn($k)=> $__map[trim($k)] ?? trim($k), $__arr);
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
                                 </svg>
                                 <div>
-                                    <div class="text-sm text-gray-600">نوع المعاملة / التفاصيل</div>
+                                    @php $__loc = app()->getLocale(); @endphp
+                                    <div class="text-sm text-gray-600">
+                                        {{ $__loc === 'fr' ? 'Type de transaction' : ($__loc === 'en' ? 'Transaction Type' : 'نوع المعاملة / التفاصيل') }}
+                                    </div>
                                     <div class="font-bold text-[#1B2A1B]">
                                         @if($listing->sale_mode === 'saniya')
-                                            سانية للتخضير
+                                            {{ $__loc === 'fr' ? '🌿 Vente sur pied' : ($__loc === 'en' ? '🌿 Standing Crop Sale' : '🌿 سانية للتخضير') }}
                                             @if($listing->tree_count)
-                                                ({{ $listing->tree_count }} شجرة)
+                                                @php $treeLabel = $__loc === 'fr' ? 'arbres' : ($__loc === 'en' ? 'trees' : 'شجرة'); @endphp
+                                                ({{ $listing->tree_count }} {{ $treeLabel }})
                                             @endif
                                         @else
-                                            زيتون حب
+                                            {{ $__loc === 'fr' ? '🫒 Olives en grain' : ($__loc === 'en' ? '🫒 Olive Drupes' : '🫒 زيتون حب') }}
                                         @endif
                                     </div>
                                 </div>

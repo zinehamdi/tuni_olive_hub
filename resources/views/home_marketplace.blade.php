@@ -760,6 +760,15 @@
                                     </div>
                                 </div>
 
+                                <!-- Delivery Option Pills -->
+                                <template x-if="getDeliveryPills(listing).length > 0">
+                                    <div class="flex flex-wrap gap-1 mb-3">
+                                        <template x-for="pill in getDeliveryPills(listing)" :key="pill">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
+                                        </template>
+                                    </div>
+                                </template>
+
                                 <div class="flex gap-2">
                                     <a :href="'/listings/' + listing.id" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
                                         {{ __('View Details') }}
@@ -868,6 +877,15 @@
                                             <span x-text="formatDate(listing.created_at)"></span>
                                         </div>
                                     </div>
+
+                                    <!-- Delivery Option Pills (list view) -->
+                                    <template x-if="getDeliveryPills(listing).length > 0">
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            <template x-for="pill in getDeliveryPills(listing)" :key="pill">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200" x-text="pill"></span>
+                                            </template>
+                                        </div>
+                                    </template>
                                 </div>
                                 <div class="text-center md:text-left">
                                     <div class="text-3xl font-bold text-[#6A8F3B] mb-4">
@@ -1226,6 +1244,10 @@ document.addEventListener('alpine:init', () => {
             'تفصيل (détail)': '{{ app()->getLocale() === "ar" ? "تفصيل (Détail)" : (app()->getLocale() === "fr" ? "Détail" : "Retail") }}',
             'جملة / صب (vrac)': '{{ app()->getLocale() === "ar" ? "جملة / صبّة" : (app()->getLocale() === "fr" ? "Gros / En Vrac" : "Wholesale / Bulk") }}',
             'جملة / صب': '{{ app()->getLocale() === "ar" ? "جملة / صبّة" : (app()->getLocale() === "fr" ? "Gros / En Vrac" : "Wholesale / Bulk") }}',
+            // Packaging — sale mode labels
+            'سانية للتخضير': '{{ app()->getLocale() === "ar" ? "سانية للتخضير" : (app()->getLocale() === "fr" ? "Vente sur pied" : "Standing Crop Sale") }}',
+            'سانية للخضارة': '{{ app()->getLocale() === "ar" ? "سانية للتخضير" : (app()->getLocale() === "fr" ? "Vente sur pied" : "Standing Crop Sale") }}',
+            'زيتون حب': '{{ app()->getLocale() === "ar" ? "زيتون حب" : (app()->getLocale() === "fr" ? "Olives en grain" : "Olive Drupes") }}',
             // Misc UI
             "This website is secure and does not have redirected links that bother users.": "{{ __('This website is secure and does not have redirected links that bother users.') }}",
             "ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.": "{{ __('ZinToop connects direct olive oil producers with buyers across Tunisia effortlessly.') }}",
@@ -1458,6 +1480,30 @@ document.addEventListener('alpine:init', () => {
 
             // 3. Arabic location token replacement (for mixed strings like "from القيروان")
             return this.translateLocation(text);
+        },
+
+        /**
+         * Returns an array of delivery option pill objects {icon, label}
+         * for the current locale, parsed from listing.delivery_options.
+         */
+        getDeliveryPills(listing) {
+            if (!listing.delivery_options) return [];
+            const isAr = this.locale === 'ar';
+            const isFr = this.locale === 'fr';
+            const labels = {
+                pickup:         isAr ? '📍 استلام' : (isFr ? '📍 Sur place'       : '📍 Pickup'),
+                local_delivery: isAr ? '🚚 توصيل'   : (isFr ? '🚚 Livraison'      : '🚚 Local Delivery'),
+                export:         isAr ? '🚢 تصدير'   : (isFr ? '🚢 Export'         : '🚢 Export'),
+                carrier:        isAr ? '📦 ناقل'    : (isFr ? '📦 Transporteur'   : '📦 Carrier'),
+            };
+            let opts = listing.delivery_options;
+            if (typeof opts === 'string') {
+                try { opts = JSON.parse(opts); } catch(e) {
+                    opts = opts.split(',').map(s => s.trim()).filter(Boolean);
+                }
+            }
+            if (!Array.isArray(opts)) return [];
+            return opts.filter(k => labels[k]).map(k => labels[k]);
         },
 
         getEnhancedTitle(listing) {

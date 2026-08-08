@@ -356,7 +356,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <div class="relative">
                                 <input type="number" x-model="formData.price" step="0.01" min="0" :required="!formData.price_on_request"
                                     class="w-full text-3xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 pr-24 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition text-right"
-                                    placeholder="مثال: 2.50">
+                                    :placeholder="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton' ? 'مثال: 800 — سعر الطن الواحد (× كمية الأطنان = إجمالي السانية)' : (formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole' ? 'مثال: 9600 — ثمن السانية كاملاً (جميع الأشجار)' : 'مثال: 2.50')">
                                 <span class="absolute left-6 top-1/2 transform -translate-y-1/2 text-2xl font-bold text-gray-400" x-text="formData.currency"></span>
                             </div>
                         </div>
@@ -488,12 +488,12 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             class="w-full border-2 rounded-xl p-5 transition-all text-right flex items-center justify-between hover:shadow-lg"
                             x-cloak>
                             <div class="flex items-center">
-                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center ml-4">
-                                    <span class="text-2xl">✈️</span>
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center ml-4">
+                                    <span class="text-2xl">🚢</span>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-lg">تصدير دولي</h4>
-                                    <p class="text-sm opacity-80">الشحن إلى خارج البلاد</p>
+                                    <h4 class="font-bold text-lg">تصدير دولي (شحن بحري)</h4>
+                                    <p class="text-sm opacity-80">الشحن إلى خارج البلاد عبر الموانئ</p>
                                 </div>
                             </div>
                             <input type="checkbox" :checked="formData.delivery_options.includes('export')" class="w-6 h-6 rounded">
@@ -714,7 +714,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </div>
                         <div class="flex justify-between items-start py-3 border-b border-gray-300">
                             <span class="text-gray-600">التسليم</span>
-                            <span class="font-bold text-left" x-text="formData.delivery_options.length > 0 ? formData.delivery_options.map(opt => ({pickup: 'استلام من الموقع', local_delivery: 'توصيل محلي', export: 'تصدير دولي', carrier: 'عبر ناقل'}[opt] || opt)).join('، ') : 'غير محدد'"></span>
+                            <span class="font-bold text-left" x-text="formData.delivery_options.length > 0 ? formData.delivery_options.map(opt => ({pickup: 'استلام من الموقع', local_delivery: 'توصيل محلي', export: '🚢 تصدير دولي (شحن بحري)', carrier: 'عبر ناقل'}[opt] || opt)).join('، ') : 'غير محدد'"></span>
                         </div>
                         <div x-show="formData.location_text || formData.governorate" class="flex justify-between items-start py-3 border-b border-gray-300">
                             <span class="text-gray-600 flex items-center gap-2">

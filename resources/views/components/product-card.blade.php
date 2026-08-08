@@ -6,7 +6,8 @@
     'image' => null, 
     'media' => null,
     'seller' => null,
-    'productType' => 'oil'
+    'productType' => 'oil',
+    'deliveryOptions' => null,
 ])
 
 <div class="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-lg transition-shadow duration-300">
@@ -76,6 +77,34 @@
         <!-- Price -->
         @if($price)
             <div class="mt-2 font-bold text-[#6A8F3B] text-lg">{{ $price }}</div>
+        @endif
+
+        <!-- Delivery Option Pills -->
+        @if($deliveryOptions)
+            @php
+                $__cardLoc = app()->getLocale();
+                $__cardDlabels = $__cardLoc === 'fr' ? [
+                    'pickup' => '📍 Sur place', 'local_delivery' => '🚚 Livraison',
+                    'export' => '🚢 Export', 'carrier' => '📦 Transporteur',
+                ] : ($__cardLoc === 'en' ? [
+                    'pickup' => '📍 Pickup', 'local_delivery' => '🚚 Local Delivery',
+                    'export' => '🚢 Export', 'carrier' => '📦 Carrier',
+                ] : [
+                    'pickup' => '📍 استلام', 'local_delivery' => '🚚 توصيل',
+                    'export' => '🚢 تصدير', 'carrier' => '📦 ناقل',
+                ]);
+                $__cardDkeys = is_array($deliveryOptions) ? $deliveryOptions
+                    : (is_string($deliveryOptions) ? (json_decode($deliveryOptions, true) ?: preg_split('/\s*,\s*/', $deliveryOptions, -1, PREG_SPLIT_NO_EMPTY)) : []);
+            @endphp
+            <div class="flex flex-wrap gap-1 mt-2">
+                @foreach($__cardDkeys as $__cdk)
+                    @if(isset($__cardDlabels[trim($__cdk)]))
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                            {{ $__cardDlabels[trim($__cdk)] }}
+                        </span>
+                    @endif
+                @endforeach
+            </div>
         @endif
         
         <!-- Slot for additional content (buttons, etc.) -->

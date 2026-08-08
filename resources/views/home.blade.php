@@ -319,9 +319,43 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     </div>
                                 </div>
                                 
-                                <div class="mt-4">
+                                @if($listing->delivery_options)
+                                    @php
+                                        $__dloc = app()->getLocale();
+                                        $__dlabels = $__dloc === 'fr' ? [
+                                            'pickup' => '📍 Sur place',
+                                            'local_delivery' => '🚚 Livraison',
+                                            'export' => '🚢 Export',
+                                            'carrier' => '📦 Transporteur',
+                                        ] : ($__dloc === 'en' ? [
+                                            'pickup' => '📍 Pickup',
+                                            'local_delivery' => '🚚 Local Delivery',
+                                            'export' => '🚢 Export',
+                                            'carrier' => '📦 Carrier',
+                                        ] : [
+                                            'pickup' => '📍 استلام',
+                                            'local_delivery' => '🚚 توصيل',
+                                            'export' => '🚢 تصدير',
+                                            'carrier' => '📦 ناقل',
+                                        ]);
+                                        $__draww = $listing->delivery_options;
+                                        $__dkeys = is_array($__draww) ? $__draww
+                                            : (is_string($__draww) ? (json_decode($__draww, true) ?: preg_split('/\s*,\s*/', $__draww, -1, PREG_SPLIT_NO_EMPTY)) : []);
+                                    @endphp
+                                    <div class="flex flex-wrap gap-1 mb-3">
+                                        @foreach($__dkeys as $__dk)
+                                            @if(isset($__dlabels[trim($__dk)]))
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                                    {{ $__dlabels[trim($__dk)] }}
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                <div class="mt-2">
                                     <a href="{{ route('listings.show', $listing) }}" class="block w-full text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-semibold">
-                                        عرض التفاصيل
+                                        {{ app()->getLocale() === 'fr' ? 'Voir les détails' : (app()->getLocale() === 'en' ? 'View Details' : 'عرض التفاصيل') }}
                                     </a>
                                 </div>
                             </div>
