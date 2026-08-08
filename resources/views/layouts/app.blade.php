@@ -79,14 +79,8 @@
     <link rel="alternate" hreflang="en" href="{{ url()->current() }}?lang=en">
     <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
 
-    <!-- Canonical URL -->
-    @php
-        $currentLocale = app()->getLocale();
-        $canonicalUrl = $currentLocale === 'ar' 
-            ? url()->current() 
-            : url()->current() . '?lang=' . $currentLocale;
-    @endphp
-    <link rel="canonical" href="{{ $canonicalUrl }}">
+    <!-- Canonical URL — always the clean base URL (hreflang handles language variants) -->
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">

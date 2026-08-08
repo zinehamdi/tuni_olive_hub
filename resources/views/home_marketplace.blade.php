@@ -1790,9 +1790,43 @@ document.addEventListener('alpine:init', () => {
                     "price": "{{ $listing->price }}",
                     "priceCurrency": "TND",
                     "availability": "https://schema.org/InStock",
+                    "validFrom": "{{ $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
                     "seller": {
                         "@@type": "Organization",
                         "name": "{{ $listing->seller->name ?? 'بائع' }}"
+                    },
+                    "shippingDetails": {
+                        "@@type": "OfferShippingDetails",
+                        "shippingDestination": {
+                            "@@type": "DefinedRegion",
+                            "addressCountry": "TN"
+                        },
+                        "shippingRate": {
+                            "@@type": "MonetaryAmount",
+                            "value": "0",
+                            "currency": "TND"
+                        },
+                        "deliveryTime": {
+                            "@@type": "ShippingDeliveryTime",
+                            "handlingTime": {
+                                "@@type": "QuantitativeValue",
+                                "minValue": 1,
+                                "maxValue": 3,
+                                "unitCode": "DAY"
+                            },
+                            "transitTime": {
+                                "@@type": "QuantitativeValue",
+                                "minValue": 2,
+                                "maxValue": 7,
+                                "unitCode": "DAY"
+                            }
+                        }
+                    },
+                    "hasMerchantReturnPolicy": {
+                        "@@type": "MerchantReturnPolicy",
+                        "applicableCountry": "TN",
+                        "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+                        "merchantReturnDays": 0
                     }
                 },
                 "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') !!}",

@@ -87,6 +87,7 @@
         "priceCurrency": "{{ $listing->currency ?? 'TND' }}",
         "price": "{{ $listing->price }}",
         "priceValidUntil": "{{ now()->addDays(30)->format('Y-m-d') }}",
+        "validFrom": "{{ $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
         "itemCondition": "https://schema.org/NewCondition",
         "availability": "https://schema.org/InStock",
         "seller": {
@@ -98,7 +99,33 @@
           "shippingDestination": {
             "@@type": "DefinedRegion",
             "addressCountry": "TN"
+          },
+          "shippingRate": {
+            "@@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "{{ $listing->currency ?? 'TND' }}"
+          },
+          "deliveryTime": {
+            "@@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@@type": "QuantitativeValue",
+              "minValue": 2,
+              "maxValue": 7,
+              "unitCode": "DAY"
+            }
           }
+        },
+        "hasMerchantReturnPolicy": {
+          "@@type": "MerchantReturnPolicy",
+          "applicableCountry": "TN",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+          "merchantReturnDays": 0
         }
       }
     }
