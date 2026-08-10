@@ -103,7 +103,18 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         
         $heroSlides = \App\Models\HeroSlide::where('is_active', true)->orderBy('order', 'asc')->get();
         
-        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides'));
+        $platformStats = \Illuminate\Support\Facades\Cache::remember('home_platform_stats', now()->addMinutes(30), function () {
+            return [
+                'visits' => \App\Models\Visitor::sum('hits'),
+                'users' => \App\Models\User::count(),
+                'producers' => \App\Models\User::where('role', 'producer')->count(),
+                'mills' => \App\Models\User::where('role', 'mill')->count(),
+                'packers' => \App\Models\User::where('role', 'packer')->count(),
+                'listings' => \App\Models\Listing::where('status', 'active')->count(),
+            ];
+        });
+        
+        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides', 'platformStats'));
     })->name('home');
     
     // Public & legal pages

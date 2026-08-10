@@ -217,22 +217,30 @@
             </div>
 
             <!-- Quick Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'هذه بعض الإحصائيات السريعة حول العروض المتوفرة في المنصة' : 'These are some quick stats about the available offers' }}">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8 max-w-6xl mx-auto" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'هذه بعض الإحصائيات السريعة حول المنصة' : 'These are some quick stats about the platform' }}">
                 <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                    <div class="text-3xl font-bold" x-text="totalListings"></div>
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['visits'] ?? 0) }}</div>
+                    <div class="text-sm text-white/80">{{ __('Total Visits') }}</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['users'] ?? 0) }}</div>
+                    <div class="text-sm text-white/80">{{ __('Registered Users') }}</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['producers'] ?? 0) }}</div>
+                    <div class="text-sm text-white/80">{{ __('Farmers') }}</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['mills'] ?? 0) }}</div>
+                    <div class="text-sm text-white/80">{{ __('Olive Mills') }}</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['packers'] ?? 0) }}</div>
+                    <div class="text-sm text-white/80">{{ __('Packers') }}</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                    <div class="text-3xl font-bold">{{ number_format($platformStats['listings'] ?? 0) }}</div>
                     <div class="text-sm text-white/80">{{ __('Active listings') }}</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                    <div class="text-3xl font-bold" x-text="oilCount"></div>
-                    <div class="text-sm text-white/80">{{ __('Olive Oil') }}</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                    <div class="text-3xl font-bold" x-text="oliveCount"></div>
-                    <div class="text-sm text-white/80">{{ __('Olives') }}</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                    <div class="text-3xl font-bold" x-text="filteredListings.length"></div>
-                    <div class="text-sm text-white/80">{{ __('Search results') }}</div>
                 </div>
             </div>
         </div>
