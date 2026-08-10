@@ -526,7 +526,7 @@
 
 
         <!-- Horizontal Filter Bar -->
-        <div class="filter-container bg-white/95 backdrop-blur-md border border-gray-150 rounded-2xl p-6 shadow-md mb-8 lg:sticky lg:top-44 lg:z-30 relative z-20"
+        <div class="filter-container bg-white/95 backdrop-blur-md border border-gray-150 rounded-2xl p-4 shadow-md mb-4 lg:sticky lg:top-[124px] lg:z-30 relative z-20"
              x-show="showFilters"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-2"
@@ -545,7 +545,7 @@
                         </svg>
                         {{ __('Distance') }}
                     </label>
-                    <select x-model="filters.distance" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                    <select x-model="filters.distance" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
                         <option value="all">{{ __('All distances') }}</option>
                         <option value="10">{{ __('Less than 10 km') }}</option>
                         <option value="25">{{ __('Less than 25 km') }}</option>
@@ -560,7 +560,7 @@
                         <span>🚜</span>
                         {{ __('Product Type') }}
                     </label>
-                    <select x-model="filters.type" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                    <select x-model="filters.type" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
                         <option value="all">{{ __('All') }}</option>
                         <option value="oil">🫗 {{ __('Olive Oil') }}</option>
                         <option value="olive">🫒 {{ __('Olives') }}</option>
@@ -605,7 +605,7 @@
                         <span>📊</span>
                         {{ __('Sort by') }}
                     </label>
-                    <select x-model="filters.sortBy" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
+                    <select x-model="filters.sortBy" @change="filterListings" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23718096%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
                         <option value="nearest">{{ __('Nearest to me') }}</option>
                         <option value="newest">{{ __('Newest') }}</option>
                         <option value="oldest">{{ __('Oldest') }}</option>

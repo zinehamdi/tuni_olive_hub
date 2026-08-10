@@ -266,15 +266,15 @@
         <!-- Main Nav Bar -->
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16 sm:h-18">
+                <div class="flex items-center justify-between h-14 sm:h-[60px]">
                     <!-- Modern Animated Logo -->
                     <a href="{{ url('/') }}" class="flex-shrink-0 group flex items-center gap-3 no-underline">
-                        <div class="relative w-12 h-12 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                        <div class="relative w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                             <!-- Background Glow -->
                             <div class="absolute inset-0 bg-[#6A8F3B]/20 rounded-xl blur-lg group-hover:bg-[#C8A356]/30 transition-all duration-500"></div>
                             
                             <!-- SVG Logo -->
-                            <svg class="relative w-10 h-10 drop-shadow-md logo-animate" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="relative w-8 h-8 drop-shadow-md logo-animate" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <!-- Outer Drop Shape -->
                                 <path d="M50 95C72.0914 95 90 77.0914 90 55C90 32.9086 50 5 50 5C50 5 10 32.9086 10 55C10 77.0914 27.9086 95 50 95Z" fill="url(#logo_gradient)" class="drop-pulse"/>
                                 
@@ -353,17 +353,17 @@
                             </div>
                             <span>{{ __('nav.sell_your_oil') }}</span>
                         </a>
-                        <a href="{{ route('how-it-works') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_how') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.index') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_services_hub') ?? __('nav.services_hub') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                             </div>
-                            <span>{{ __('nav.how_it_works') }}</span>
+                            <span>{{ __('nav.services_hub') }}</span>
                         </a>
-                        <a href="{{ route('about') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_about') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.pricing') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_our_services') ?? __('nav.our_services') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                             </div>
-                            <span>{{ __('nav.about') }}</span>
+                            <span>{{ __('nav.our_services') }}</span>
                         </a>
                         @auth
                             <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_dashboard') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
@@ -723,16 +723,16 @@
     </nav>
 
     <!-- Spacer for fixed navbar -->
-    <div class="h-16 sm:h-[72px]"></div>
+    <div class="h-14 sm:h-[60px]"></div>
 
     <!-- Price Ticker - Fixed below navbar -->
-    <div class="fixed top-16 sm:top-[72px] left-0 right-0 z-40 shadow-md">
+    <div class="fixed top-14 sm:top-[60px] left-0 right-0 z-40 shadow-md">
         @include('components.price-ticker')
         @include('components.ads-ticker')
     </div>
 
-    <!-- Spacer for both tickers (price ~50px + ads ~38px) -->
-    <div class="h-24"></div>
+    <!-- Spacer for both tickers (price ~32px + ads ~32px) -->
+    <div class="h-16"></div>
 
     @isset($header)
     <header class="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-100">
@@ -749,20 +749,21 @@
     </main>
 
     <!-- Unified Black Footer -->
-    <footer class="bg-gray-900 text-white py-12 px-4 mt-12">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+    <footer class="bg-gray-900 text-white py-6 px-4 mt-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" style="height: 40px; width: 80px;" class="h-10 w-20 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="ZinToop" style="height: 32px; width: 64px;" class="h-8 w-16 rounded-xl object-contain bg-white p-0.5 border border-gray-100 shadow-sm">
                     <h3 class="text-xl font-bold">ZinToop</h3>
                 </div>
-                <p class="text-gray-400">{{ __('Platform connecting producers and buyers') }}</p>
+                <p class="text-gray-400 text-sm">{{ __('Platform connecting producers and buyers') }}</p>
             </div>
             <div>
                 <h4 class="font-bold mb-4">{{ __('Quick Links') }}</h4>
                 <ul class="space-y-2 text-gray-400">
                     <li><a href="{{ url('/') }}" class="hover:text-white transition">{{ __('Home') }}</a></li>
                     <li><a href="{{ url('/#products') }}" class="hover:text-white transition">{{ __('Products') }}</a></li>
+                    <li><a href="{{ route('how-it-works') }}" class="hover:text-white transition">{{ __('nav.how_it_works') }}</a></li>
                     <li><a href="{{ route('about') }}" class="hover:text-white transition">{{ __('About') }}</a></li>
                     <li><a href="{{ route('pricing') }}" class="hover:text-white transition">{{ __('nav.pricing') }}</a></li>
                 </ul>
@@ -790,7 +791,7 @@
                 </div>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto mt-6 pt-6 border-t border-gray-800 text-center text-gray-400 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
             <p>© 2024 - {{ now()->year }} ZinToop. {{ __('All Rights Reserved') }}.</p>
             <div class="flex flex-wrap justify-center gap-4 text-sm">
                 <a href="{{ route('terms') }}" class="hover:text-white transition">{{ __('nav.terms') }}</a>

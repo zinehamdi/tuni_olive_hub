@@ -130,7 +130,7 @@
 {{-- ── Price Ticker Bar ────────────────────────────────────────────────────── --}}
 <div class="relative overflow-hidden bg-gradient-to-r from-[#C8A356] via-[#d4b166] to-[#C8A356] backdrop-blur-md border-b border-[#b08a3c]/30 shadow-sm flex items-center"
      dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}"
-     style="height: 46px; min-height: 46px; overflow: hidden;">
+     style="height: 32px; min-height: 32px; overflow: hidden;">
 
     <div class="relative z-10 w-full h-full flex items-center">
         <div class="ticker-wrapper">

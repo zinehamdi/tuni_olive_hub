@@ -140,7 +140,7 @@
     }
 </style>
 
-<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20 ads-ticker-bar flex items-center" style="height: 48px; max-height: 80px; overflow: hidden;">
+<div class="relative overflow-hidden bg-gradient-to-r from-[#1a3310] via-[#1f3d14] to-[#1a3310] border-t border-[#6A8F3B]/20 ads-ticker-bar flex items-center" style="height: 32px; max-height: 50px; overflow: hidden;">
 
     <div class="relative z-10 w-full h-full flex items-center py-1">
         <div class="ads-ticker-wrapper">
