@@ -105,9 +105,9 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         
         $platformStats = \Illuminate\Support\Facades\Cache::remember('home_platform_stats', now()->addMinutes(30), function () {
             return [
-                'visits' => \App\Models\Visitor::sum('hits'),
+                'visits' => \App\Models\Visitor::where('is_bot', false)->count(),
                 'users' => \App\Models\User::count(),
-                'producers' => \App\Models\User::where('role', 'producer')->count(),
+                'producers' => \App\Models\User::where('role', 'farmer')->count(),
                 'mills' => \App\Models\User::where('role', 'mill')->count(),
                 'packers' => \App\Models\User::where('role', 'packer')->count(),
                 'listings' => \App\Models\Listing::where('status', 'active')->count(),
