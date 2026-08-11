@@ -19,7 +19,7 @@
     $roleTitlesGlobal = [
         'carrier' => ['ar' => 'خدمات النقل اللوجستي والبري', 'fr' => 'Services de Transport Logistique', 'en' => 'Logistic & Land Transport Services'],
         'mill' => ['ar' => 'خدمات معصرة زيتون', 'fr' => 'Services de Moulin / Pressoir', 'en' => 'Olive Mill Services'],
-        'packer' => ['ar' => 'خدمات تعبئة وتغليف وتعبئة', 'fr' => 'Services d\'Embouteillage & Emballage', 'en' => 'Packaging & Bottling Services'],
+        'packer' => ['ar' => 'خدمات تعبئة وتغليف', 'fr' => 'Services d\'Embouteillage & Emballage', 'en' => 'Packaging & Bottling Services'],
         'transiteur' => ['ar' => 'خدمات مخلص جمركي وتصدير', 'fr' => 'Services de Transiteur', 'en' => 'Customs Broker & Export Services'],
         'comptable' => ['ar' => 'خدمات محاسبة فلاحية ومالية', 'fr' => 'Services de Comptable', 'en' => 'Accounting & Financial Services'],
         'service_bureau' => ['ar' => 'خدمات مكتب إداري وتسهيلات', 'fr' => 'Services de Bureau de services', 'en' => 'Administrative Service Bureau'],
@@ -345,7 +345,7 @@
                             
                             <!-- Right Side: Governorate & Flag -->
                             <div class="relative z-10 flex items-center gap-1">
-                                <span class="text-white/90 font-black">{{ $provider->addresses->first()->governorate ?? 'تونس' }}</span>
+                                <span class="text-white/90 font-black">{{ $provider->addresses->first()->governorate ?? (app()->getLocale() === 'ar' ? 'تونس (عام)' : 'Tunisia') }}</span>
                                 <span>🇹🇳</span>
                             </div>
                             
