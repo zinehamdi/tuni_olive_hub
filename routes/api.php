@@ -50,6 +50,9 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [\App\Http\Controllers\Api\V1\ApiAuthController::class, 'logout']);
         
+        // Device Tokens
+        Route::post('device-tokens', [\App\Http\Controllers\Api\V1\DeviceTokenController::class, 'store']);
+        
         // Listings restricted operations
         Route::post('listings', [\App\Http\Controllers\Api\V1\ListingController::class, 'store']);
         Route::match(['put', 'patch'], 'listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'update']);

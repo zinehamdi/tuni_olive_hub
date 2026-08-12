@@ -10,13 +10,19 @@ use Illuminate\Support\Str;
 
 class SocialLoginController extends Controller
 {
-    public function redirect()
+    public function redirect(\Illuminate\Http\Request $request)
     {
+        if ($request->has('mobile_app')) {
+            session(['mobile_app' => true]);
+        }
         return Socialite::driver('facebook')->redirect();
     }
 
-    public function redirectGoogle()
+    public function redirectGoogle(\Illuminate\Http\Request $request)
     {
+        if ($request->has('mobile_app')) {
+            session(['mobile_app' => true]);
+        }
         if (empty(config('services.google.client_id'))) {
             return redirect('/register')->with('info', __('تسجيل الدخول عبر Google بيتطلب إعداد المعرف في ملف البيئة. يرجى التسجيل بالبريد الإلكتروني حالياً.'));
         }
@@ -110,11 +116,16 @@ class SocialLoginController extends Controller
 
         // Redirect handled by EnsureOnboardingIsComplete middleware automatically
         // but we can be explicit if we want:
+        $intended = '/dashboard';
         if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
-            return redirect()->route('onboarding.complete');
+            $intended = route('onboarding.complete');
         }
 
-        return redirect()->intended('/dashboard');
+        if (session()->pull('mobile_app')) {
+            return redirect('zintoop://login-success');
+        }
+
+        return redirect()->intended($intended);
     }
 
     public function callbackGoogle()
@@ -179,10 +190,15 @@ class SocialLoginController extends Controller
 
         Auth::login($user, true);
 
+        $intended = '/dashboard';
         if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
-            return redirect()->route('onboarding.complete');
+            $intended = route('onboarding.complete');
         }
 
-        return redirect()->intended('/dashboard');
+        if (session()->pull('mobile_app')) {
+            return redirect('zintoop://login-success');
+        }
+
+        return redirect()->intended($intended);
     }
 }

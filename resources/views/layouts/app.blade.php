@@ -392,7 +392,7 @@
                                  x-transition:enter="transition ease-out duration-200" 
                                  x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
                                  x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
-                                 class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden">
+                                 class="fixed left-4 right-4 top-16 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-3 w-auto sm:w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden">
                                 <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
                                     <h3 class="font-bold text-gray-900 text-sm">{{ __('Notifications') }}</h3>
                                     <button @click="markNotificationsAsRead()" class="text-[10px] text-[#6A8F3B] hover:text-[#5a7a2f] hover:underline font-bold transition">

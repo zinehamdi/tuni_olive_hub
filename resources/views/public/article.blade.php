@@ -3,6 +3,7 @@
 @section('title', $article->title[app()->getLocale()] ?? 'Article')
 
 @section('og_title', $article->title[app()->getLocale()] ?? '')
+@section('twitter_title', $article->title[app()->getLocale()] ?? '')
 @section('og_description', Str::limit(strip_tags($article->content[app()->getLocale()] ?? ''), 150))
 @section('description', Str::limit(strip_tags($article->content[app()->getLocale()] ?? ''), 150))
 @section('og_image', Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? url($article->image) : (Storage::disk('public')->exists($article->image) ? url(Storage::url($article->image)) : url('images/' . $article->image))))
