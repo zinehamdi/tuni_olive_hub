@@ -683,8 +683,13 @@
                                         <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         
                                         <div class="relative z-10 flex flex-col items-center text-center">
-                                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center shadow-xl mb-1.5">
-                                                <span class="text-white text-xl font-black tracking-wider uppercase" x-text="getInitials(listing.product?.variety || listing.seller?.name || 'Z')"></span>
+                                            <div class="min-w-[5rem] px-4 h-10 rounded-lg bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-xl mb-1.5 overflow-hidden relative">
+                                                <template x-if="listing.seller?.profile_picture">
+                                                    <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
+                                                </template>
+                                                <template x-if="!listing.seller?.profile_picture">
+                                                    <span class="text-[#143618] text-lg font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
                                                   x-text="(listing.category === 'olive' || listing.product?.type === 'olive') ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
@@ -815,8 +820,13 @@
                                         <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         
                                         <div class="relative z-10 flex flex-col items-center text-center">
-                                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center shadow-xl mb-1.5">
-                                                <span class="text-white text-xl font-black tracking-wider uppercase" x-text="getInitials(listing.product?.variety || listing.seller?.name || 'Z')"></span>
+                                            <div class="min-w-[5rem] px-4 h-10 rounded-lg bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-xl mb-1.5 overflow-hidden relative">
+                                                <template x-if="listing.seller?.profile_picture">
+                                                    <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
+                                                </template>
+                                                <template x-if="!listing.seller?.profile_picture">
+                                                    <span class="text-[#143618] text-lg font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
                                                   x-text="(listing.category === 'olive' || listing.product?.type === 'olive') ? '🫒 ' + ('{{ app()->getLocale() === 'ar' ? 'زيتون' : __('Olives') }}') : '🫗 ' + ('{{ app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil') }}')">
@@ -1232,15 +1242,30 @@ document.addEventListener('alpine:init', () => {
                 this.uploadingQuickFile = false;
             }
         },
+        arabicToLatinInitial(char) {
+            const map = {
+                'ا': 'A', 'أ': 'A', 'إ': 'A', 'آ': 'A',
+                'ب': 'B', 'ت': 'T', 'ث': 'T', 'ج': 'J',
+                'ح': 'H', 'خ': 'K', 'د': 'D', 'ذ': 'D',
+                'ر': 'R', 'ز': 'Z', 'س': 'S', 'ش': 'S',
+                'ص': 'S', 'ض': 'D', 'ط': 'T', 'ظ': 'Z',
+                'ع': 'A', 'غ': 'G', 'ف': 'F', 'ق': 'K',
+                'ك': 'K', 'ل': 'L', 'م': 'M', 'ن': 'N',
+                'ه': 'H', 'ة': 'H', 'و': 'W', 'ي': 'Y',
+                'ى': 'Y', 'ئ': 'Y', 'ؤ': 'Y'
+            };
+            return map[char] || char.toUpperCase();
+        },
         getInitials(text) {
             if (!text) return 'ZT';
             const clean = text.trim();
-            if (clean.length <= 2) return clean.toUpperCase();
             const parts = clean.split(/\s+/);
-            if (parts.length >= 2) {
-                return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+            
+            if (parts.length === 1 && clean.length > 1) {
+                return this.arabicToLatinInitial(clean.charAt(0)) + this.arabicToLatinInitial(clean.charAt(1));
             }
-            return clean.substring(0, 2).toUpperCase();
+            
+            return parts.map(word => this.arabicToLatinInitial(word.charAt(0))).join('').toUpperCase();
         },
         translations: {
             'Extra Virgin Olive Oil': '{{ __("Extra Virgin Olive Oil") }}',
