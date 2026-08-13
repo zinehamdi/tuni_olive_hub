@@ -683,12 +683,12 @@
                                         <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         
                                         <div class="relative z-10 flex flex-col items-center text-center">
-                                            <div class="min-w-[5rem] px-4 h-10 rounded-lg bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-xl mb-1.5 overflow-hidden relative">
+                                            <div class="min-w-[7rem] px-5 h-16 rounded-xl bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-2xl mb-1.5 overflow-hidden relative">
                                                 <template x-if="listing.seller?.profile_picture">
                                                     <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
                                                 </template>
                                                 <template x-if="!listing.seller?.profile_picture">
-                                                    <span class="text-[#143618] text-lg font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
                                                 </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
@@ -820,12 +820,12 @@
                                         <div class="absolute -left-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl"></div>
                                         
                                         <div class="relative z-10 flex flex-col items-center text-center">
-                                            <div class="min-w-[5rem] px-4 h-10 rounded-lg bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-xl mb-1.5 overflow-hidden relative">
+                                            <div class="min-w-[7rem] px-5 h-16 rounded-xl bg-[#FDFBF7] border-2 border-[#C8A356] flex items-center justify-center shadow-2xl mb-1.5 overflow-hidden relative">
                                                 <template x-if="listing.seller?.profile_picture">
                                                     <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
                                                 </template>
                                                 <template x-if="!listing.seller?.profile_picture">
-                                                    <span class="text-[#143618] text-lg font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
                                                 </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
@@ -1261,8 +1261,8 @@ document.addEventListener('alpine:init', () => {
             const clean = text.trim();
             const parts = clean.split(/\s+/);
             
-            if (parts.length === 1 && clean.length > 1) {
-                return this.arabicToLatinInitial(clean.charAt(0)) + this.arabicToLatinInitial(clean.charAt(1));
+            if (parts.length === 1) {
+                return clean.substring(0, 4).split('').map(char => this.arabicToLatinInitial(char)).join('').toUpperCase();
             }
             
             return parts.map(word => this.arabicToLatinInitial(word.charAt(0))).join('').toUpperCase();
