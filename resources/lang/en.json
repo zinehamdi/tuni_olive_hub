@@ -107,5 +107,9 @@
     "Browse and purchase products": "Browse and purchase products",
     "Next": "Next",
     "Already have an account?": "Already have an account?",
-    "Log in": "Log in"
+    "Log in": "Log in",
+    "nav.services_hub": "Services Hub",
+    "nav.tooltip_services_hub": "Explore the services hub",
+    "nav.our_services": "Our Services",
+    "nav.tooltip_our_services": "Explore our services"
 }
