@@ -124,6 +124,11 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides', 'platformStats'));
     })->name('home');
     
+    // Redirect /products to home page anchored at products section
+    Route::get('/products', function ($locale) {
+        return redirect(url($locale . '/#products'), 301);
+    })->name('products');
+    
     // Public & legal pages
     Route::view('/about', 'public.about')->name('about');
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');

@@ -107,9 +107,9 @@
                                 اطلب عولة
                             </a>
 
-                            <a href="{{ $safeRoute('gulf.catalog', '/gulf/catalog') }}"
+                            <a href="{{ $safeRoute('catalog', '/catalog') }}"
                                class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:opacity-90 focus:ring focus:outline-none">
-                                شوف عروض التصدير
+                                {{ __('Premium Export Catalog') }}
                             </a>
                         </div>
                     </div>
@@ -213,11 +213,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="grid sm:grid-cols-3 gap-4">
         <a href="{{ $safeRoute('listings.create', '/listings/create') }}" class="block border rounded p-4 hover:shadow bg-[#6A8F3B] text-white text-center font-bold transition">اعرض زيتك/زيتونك اليوم</a>
         <a href="{{ $safeRoute('orders.requestAoula', '/orders/request-aoula') }}" class="block border rounded p-4 hover:shadow bg-[#C8A356] text-white text-center font-bold transition">اطلب عولة</a>
-        <a href="{{ $safeRoute('gulf.catalog', '/gulf/catalog') }}" class="block border rounded p-4 hover:shadow bg-blue-600 text-white text-center font-bold transition">شوف عروض التصدير</a>
+        <a href="{{ $safeRoute('catalog', '/catalog') }}" class="block border rounded p-4 hover:shadow bg-blue-600 text-white text-center font-bold transition">{{ __('Premium Export Catalog') }}</a>
     </div>
 
     <!-- Latest Products Section -->
-    <div class="mt-8">
+    <div class="mt-8" id="products">
         <h2 class="text-2xl font-bold text-gray-900 mb-6 text-right">أحدث المنتجات المعروضة</h2>
         
         @if(isset($featuredListings) && $featuredListings->count() > 0)
