@@ -407,8 +407,9 @@ Route::middleware('set.locale')->group(function(){
     // Ezzitouni AI Chatbot Route
     Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
 });
+}); // end locale prefix group 2
 
-// Authentication routes
+// Authentication routes are kept outside locale prefix to prevent Missing required parameter exception
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
@@ -420,8 +421,6 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
     }
     return view('auth.register_' . $role, compact('role'));
 })->name('register.role');
-
-}); // end locale prefix group 2
 
 // ═══════════════════════════════════════════════════════════════
 // NON-LOCALISED INFRASTRUCTURE ROUTES
