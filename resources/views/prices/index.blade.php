@@ -263,11 +263,11 @@
                                 <div class="flex items-center gap-2">
                                     <span class="text-xl">🇹🇳</span>
                                     <h3 class="font-extrabold text-base text-white leading-tight">
-                                        {{ $soukDisplay ?: 'سوق تونس' }}
+                                        {{ __($soukDisplay ?: 'سوق تونس') }}
                                     </h3>
                                 </div>
                                 <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#C8A356] text-gray-950 shadow-sm">
-                                    {{ $gov ?: 'تونس' }}
+                                    {{ __($gov ?: 'تونس') }}
                                 </span>
                             </div>
 
@@ -278,7 +278,7 @@
                                     @else
                                         <span class="text-emerald-300 font-bold">🌿 {{ __('زيتون حب') }}</span>
                                     @endif
-                                    @if($variety) <span class="opacity-75">({{ $variety }})</span> @endif
+                                    @if($variety) <span class="opacity-75">({{ __($variety) }})</span> @endif
                                 </span>
                                 <span class="text-[10px] opacity-80 bg-white/10 px-2 py-0.5 rounded">{{ $date }}</span>
                             </div>
@@ -321,7 +321,7 @@
                                     <span>{{ $changePct }}</span>
                                 </div>
                                 <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-bold">
-                                    {{ $quality }}
+                                    {{ __($quality) }}
                                 </span>
                             </div>
 
@@ -373,11 +373,11 @@
                                 <div class="flex items-center gap-2">
                                     <span class="text-2xl drop-shadow-md">{{ $flag }}</span>
                                     <h3 class="font-extrabold text-base text-white">
-                                        {{ $countryRaw }}
+                                        {{ __($countryRaw) }}
                                     </h3>
                                 </div>
                                 <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#C8A356] text-gray-950 shadow-sm">
-                                    {{ $quality }}
+                                    {{ __($quality) }}
                                 </span>
                             </div>
                         </div>
@@ -410,7 +410,7 @@
 
                             <!-- Footer Info -->
                             <div class="flex items-center justify-between text-xs text-gray-400 pt-2 border-t border-gray-100">
-                                <span class="font-semibold text-gray-600">{{ $variety }}</span>
+                                <span class="font-semibold text-gray-600">{{ __($variety) }}</span>
                                 <span>{{ $date }}</span>
                             </div>
 
