@@ -417,7 +417,7 @@ Route::middleware('set.locale')->group(function(){
             return redirect('/' . app()->getLocale() . '/register');
         }
         return view('auth.register_' . $role, compact('role'));
-    });
+    })->name('register.role');
     Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create']);
     Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create']);
 
