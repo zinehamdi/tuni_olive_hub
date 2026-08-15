@@ -8,9 +8,15 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App as AppFacade;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 
 /**
- * Set the application locale from query (?lang=ar|fr|en) or session, defaulting to config('app.locale').
+ * Set the application locale from the {locale} URL prefix, session, or user profile.
+ *
+ * Priority: 1. Route param ({locale} from URL prefix)
+ *           2. Session (persisted from previous visit)
+ *           3. Authenticated user's saved locale
+ *           4. config('app.fallback_locale')
  */
 class SetLocale
 {
@@ -23,37 +29,41 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         $supported = ['ar', 'fr', 'en'];
-        $defaultLocale = 'ar'; // Always default to Arabic
-        
-        // Check for language in query parameter
-        $lang = $request->query('lang');
-        if ($lang && in_array($lang, $supported, true)) {
-            Session::put('locale', $lang);
-            
-            // Save to user's profile if authenticated
-            if ($request->user()) {
-                $request->user()->update(['locale' => $lang]);
+        $fallback  = config('app.fallback_locale', 'ar');
+
+        // 1. Read locale from the URL prefix ({locale} route parameter)
+        $routeLocale = $request->route('locale');
+        if ($routeLocale && in_array($routeLocale, $supported, true)) {
+            $locale = $routeLocale;
+            Session::put('locale', $locale);
+
+            // Persist to user profile only when it actually changes
+            if ($request->user() && $request->user()->locale !== $locale) {
+                $request->user()->update(['locale' => $locale]);
+            }
+        } else {
+            // 2. Fallback: session → user → config
+            $locale = Session::get('locale');
+
+            if (!$locale && $request->user() && $request->user()->locale) {
+                $locale = $request->user()->locale;
+                Session::put('locale', $locale);
+            }
+
+            if (!$locale || !in_array($locale, $supported, true)) {
+                $locale = $fallback;
             }
         }
 
-        // Priority: 1. Session, 2. User's saved locale, 3. Default to Arabic
-        $locale = Session::get('locale');
-        
-        if (!$locale && $request->user() && $request->user()->locale) {
-            $locale = $request->user()->locale;
-            Session::put('locale', $locale);
-        }
-        
-        if (!$locale) {
-            $locale = $defaultLocale;
-        }
-        
-        // Validate locale is supported, otherwise use Arabic
-        if (! in_array($locale, $supported, true)) {
-            $locale = $defaultLocale;
-        }
-
         AppFacade::setLocale($locale);
+
+        // Set URL defaults so route() helper auto-includes the locale
+        URL::defaults(['locale' => $locale]);
+
+        // Remove the locale parameter so it is not passed to controller methods
+        if ($request->route()) {
+            $request->route()->forgetParameter('locale');
+        }
 
         $response = $next($request);
         if (method_exists($response, 'header')) {

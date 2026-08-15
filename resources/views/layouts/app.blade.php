@@ -48,39 +48,44 @@
     <meta name="twitter:description" content="{{ trim($__env->yieldContent('twitter_description', $defaultDesc)) }}">
     <meta name="twitter:image" content="{{ trim($__env->yieldContent('twitter_image', asset('images/zintoop-logo.png'))) }}">
 
+    @php
+        $pathWithoutLocale = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/';
+    @endphp
     <!-- JSON-LD Schema (Structured Data for Google) -->
     <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "WebSite",
-      "name": "{{ $defaultBrandName }}",
-      "url": "{{ request()->fullUrl() }}",
-      "description": "{{ $defaultDesc }}",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://zintoop.com/?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        'name' => $defaultBrandName,
+        'alternateName' => 'ZinToop',
+        'url' => url('/'),
+        'description' => $defaultDesc,
+        'inLanguage' => app()->getLocale(),
+        'potentialAction' => [
+            '@type' => 'SearchAction',
+            'target' => url(app()->getLocale()) . '?search={search_term_string}',
+            'query-input' => 'required name=search_term_string',
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
     <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "Organization",
-      "name": "ZinToop",
-      "url": "https://zintoop.com",
-      "logo": "{{ asset('images/zintoop-logo.png') }}"
-    }
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'Organization',
+        'name' => 'ZinToop',
+        'url' => 'https://zintoop.com',
+        'logo' => asset('images/zintoop-logo.png'),
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
 
-    <!-- Alternate Language Links for SEO -->
-    <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
-    <link rel="alternate" hreflang="fr" href="{{ url()->current() }}?lang=fr">
-    <link rel="alternate" hreflang="en" href="{{ url()->current() }}?lang=en">
-    <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+    <!-- Alternate Language Links for SEO (path-based, not query-param) -->
+    <link rel="alternate" hreflang="ar" href="{{ url('ar' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="fr" href="{{ url('fr' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="en" href="{{ url('en' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('ar' . $pathWithoutLocale) }}">
 
-    <!-- Canonical URL — always the clean base URL (hreflang handles language variants) -->
-    <link rel="canonical" href="{{ url()->current() }}">
+    <!-- Canonical URL — the current locale version of this page -->
+    <link rel="canonical" href="{{ url(app()->getLocale() . $pathWithoutLocale) }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
@@ -133,23 +138,6 @@
         document.documentElement.dir = '{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}';
     </script>
 
-    <!-- Structured Data for SEO -->
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "WebSite",
-        "name": "{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}",
-        "alternateName": "ZinToop",
-        "url": "{{ url('/') }}",
-        "description": "{{ __(app()->getLocale() === 'ar' ? 'brand.descriptor' : 'brand.descriptor') }}",
-        "potentialAction": {
-            "@@type": "SearchAction",
-            "target": "{{ url('/') }}?search={search_term_string}",
-            "query-input": "required name=search_term_string"
-        },
-        "inLanguage": ["ar", "fr", "en"]
-    }
-    </script>
 
     @if(config('services.facebook.pixel_id'))
     <!-- Meta Pixel Code -->
@@ -462,9 +450,10 @@
                                  x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
                                  x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
                                  class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-2 w-24 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
-                                <a href="{{ route('lang.switch','ar') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">العربية (AR)</a>
-                                <a href="{{ route('lang.switch','fr') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">Français (FR)</a>
-                                <a href="{{ route('lang.switch','en') }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">English (EN)</a>
+                                @php $switchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                                <a href="{{ url('ar' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">العربية (AR)</a>
+                                <a href="{{ url('fr' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">Français (FR)</a>
+                                <a href="{{ url('en' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">English (EN)</a>
                             </div>
                         </div>
 
@@ -648,9 +637,10 @@
 
                         <!-- Language Switcher -->
                         <div class="mt-4 px-4 flex items-center justify-center gap-1 bg-white/10 rounded-xl p-1.5 mx-2">
-                            <a href="{{ route('lang.switch','ar') }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='ar' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">العربية</a>
-                            <a href="{{ route('lang.switch','fr') }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='fr' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">Français</a>
-                            <a href="{{ route('lang.switch','en') }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='en' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">English</a>
+                            @php $mobileSwitchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                            <a href="{{ url('ar' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='ar' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">العربية</a>
+                            <a href="{{ url('fr' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='fr' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">Français</a>
+                            <a href="{{ url('en' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='en' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">English</a>
                         </div>
                     </div>
 
@@ -785,9 +775,10 @@
                 <p class="text-gray-400 mb-2">{{ __('Email') }}: <span dir="ltr" style="unicode-bidi: embed;">contact@zintoop.com</span></p>
                 <p class="text-gray-400 mb-4">{{ __('Phone') }}: <span dir="ltr" style="unicode-bidi: embed;">+216 25 777 926</span></p>
                 <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('lang.switch','ar') }}" class="px-2 py-1 {{ app()->getLocale()==='ar' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">العربية</a>
-                    <a href="{{ route('lang.switch','fr') }}" class="px-2 py-1 {{ app()->getLocale()==='fr' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">FR</a>
-                    <a href="{{ route('lang.switch','en') }}" class="px-2 py-1 {{ app()->getLocale()==='en' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">EN</a>
+                    @php $footerSwitchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                    <a href="{{ url('ar' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='ar' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">العربية</a>
+                    <a href="{{ url('fr' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='fr' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">FR</a>
+                    <a href="{{ url('en' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='en' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">EN</a>
                 </div>
             </div>
         </div>

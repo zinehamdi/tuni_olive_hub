@@ -35,19 +35,26 @@ Route::get('/auth/token-login', function (\Illuminate\Http\Request $request) {
     return redirect($redirect);
 })->name('auth.token-login');
 
-// Language switcher - must be outside middleware groups and available globally
+// Language switcher — backward compat redirect to locale-prefixed URL
 Route::get('/lang/{locale}', function (string $locale) {
     $supported = ['ar','fr','en'];
-    if (in_array($locale, $supported, true)) {
-        session(['locale' => $locale]);
-        
-        // Save to user's profile if authenticated
-        if (auth()->check()) {
-            auth()->user()->update(['locale' => $locale]);
-        }
+    if (!in_array($locale, $supported, true)) {
+        $locale = config('app.fallback_locale', 'ar');
     }
-    return redirect()->back();
+    session(['locale' => $locale]);
+    if (auth()->check() && auth()->user()->locale !== $locale) {
+        auth()->user()->update(['locale' => $locale]);
+    }
+    // Redirect to the same page with locale prefix
+    $previousPath = parse_url(url()->previous(), PHP_URL_PATH) ?? '/';
+    $previousPath = preg_replace('#^/(ar|fr|en)#', '', $previousPath) ?: '/';
+    return redirect('/' . $locale . $previousPath);
 })->name('lang.switch');
+
+// ═══════════════════════════════════════════════════════════════
+// LOCALE-PREFIXED ROUTES — /ar/, /fr/, /en/ (SEO multilingual)
+// ═══════════════════════════════════════════════════════════════
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->group(function () {
 
 Route::middleware(['web', 'set.locale'])->group(function () {
     Route::get('/', function () {
@@ -238,6 +245,8 @@ Route::middleware('set.locale')->group(function () {
     Route::get('/prices/world', [\App\Http\Controllers\PriceController::class, 'world'])->name('prices.world');
 });
 
+}); // end locale prefix group 1
+
 // Admin Routes - Rate limited to prevent abuse
 // Limit: 60 requests per minute per user
 Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
@@ -315,7 +324,7 @@ require __DIR__.'/auth.php';
 
 \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['web']]);
 
-// Public storefront + SEO
+// Public storefront feeds + SEO (no locale prefix — feeds are language-neutral)
 Route::group([], function(){
     Route::get('landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
     Route::get('public/landing.json', [\App\Http\Controllers\PublicController::class, 'landing']);
@@ -327,12 +336,15 @@ Route::group([], function(){
     // Google Shopping product feed — all active marketplace listings with correct images
     Route::get('google-merchant-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed'])->name('google.merchant.feed');
     Route::get('shopping-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed']);
-    // Real HTML pages for storefront
-    Route::get('gulf/catalog', [\App\Http\Controllers\PublicController::class, 'gulfCatalog'])->name('gulf.catalog');
-    Route::get('gulf/products/{product}', [\App\Http\Controllers\PublicController::class, 'gulfProduct'])->name('gulf.product');
+});
+
+// Gulf storefront (locale-prefixed — user-facing pages)
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->middleware('set.locale')->group(function () {
+    Route::get('catalog', [\App\Http\Controllers\PublicController::class, 'catalog'])->name('catalog');
 });
 
 // Named routes for CTAs under allowed prefixes per CI guard
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->group(function () {
 Route::middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
     Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
@@ -408,6 +420,12 @@ Route::get('/register/role', function (\Illuminate\Http\Request $request) {
     }
     return view('auth.register_' . $role, compact('role'));
 })->name('register.role');
+
+}); // end locale prefix group 2
+
+// ═══════════════════════════════════════════════════════════════
+// NON-LOCALISED INFRASTRUCTURE ROUTES
+// ═══════════════════════════════════════════════════════════════
 Route::get('/healthz', function(){ return 'OK'; });
 Route::get('/email-preview', function(){ return view('emails.platform_update_announcement'); })->name('email.preview');
 Route::get('/email-preview/welcome', function(){
@@ -434,3 +452,18 @@ Route::get('/email-preview/new-listing', function(){
     return view('emails.new_listing_notification', compact('listing'));
 });
 
+// ═══════════════════════════════════════════════════════════════
+// ROOT URL + CATCH-ALL REDIRECTS (old non-prefixed URLs → /ar/...)
+// ═══════════════════════════════════════════════════════════════
+
+// Root URL → redirect to default locale
+Route::get('/', function () {
+    $locale = session('locale', config('app.fallback_locale', 'ar'));
+    return redirect('/' . $locale, 302);
+});
+
+// Old non-prefixed URLs → 301 redirect to default locale
+Route::get('{any}', function ($any) {
+    $locale = session('locale', config('app.fallback_locale', 'ar'));
+    return redirect('/' . $locale . '/' . $any, 301);
+})->where('any', '^(?!api|admin|auth|healthz|og-image|sitemap|feed|google-merchant|shopping-feed|landing|email-preview|lang|livewire|public|broadcasting|ar|fr|en|images|storage|css|js|build|favicon\.ico|manifest\.webmanifest).*');
