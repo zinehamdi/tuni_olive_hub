@@ -320,7 +320,9 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
 // Dynamic OG Image for listings
 Route::get('/og-image/listing/{id}', [\App\Http\Controllers\OgImageController::class, 'generate'])->name('og.listing.image');
 
-require __DIR__.'/auth.php';
+Route::middleware('set.locale')->group(function () {
+    require __DIR__.'/auth.php';
+});
 
 \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['web']]);
 
@@ -406,21 +408,23 @@ Route::middleware('set.locale')->group(function(){
 
     // Ezzitouni AI Chatbot Route
     Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
+    // Localized auth views (no names, to avoid conflict with auth.php)
+    Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create']);
+    Route::get('register', function () { return view('auth.register'); });
+    Route::get('register/role', function (\Illuminate\Http\Request $request) {
+        $role = $request->query('role');
+        if (!in_array($role, ['farmer','carrier','mill','packer','normal'])) {
+            return redirect('/' . app()->getLocale() . '/register');
+        }
+        return view('auth.register_' . $role, compact('role'));
+    });
+    Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create']);
+    Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create']);
+
 });
 }); // end locale prefix group 2
 
-// Authentication routes are kept outside locale prefix to prevent Missing required parameter exception
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-
-Route::get('/register/role', function (\Illuminate\Http\Request $request) {
-    $role = $request->query('role');
-    if (!in_array($role, ['farmer','carrier','mill','packer','normal'])) {
-        return redirect()->route('register');
-    }
-    return view('auth.register_' . $role, compact('role'));
-})->name('register.role');
+// Removed old register routes as they are now handled by the localized group and auth.php
 
 // ═══════════════════════════════════════════════════════════════
 // NON-LOCALISED INFRASTRUCTURE ROUTES
