@@ -125,8 +125,8 @@ Route::middleware(['web', 'set.locale'])->group(function () {
     })->name('home');
     
     // Redirect /products to home page anchored at products section
-    Route::get('/products', function ($locale) {
-        return redirect(url($locale . '/#products'), 301);
+    Route::get('/products', function () {
+        return redirect(url(app()->getLocale() . '/#products'), 301);
     })->name('products');
     
     // Public & legal pages
