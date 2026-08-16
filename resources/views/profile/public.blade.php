@@ -804,13 +804,13 @@
                 confirmFollow() { if (!this.isLoggedIn) { window.location.href = '{{ route('login') }}'; return; } const action = this.followed ? '{{ __('Unfollow this user?') }}' : '{{ __('Follow this user?') }}'; if (confirm(action)) { this.toggleFollow(); } },
                 toggleLike() {
                     this.loading = true;
-                    fetch(`/user/${this.userId}/toggle-like`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                    .then(res => res.json()).then(data => { if (data.success) { this.liked = data.liked; this.likeCount = data.likes_count; } else { showToast(data.message || '{{ __('An error occurred') }}', 'error'); } }).catch(err => showToast('{{ __('An error occurred') }}', 'error')).finally(() => this.loading = false);
+                    fetch(`{{ route('user.toggle-like', ['locale' => app()->getLocale(), 'user' => ':userId']) }}`.replace(':userId', this.userId), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
+                    .then(res => res.json()).then(data => { if (data.success) { this.liked = data.liked; this.likeCount = data.likes_count; } else { showToast(data.message || @js(__('An error occurred')), 'error'); } }).catch(err => showToast(@js(__('An error occurred')), 'error')).finally(() => this.loading = false);
                 },
                 toggleFollow() {
                     this.loading = true;
-                    fetch(`/user/${this.userId}/toggle-follow`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                    .then(res => res.json()).then(data => { if (data.success) { this.followed = data.followed; this.followerCount = data.followers_count; } else { showToast(data.message || '{{ __('An error occurred') }}', 'error'); } }).catch(err => showToast('{{ __('An error occurred') }}', 'error')).finally(() => this.loading = false);
+                    fetch(`{{ route('user.toggle-follow', ['locale' => app()->getLocale(), 'user' => ':userId']) }}`.replace(':userId', this.userId), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
+                    .then(res => res.json()).then(data => { if (data.success) { this.followed = data.followed; this.followerCount = data.followers_count; } else { showToast(data.message || @js(__('An error occurred')), 'error'); } }).catch(err => showToast(@js(__('An error occurred')), 'error')).finally(() => this.loading = false);
                 }
             };
         }

@@ -449,7 +449,7 @@
                 },
 
                 async markAsRead() {
-                    try { await fetch(`/messages/{{ $user->id }}/get`); } catch (e) {}
+                    try { await fetch(`{{ route('messages.get', ['locale' => app()->getLocale(), 'user' => $user->id]) }}`); } catch (e) {}
                 },
 
                 scrollToBottom() {
@@ -500,7 +500,7 @@
                     if (!this.message.trim() || this.sending) return;
                     this.sending = true;
                     try {
-                        const res = await fetch(`/messages/{{ $user->id }}/send`, {
+                        const res = await fetch(`{{ route('messages.send', ['locale' => app()->getLocale(), 'user' => $user->id]) }}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
