@@ -98,7 +98,7 @@ async function submitListing(e){
   try {
     const json = await res.json();
     if (res.ok && json.success){
-      window.location.href = '{{ route('gulf.catalog') }}';
+      window.location.href = '{{ route('catalog') }}';
       return false;
     }
     out.textContent = JSON.stringify(json.error || json.errors || json, null, 2);

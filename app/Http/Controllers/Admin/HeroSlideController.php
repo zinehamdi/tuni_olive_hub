@@ -78,4 +78,15 @@ class HeroSlideController extends Controller
 
         return redirect()->route('admin.hero-slides.index')->with('success', __('Hero slide deleted successfully.'));
     }
+
+    public function updateCatalogBg(Request $request)
+    {
+        $request->validate([
+            'catalog_bg' => 'required|file|mimes:jpeg,jpg,png,gif,webp|max:10240',
+        ]);
+
+        $this->imageService->optimizeCatalogHero($request->file('catalog_bg'));
+
+        return redirect()->route('admin.hero-slides.index')->with('success', __('Catalog background updated successfully.'));
+    }
 }

@@ -9,37 +9,93 @@
 1. **Never change page titles or meta descriptions** without explicit user approval
 2. **Never modify or remove `hreflang` alternate tags** — they drive multilingual traffic
 3. **Never add incomplete structured data** — if you add a schema field, complete ALL its required sub-fields
-4. **Never change URL structures** — all existing URLs must remain functional
-5. **The canonical URL is ALWAYS the clean base URL** (no `?lang=` parameter)
-6. **Arabic is the default language** — the base URL always renders Arabic content
+4. **All public routes MUST be inside the `{locale}` prefix group** — see Architecture below
+5. **The canonical URL includes the locale prefix** (e.g., `https://zintoop.com/fr/listings/42`)
+6. **Arabic is the default language** — root `/` redirects to `/ar/`
 7. **Test JSON-LD with Google Rich Results Test** (https://search.google.com/test/rich-results) before deploying any schema changes
 8. **Always deploy via `./deploy_hostinger.sh`** — never manually edit production files
+9. **Never use `@@context` in JSON-LD** — always use `json_encode()` to avoid Blade escaping issues
 
 ---
 
 ## 🏗️ Architecture Overview
 
-### Language System
-- **Type**: Session-based translation (NOT separate URL paths)
+### Multilingual URL System (Locale Prefix)
+
+- **Strategy**: URL-prefix routing (`/ar/...`, `/fr/...`, `/en/...`)
 - **Supported**: Arabic (`ar`), French (`fr`), English (`en`)
 - **Default**: Arabic (`ar`)
 - **How it works**:
-  - User clicks language switch → hits `/lang/{locale}` → saves to session → redirects back
-  - Middleware `SetLocale` also accepts `?lang=` query param and saves to session
-  - All pages render at the **same URL** regardless of language
-  - Translation files: `resources/lang/ar.json`, `resources/lang/fr.json`, `resources/lang/en.json`
+  1. All public routes are inside `Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->group(...)` in `routes/web.php`
+  2. Middleware `SetLocale` reads the `{locale}` route parameter and sets `App::setLocale()`
+  3. `URL::defaults(['locale' => $locale])` ensures `route()` helper auto-includes the locale
+  4. Each language version has its own distinct URL: `/ar/listings/42`, `/fr/listings/42`, `/en/listings/42`
+  5. Translation files: `resources/lang/ar.json`, `resources/lang/fr.json`, `resources/lang/en.json`
 
-### Canonical URL Strategy
-```html
-<!-- hreflang alternates tell Google about language versions -->
-<link rel="alternate" hreflang="ar" href="https://zintoop.com/page?lang=ar">
-<link rel="alternate" hreflang="fr" href="https://zintoop.com/page?lang=fr">
-<link rel="alternate" hreflang="en" href="https://zintoop.com/page?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://zintoop.com/page">
+### URL Structure
 
-<!-- Canonical is ALWAYS the clean URL (no query params) -->
-<link rel="canonical" href="https://zintoop.com/page">
 ```
+https://zintoop.com/ar/              → Arabic home page
+https://zintoop.com/fr/              → French home page
+https://zintoop.com/en/              → English home page
+https://zintoop.com/ar/listings/42   → Arabic listing
+https://zintoop.com/fr/listings/42   → French listing
+https://zintoop.com/                 → 302 redirect to /ar/
+https://zintoop.com/listings/42      → 301 redirect to /ar/listings/42
+```
+
+### Canonical URL & hreflang Strategy
+```html
+<!-- Each page generates path-based hreflang (NOT query-param) -->
+<link rel="alternate" hreflang="ar" href="https://zintoop.com/ar/listings/42">
+<link rel="alternate" hreflang="fr" href="https://zintoop.com/fr/listings/42">
+<link rel="alternate" hreflang="en" href="https://zintoop.com/en/listings/42">
+<link rel="alternate" hreflang="x-default" href="https://zintoop.com/ar/listings/42">
+
+<!-- Canonical = current locale version of the page -->
+<link rel="canonical" href="https://zintoop.com/fr/listings/42">
+```
+
+### Routes That Stay OUTSIDE the Locale Prefix
+
+These routes do NOT get a language prefix (they are language-neutral):
+- **Admin routes**: `/admin/...`
+- **Auth routes**: `/login`, `/logout`, `/password/...` (from `auth.php`)
+- **Social auth**: `/auth/facebook/...`, `/auth/google/...`
+- **API routes**: `/api/...`
+- **Feeds**: `/sitemap.xml`, `/feed.rss`, `/google-merchant-feed.xml`
+- **Infrastructure**: `/healthz`, `/email-preview/...`, `/og-image/...`
+- **Livewire**: `/livewire/...`
+
+### Adding a New Public Route
+
+When adding any new user-facing page, **always add it inside the locale prefix group**:
+
+```php
+// In routes/web.php — inside one of the Route::prefix('{locale}') groups:
+Route::get('my-new-page', [MyController::class, 'index'])->name('my-page');
+```
+
+The route will automatically be available at `/ar/my-new-page`, `/fr/my-new-page`, `/en/my-new-page`.
+
+Use `route('my-page')` in Blade — the locale is injected automatically via `URL::defaults`.
+
+### Language Switcher Pattern
+
+All language switchers use direct URL navigation (no redirect route):
+
+```blade
+@php
+    $switchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/';
+@endphp
+<a href="{{ url('ar' . $switchPath) }}">العربية</a>
+<a href="{{ url('fr' . $switchPath) }}">Français</a>
+<a href="{{ url('en' . $switchPath) }}">English</a>
+```
+
+The `lang.switch` route is kept for backward compatibility only (redirects to locale URL).
+
+---
 
 ### Layout Files
 | Layout | Used By | Location |
@@ -123,7 +179,46 @@ Same fields added as Fix 2 to the `ItemList > Product` schema on the main market
 
 ---
 
+### Fix 6: Multilingual SEO — URL Prefix Routing (August 15, 2026)
+
+**Problem**: French/English pages were invisible to Google because the site used `?lang=` query strings. Google treated all language versions as duplicates of the Arabic page.
+
+**Solution**: Switched to URL-prefix routing (`/ar/`, `/fr/`, `/en/`).
+
+**Files changed**:
+| File | Change |
+|------|--------|
+| `SetLocale.php` | Reads locale from `{locale}` route param instead of `?lang=` query |
+| `AppServiceProvider.php` | Added `URL::defaults(['locale' => ...])` for route() helper |
+| `routes/web.php` | Wrapped public routes in `{locale}` prefix group, added catch-all 301 redirects |
+| `app.blade.php` | Path-based hreflang, canonical, JSON-LD via `json_encode()`, direct lang switcher links |
+| `sitemap.blade.php` | 3 URLs per page (ar/fr/en) with `xhtml:link` hreflang alternates |
+| `SEO_GUIDE.md` | Updated architecture documentation |
+
+**Impact**:
+- ✅ Each language version gets its own Google-indexed URL
+- ✅ hreflang tags use clean paths (not query params)
+- ✅ Old URLs 301-redirect to locale-prefixed URLs (SEO authority preserved)
+- ✅ No database changes, no controller changes, no translation file changes
+
+---
+
 ## 📄 Structured Data Reference
+
+### JSON-LD Convention
+
+**ALWAYS use `json_encode()` for JSON-LD**, never raw JSON with `@@context`:
+
+```blade
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Product',
+    'name' => $product->name,
+    // ...
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+```
 
 ### Listing Detail Page (`show.blade.php`)
 ```json
@@ -184,13 +279,24 @@ Same fields added as Fix 2 to the `ItemList > Product` schema on the main market
 **Controller**: `PublicController@sitemap`  
 **Template**: `resources/views/public/sitemap.blade.php`
 
+**Structure**: Each page generates 3 URL entries (one per language) with `xhtml:link` hreflang alternates:
+
+```xml
+<url>
+  <loc>https://zintoop.com/ar/listings/42</loc>
+  <xhtml:link rel="alternate" hreflang="ar" href="https://zintoop.com/ar/listings/42"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="https://zintoop.com/fr/listings/42"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://zintoop.com/en/listings/42"/>
+</url>
+```
+
 **Includes**:
-- Static pages: `/`, `/register`, `/gulf-catalog`, `/olive-varieties`
+- Static pages: `/`, `/register`, `/gulf/catalog`, `/articles/olive-varieties`
 - Dynamic listings: all active listings (`status = active`)
 - Dynamic articles: all active articles
 - Gulf products: premium + export-ready products
 
-> **Note**: The sitemap includes ALL active listings. If a listing is deleted/deactivated, it will be removed from the sitemap automatically. Google will take 2-4 weeks to de-index old 404 URLs.
+> **Note**: After deploying, resubmit the sitemap in Google Search Console for faster re-indexing.
 
 ---
 
@@ -236,7 +342,7 @@ The following keywords are embedded in titles, descriptions, and schema across t
 | Issue | Count | Resolution |
 |-------|-------|------------|
 | "Introuvable (404)" | 36 | Deleted listings still in Google's index. Will drop naturally in 2-4 weeks. |
-| "Page avec redirection" | 65 | Old URLs redirecting. Normal behavior, not harmful. |
+| "Page avec redirection" | 65+ | Old URLs redirecting to locale-prefixed URLs. Normal behavior — 301 redirects preserve SEO authority. |
 | "Explorée, actuellement non indexée" | 8 | Google has crawled but not yet indexed. Will resolve as domain authority grows. |
 
 ---
@@ -246,8 +352,11 @@ The following keywords are embedded in titles, descriptions, and schema across t
 1. **JSON-LD Schema**: Paste page URL into [Google Rich Results Test](https://search.google.com/test/rich-results)
 2. **Structured Data**: Use [Schema.org Validator](https://validator.schema.org/)
 3. **OG Tags**: Use [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-4. **Local Test**: `curl -s http://127.0.0.1:8000/listings/100 | grep -E 'canonical|hreflang|shippingRate|validFrom'`
-5. **Feed Test**: `curl -s https://zintoop.com/google-merchant-feed.xml | grep -c "<item>"` (count products)
+4. **hreflang Check**: `curl -s http://127.0.0.1:8000/ar/ | grep -E 'hreflang'` (should show /ar/, /fr/, /en/ paths)
+5. **Canonical Check**: `curl -s http://127.0.0.1:8000/fr/ | grep 'canonical'` (should show `/fr/` path)
+6. **JSON-LD Check**: `curl -s http://127.0.0.1:8000/ar/ | grep -c '@@context'` (should return 0)
+7. **Sitemap Check**: `curl -s http://127.0.0.1:8000/sitemap.xml | grep -c 'xhtml:link'` (should be > 0)
+8. **Feed Test**: `curl -s https://zintoop.com/google-merchant-feed.xml | grep -c "<item>"` (count products)
 
 ---
 
@@ -255,16 +364,18 @@ The following keywords are embedded in titles, descriptions, and schema across t
 
 | File | Purpose |
 |------|---------|
-| `layouts/app.blade.php` | Canonical URL, hreflang, Organization schema |
+| `routes/web.php` | Locale-prefixed route groups, catch-all 301 redirects |
+| `SetLocale.php` | Reads `{locale}` from route param, sets `URL::defaults` |
+| `AppServiceProvider.php` | Default locale for `route()` helper in CLI/queues |
+| `layouts/app.blade.php` | Canonical URL, hreflang, Organization schema, language switchers |
 | `layouts/guest.blade.php` | Canonical URL, hreflang (guest pages) |
 | `listings/show.blade.php` | Product JSON-LD schema, OG tags |
 | `home_marketplace.blade.php` | ItemList Product schema |
-| `public/sitemap.blade.php` | XML sitemap template |
+| `public/sitemap.blade.php` | XML sitemap with hreflang alternates per language |
 | `public/google_merchant_feed.blade.php` | Google Shopping feed |
 | `GoogleMerchantFeedController.php` | Feed query logic (oil-only, with photos) |
 | `PublicController.php` | Sitemap generation |
-| `SetLocale.php` | Language middleware |
 
 ---
 
-*Last updated: August 8, 2026*
+*Last updated: August 15, 2026*

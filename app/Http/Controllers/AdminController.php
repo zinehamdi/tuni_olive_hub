@@ -230,6 +230,7 @@ class AdminController extends Controller
             'variety' => ['required', 'string', 'max:64'],
             'quality' => ['nullable', 'string', 'max:64'],
             'is_organic' => ['sometimes', 'boolean'],
+            'export_ready' => ['sometimes', 'boolean'],
             'price' => ['required', 'numeric', 'min:0'],
             'currency' => ['nullable', 'string', 'max:8'],
             'quantity' => ['nullable', 'numeric', 'min:0'],
@@ -275,6 +276,7 @@ class AdminController extends Controller
         $product->variety = $data['variety'];
         $product->quality = $data['quality'] ?? null;
         $product->is_organic = $request->boolean('is_organic');
+        $product->export_ready = $request->boolean('export_ready');
         $product->price = $data['price'];
         $product->stock = $data['stock'] ?? ($data['quantity'] ?? $product->stock);
         $product->weight_kg = $data['weight_kg'] ?? null;

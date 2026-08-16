@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Default locale for route() helper (overridden by SetLocale middleware on web requests)
+        \Illuminate\Support\Facades\URL::defaults(['locale' => config('app.fallback_locale', 'ar')]);
+
         // Fix for Livewire update route CORS issues on Hostinger
         \Livewire\Livewire::setUpdateRoute(function ($handle) {
             return \Illuminate\Support\Facades\Route::post('/livewire/update', $handle);

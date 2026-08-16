@@ -54,9 +54,15 @@
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-4">
-                    <div class="flex items-center gap-2">
-                        <input type="checkbox" name="is_organic" value="1" {{ old('is_organic', $product->is_organic) ? 'checked' : '' }} class="h-4 w-4 text-[#6A8F3B] border-gray-300 rounded">
-                        <span class="text-sm font-semibold text-gray-800">{{ __('Organic') }}</span>
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="is_organic" value="1" {{ old('is_organic', $product->is_organic) ? 'checked' : '' }} class="h-4 w-4 text-[#6A8F3B] border-gray-300 rounded">
+                            <span class="text-sm font-semibold text-gray-800">{{ __('Organic') }}</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="export_ready" value="1" {{ old('export_ready', $product->export_ready) ? 'checked' : '' }} class="h-4 w-4 text-blue-500 border-gray-300 rounded">
+                            <span class="text-sm font-semibold text-gray-800">🚢 Export Ready</span>
+                        </label>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Packaging / Condition') }}</label>

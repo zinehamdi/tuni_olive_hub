@@ -319,6 +319,7 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
 
     // Hero Slideshow Management
+    Route::post('hero-slides/catalog-bg', [\App\Http\Controllers\Admin\HeroSlideController::class, 'updateCatalogBg'])->name('hero-slides.catalog-bg');
     Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except(['show']);
 });
 

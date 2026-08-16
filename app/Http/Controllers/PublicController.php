@@ -15,7 +15,6 @@ class PublicController extends Controller
         try {
             $data = Cache::remember('public:landing', 300, function(){
                 $featured = Product::query()
-                    ->where('is_premium', true)
                     ->where('export_ready', true)
                     ->latest()
                     ->take(6)
@@ -45,15 +44,15 @@ class PublicController extends Controller
     {
         $listings = \App\Models\Listing::where('status', 'active')->latest()->take(500)->get(['id','updated_at']);
         $articles = \App\Models\Article::where('is_active', true)->latest()->take(100)->get(['id','updated_at']);
-        $gulfProducts = \App\Models\Product::where('is_premium', true)->where('export_ready', true)->latest()->take(100)->get(['id','updated_at']);
+        $premiumProducts = \App\Models\Product::where('export_ready', true)->latest()->take(100)->get(['id','updated_at']);
         
-        $xml = view('public.sitemap', compact('listings', 'articles', 'gulfProducts'))->render();
+        $xml = view('public.sitemap', compact('listings', 'articles', 'premiumProducts'))->render();
         return response($xml, 200)->header('Content-Type', 'application/xml; charset=utf-8');
     }
 
     public function rss()
     {
-        $items = Product::query()->where('is_premium', true)->where('export_ready', true)->latest()->take(500)->get(['id','variety','created_at']);
+        $items = Product::query()->where('export_ready', true)->latest()->take(500)->get(['id','variety','created_at']);
         $xml = view('public.rss', ['items' => $items])->render();
         return response($xml, 200)->header('Content-Type', 'application/rss+xml; charset=utf-8');
     }
@@ -65,49 +64,50 @@ class PublicController extends Controller
     }
 
     // Public storefront HTML: Catalog + Product detail
-    public function gulfCatalog(Request $request)
+    public function catalog(Request $request)
     {
-        $cacheKey = 'public:catalog:' . md5(json_encode($request->query()));
-        $paginator = Cache::remember($cacheKey, 300, function() use ($request) {
-            $q = Product::query()->with('seller')
-                ->where('is_premium', true)
-                ->where('export_ready', true);
+        $q = \App\Models\Listing::query()->with(['seller', 'product', 'product.seller'])
+            ->whereHas('product', function ($query) {
+                $query->where('export_ready', true);
+            });
 
-            if ($v = $request->input('variety')) $q->where('variety', $v);
-            if ($qf = $request->input('quality')) $q->where('quality', $qf);
-            if ($request->filled('organic')) $q->where('is_organic', (bool)$request->boolean('organic'));
-            if ($request->filled('min_pack')) $q->where('weight_kg', '>=', (float)$request->input('min_pack'));
-            if ($request->filled('max_pack')) $q->where('weight_kg', '<=', (float)$request->input('max_pack'));
+        if ($request->filled('variety')) {
+            $q->whereHas('product', function ($query) use ($request) {
+                $query->where('variety', 'like', '%' . $request->variety . '%');
+            });
+        }
+        if ($request->filled('quality')) {
+            $q->whereHas('product', function ($query) use ($request) {
+                $query->where('quality', 'like', '%' . $request->quality . '%');
+            });
+        }
+        if ($request->filled('organic')) {
+            $q->whereHas('product', function ($query) {
+                $query->where('is_organic', true);
+            });
+        }
+        if ($request->filled('min_pack')) {
+            $q->whereHas('product', function ($query) use ($request) {
+                $query->where('weight_kg', '>=', (float)$request->min_pack)
+                      ->orWhere('volume_liters', '>=', (float)$request->min_pack);
+            });
+        }
 
-            $sort = $request->input('sort','premium_rank');
-            if ($sort === 'price_asc') {
-                $q->orderBy('price','asc');
-            } elseif ($sort === 'newest') {
-                $q->orderBy('products.created_at','desc');
-            } else {
-                $q->leftJoin('users as sellers','sellers.id','=','products.seller_id')
-                  ->select('products.*')
-                  ->selectRaw('( (CASE WHEN products.certs IS NOT NULL THEN 1 ELSE 0 END)
-                               + (COALESCE(sellers.trust_score,0)/100.0)
-                               + (CASE WHEN products.weight_kg IS NOT NULL AND products.volume_liters IS NOT NULL THEN 1 ELSE 0.5 END)
-                               + (CASE WHEN julianday(?) - julianday(products.created_at) <= 7 THEN 1 ELSE 0 END)
-                               ) as premium_rank', [now()])
-                  ->orderByDesc('premium_rank');
-            }
+        if ($request->sort === 'newest') {
+            $q->latest();
+        } elseif ($request->sort === 'price_asc') {
+            $q->orderBy('price', 'asc');
+        } else {
+            $q->latest(); // Default sort since we can't easily do the premium_rank math on listings without joining
+        }
 
-            $per = max(1, min(30, (int)$request->input('per_page', 12)));
-            return $q->paginate($per)->appends($request->query());
-        });
+        $paginator = $q->paginate(12);
+
         return view('public.catalog', [
-            'products' => $paginator,
+            'listings' => $paginator,
             'query' => $request->query(),
         ]);
     }
 
-    public function gulfProduct(Product $product)
-    {
-        if (!$product->is_premium || !$product->export_ready) abort(404);
-        $product->load('seller');
-        return view('public.product', ['product' => $product]);
-    }
+    // (Removed unused gulfProduct method)
 }

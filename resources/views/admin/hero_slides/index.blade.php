@@ -78,11 +78,58 @@
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Upload Form -->
-            <div class="bg-white rounded-3xl border border-gray-150 p-6 shadow-sm h-fit">
-                <h2 class="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
-                    <span>📤</span> {{ __('Add New Slide') }}
-                </h2>
+            <!-- Upload Forms -->
+            <div class="space-y-8">
+                <!-- Catalog Hero Form -->
+                <div class="bg-white rounded-3xl border border-gray-150 p-6 shadow-sm">
+                    <h2 class="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
+                        <span>📖</span> {{ __('Catalog Background') }}
+                    </h2>
+                    
+                    <form action="{{ route('admin.hero-slides.catalog-bg') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        @csrf
+                        <div x-data="{ isDragOver: false }" class="relative">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Background Image') }} <span class="text-red-500">*</span></label>
+                            
+                            @if(\Illuminate\Support\Facades\Storage::disk('public')->exists('settings/catalog-hero.webp'))
+                                <div class="mb-4 aspect-video rounded-xl overflow-hidden shadow-sm relative">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::url('settings/catalog-hero.webp') }}" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                        <span class="bg-white/90 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg">{{ __('Current Background') }}</span>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div :class="isDragOver ? 'border-[#6A8F3B] bg-[#6A8F3B]/5' : 'border-gray-250 bg-gray-50'"
+                                 @dragover.prevent="isDragOver = true"
+                                 @dragleave.prevent="isDragOver = false"
+                                 @drop.prevent="isDragOver = false; $refs.catalogFileInput.files = $event.dataTransfer.files; $refs.catalogFileInput.dispatchEvent(new Event('change'))"
+                                 class="border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer hover:border-[#6A8F3B] transition duration-200 relative">
+                                
+                                <input type="file" name="catalog_bg" required x-ref="catalogFileInput" @change="if ($refs.catalogFileInput.files[0]) { $refs.catalogFileName.innerText = $refs.catalogFileInput.files[0].name; }" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                
+                                <div class="space-y-2">
+                                    <span class="text-3xl block">🖼️</span>
+                                    <p class="text-xs font-bold text-gray-800">{{ __('Drag & drop image here or click to upload') }}</p>
+                                    <p x-ref="catalogFileName" class="text-xs text-[#6A8F3B] font-bold mt-2 truncate"></p>
+                                </div>
+                            </div>
+                            @error('catalog_bg')
+                                <p class="text-red-500 text-xs mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-sm transition duration-200 shadow-md flex items-center justify-center gap-2">
+                            <span>💾</span> {{ __('Update Background') }}
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Add New Slide Form -->
+                <div class="bg-white rounded-3xl border border-gray-150 p-6 shadow-sm">
+                    <h2 class="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
+                        <span>📤</span> {{ __('Add New Slide') }}
+                    </h2>
 
                 <form action="{{ route('admin.hero-slides.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
@@ -151,6 +198,7 @@
                     </button>
                 </form>
             </div>
+            </div> <!-- End space-y-8 -->
 
             <!-- Slides List -->
             <div class="lg:col-span-2 space-y-6">

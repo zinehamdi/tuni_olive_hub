@@ -221,4 +221,27 @@ class ImageOptimizationService
 
         return 'hero-slides/' . $filename;
     }
+
+    /**
+     * Optimize and save catalog hero background
+     * Always overwrites catalog-hero.webp
+     */
+    public function optimizeCatalogHero(UploadedFile $file): string
+    {
+        $filename = 'catalog-hero.webp';
+        $directory = storage_path('app/public/settings');
+        $path = $directory . '/' . $filename;
+        
+        // Ensure directory exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Read, resize, and optimize image
+        $image = Image::read($file);
+        $image->scaleDown(width: 1920);
+        $image->toWebp(85)->save($path);
+
+        return 'settings/' . $filename;
+    }
 }
