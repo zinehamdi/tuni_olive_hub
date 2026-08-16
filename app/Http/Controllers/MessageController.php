@@ -178,25 +178,35 @@ class MessageController extends Controller
             'is_hidden' => false,
         ]);
         
-        // Dispatch the event to broadcast
-        broadcast(new \App\Events\MessageSent($message))->toOthers();
-        
-        // Send WebPush notification
-        $user->notify(new \App\Notifications\NewMessage($message, $authUser));
-        
+        // Dispatch the event to broadcast (gracefully degrade if WebSocket server is down)
+        try {
+            broadcast(new \App\Events\MessageSent($message))->toOthers();
+        } catch (\Throwable $e) {
+            // Reverb/Pusher not available — message still saved, real-time push skipped
+            \Log::warning('Broadcast failed (WebSocket unavailable): ' . $e->getMessage());
+        }
+
+        // Send notification (queued — won't block even if broadcast channel fails)
+        try {
+            $user->notify(new \App\Notifications\NewMessage($message, $authUser));
+        } catch (\Throwable $e) {
+            \Log::warning('Notification dispatch failed: ' . $e->getMessage());
+        }
+
         // Update thread timestamp
         $thread->touch();
-        
+
         return response()->json([
             'success' => true,
             'message' => __('Message sent successfully'),
             'data' => [
-                'id' => $message->id,
-                'body' => $message->body,
-                'sender_id' => $message->sender_id,
+                'id'         => $message->id,
+                'body'       => $message->body,
+                'sender_id'  => $message->sender_id,
                 'created_at' => $message->created_at->format('M d, Y H:i'),
             ],
         ]);
+
     }
 
     /**
