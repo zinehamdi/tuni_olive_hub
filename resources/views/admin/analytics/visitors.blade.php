@@ -7,8 +7,9 @@
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" x-transition></div>
 
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : (document.documentElement.dir === 'rtl' ? 'translate-x-full' : '-translate-x-full')" 
-           class="fixed md:sticky top-0 md:top-[72px] bottom-0 md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 md:translate-x-0">
+    <aside x-cloak
+           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ app()->getLocale() === 'ar' ? 'translateX(100%)' : 'translateX(-100%)' }}')"
+           class="fixed md:sticky top-0 md:top-[72px] bottom-0 md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 ltr:left-0 rtl:right-0">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <span class="text-[#6A8F3B]">🛡️</span> {{ __('Admin Panel') }}

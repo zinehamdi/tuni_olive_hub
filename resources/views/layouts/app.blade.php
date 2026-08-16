@@ -323,38 +323,38 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('home') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_home') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('home') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_home')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                             </div>
                             <span>{{ __('nav.home') }}</span>
                         </a>
-                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_prices') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_prices')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/30 to-amber-600/30 group-hover:from-amber-400/40 group-hover:to-amber-600/40 flex items-center justify-center transition-all">
                                 <span class="text-base">📊</span>
                             </div>
                             <span>{{ __('nav.prices') }}</span>
                         </a>
-                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_sell') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_sell')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6A8F3B]/30 to-[#5a7a2f]/30 group-hover:from-[#6A8F3B]/50 group-hover:to-[#5a7a2f]/50 flex items-center justify-center transition-all">
                                 <span class="text-base">🫒</span>
                             </div>
                             <span>{{ __('nav.sell_your_oil') }}</span>
                         </a>
-                        <a href="{{ route('services.index') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_services_hub') ?? __('nav.services_hub') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.index') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_services_hub') ?: __('nav.services_hub')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                             </div>
                             <span>{{ __('nav.services_hub') }}</span>
                         </a>
-                        <a href="{{ route('services.pricing') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_our_services') ?? __('nav.our_services') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.pricing') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_our_services') ?: __('nav.our_services')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                             </div>
                             <span>{{ __('nav.our_services') }}</span>
                         </a>
                         @auth
-                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, '{{ __('nav.tooltip_dashboard') }}')" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_dashboard')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C8A356]/30 to-[#b08a3c]/30 group-hover:from-[#C8A356]/40 group-hover:to-[#b08a3c]/40 flex items-center justify-center transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                                 </div>

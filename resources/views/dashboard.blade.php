@@ -54,7 +54,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    this.successMessage = result.message || '{{ __('Updated successfully!') }}';
+                    this.successMessage = result.message || @js(__('Updated successfully!'));
                     this.closeEdit();
                     setTimeout(() => this.successMessage = '', 3000);
                     // Update the displayed value
@@ -62,10 +62,10 @@
                         document.getElementById('display-' + field).textContent = this.formData[field];
                     }
                 } else {
-                    this.errorMessage = result.message || '{{ __('Update failed. Please try again.') }}';
+                    this.errorMessage = result.message || @js(__('Update failed. Please try again.'));
                 }
             } catch (error) {
-                this.errorMessage = '{{ __('An error occurred. Please try again.') }}';
+                this.errorMessage = @js(__('An error occurred. Please try again.'));
             }
             
             this.saving = false;
@@ -92,19 +92,19 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    this.successMessage = result.message || '{{ __('Photo uploaded!') }}';
+                    this.successMessage = result.message || @js(__('Photo uploaded!'));
                     setTimeout(() => location.reload(), 1000);
                 } else {
-                    this.errorMessage = result.message || '{{ __('Upload failed.') }}';
+                    this.errorMessage = result.message || @js(__('Upload failed.'));
                 }
             } catch (error) {
-                this.errorMessage = '{{ __('An error occurred.') }}';
+                this.errorMessage = @js(__('An error occurred.'));
             }
             
             this.saving = false;
         },
         async acceptLoad(id) {
-            if (!confirm('{{ __('Accept this transport task?') }}')) return;
+            if (!confirm(@js(__('Accept this transport task?')))) return;
             this.saving = true;
             try {
                 const response = await fetch(`/api/v1/mobile/loads/${id}/accept`, {
@@ -118,15 +118,15 @@
                 if (response.ok) {
                     location.reload();
                 } else {
-                    alert('{{ __('Failed to accept load.') }}');
+                    alert(@js(__('Failed to accept load.')));
                 }
             } catch (error) {
-                alert('{{ __('Network error.') }}');
+                alert(@js(__('Network error.')));
             }
             this.saving = false;
         },
         async rejectLoad(id) {
-            if (!confirm('{{ __('Reject this transport task?') }}')) return;
+            if (!confirm(@js(__('Reject this transport task?')))) return;
             this.saving = true;
             try {
                 const response = await fetch(`/api/v1/mobile/loads/${id}/reject`, {
@@ -140,10 +140,10 @@
                 if (response.ok) {
                     location.reload();
                 } else {
-                    alert('{{ __('Failed to reject load.') }}');
+                    alert(@js(__('Failed to reject load.')));
                 }
             } catch (error) {
-                alert('{{ __('Network error.') }}');
+                alert(@js(__('Network error.')));
             }
             this.saving = false;
         },
@@ -164,7 +164,7 @@
                 
                 if (!podRes.ok) {
                     const result = await podRes.json();
-                    throw new Error(result.message || '{{ __('Invalid PIN') }}');
+                    throw new Error(result.message || @js(__('Invalid PIN')));
                 }
 
                 // 2. Complete Trip
@@ -178,11 +178,11 @@
                 });
                 
                 if (response.ok) {
-                    this.successMessage = '{{ __('Trip completed successfully!') }}';
+                    this.successMessage = @js(__('Trip completed successfully!'));
                     setTimeout(() => location.reload(), 2000);
                 } else {
                     const result = await response.json();
-                    throw new Error(result.message || '{{ __('Failed to complete trip.') }}');
+                    throw new Error(result.message || @js(__('Failed to complete trip.')));
                 }
             } catch (error) {
                 alert(error.message);
@@ -199,8 +199,9 @@
     <div class="flex w-full min-h-screen">
 
     <!-- LEFT SIDEBAR -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : (document.documentElement.dir === 'rtl' ? 'translate-x-full' : '-translate-x-full')"
-           class="fixed md:sticky top-0 md:top-[72px] h-screen md:h-[calc(100vh-72px)] w-72 bg-white border-r border-gray-100 shadow-xl md:shadow-none z-50 md:z-10 flex flex-col overflow-y-auto transition-transform duration-300 md:translate-x-0 flex-shrink-0">
+    <aside x-cloak
+           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ app()->getLocale() === 'ar' ? 'translateX(100%)' : 'translateX(-100%)' }}')"
+           class="fixed md:sticky top-0 md:top-[72px] h-screen md:h-[calc(100vh-72px)] w-72 bg-white border-r border-gray-100 shadow-xl md:shadow-none z-50 md:z-10 flex flex-col overflow-y-auto transition-transform duration-300 ltr:left-0 rtl:right-0 flex-shrink-0">
 
         <!-- Close btn (mobile) -->
         <div class="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100">
@@ -401,9 +402,9 @@
     <main class="flex-1 min-w-0 overflow-y-auto">
         <!-- Mobile topbar -->
         <div class="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 shadow-sm">
-            <button @click="sidebarOpen = true" class="px-3 py-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200 flex items-center gap-2 font-bold text-sm">
+            <button @click="sidebarOpen = true" class="px-3 py-2 bg-gray-50 rounded-xl text-gray-700 border border-gray-200 flex items-center gap-2 font-bold text-sm hover:bg-gray-100 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                {{ __('قائمتي') }}
+                {{ __('My Store') }}
             </button>
             <span class="font-bold text-gray-900 text-sm">
                 @if(Auth::user()->role === 'farmer' && Auth::user()->farm_name)
@@ -419,13 +420,13 @@
                 @endif
             </span>
             @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
-            <a href="{{ route('profile.edit') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm">
-                {{ __('الخدمات') }}
+            <a href="{{ route('profile.edit') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm hover:bg-[#5a7a2f] transition-colors">
+                {{ __('Services') }}
             </a>
             @else
-            <a href="{{ route('listings.create') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm">
+            <a href="{{ route('listings.create') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm hover:bg-[#5a7a2f] transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                {{ __('عرض') }}
+                {{ __('Add') }}
             </a>
             @endif
         </div>
