@@ -4,9 +4,9 @@
 @endphp
 
 <x-app-layout>
-    <div class="min-h-screen bg-gray-100" dir="{{ $isRTL ? 'rtl' : 'ltr' }}" 
-         x-data="Object.assign({ showTransporters: false, showProposeDealModal: false }, messageChat())" 
-         @open-transporters.window="showTransporters = true; $store.chat.selectedOrder = $event.detail.orderId" 
+    <div class="min-h-screen bg-gray-100" dir="{{ $isRTL ? 'rtl' : 'ltr' }}"
+         x-data="Object.assign({ showTransporters: false, showProposeDealModal: false, showScrollFab: false, charCount: 0 }, messageChat())"
+         @open-transporters.window="showTransporters = true; $store.chat.selectedOrder = $event.detail.orderId"
          @open-propose-deal.window="showProposeDealModal = true">
         <div class="max-w-4xl mx-auto relative">
             
@@ -125,64 +125,125 @@
             @endif
             
             {{-- Messages Area --}}
-            <div id="messages-container" class="px-3 sm:px-4 py-4 sm:py-6 space-y-3 sm:space-y-4 min-h-[calc(100vh-180px)] sm:min-h-[calc(100vh-200px)] max-h-[calc(100vh-180px)] sm:max-h-[calc(100vh-200px)] overflow-y-auto" 
-                 @message-sent.window="if (!newMessages.find(m => m.id === $event.detail.id)) { newMessages.push({...$event.detail, is_mine: $event.detail.sender_id == {{ auth()->id() }} }); lastMessageId = $event.detail.id; scrollToBottom(); }"
-                 @show-toast.window="showToast($event.detail.message, $event.detail.type)">
+            <div id="messages-container"
+                 class="px-3 sm:px-6 py-4 space-y-2 overflow-y-auto"
+                 style="height: calc(100dvh - 190px); min-height: 200px; scroll-behavior: smooth;"
+                 @message-sent.window="if (!newMessages.find(m => m.id === $event.detail.id)) { newMessages.push({...$event.detail, is_mine: $event.detail.sender_id == {{ auth()->id() }} }); lastMessageId = $event.detail.id; scrollToBottom(); showScrollFab = false; }"
+                 @show-toast.window="showToast($event.detail.message, $event.detail.type)"
+                 @scroll="showScrollFab = $el.scrollHeight - $el.scrollTop - $el.clientHeight > 120">
                 <input type="hidden" id="selected-order-id" value="" />
+
+                @if($messages->count() > 0)
+                <div class="flex items-center gap-3 my-3">
+                    <div class="flex-1 h-px bg-gray-200"></div>
+                    <span class="text-[11px] text-gray-400 font-medium px-2">{{ $messages->first()->created_at->translatedFormat('d M Y') }}</span>
+                    <div class="flex-1 h-px bg-gray-200"></div>
+                </div>
+                @endif
+
                 @foreach($messages as $message)
-                    <div class="flex {{ $message->sender_id === auth()->id() ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }}">
-                        <div class="max-w-[85%] sm:max-w-[75%] {{ $message->sender_id === auth()->id() 
-                            ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl ' . ($isRTL ? 'rounded-bl-sm' : 'rounded-br-sm')
-                            : 'bg-white border-2 border-green-500 text-gray-900 rounded-2xl shadow ' . ($isRTL ? 'rounded-br-sm' : 'rounded-bl-sm') }}">
-                            <p class="px-4 py-3 text-sm leading-relaxed">{{ $message->body }}</p>
-                            <span class="block px-4 pb-2 text-xs {{ $message->sender_id === auth()->id() ? 'text-blue-200' : 'text-gray-400' }}">
-                                {{ $message->created_at->translatedFormat('d M, H:i') }}
-                            </span>
+                    @php $isMine = $message->sender_id === auth()->id(); @endphp
+                    <div class="flex {{ $isMine ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }} items-end gap-2 group">
+                        @if(!$isMine)
+                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mb-5">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <div class="max-w-[78%] sm:max-w-[65%]">
+                            <div class="{{ $isMine
+                                ? 'bg-gradient-to-br from-[#3B5998] to-[#2d4275] text-white ' . ($isRTL ? 'rounded-t-2xl rounded-br-2xl rounded-bl-md' : 'rounded-t-2xl rounded-bl-2xl rounded-br-md')
+                                : 'bg-white border border-gray-200 text-gray-900 shadow-sm ' . ($isRTL ? 'rounded-t-2xl rounded-bl-2xl rounded-br-md' : 'rounded-t-2xl rounded-br-2xl rounded-bl-md') }} px-4 py-2.5">
+                                <p class="text-sm leading-relaxed whitespace-pre-wrap break-words">{{ $message->body }}</p>
+                            </div>
+                            <div class="flex items-center gap-1 mt-0.5 px-1 {{ $isMine ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }}">
+                                <span class="text-[10px] text-gray-400">{{ $message->created_at->translatedFormat('H:i') }}</span>
+                                @if($isMine)
+                                    @if($message->read_at)
+                                        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 6.5l1-1 4 4L13.5 2l1 1-9 9z"/><path d="M3.5 6.5l1-1 4 4" opacity=".4"/></svg>
+                                    @else
+                                        <svg class="w-3.5 h-3.5 text-gray-300" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 6.5l1-1 4 4L13.5 2l1 1-9 9z"/></svg>
+                                    @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
-                
-                {{-- New messages will be appended here --}}
+
+                {{-- New messages via Alpine (real-time) --}}
                 <template x-for="msg in newMessages" :key="msg.id">
-                    <div :class="msg.is_mine ? '{{ $isRTL ? 'justify-start' : 'justify-end' }}' : '{{ $isRTL ? 'justify-end' : 'justify-start' }}'" class="flex">
-                        <div :class="msg.is_mine 
-                            ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl {{ $isRTL ? 'rounded-bl-sm' : 'rounded-br-sm' }}'
-                            : 'bg-white border-2 border-green-500 text-gray-900 rounded-2xl shadow {{ $isRTL ? 'rounded-br-sm' : 'rounded-bl-sm' }}'"
-                            class="max-w-[75%]">
-                            <p class="px-4 py-3 text-sm leading-relaxed" x-text="msg.body"></p>
-                            <span :class="msg.is_mine ? 'text-blue-200' : 'text-gray-400'" class="block px-4 pb-2 text-xs" x-text="msg.created_at"></span>
+                    <div :class="msg.is_mine ? '{{ $isRTL ? 'justify-start' : 'justify-end' }}' : '{{ $isRTL ? 'justify-end' : 'justify-start' }}'" class="flex items-end gap-2">
+                        <div class="max-w-[78%] sm:max-w-[65%]">
+                            <div :class="msg.is_mine
+                                ? 'bg-gradient-to-br from-[#3B5998] to-[#2d4275] text-white {{ $isRTL ? 'rounded-t-2xl rounded-br-2xl rounded-bl-md' : 'rounded-t-2xl rounded-bl-2xl rounded-br-md' }}'
+                                : 'bg-white border border-gray-200 text-gray-900 shadow-sm {{ $isRTL ? 'rounded-t-2xl rounded-bl-2xl rounded-br-md' : 'rounded-t-2xl rounded-br-2xl rounded-bl-md' }}'" class="px-4 py-2.5">
+                                <p class="text-sm leading-relaxed whitespace-pre-wrap break-words" x-text="msg.body"></p>
+                            </div>
+                            <span :class="msg.is_mine ? '{{ $isRTL ? 'text-left' : 'text-right' }}' : '{{ $isRTL ? 'text-right' : 'text-left' }}'" class="block mt-0.5 text-[10px] text-gray-400 px-1" x-text="msg.created_at"></span>
                         </div>
                     </div>
                 </template>
+
+                <div class="h-2"></div>
             </div>
             
-            {{-- Message Input --}}
-            <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 sm:p-4 z-20">
-                <div class="max-w-4xl mx-auto">
+            {{-- Scroll-to-bottom FAB --}}
+            <div class="relative h-0">
+                <button x-show="showScrollFab"
+                        x-cloak
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        @click="scrollToBottom(); showScrollFab = false"
+                        class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white border border-gray-200 shadow-lg rounded-full px-4 py-1.5 flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition z-30"
+                        style="display:none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    {{ __('New messages') }}
+                </button>
+            </div>
+
+            {{-- Message Input Bar --}}
+            <div class="sticky bottom-0 left-0 right-0 bg-white border-t-2 border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-20">
+                <div class="max-w-4xl mx-auto px-3 sm:px-4 py-3">
                     <form x-data="messageSender" @submit.prevent="send()" class="flex items-end gap-2 sm:gap-3">
+
+                        {{-- Textarea --}}
                         <div class="flex-1 relative">
-                            <textarea 
+                            <textarea
+                                id="message-input"
                                 x-model="message"
                                 @keydown.enter.prevent="!$event.shiftKey && send()"
+                                @input="$el.style.height = 'auto'; $el.style.height = Math.min($el.scrollHeight, 140) + 'px'; charCount = $el.value.length"
                                 rows="1"
-                                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-green-600 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-green-600 resize-none text-sm"
-                                placeholder="{{ __('Type a message...') }}"
+                                maxlength="2000"
+                                class="w-full px-4 py-3 border-2 border-[#6A8F3B] bg-gray-50 rounded-2xl focus:ring-2 focus:ring-[#6A8F3B]/30 focus:border-[#6A8F3B] focus:bg-white resize-none text-sm text-gray-900 placeholder-gray-400 transition-all"
+                                style="min-height: 48px; max-height: 140px; overflow-y: auto;"
+                                placeholder="{{ __('Write your message...') }}"
                                 :disabled="sending"
                             ></textarea>
+                            <span x-show="charCount > 100"
+                                  x-text="(2000 - charCount) + ' {{ __('left') }}'"
+                                  :class="charCount > 1900 ? 'text-red-500' : 'text-gray-400'"
+                                  class="absolute bottom-1.5 {{ $isRTL ? 'left-3' : 'right-3' }} text-[10px] font-medium pointer-events-none">
+                            </span>
                         </div>
-                        <button 
+
+                        {{-- Send Button --}}
+                        <button
                             type="submit"
                             :disabled="!message.trim() || sending"
-                            class="p-2.5 sm:p-3 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
-                            <svg x-show="!sending" class="w-5 h-5 {{ $isRTL ? '-rotate-90' : 'rotate-90' }} transform -translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            class="flex items-center gap-2 px-4 sm:px-5 py-3 bg-gradient-to-br from-[#6A8F3B] to-[#4d6b29] text-white rounded-2xl shadow-md hover:shadow-lg hover:from-[#5a7a2f] hover:to-[#3e561f] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none flex-shrink-0 font-semibold text-sm"
+                            style="min-height: 48px;">
+                            <svg x-show="!sending" class="w-5 h-5 flex-shrink-0 {{ $isRTL ? 'scale-x-[-1]' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
                             </svg>
-                            <svg x-show="sending" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <svg x-show="sending" class="w-5 h-5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
+                            <span class="hidden sm:inline" x-text="sending ? '{{ __('Sending...') }}' : '{{ __('Send') }}'"></span>
                         </button>
                     </form>
+                    <p class="text-[11px] text-gray-400 mt-1 px-1 hidden sm:block">{{ __('Enter to send · Shift+Enter for new line') }}</p>
                 </div>
             </div>
             

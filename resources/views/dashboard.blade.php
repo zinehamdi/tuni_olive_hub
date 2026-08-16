@@ -43,7 +43,7 @@
             formDataObj.append('value', this.formData[field]);
             
             try {
-                const response = await fetch('{{ route('profile.update.field') }}', {
+                const response = await fetch("{{ route('profile.update.field') }}", {
                     method: 'POST',
                     body: formDataObj,
                     headers: {
@@ -81,7 +81,7 @@
             formDataObj.append('photo', file);
             
             try {
-                const response = await fetch('{{ route('profile.upload.photo') }}', {
+                const response = await fetch("{{ route('profile.upload.photo') }}", {
                     method: 'POST',
                     body: formDataObj,
                     headers: {

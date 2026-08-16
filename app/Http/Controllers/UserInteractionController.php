@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\NewFollowNotification;
+use App\Notifications\NewLikeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -33,13 +35,13 @@ class UserInteractionController extends Controller
         $isFollowing = $authUser->isFollowing($user);
 
         if ($isFollowing) {
-            // Unfollow
             $authUser->following()->detach($user->id);
             $followed = false;
         } else {
-            // Follow
             $authUser->following()->attach($user->id);
             $followed = true;
+            // Notify followed user (throttled — max 1 email per 5 min)
+            $user->notify(new NewFollowNotification($authUser));
         }
 
         return response()->json([
@@ -75,13 +77,13 @@ class UserInteractionController extends Controller
         $hasLiked = $authUser->hasLiked($user);
 
         if ($hasLiked) {
-            // Unlike
             $authUser->likedUsers()->detach($user->id);
             $liked = false;
         } else {
-            // Like
             $authUser->likedUsers()->attach($user->id);
             $liked = true;
+            // Notify liked user (throttled — max 1 email per 5 min)
+            $user->notify(new NewLikeNotification($authUser));
         }
 
         return response()->json([
