@@ -261,26 +261,9 @@
                             <!-- Background Glow -->
                             <div class="absolute inset-0 bg-[#6A8F3B]/20 rounded-xl blur-lg group-hover:bg-[#C8A356]/30 transition-all duration-500"></div>
                             
-                            <!-- SVG Logo -->
-                            <svg class="relative w-8 h-8 drop-shadow-md logo-animate" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Outer Drop Shape -->
-                                <path d="M50 95C72.0914 95 90 77.0914 90 55C90 32.9086 50 5 50 5C50 5 10 32.9086 10 55C10 77.0914 27.9086 95 50 95Z" fill="url(#logo_gradient)" class="drop-pulse"/>
-                                
-                                <!-- Stylized Z -->
-                                <path d="M35 40H65L35 70H65" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="z-draw"/>
-                                
-                                <defs>
-                                    <linearGradient id="logo_gradient" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#6A8F3B" />
-                                        <stop offset="100%" stop-color="#4A662A" />
-                                    </linearGradient>
-                                    <!-- Secondary Golden Gradient for Hover -->
-                                    <linearGradient id="gold_gradient" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#C8A356" />
-                                        <stop offset="100%" stop-color="#9A7A3A" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <!-- Rounded Image Logo -->
+                            <img src="{{ asset('images/zintoop-logo.png') }}" class="relative w-8 h-8 rounded-full object-cover drop-shadow-md logo-animate border border-white/20" alt="ZinToop Logo">
+
                         </div>
                         <div class="flex flex-col">
                             <span class="text-2xl font-black text-white tracking-tighter leading-none group-hover:text-[#C8A356] transition-colors duration-300">ZinToop</span>

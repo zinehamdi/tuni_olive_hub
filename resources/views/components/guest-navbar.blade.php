@@ -6,7 +6,7 @@
                 <a href="{{ url('/') }}" class="flex-shrink-0 group flex items-center gap-3 no-underline">
                     <div class="relative w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-[#6A8F3B]/20 rounded-xl blur-lg group-hover:bg-[#C8A356]/30 transition-all duration-500"></div>
-                        <img src="{{ asset('images/zintoop-logo.png') }}" class="relative w-8 h-8 drop-shadow-md logo-animate" alt="ZinToop Logo">
+                        <img src="{{ asset('images/zintoop-logo.png') }}" class="relative w-8 h-8 rounded-full object-cover drop-shadow-md logo-animate" alt="ZinToop Logo">
                     </div>
                     <div class="flex flex-col">
                         <span class="text-2xl font-black text-white tracking-tighter leading-none group-hover:text-[#C8A356] transition-colors duration-300">ZinToop</span>
@@ -120,7 +120,7 @@
             <div class="absolute inset-0 bg-[#C8A356]/10"></div>
             <div class="relative z-10">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-3">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" class="w-10 h-10 drop-shadow-md">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" class="w-10 h-10 rounded-full object-cover drop-shadow-md">
                     <div class="flex flex-col">
                         <span class="text-xl font-black text-white">ZinToop</span>
                         <span class="text-[9px] uppercase font-bold tracking-[0.2em] text-[#C8A356]">Marketplace</span>
