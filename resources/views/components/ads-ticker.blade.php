@@ -181,15 +181,15 @@
                 ];
 
                 $defaultDescs = [
-                    'carrier' => 'ناقل بري ولوجستي لنقل الزيتون والزيت بين الولايات التونسية',
-                    'mill' => 'معصرة زيتون مجهزة بأحدث آليات العصر لإنتاج زيت رفيع',
-                    'packer' => 'وحدة تعليب وتغليف متكاملة لمنتجات زيت الزيتون والزيتون',
-                    'transiteur' => 'خدمات تخليص جمركي وتصدير زيت الزيتون لكافة دول العالم',
-                    'comptable' => 'محاسبة واستشارات مالية وإدارية للشركات والتعاونيات الفلاحية',
-                    'service_bureau' => 'مكتب خدمات إدارية وتسهيل المعاملات والملفات القانونية',
-                    'agri_equipment' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون',
-                    'agri_materials' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية',
-                    'agri_study_office' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع',
+                    'carrier' => __('Land and logistics carrier for transporting olives and oil between Tunisian states'),
+                    'mill' => __('Olive mill equipped with the latest pressing mechanisms to produce premium oil'),
+                    'packer' => __('Integrated canning and packaging unit for olive and olive oil products'),
+                    'transiteur' => __('Customs clearance and olive oil export services to all countries of the world'),
+                    'comptable' => __('Accounting, financial and administrative consulting for agricultural companies and cooperatives'),
+                    'service_bureau' => __('Administrative services office to facilitate transactions and legal files'),
+                    'agri_equipment' => __('Selling and providing modern agricultural equipment and machinery for the olive sector'),
+                    'agri_materials' => __('Providing high-quality fertilizers, seedlings, and agricultural materials'),
+                    'agri_study_office' => __('Agricultural studies and engineering consultations for project development and management'),
                 ];
 
                 $providerAds = [];
@@ -198,13 +198,13 @@
                     
                     $desc = null;
                     if (is_array($p->meta_data)) {
-                        $desc = $p->meta_data['service_description'] ?? null;
+                        $desc = \App\Helpers\TextHelper::localizeArabicString($p->meta_data['service_description'] ?? null);
                     } elseif (is_object($p->meta_data)) {
-                        $desc = $p->meta_data->service_description ?? null;
+                        $desc = \App\Helpers\TextHelper::localizeArabicString($p->meta_data->service_description ?? null);
                     }
                     
                     if (empty($desc)) {
-                        $desc = $defaultDescs[$p->role] ?? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا';
+                        $desc = $defaultDescs[$p->role] ?? __('Registered agricultural and commercial service provider on our platform');
                     }
 
                     $descShort = \Illuminate\Support\Str::limit($desc, 60);
@@ -213,9 +213,9 @@
                     $providerAds[] = [
                         'icon' => $icon,
                         'logo' => $logoUrl,
-                        'name' => $p->name,
+                        'name' => \App\Helpers\TextHelper::localizeArabicString($p->name),
                         'desc' => $descShort,
-                        'text' => $p->name . ' (' . $icon . '): ' . $descShort,
+                        'text' => \App\Helpers\TextHelper::localizeArabicString($p->name) . ' (' . $icon . '): ' . $descShort,
                         'url' => route('services.index') . '?provider=' . $p->id . '#directory'
                     ];
                 }

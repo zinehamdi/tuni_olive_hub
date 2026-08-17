@@ -169,4 +169,33 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tank::class);
     }
+
+    /**
+     * Override toArray to transliterate Arabic content to Latin for EN/FR locales
+     * when the model is converted to array/JSON (for APIs and Vue/Alpine frontends).
+     */
+    public function toArray()
+    {
+        $array = parent::toArray();
+        
+        if (app()->getLocale() !== 'ar' && class_exists(\App\Helpers\TextHelper::class)) {
+            if (!empty($array['name'])) {
+                $array['name'] = \App\Helpers\TextHelper::localizeArabicString($array['name']);
+            }
+            if (!empty($array['farm_location'])) {
+                $array['farm_location'] = \App\Helpers\TextHelper::localizeArabicString($array['farm_location']);
+            }
+            if (!empty($array['location'])) {
+                $array['location'] = \App\Helpers\TextHelper::localizeArabicString($array['location']);
+            }
+            if (!empty($array['bio'])) {
+                $array['bio'] = \App\Helpers\TextHelper::localizeArabicString($array['bio']);
+            }
+            if (isset($array['meta_data']['service_description']) && !empty($array['meta_data']['service_description'])) {
+                $array['meta_data']['service_description'] = \App\Helpers\TextHelper::localizeArabicString($array['meta_data']['service_description']);
+            }
+        }
+        
+        return $array;
+    }
 }

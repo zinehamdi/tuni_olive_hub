@@ -157,10 +157,10 @@
                                 @endif
                             </span>
                             <span class="text-sm font-black text-gray-950">
-                                {{ $locale === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : $price->souk_name }}
+                                {{ $locale === 'ar' ? ($soukNames[$price->souk_name] ?? $price->souk_name) : \App\Helpers\TextHelper::localizeArabicString($price->souk_name) }}
                             </span>
                             <span class="text-xs font-bold text-gray-800">
-                                @if ($price->product_type === 'olive')({{ ucfirst($price->variety) }})
+                                @if ($price->product_type === 'olive')({{ \App\Helpers\TextHelper::localizeArabicString(ucfirst($price->variety)) }})
                                 @else ({{ __('nav.oil') }})
                                 @endif
                             </span>
