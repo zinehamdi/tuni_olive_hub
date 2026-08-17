@@ -108,7 +108,7 @@
                         </div>
 
                         <div>
-                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد {{ __('Password') }} <span class="text-red-600">*</span></label>
+                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">{{ __('Confirm Password') }} <span class="text-red-600">*</span></label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#8B4513] focus:ring-4 focus:ring-[#8B4513]/20 transition-all" 
                                 placeholder="••••••••">
@@ -126,10 +126,10 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
-                            <label for="mill_name" class="block text-gray-900 font-bold mb-2">اسم المعصرة <span class="text-red-600">*</span></label>
+                            <label for="mill_name" class="block text-gray-900 font-bold mb-2">{{ __('Mill Name') }} <span class="text-red-600">*</span></label>
                             <input id="mill_name" type="text" name="mill_name" value="{{ old('mill_name', request('mill_name')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#8B4513] focus:ring-4 focus:ring-[#8B4513]/20 transition-all" 
-                                placeholder="أدخل اسم المعصرة">
+                                placeholder="{{ __('Enter mill name') }}"
                             @error('mill_name')
                                 <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
                             @enderror
@@ -243,7 +243,7 @@
                                         <span class="font-bold">{{ __('Add Cover Photos') }}</span>
                                     </label>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }} لكل صورة
+                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically, per photo') }}
                                     </p>
                                     @error('cover_photos')
                                         <p class="text-red-600 text-sm mt-2">{{ $message }}</p>

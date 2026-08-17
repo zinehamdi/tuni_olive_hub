@@ -105,7 +105,7 @@
                         </div>
 
                         <div>
-                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد {{ __('Password') }} <span class="text-red-600">*</span></label>
+                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">{{ __('Confirm Password') }} <span class="text-red-600">*</span></label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
                                 placeholder="••••••••">
@@ -123,10 +123,10 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
-                            <label for="camion_capacity" class="block text-gray-900 font-bold mb-2">سعة الشاحنة (بالطن) <span class="text-red-600">*</span></label>
+                            <label for="camion_capacity" class="block text-gray-900 font-bold mb-2">{{ __('Truck Capacity (in tons)') }} <span class="text-red-600">*</span></label>
                             <input id="camion_capacity" type="number" step="0.1" name="camion_capacity" value="{{ old('camion_capacity', request('camion_capacity')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
-                                placeholder="مثال: 5، 10، 20">
+                                placeholder="{{ __('Example: 5, 10, 20') }}">
                             @error('camion_capacity')
                                 <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
                             @enderror
@@ -240,7 +240,7 @@
                                         <span class="font-bold">{{ __('Add Cover Photos') }}</span>
                                     </label>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }} لكل صورة
+                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically, per photo') }}
                                     </p>
                                     @error('cover_photos')
                                         <p class="text-red-600 text-sm mt-2">{{ $message }}</p>

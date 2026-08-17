@@ -104,7 +104,7 @@
                         </div>
 
                         <div>
-                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد {{ __('Password') }} <span class="text-red-600">*</span></label>
+                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">{{ __('Confirm Password') }} <span class="text-red-600">*</span></label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="••••••••">

@@ -36,7 +36,7 @@
                 <svg class="w-6 h-6 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span>الدور <span class="text-red-600">*</span></span>
+                <span>{{ __('Role') }} <span class="text-red-600">*</span></span>
             </label>
             
             <!-- Farmer -->
@@ -49,8 +49,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900">فلاح</div>
-                        <div class="text-sm text-gray-500">منتج زيت الزيتون والزيتون</div>
+                        <div class="font-bold text-gray-900">{{ __('Farmer') }}</div>
+                        <div class="text-sm text-gray-500">{{ __('Olive and Olive Oil Producer') }}</div>
                     </div>
                 </div>
             </label>
@@ -65,8 +65,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900">ناقِل</div>
-                        <div class="text-sm text-gray-500">خدمات النقل والتوصيل</div>
+                        <div class="font-bold text-gray-900">{{ __('Carrier') }}</div>
+                        <div class="text-sm text-gray-500">{{ __('Transport and Delivery Services') }}</div>
                     </div>
                 </div>
             </label>
@@ -81,8 +81,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900">معصرة</div>
-                        <div class="text-sm text-gray-500">عصر وتجهيز الزيتون</div>
+                        <div class="font-bold text-gray-900">{{ __('Mill') }}</div>
+                        <div class="text-sm text-gray-500">{{ __('Olive Pressing and Processing') }}</div>
                     </div>
                 </div>
             </label>
@@ -97,8 +97,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900">مُعبئ</div>
-                        <div class="text-sm text-gray-500">تعبئة وتغليف المنتجات</div>
+                        <div class="font-bold text-gray-900">{{ __('Packer') }}</div>
+                        <div class="text-sm text-gray-500">{{ __('Product Packaging') }}</div>
                     </div>
                 </div>
             </label>
@@ -113,8 +113,8 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="font-bold text-gray-900">مشترٍ / مستورد</div>
-                        <div class="text-sm text-gray-500">تصفح وشراء المنتجات</div>
+                        <div class="font-bold text-gray-900">{{ __('Buyer / Importer') }}</div>
+                        <div class="text-sm text-gray-500">{{ __('Browse and Buy Products') }}</div>
                     </div>
                 </div>
             </label>
@@ -127,7 +127,7 @@
             <button type="submit" 
                 class="w-full py-4 px-6 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2" 
                 :disabled="role === ''">
-                <span>التالي</span>
+                <span>{{ __('Next') }}</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

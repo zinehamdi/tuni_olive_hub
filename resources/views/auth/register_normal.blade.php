@@ -108,7 +108,7 @@
                         </div>
 
                         <div>
-                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد {{ __('Password') }} <span class="text-red-600">*</span></label>
+                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">{{ __('Confirm Password') }} <span class="text-red-600">*</span></label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#3B82F6] focus:ring-4 focus:ring-[#3B82F6]/20 transition-all" 
                                 placeholder="••••••••">
@@ -117,18 +117,18 @@
                         <!-- Interest Field (Full Width) -->
                         <div class="md:col-span-2">
                             <label for="interest" class="text-gray-900 font-bold mb-2 flex items-center gap-2">
-                                <span>مجال الاهتمام الأساسي</span>
-                                <span class="text-xs text-[#3B82F6] bg-[#3B82F6]/10 px-2 py-1 rounded-full font-bold">اختياري</span>
+                                <span>{{ __('Primary Field of Interest') }}</span>
+                                <span class="text-xs text-[#3B82F6] bg-[#3B82F6]/10 px-2 py-1 rounded-full font-bold">{{ __('Optional') }}</span>
                             </label>
                             <div class="relative">
                                 <select id="interest" name="interest" 
                                     class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-white text-gray-900 focus:border-[#3B82F6] focus:ring-4 focus:ring-[#3B82F6]/20 transition-all appearance-none cursor-pointer">
-                                    <option value="" disabled selected>اختر مجال اهتمامك (يمكنك تغييره لاحقاً)</option>
-                                    <option value="explore">مجرد استكشاف (Just Explore)</option>
-                                    <option value="interested">مهتم بزيت الزيتون (Interested in Olive Oil)</option>
-                                    <option value="wholesale">تاجر جملة (Wholesale Trader)</option>
-                                    <option value="importer">مستورد (Importer)</option>
-                                    <option value="expert">خبير / متذوق (Expert / Taster)</option>
+                                    <option value="" disabled selected>{{ __('Choose your field of interest (can be changed later)') }}</option>
+                                    <option value="explore">{{ __('Just Explore') }}</option>
+                                    <option value="interested">{{ __('Interested in Olive Oil') }}</option>
+                                    <option value="wholesale">{{ __('Wholesale Trader') }}</option>
+                                    <option value="importer">{{ __('Importer') }}</option>
+                                    <option value="expert">{{ __('Expert / Taster') }}</option>
                                 </select>
                                 <div class="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none text-gray-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,7 +254,7 @@
                                         <span class="font-bold">{{ __('Add Cover Photos') }}</span>
                                     </label>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }} لكل صورة
+                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically, per photo') }}
                                     </p>
                                     @error('cover_photos')
                                         <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
