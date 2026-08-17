@@ -260,7 +260,7 @@
                             {{ strtoupper(substr($ad['name'] ?? '', 0, 1)) }}
                         </div>
                     @endif
-                    <div class="ads-ticker-text-wrapper flex flex-col text-right justify-center leading-none">
+                    <div class="ads-ticker-text-wrapper flex flex-col {{ $locale === 'ar' ? 'text-right' : 'text-left' }} justify-center leading-none">
                         <span class="ads-ticker-title font-black text-black leading-tight">
                             {{ $ad['name'] ?? '' }}
                         </span>

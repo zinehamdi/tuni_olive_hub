@@ -13,6 +13,50 @@ class TextHelper
             return $text;
         }
 
+        // Common Tunisian City/Location Overrides
+        $locationOverrides = [
+            'صفاقس' => 'Sfax',
+            'تونس' => 'Tunis',
+            'سوسة' => 'Sousse',
+            'المهدية' => 'Mahdia',
+            'المنستير' => 'Monastir',
+            'القيروان' => 'Kairouan',
+            'مدنين' => 'Medenine',
+            'جرجيس' => 'Zarzis',
+            'جربة' => 'Djerba',
+            'قابس' => 'Gabes',
+            'قفصة' => 'Gafsa',
+            'جندوبة' => 'Jendouba',
+            'باجة' => 'Beja',
+            'الكاف' => 'Kef',
+            'سليانة' => 'Siliana',
+            'سيدي بوزيد' => 'Sidi Bouzid',
+            'الرقاب' => 'Rgab',
+            'رقاب' => 'Rgab',
+            'القصرين' => 'Kasserine',
+            'تطاوين' => 'Tataouine',
+            'قبلي' => 'Kebili',
+            'توزر' => 'Tozeur',
+            'نابل' => 'Nabeul',
+            'زغوان' => 'Zaghouan',
+            'منوبة' => 'Manouba',
+            'أريانة' => 'Ariana',
+            'بن عروس' => 'Ben Arous',
+            'بنزرت' => 'Bizerte',
+            'المدينة' => 'Ville', // For "Gafsa Ville" or "Sfax Ville"
+            'بوحجلة' => 'Bouhajla',
+        ];
+
+        // Apply overrides first
+        foreach ($locationOverrides as $ar => $fr) {
+            $text = str_replace($ar, $fr, $text);
+        }
+
+        // If the text was entirely an override, return it early to avoid further mangling
+        if (in_array(trim($text), array_values($locationOverrides))) {
+            return $text;
+        }
+
         // Replace "ال" at the beginning of words first
         $text = preg_replace_callback('/(^|\s)ال/u', function($matches) {
             return $matches[1] . 'El ';
