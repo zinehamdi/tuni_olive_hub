@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mx-auto max-w-2xl px-4 py-8">
         <!-- Register Card -->
-        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-gray-100">
             <div class="text-center mb-8">
                 <span class="text-4xl">🛠️</span>
                 <h2 class="text-2xl font-black mt-2 text-[#6A8F3B]">تسجيل مزود خدمة جديد</h2>
@@ -30,7 +30,7 @@
 
                     <!-- Email -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">البريد الإلكتروني <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Email Address') }} <span class="text-red-500">*</span></label>
                         <input type="email" name="email" value="{{ old('email') }}" required placeholder="example@domain.com" class="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
                     </div>
                 </div>
@@ -38,13 +38,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Phone -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">رقم الهاتف / واتساب <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Phone Number') }} / واتساب <span class="text-red-500">*</span></label>
                         <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="216XXXXXXXX+" class="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
                     </div>
 
                     <!-- Role Selection -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">نوع الخدمة المقدمة <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Service Type') }} المقدمة <span class="text-red-500">*</span></label>
                         <select name="role" x-model="role" required class="w-full rounded-xl border border-gray-200 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%234a5568%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
                             <option value="carrier">🚛 ناقل بري وبحري (Transporteur)</option>
                             <option value="mill">🏢 معصرة زيتون (Pressoir / Moulin)</option>
@@ -122,13 +122,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Password -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">كلمة المرور <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Password') }} <span class="text-red-500">*</span></label>
                         <input type="password" name="password" required placeholder="••••••••" class="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
                     </div>
 
                     <!-- Password Confirmation -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">تأكيد كلمة المرور <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">تأكيد {{ __('Password') }} <span class="text-red-500">*</span></label>
                         <input type="password" name="password_confirmation" required placeholder="••••••••" class="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6A8F3B] focus:border-transparent">
                     </div>
                 </div>
@@ -144,9 +144,9 @@
 
                 <!-- Login Link -->
                 <div class="text-center pt-4 border-t">
-                    <span class="text-gray-600">لديك حساب بالفعل؟</span>
+                    <span class="text-gray-600">{{ __('Already have an account?') }}</span>
                     <a href="{{ route('login') }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
-                        سجل دخولك
+                        {{ __('Log in') }}
                     </a>
                 </div>
             </form>

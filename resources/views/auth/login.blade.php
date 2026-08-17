@@ -1,11 +1,11 @@
 <x-guest-layout>
-    <div class="mx-auto max-w-xl">
+    <div class="mx-auto max-w-md">
         <!-- Login Card -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-2xl p-5 border border-gray-100">
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-6">
+            <form method="POST" action="{{ route('login') }}" class="space-y-4">
                 @csrf
 
                 <!-- Email or Phone Number -->
@@ -16,7 +16,7 @@
                         </svg>
                     </x-input-label>
                     <x-text-input id="email" 
-                        class="block mt-2 w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
+                        class="block mt-1 w-full rounded-xl border-2 border-gray-200 px-4 py-2 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                         type="text" 
                         name="email" 
                         :value="old('email')" 
@@ -35,7 +35,7 @@
                         </svg>
                     </x-input-label>
                     <x-text-input id="password" 
-                        class="block mt-2 w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all"
+                        class="block mt-1 w-full rounded-xl border-2 border-gray-200 px-4 py-2 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all"
                         type="password"
                         name="password"
                         required 
@@ -60,14 +60,14 @@
 
                 <!-- Social Login -->
                 <div>
-                    <a href="{{ route('auth.facebook') }}" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#1877F2] hover:bg-[#166fe5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1877F2] transition-colors items-center gap-2">
+                    <a href="{{ route('auth.facebook') }}" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#1877F2] hover:bg-[#166fe5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1877F2] transition-colors items-center gap-2">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
                         </svg>
                         {{ __('Continue with Facebook') }}
                     </a>
                     
-                    <a href="{{ route('auth.google') }}" class="w-full flex justify-center py-3 px-4 mt-3 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors items-center gap-2">
+                    <a href="{{ route('auth.google') }}" class="w-full flex justify-center py-2 px-4 mt-2 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors items-center gap-2">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -86,7 +86,7 @@
 
                 <!-- Submit Button -->
                 <div class="space-y-4">
-                    <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full py-2.5 px-6 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2">
                         <span>{{ __('Log in') }}</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />

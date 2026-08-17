@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <div class="mx-auto max-w-2xl">
+    <div class="mx-auto max-w-lg">
         <!-- Register Card -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
-            <form method="GET" action="{{ route('register.role') }}" class="space-y-6" x-data="{ role: '' }">
-                <h2 class="text-2xl font-bold text-center mb-6 text-[#6A8F3B]">{{ __('Select your role') }}</h2>
+        <div class="bg-white rounded-2xl shadow-2xl p-5 border border-gray-100">
+            <form method="GET" action="{{ route('register.role') }}" class="space-y-4" x-data="{ role: '' }">
+                <h2 class="text-xl font-bold text-center mb-4 text-[#6A8F3B]">{{ __('Select your role') }}</h2>
                 
                 <!-- Role Selection with Icons -->
                 <div class="space-y-3">
@@ -15,7 +15,7 @@
                     </label>
                     
                     <!-- Farmer -->
-                    <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'farmer' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
+                    <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'farmer' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="farmer" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
                         <div class="flex items-center gap-3 flex-1">
                             <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white">
@@ -31,7 +31,7 @@
                     </label>
 
                     <!-- Carrier -->
-                    <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'carrier' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
+                    <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'carrier' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="carrier" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
                         <div class="flex items-center gap-3 flex-1">
                             <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-[#C8A356] to-[#b08a3c] flex items-center justify-center text-white">
@@ -47,7 +47,7 @@
                     </label>
 
                     <!-- Mill -->
-                    <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'mill' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
+                    <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'mill' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="mill" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
                         <div class="flex items-center gap-3 flex-1">
                             <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-[#8B4513] to-[#6B3410] flex items-center justify-center text-white">
@@ -63,7 +63,7 @@
                     </label>
 
                     <!-- Packer -->
-                    <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'packer' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
+                    <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'packer' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="packer" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
                         <div class="flex items-center gap-3 flex-1">
                             <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-[#9333EA] to-[#7E22CE] flex items-center justify-center text-white">
@@ -79,7 +79,7 @@
                     </label>
 
                     <!-- Normal User -->
-                    <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'normal' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
+                    <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'normal' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="normal" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
                         <div class="flex items-center gap-3 flex-1">
                             <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#2563EB] flex items-center justify-center text-white">
@@ -97,14 +97,14 @@
 
                 <!-- Social Login -->
                 <div>
-                    <a href="{{ route('auth.facebook') }}" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#1877F2] hover:bg-[#166fe5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1877F2] transition-colors items-center gap-2">
+                    <a href="{{ route('auth.facebook') }}" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#1877F2] hover:bg-[#166fe5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1877F2] transition-colors items-center gap-2">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
                         </svg>
                         {{ __('Continue with Facebook') }}
                     </a>
                     
-                    <a href="{{ route('auth.google') }}" class="w-full flex justify-center py-3 px-4 mt-3 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors items-center gap-2">
+                    <a href="{{ route('auth.google') }}" class="w-full flex justify-center py-2 px-4 mt-2 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors items-center gap-2">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -123,7 +123,7 @@
 
                 <!-- Submit Button -->
                 <button type="submit" 
-                    class="w-full py-4 px-6 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2" 
+                    class="w-full py-2.5 px-6 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2" 
                     :disabled="role === ''">
                     <span>{{ __('Next') }}</span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

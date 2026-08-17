@@ -14,14 +14,15 @@
         @stack('head')
     </head>
     <body class="font-sans text-gray-900 antialiased bg-gradient-to-br from-gray-50 to-gray-100" style="font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'Arial', sans-serif;">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
+        <x-guest-navbar />
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-24 sm:pt-28 pb-8 px-4">
             <!-- Logo -->
             <div class="mb-8">
                 <a href="/" class="flex flex-col items-center gap-3">
                     <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" style="height: 128px; width: 128px;" class="rounded-full object-contain bg-white p-3 shadow-lg hover:scale-105 transition border border-gray-100 h-24 w-24 sm:h-32 sm:w-32">
                     <div class="text-center">
                         <h1 class="text-2xl font-bold text-gray-900">منصة زيت الزيتون التونسي</h1>
-                        <p class="text-sm text-gray-600">Tunisian Olive Oil Platform</p>
+                        <h2 class="text-2xl font-bold text-gray-900">Tunisian Olive Oil Platform</h2>
                     </div>
                 </a>
             </div>

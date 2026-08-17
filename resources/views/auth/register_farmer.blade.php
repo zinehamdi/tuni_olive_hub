@@ -1,7 +1,7 @@
 <x-guest-layout>
-    <div class="mx-auto max-w-3xl">
+    <div class="mx-auto max-w-2xl">
         <!-- Register Card -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-4">
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center shadow-lg">
@@ -10,8 +10,8 @@
                         </svg>
                     </div>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">تسجيل كفلاح</h2>
-                <p class="text-gray-600">أكمل البيانات للانضمام كمنتج في المنصة</p>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ __('Register as Farmer') }}</h2>
+                <p class="text-gray-600">{{ __('Complete the details to join as a producer on the platform') }}</p>
             </div>
             @if ($errors->any())
                 <div class="bg-red-50 border-r-4 border-red-500 text-red-700 px-6 py-4 rounded-lg mb-6">
@@ -19,7 +19,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span class="font-bold">يرجى تصحيح الأخطاء التالية:</span>
+                        <span class="font-bold">{{ __('Please correct the following errors:') }}</span>
                     </div>
                     <ul class="list-disc list-inside space-y-1">
                         @foreach ($errors->all() as $error)
@@ -39,14 +39,14 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        المعلومات الشخصية
+                        {{ __('Personal Information') }}
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="name" class="block text-gray-900 font-bold mb-2">الاسم الكامل <span class="text-red-600">*</span></label>
+                            <label for="name" class="block text-gray-900 font-bold mb-2">{{ __('Full Name') }} <span class="text-red-600">*</span></label>
                             <input id="name" type="text" name="name" value="{{ old('name', request('name')) }}" required autofocus 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                                placeholder="أدخل اسمك الكامل">
+                                placeholder="{{ __('Enter your full name') }}">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-2 flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -58,7 +58,7 @@
                         </div>
 
                         <div>
-                            <label for="email" class="block text-gray-900 font-bold mb-2">البريد الإلكتروني <span class="text-red-600">*</span></label>
+                            <label for="email" class="block text-gray-900 font-bold mb-2">{{ __('Email Address') }} <span class="text-red-600">*</span></label>
                             <input id="email" type="email" name="email" value="{{ old('email') }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="example@email.com">
@@ -73,7 +73,7 @@
                         </div>
 
                         <div>
-                            <label for="phone" class="block text-gray-900 font-bold mb-2">رقم الهاتف <span class="text-red-600">*</span></label>
+                            <label for="phone" class="block text-gray-900 font-bold mb-2">{{ __('Phone Number') }} <span class="text-red-600">*</span></label>
                             <input id="phone" type="tel" name="phone" value="{{ old('phone', request('phone')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="+216 XX XXX XXX"
@@ -89,7 +89,7 @@
                         </div>
 
                         <div>
-                            <label for="password" class="block text-gray-900 font-bold mb-2">كلمة المرور <span class="text-red-600">*</span></label>
+                            <label for="password" class="block text-gray-900 font-bold mb-2">{{ __('Password') }} <span class="text-red-600">*</span></label>
                             <input id="password" type="password" name="password" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="••••••••">
@@ -104,7 +104,7 @@
                         </div>
 
                         <div>
-                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد كلمة المرور <span class="text-red-600">*</span></label>
+                            <label for="password_confirmation" class="block text-gray-900 font-bold mb-2">تأكيد {{ __('Password') }} <span class="text-red-600">*</span></label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
                                 placeholder="••••••••">
@@ -118,34 +118,34 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                         </svg>
-                        معلومات المزرعة
+                        {{ __('Farm Information') }}
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="olive_type" class="block text-gray-900 font-bold mb-2">نوع الزيتون <span class="text-red-600">*</span></label>
+                            <label for="olive_type" class="block text-gray-900 font-bold mb-2">{{ __('Olive Type') }} <span class="text-red-600">*</span></label>
                             <input id="olive_type" type="text" name="olive_type" value="{{ old('olive_type', request('olive_type')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                                placeholder="مثال: شملالي، شتوي، زرازي">
+                                placeholder="{{ __('e.g. Chemlali, Chetoui, Zarazi') }}">
                             @error('olive_type')
                                 <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
-                            <label for="farm_location" class="block text-gray-900 font-bold mb-2">موقع المزرعة <span class="text-red-600">*</span></label>
+                            <label for="farm_location" class="block text-gray-900 font-bold mb-2">{{ __('Farm Location') }} <span class="text-red-600">*</span></label>
                             <input id="farm_location" type="text" name="farm_location" value="{{ old('farm_location', request('farm_location')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                                placeholder="المدينة، المحافظة">
+                                placeholder="{{ __('City, Governorate') }}">
                             @error('farm_location')
                                 <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="md:col-span-2">
-                            <label for="tree_number" class="block text-gray-900 font-bold mb-2">عدد الأشجار <span class="text-red-600">*</span></label>
+                            <label for="tree_number" class="block text-gray-900 font-bold mb-2">{{ __('Number of Trees') }} <span class="text-red-600">*</span></label>
                             <input id="tree_number" type="number" name="tree_number" value="{{ old('tree_number', request('tree_number')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition-all" 
-                                placeholder="أدخل عدد الأشجار">
+                                placeholder="{{ __('Enter number of trees') }}">
                             @error('tree_number')
                                 <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
                             @enderror
@@ -193,13 +193,13 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        الصور (اختياري)
+                        {{ __('Images (Optional)') }}
                     </h3>
 
                     <div class="space-y-6">
                         <!-- Profile Picture -->
                         <div>
-                            <label class="block text-gray-900 font-bold mb-2">صورة الملف الشخصي</label>
+                            <label class="block text-gray-900 font-bold mb-2">{{ __('Profile Picture') }}</label>
                             <div class="flex flex-col sm:flex-row items-start gap-4">
                                 <div class="flex-shrink-0">
                                     <template x-if="profilePreview">
@@ -226,10 +226,10 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <span class="font-bold">اختر صورة</span>
+                                        <span class="font-bold">{{ __('Choose Image') }}</span>
                                     </label>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        أي صورة، أي حجم - سيتم تحسينها تلقائياً
+                                        {{ __('Any image, any size - will be optimized automatically') }}
                                     </p>
                                     @error('profile_picture')
                                         <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
@@ -240,7 +240,7 @@
 
                         <!-- Cover Photos -->
                         <div>
-                            <label class="block text-gray-900 font-bold mb-2">صور الغلاف (حتى 5 صور)</label>
+                            <label class="block text-gray-900 font-bold mb-2">{{ __('Cover Photos (Up to 5)') }}</label>
                             <div class="space-y-4">
                                 <div>
                                     <input 
@@ -256,10 +256,10 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                         </svg>
-                                        <span class="font-bold">أضف صور الغلاف</span>
+                                        <span class="font-bold">{{ __('Add Cover Photos') }}</span>
                                     </label>
                                     <p class="text-sm text-gray-600 mt-2">
-                                        يمكنك اختيار حتى 5 صور. أي صورة، أي حجم - سيتم تحسينها تلقائياً
+                                        {{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }}
                                     </p>
                                     @error('cover_photos')
                                         <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
@@ -298,14 +298,14 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>إنشاء الحساب</span>
+                        <span>{{ __('Create Account') }}</span>
                     </button>
 
                     <!-- Login Link -->
                     <div class="text-center mt-6">
-                        <span class="text-gray-600">لديك حساب بالفعل؟</span>
+                        <span class="text-gray-600">{{ __('Already have an account?') }}</span>
                         <a href="{{ route('login') }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
-                            سجل دخولك
+                            {{ __('Log in') }}
                         </a>
                     </div>
                 </div>

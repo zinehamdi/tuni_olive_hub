@@ -441,6 +441,15 @@
                         <!-- Language Dropdown -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-sm text-white rounded-full hover:bg-white/20 transition-all duration-200 font-bold text-xs uppercase border border-white/20 shadow-sm">
+                                @php
+                                    $currentFlag = match(app()->getLocale()) {
+                                        'ar' => '🇹🇳',
+                                        'fr' => '🇫🇷',
+                                        'en' => '🇬🇧',
+                                        default => '🇹🇳'
+                                    };
+                                @endphp
+                                <span class="text-sm leading-none">{{ $currentFlag }}</span>
                                 <span>{{ strtoupper(app()->getLocale()) }}</span>
                                 <svg class="w-3 h-3 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                             </button>
@@ -451,9 +460,15 @@
                                  x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
                                  class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-2 w-24 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
                                 @php $switchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
-                                <a href="{{ url('ar' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">العربية (AR)</a>
-                                <a href="{{ url('fr' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">Français (FR)</a>
-                                <a href="{{ url('en' . $switchPath) }}" class="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">English (EN)</a>
+                                <a href="{{ url('ar' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇹🇳</span> العربية (AR)
+                                </a>
+                                <a href="{{ url('fr' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇫🇷</span> Français (FR)
+                                </a>
+                                <a href="{{ url('en' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇬🇧</span> English (EN)
+                                </a>
                             </div>
                         </div>
 
