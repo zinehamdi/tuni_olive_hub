@@ -47,15 +47,15 @@
     ];
 
     $defaultDescsGlobal = [
-        'carrier' => 'ناقل بري ولوجستي لنقل الزيتون والزيت بين الولايات التونسية',
-        'mill' => 'معصرة زيتون مجهزة بأحدث آليات العصر لإنتاج زيت رفيع',
-        'packer' => 'وحدة تعليب وتغليف متكاملة لمنتجات زيت الزيتون والزيتون',
-        'transiteur' => 'خدمات تخليص جمركي وتصدير زيت الزيتون لكافة دول العالم',
-        'comptable' => 'محاسبة واستشارات مالية وإدارية للشركات والتعاونيات الفلاحية',
-        'service_bureau' => 'مكتب خدمات إدارية وتسهيل المعاملات والملفات القانونية',
-        'agri_equipment' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون',
-        'agri_materials' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية',
-        'agri_study_office' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع',
+        'carrier' => ['ar' => 'ناقل بري ولوجستي لنقل الزيتون والزيت بين الولايات التونسية', 'fr' => 'Transporteur logistique pour le transport des huiles', 'en' => 'Logistics carrier for olive oil transport'],
+        'mill' => ['ar' => 'معصرة زيتون مجهزة بأحدث آليات العصر لإنتاج زيت رفيع', 'fr' => 'Moulin à huile équipé de mécanismes modernes', 'en' => 'Olive mill equipped with modern machinery'],
+        'packer' => ['ar' => 'وحدة تعليب وتغليف متكاملة لمنتجات زيت الزيتون والزيتون', 'fr' => 'Unité de conditionnement et d\'emballage d\'huile', 'en' => 'Olive oil packaging and bottling unit'],
+        'transiteur' => ['ar' => 'خدمات تخليص جمركي وتصدير زيت الزيتون لكافة دول العالم', 'fr' => 'Services de dédouanement et exportation', 'en' => 'Customs clearance and export services'],
+        'comptable' => ['ar' => 'محاسبة واستشارات مالية وإدارية للشركات والتعاونيات الفلاحية', 'fr' => 'Comptabilité et conseil financier agricole', 'en' => 'Agricultural accounting and financial consulting'],
+        'service_bureau' => ['ar' => 'مكتب خدمات إدارية وتسهيل المعاملات والملفات القانونية', 'fr' => 'Bureau de services administratifs et juridiques', 'en' => 'Administrative and legal services bureau'],
+        'agri_equipment' => ['ar' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون', 'fr' => 'Vente de matériel et machines agricoles', 'en' => 'Sale of agricultural equipment and machinery'],
+        'agri_materials' => ['ar' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية', 'fr' => 'Fourniture d\'engrais et de matériel agricole', 'en' => 'Supply of fertilizers and agricultural materials'],
+        'agri_study_office' => ['ar' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع', 'fr' => 'Études agricoles et conseil en ingénierie', 'en' => 'Agricultural studies and engineering consulting'],
     ];
 
     $providersJsonData = collect($providers)->mapWithKeys(function($p) use ($roleLabelsGlobal, $providerTypeLabelsGlobal, $defaultDescsGlobal) {
@@ -73,7 +73,7 @@
         }
         
         if (empty($desc)) {
-            $desc = $defaultDescsGlobal[$p->role] ?? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا';
+            $desc = $defaultDescsGlobal[$p->role][app()->getLocale()] ?? ($defaultDescsGlobal[$p->role]['ar'] ?? (app()->getLocale() === 'fr' ? 'Prestataire de services agricoles enregistré.' : (app()->getLocale() === 'ar' ? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا' : 'Registered agricultural service provider.')));
         }
 
         return [$p->id => [
@@ -174,15 +174,15 @@
             <div class="relative z-10">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#C8A356]/20 text-[#F5E5C0] border border-[#C8A356]/40 backdrop-blur-md mb-4">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1.5 mr-1.5"></span>
-                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات المتكامل للقطاع الفلاحي والتصدير' : 'Unified Services & Providers Hub' }}
+                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات المتكامل للقطاع الفلاحي والتصدير' : (app()->getLocale() === 'fr' ? 'Hub Unifié de Services & Prestataires' : 'Unified Services & Providers Hub') }}
                 </span>
                 <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight">
-                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات ومزودي الخدمات' : 'Services & Providers Hub' }}
+                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات ومزودي الخدمات' : (app()->getLocale() === 'fr' ? 'Hub des Services et Prestataires' : 'Services & Providers Hub') }}
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-300 mt-2 max-w-3xl leading-relaxed">
                     {{ app()->getLocale() === 'ar' 
                         ? 'اكتشف خدماتنا الرقمية للتسويق والتصدير، وتصفح دليل مزودي الخدمات المحليين من ناقلين، معاصر، محاسبين، ومعدات فلاحية.' 
-                        : 'Discover our digital marketing & export services, and explore the directory of local service providers.' }}
+                        : (app()->getLocale() === 'fr' ? 'Découvrez nos services de marketing et d\'exportation, et explorez l\'annuaire des prestataires locaux.' : 'Discover our digital marketing & export services, and explore the directory of local service providers.') }}
                 </p>
             </div>
         </div>
@@ -194,17 +194,17 @@
                         <div class="absolute right-0 top-0 w-80 h-80 bg-[#6A8F3B]/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="relative z-10 text-right">
                             <h3 class="text-2xl font-black text-white mb-2">
-                                {{ app()->getLocale() === 'ar' ? 'هل أنت مزود خدمات فلاحية أو تجارية؟' : 'Are you an agricultural or commercial service provider?' }}
+                                {{ app()->getLocale() === 'ar' ? 'هل أنت مزود خدمات فلاحية أو تجارية؟' : (app()->getLocale() === 'fr' ? 'Êtes-vous un prestataire de services agricoles ou commerciaux ?' : 'Are you an agricultural or commercial service provider?') }}
                             </h3>
                             <p class="text-gray-300 text-sm max-w-xl">
                                 {{ app()->getLocale() === 'ar' 
                                     ? 'سجل معنا الآن كـ ناقل، معصرة، وحدة تعبئة، محاسب، أو شركة معدات، واعرض خدماتك أمام آلاف الفلاحين والمنتجين مجاناً!' 
-                                    : 'Register now as a carrier, mill, packer, accountant, or equipment provider and display your services to thousands of farmers.' }}
+                                    : (app()->getLocale() === 'fr' ? 'Inscrivez-vous en tant que transporteur, moulin, comptable ou fournisseur d\'équipement et proposez vos services.' : 'Register now as a carrier, mill, packer, accountant, or equipment provider and display your services to thousands of farmers.') }}
                             </p>
                         </div>
                         <a href="{{ route('services.register') }}" class="relative z-10 px-8 py-4 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-black rounded-2xl shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2">
                             <span>📝</span>
-                            {{ app()->getLocale() === 'ar' ? 'سجل كمزود خدمة الآن' : 'Register as a Provider Now' }}
+                            {{ app()->getLocale() === 'ar' ? 'سجل كمزود خدمة الآن' : (app()->getLocale() === 'fr' ? 'Inscrivez-vous maintenant' : 'Register as a Provider Now') }}
                         </a>
                     </div>
                 </div>
@@ -216,9 +216,9 @@
                     <span class="text-3xl">👥</span>
                 <div>
                     <h2 class="text-2xl font-black text-[#1B2A1B]">
-                        {{ app()->getLocale() === 'ar' ? 'دليل مزودي الخدمات المحليين' : 'Local Service Providers Directory' }}
+                        {{ app()->getLocale() === 'ar' ? 'دليل مزودي الخدمات المحليين' : (app()->getLocale() === 'fr' ? 'Annuaire des Prestataires Locaux' : 'Local Service Providers Directory') }}
                     </h2>
-                    <p class="text-gray-500 text-xs mt-1">{{ app()->getLocale() === 'ar' ? 'تواصل مباشرة مع مقدمي الخدمات الفلاحية واللوجستية في تونس' : 'Contact agricultural & logistics providers in Tunisia directly' }}</p>
+                    <p class="text-gray-500 text-xs mt-1">{{ app()->getLocale() === 'ar' ? 'تواصل مباشرة مع مقدمي الخدمات الفلاحية واللوجستية في تونس' : (app()->getLocale() === 'fr' ? 'Contactez directement les prestataires agricoles et logistiques en Tunisie' : 'Contact agricultural & logistics providers in Tunisia directly') }}</p>
                 </div>
                 </div>
 
@@ -388,7 +388,7 @@
 
                             <!-- Description -->
                             <p class="text-gray-500 text-[11px] leading-relaxed line-clamp-2 text-right flex-grow">
-                                {{ $card['description'] ?: 'لا يوجد وصف تفصيلي متوفر لهذه الخدمة.' }}
+                                {{ $card['description'] ?: (app()->getLocale() === 'ar' ? 'لا يوجد وصف تفصيلي متوفر لهذه الخدمة.' : (app()->getLocale() === 'fr' ? 'Aucune description détaillée disponible pour ce service.' : 'No detailed description available for this service.')) }}
                             </p>
 
                             <!-- Price Display Container (Matches Prices page style) -->
@@ -470,7 +470,7 @@
                             </div>
 
                             <!-- Description -->
-                            <p class="text-gray-600 text-sm leading-relaxed font-medium mb-4" x-text="activeProvider && activeProvider.description ? activeProvider.description : 'لا يوجد وصف تفصيلي للمزود'"></p>
+                            <p class="text-gray-600 text-sm leading-relaxed font-medium mb-4" x-text="activeProvider && activeProvider.description ? activeProvider.description : '{{ app()->getLocale() === 'ar' ? 'لا يوجد وصف تفصيلي للمزود' : (app()->getLocale() === 'fr' ? 'Aucune description détaillée pour le prestataire' : 'No detailed description for provider') }}'"></p>
 
                             <!-- Services Tags inside big card -->
                             <div class="mb-4" x-show="activeProvider && activeProvider.services && activeProvider.services.length > 0">

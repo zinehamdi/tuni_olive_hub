@@ -296,11 +296,37 @@ if [ $ERRORS -eq 0 ]; then
     echo "3. Optimize images: ./optimize-images.sh"
     echo "4. Create deployment package"
     echo "5. Follow DEPLOYMENT_GUIDE.md"
+    echo ""
+    echo "=================================================="
+    echo "🌐 Starting Remote Deployment to Hostinger..."
+    echo "=================================================="
+    export SSHPASS="Zine2026$"
+    sshpass -e ssh -o StrictHostKeyChecking=no -p 65002 u346640129@147.93.54.167 << 'REMOTE'
+    set -e
+    echo "🚀 Starting deployment..."
+    cd domains/zintoop.com/public_html
+    echo "📦 Pulling latest code..."
+    git reset --hard HEAD
+    git pull origin main
+    echo "🗄️ Running database migrations..."
+    php artisan migrate --force
+    echo "🔨 Building assets..."
+    npm run build
+    echo "🧹 Clearing caches..."
+    php artisan view:clear
+    php artisan config:clear
+    php artisan route:clear
+    php artisan cache:clear
+    echo "♻️ Restarting PHP..."
+    killall -9 lsphp || true
+    echo "✅ Deployment completed successfully"
+REMOTE
 else
     echo "1. Fix all critical errors above"
     echo "2. Re-run this script"
     echo "3. Once passing, proceed with deployment"
+    echo ""
+    echo "❌ Deployment aborted due to errors."
 fi
-echo ""
 
 exit $ERRORS
