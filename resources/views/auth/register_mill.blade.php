@@ -76,7 +76,7 @@
                         <div>
                             <label for="phone" class="text-gray-900 font-bold mb-2 flex items-center gap-2">
                                 <span>{{ __('Phone Number') }} <span class="text-red-600">*</span></span>
-                                <span class="text-xs text-gray-500">(للاتصال وتأكيد SMS)</span>
+                                <span class="text-xs text-gray-500">{{ __('(For contact and SMS verification)') }}</span>
                             </label>
                             <input id="phone" type="tel" name="phone" value="{{ old('phone', request('phone')) }}" required 
                                 class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#8B4513] focus:ring-4 focus:ring-[#8B4513]/20 transition-all" 

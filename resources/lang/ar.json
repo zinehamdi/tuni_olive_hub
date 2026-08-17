@@ -1280,8 +1280,8 @@
     "Complete the details to join as a carrier on the platform": "أكمل البيانات للانضمام كناقل في المنصة",
     "Register as Mill": "تسجيل كمعصرة",
     "Complete the details to join as a mill on the platform": "أكمل البيانات للانضمام كمعصرة في المنصة",
-    "Register as Packer": "تسجيل كمعبئ",
-    "Complete the details to join as a packer on the platform": "أكمل البيانات للانضمام كمعبئ في المنصة",
+    "Register as Packer": "تسجيل كمُعبئ",
+    "Complete the details to join as a packer on the platform": "أكمل البيانات للانضمام كمُعبئ في المنصة",
     "Register as Buyer": "تسجيل كمشتري",
     "Complete the details to join as a buyer on the platform": "أكمل البيانات للانضمام كمشتري في المنصة",
     "Register as Service Provider": "تسجيل كمزود خدمات",
@@ -1314,5 +1314,8 @@
     "Any image, any size - will be optimized automatically": "أي صورة، أي حجم - سيتم تحسينها تلقائياً",
     "Cover Photos (Up to 5)": "صور الغلاف (حتى 5 صور)",
     "You can choose up to 5 photos. Any image, any size - will be optimized automatically": "يمكنك اختيار حتى 5 صور. أي صورة، أي حجم - سيتم تحسينها تلقائياً",
-    "Please correct the following errors:": "يرجى تصحيح الأخطاء التالية:"
+    "Please correct the following errors:": "يرجى تصحيح الأخطاء التالية:",
+    "Register as Buyer \/ Importer": "تسجيل كمشترٍ \/ مستورد",
+    "Complete the details to join the platform": "أكمل البيانات للانضمام إلى المنصة",
+    "(For contact and SMS verification)": "(للاتصال وتأكيد SMS)"
 }
