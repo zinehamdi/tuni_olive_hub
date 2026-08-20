@@ -47,14 +47,14 @@ Route::get('/lang/{locale}', function (string $locale) {
     }
     // Redirect to the same page with locale prefix
     $previousPath = parse_url(url()->previous(), PHP_URL_PATH) ?? '/';
-    $previousPath = preg_replace('#^/(ar|fr|en)#', '', $previousPath) ?: '/';
+    $previousPath = preg_replace('#^/(ar|fr|en|es|zh|ja)#', '', $previousPath) ?: '/';
     return redirect('/' . $locale . $previousPath);
 })->name('lang.switch');
 
 // ═══════════════════════════════════════════════════════════════
 // LOCALE-PREFIXED ROUTES — /ar/, /fr/, /en/ (SEO multilingual)
 // ═══════════════════════════════════════════════════════════════
-Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->group(function () {
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en|es|zh|ja'])->group(function () {
 
 Route::middleware(['web', 'set.locale'])->group(function () {
     Route::get('/', function () {
@@ -124,10 +124,14 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides', 'platformStats'));
     })->name('home');
     
-    // Redirect /products to home page anchored at products section
+    // Redirect /products and /market to home page anchored at products section
     Route::get('/products', function () {
         return redirect(url(app()->getLocale() . '/#products'), 301);
     })->name('products');
+
+    Route::get('/market', function () {
+        return redirect(url(app()->getLocale() . '/#products'), 301);
+    })->name('market');
     
     // Public & legal pages
     Route::view('/about', 'public.about')->name('about');
@@ -347,12 +351,12 @@ Route::group([], function(){
 });
 
 // Gulf storefront (locale-prefixed — user-facing pages)
-Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->middleware('set.locale')->group(function () {
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en|es|zh|ja'])->middleware('set.locale')->group(function () {
     Route::get('catalog', [\App\Http\Controllers\PublicController::class, 'catalog'])->name('catalog');
 });
 
 // Named routes for CTAs under allowed prefixes per CI guard
-Route::prefix('{locale}')->where(['locale' => 'ar|fr|en'])->group(function () {
+Route::prefix('{locale}')->where(['locale' => 'ar|fr|en|es|zh|ja'])->group(function () {
 Route::middleware('set.locale')->group(function(){
     // Listing creation form (requires auth)
     Route::get('listings/create', [\App\Http\Controllers\ListingController::class, 'create'])
@@ -475,4 +479,4 @@ Route::get('/', function () {
 Route::get('{any}', function ($any) {
     $locale = session('locale', config('app.fallback_locale', 'ar'));
     return redirect('/' . $locale . '/' . $any, 301);
-})->where('any', '^(?!api|admin|auth|healthz|og-image|sitemap|feed|google-merchant|shopping-feed|landing|email-preview|lang|livewire|public|broadcasting|ar|fr|en|images|storage|css|js|build|favicon\.ico|manifest\.webmanifest).*');
+})->where('any', '^(?!api|admin|auth|healthz|og-image|sitemap|feed|google-merchant|shopping-feed|landing|email-preview|lang|livewire|public|broadcasting|ar|fr|en|es|zh|ja|images|storage|css|js|build|favicon\.ico|manifest\.webmanifest).*');

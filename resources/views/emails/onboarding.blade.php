@@ -137,7 +137,7 @@
                                 </tr>
                                 <tr>
                                     <td align="center" style="padding-top: 14px;">
-                                        <a href="{{ url('/servicehub') }}" target="_blank" style="color: #6A8F3B; font-size: 13px; font-weight: 700; text-decoration: underline;">
+                                        <a href="{{ url((app()->getLocale() ?: 'ar') . '/servicehub') }}" target="_blank" style="color: #6A8F3B; font-size: 13px; font-weight: 700; text-decoration: underline;">
                                             💼 أو تصفح دليل الخدمات الفلاحية
                                         </a>
                                     </td>

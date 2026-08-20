@@ -45,5 +45,8 @@ This document outlines the exact sequence of commands to execute when deploying 
    killall -9 lsphp
    ```
 
+7. **Cron & Queue Management**:
+   Refer to [`CRON_AND_QUEUE_GUIDE.md`](./CRON_AND_QUEUE_GUIDE.md) for background worker and email queue operations.
+
 > [!WARNING]
 > Do **NOT** use `~/laravel_app/` for deployments, as it is outdated. The active live site runs entirely from `domains/zintoop.com/public_html`.

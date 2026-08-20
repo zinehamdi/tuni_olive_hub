@@ -140,7 +140,7 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td align="center">
-                                        <a href="{{ url('/servicehub') }}" target="_blank" class="cta-btn" style="display: inline-block; background-color: #6A8F3B; color: #FFFFFF; font-size: 16px; font-weight: 800; text-decoration: none; padding: 16px 36px; border-radius: 14px; box-shadow: 0 8px 20px rgba(106,143,59,0.35); border: 1px solid #5a7a2f;">
+                                        <a href="{{ url((app()->getLocale() ?: 'ar') . '/servicehub') }}" target="_blank" class="cta-btn" style="display: inline-block; background-color: #6A8F3B; color: #FFFFFF; font-size: 16px; font-weight: 800; text-decoration: none; padding: 16px 36px; border-radius: 14px; box-shadow: 0 8px 20px rgba(106,143,59,0.35); border: 1px solid #5a7a2f;">
                                             🚀 اكتشف التحديثات الجديدة في منصة زين توب
                                         </a>
                                     </td>

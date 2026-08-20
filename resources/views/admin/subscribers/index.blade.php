@@ -242,8 +242,8 @@
                                 <option value="fix_listings_ar">تنبيه: مراجعة وتعديل العروض (العربية) 🫒</option>
                                 <option value="fix_listings_fr">Correction d'annonces et guide (Français) 🫒</option>
                                 <option value="welcome">{{ __('Welcome to Zintoop') }}</option>
-                                <option value="update_announcement">🚀 {{ app()->getLocale() === 'ar' ? 'إعلان التحديث الشامل لمنصة زين توب (قالب HTML الاحترافي)' : 'ZinToop Major Platform Update (HTML Theme)' }}</option>
-                                <option value="latest_listing">🆕 {{ app()->getLocale() === 'ar' ? 'آخر عرض منشور (إشعار للمشتركين)' : 'Latest Listing — Subscriber Notification' }}</option>
+                                <option value="update_announcement">🚀 {{ __('ZinToop Major Platform Update (HTML Theme)') }}</option>
+                                <option value="latest_listing">🆕 {{ __('Latest Listing — Subscriber Notification') }}</option>
                                 <option value="update">{{ __('Weekly Update / News') }}</option>
                                 <option value="deal">{{ __('New Deals Available') }}</option>
                                 <option value="guide">{{ __('How to Use Zintoop Guide') }}</option>
@@ -355,7 +355,7 @@ L'équipe ZinToop.</p>
     <li><strong>السعر:</strong> {{ addslashes($latestListing && $latestListing->price > 0 ? number_format($latestListing->price, 2).' '.($latestListing->currency ?? 'TND') : 'عند الطلب') }}</li>
     {{ $latestListing?->governorate ? '<li><strong>المنطقة:</strong> '.addslashes($latestListing->governorate).'</li>' : '' }}
 </ul>
-<p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing->id) : url('/market') }}">👁 مشاهدة العرض الآن</a></p>`
+<p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing->id) : url('/#products') }}">👁 مشاهدة العرض الآن</a></p>`
         },
         'update_announcement': {
             subject: '🚀 إطلاق التحديث الجديد لمنصة زين توب | ZinToop New Update',

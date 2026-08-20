@@ -143,14 +143,14 @@
                             <table border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center">
-                                        <a href="{{ route('listings.show', $listing->id) }}" target="_blank" style="display: inline-block; background-color: #6A8F3B; color: #FFFFFF; font-size: 16px; font-weight: 800; text-decoration: none; padding: 16px 36px; border-radius: 14px; box-shadow: 0 8px 20px rgba(106,143,59,0.35); border: 1px solid #5a7a2f;">
+                                        <a href="{{ route('listings.show', ['locale' => app()->getLocale() ?: 'ar', 'listing' => $listing->id]) }}" target="_blank" style="display: inline-block; background-color: #6A8F3B; color: #FFFFFF; font-size: 16px; font-weight: 800; text-decoration: none; padding: 16px 36px; border-radius: 14px; box-shadow: 0 8px 20px rgba(106,143,59,0.35); border: 1px solid #5a7a2f;">
                                             👁 مشاهدة العرض والتواصل مع البائع
                                         </a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td align="center" style="padding-top: 14px;">
-                                        <a href="{{ url('/market') }}" target="_blank" style="color: #6A8F3B; font-size: 13px; font-weight: 700; text-decoration: underline;">
+                                        <a href="{{ url((app()->getLocale() ?: 'ar') . '/#products') }}" target="_blank" style="color: #6A8F3B; font-size: 13px; font-weight: 700; text-decoration: underline;">
                                             🫒 تصفح جميع العروض في السوق
                                         </a>
                                     </td>
