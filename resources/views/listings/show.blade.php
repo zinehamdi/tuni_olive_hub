@@ -307,7 +307,7 @@
                             @if($listing->estimated_oil_yield)
                                 <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#1B2A1B] to-[#6A8F3B] text-white font-bold shadow-lg" title="Ezzitouni AI Analyzed">
                                     <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Ezzitouni" class="w-6 h-6 rounded-full bg-white p-0.5 object-cover">
-                                    <span>{{ app()->getLocale() === 'ar' ? 'تقدير الذكاء الاصطناعي:' : 'AI Estimated:' }} {{ $listing->estimated_oil_yield }}%</span>
+                                    <span>{{ __('AI Estimated:') }} {{ $listing->estimated_oil_yield }}%</span>
                                 </div>
                             @endif
                         </div>
@@ -341,7 +341,7 @@
                                     @elseif($listing->unit === 'bottle')
                                         {{ app()->getLocale() === 'ar' ? 'قارورة' : __('Bottle') }}
                                     @elseif($listing->unit === 'سانية')
-                                        {{ app()->getLocale() === 'ar' ? 'السانية بالكامل' : (app()->getLocale() === 'fr' ? 'Verger complet' : 'Whole orchard') }}
+                                        {{ __('Whole orchard') }}
                                     @else
                                         {{ $listing->unit ?? __('Unit') }}
                                     @endif
@@ -425,15 +425,15 @@
                                     <div class="font-bold text-[#1B2A1B]">
                                         {{ $listing->formatted_quantity }} 
                                         @if($listing->unit === 'kg')
-                                            {{ app()->getLocale() === 'ar' ? 'كغ' : (app()->getLocale() === 'fr' ? 'kg' : 'kg') }}
+                                            {{ __('kg') }}
                                         @elseif($listing->unit === 'ton')
-                                            {{ app()->getLocale() === 'ar' ? 'طن' : (app()->getLocale() === 'fr' ? 'tonne' : 'ton') }}
+                                            {{ __('ton') }}
                                         @elseif($listing->unit === 'liter')
-                                            {{ app()->getLocale() === 'ar' ? 'لتر' : (app()->getLocale() === 'fr' ? 'litre' : 'liter') }}
+                                            {{ __('liter') }}
                                         @elseif($listing->unit === 'bottle')
-                                            {{ app()->getLocale() === 'ar' ? 'قارورة' : (app()->getLocale() === 'fr' ? 'bouteille' : 'bottle') }}
+                                            {{ __('bottle') }}
                                         @elseif($listing->unit === 'سانية')
-                                            {{ app()->getLocale() === 'ar' ? 'سانية' : (app()->getLocale() === 'fr' ? 'verger' : 'orchard') }}
+                                            {{ __('orchard') }}
                                         @else
                                             {{ $listing->unit }}
                                         @endif
@@ -561,37 +561,37 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                     <div class="flex flex-wrap gap-3 w-full" x-data="listingActions">
                         @auth
                             <!-- Contact Seller Button -->
-                            <button @click="showContactModal = true" class="flex-1 min-w-[200px] px-6 py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button @click="showContactModal = true" class="flex-1 min-w-[130px] sm:min-w-[160px] px-4 sm:px-6 py-3.5 sm:py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-sm sm:text-base shadow-lg flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
-                                <span class="hidden sm:inline">{{ __('Contact Seller') }}</span>
+                                <span>{{ __('Contact Seller') }}</span>
                             </button>
                             
                             <!-- Message Seller Button -->
                             @if($listing->seller_id !== auth()->id())
-                                <a href="{{ route('messages.show', $listing->seller) }}" class="flex-1 min-w-[200px] px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <a href="{{ route('messages.show', $listing->seller) }}" class="flex-1 min-w-[130px] sm:min-w-[160px] px-4 sm:px-6 py-3.5 sm:py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-xl transition font-bold text-sm sm:text-base shadow-lg flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                     </svg>
-                                    <span class="hidden sm:inline">{{ app()->getLocale() === 'ar' ? 'مراسلة البائع' : 'Message Seller' }}</span>
+                                    <span>{{ __('Message Seller') }}</span>
                                 </a>
                                 
                                 <!-- Make Deal Button -->
-                                <button @click="showDealModal = true" class="flex-1 min-w-[200px] px-6 py-4 bg-gradient-to-r from-[#C8A356] to-[#b08a3c] text-white rounded-xl hover:shadow-xl transition font-bold text-base sm:text-lg shadow-lg flex items-center justify-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button @click="showDealModal = true" class="flex-1 min-w-[130px] sm:min-w-[160px] px-4 sm:px-6 py-3.5 sm:py-4 bg-gradient-to-r from-[#C8A356] to-[#b08a3c] text-white rounded-xl hover:shadow-xl transition font-bold text-sm sm:text-base shadow-lg flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span class="hidden sm:inline">{{ app()->getLocale() === 'ar' ? 'عقد صفقة' : 'Make Deal' }}</span>
+                                    <span>{{ __('Make Deal') }}</span>
                                 </button>
                             @endif
                             
                             <!-- View Location Button - Always visible -->
                             @if($listing->seller->addresses->first())
                                 <button @click="openLocationInfo" 
-                                        class="px-6 py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg flex-shrink-0" 
+                                        class="px-4 sm:px-5 py-3.5 sm:py-4 bg-[#C8A356] text-white rounded-xl hover:bg-[#b08a3c] transition font-bold shadow-lg flex-shrink-0" 
                                         :title="'{{ __('View Location') }}'">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
@@ -599,8 +599,8 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                             @endif
                             
                             <!-- Favorite Button -->
-                            <button @click="toggleFavorite" class="px-6 py-4 rounded-xl transition font-bold shadow-lg flex-shrink-0" :class="isFavorite ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'">
-                                <svg class="w-6 h-6" :fill="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
+                            <button @click="toggleFavorite" class="px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl transition font-bold shadow-lg flex-shrink-0" :class="isFavorite ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'">
+                                <svg class="w-5 h-5" :fill="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
                             </button>
@@ -620,27 +620,27 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                      x-transition:leave-start="opacity-100 scale-100"
                                      x-transition:leave-end="opacity-0 scale-95">
                                     
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ app()->getLocale() === 'ar' ? 'إنشاء صفقة جديدة' : 'Create New Deal' }}</h3>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ __('Create New Deal') }}</h3>
                                     
                                     <div class="space-y-4">
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الكمية (' . $listing->unit . ')' : 'Quantity (' . $listing->unit . ')' }}</label>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Quantity (') . $listing->unit . ')' }}</label>
                                                 <input type="number" x-model.number="dealQty" min="{{ $listing->formatted_min_order ?? 1 }}" step="any" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
                                                 @if($listing->min_order)
-                                                    <p class="text-xs text-gray-500 mt-1">{{ app()->getLocale() === 'ar' ? 'الحد الأدنى للطلب: ' : 'Minimum order: ' }} {{ $listing->formatted_min_order }} {{ $listing->unit }}</p>
+                                                    <p class="text-xs text-gray-500 mt-1">{{ __('Minimum order: ') }} {{ $listing->formatted_min_order }} {{ $listing->unit }}</p>
                                                 @endif
                                             </div>
                                             
                                             <div>
-                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر المقترح للوحدة' : 'Proposed Unit Price' }}</label>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Proposed Unit Price') }}</label>
                                                 <input type="number" x-model.number="dealPrice" min="0" step="0.1" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
                                             </div>
                                         </div>
                                         
                                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-4">
                                             <div class="flex justify-between items-center text-lg font-bold">
-                                                <span class="text-gray-900">{{ app()->getLocale() === 'ar' ? 'الإجمالي' : 'Total' }}</span>
+                                                <span class="text-gray-900">{{ __('Total') }}</span>
                                                 <span class="text-[#6A8F3B]"><span x-text="(dealQty * dealPrice).toFixed(2)"></span> 
                                                     @if($listing->currency === 'USD')
                                                         $
@@ -656,10 +656,10 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                     
                                     <div class="mt-6 flex gap-3">
                                         <button @click="showDealModal = false" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-bold">
-                                            {{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}
+                                            {{ __('Cancel') }}
                                         </button>
                                         <button @click="submitDeal" :disabled="makingDeal || dealQty < {{ $listing->formatted_min_order ?? 1 }} || !dealPrice" class="flex-1 px-4 py-3 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] disabled:opacity-50 transition font-bold flex items-center justify-center gap-2">
-                                            <span x-show="!makingDeal">{{ app()->getLocale() === 'ar' ? 'إرسال العرض' : 'Send Offer' }}</span>
+                                            <span x-show="!makingDeal">{{ __('Send Offer') }}</span>
                                             <svg x-show="makingDeal" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         </button>
                                     </div>
