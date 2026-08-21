@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ __('ltr') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,7 +38,7 @@
     <meta property="og:description" content="{{ trim($__env->yieldContent('og_description', $defaultDesc)) }}">
     <meta property="og:image" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
     <meta property="og:image:secure_url" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
-    <meta property="og:locale" content="{{ app()->getLocale() === 'ar' ? 'ar_TN' : (app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US') }}">
+    <meta property="og:locale" content="{{ __('en_US') }}">
     <meta property="fb:app_id" content="{{ env('FACEBOOK_CLIENT_ID') }}">
     @yield('og_product_tags')
     <!-- Twitter Card -->
@@ -135,7 +135,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('head')
     <script nonce="{{ $cspNonce ?? '' }}">
-        document.documentElement.dir = '{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}';
+        document.documentElement.dir = '{{ __('ltr') }}';
     </script>
 
 
@@ -267,12 +267,12 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="text-2xl font-black text-white tracking-tighter leading-none group-hover:text-[#C8A356] transition-colors duration-300">ZinToop</span>
-                            <span class="text-[9px] uppercase font-bold tracking-[0.2em] text-white/60 group-hover:text-white transition-colors duration-300">Marketplace</span>
+                            <span class="text-[9px] uppercase font-bold tracking-[0.2em] text-white/60 group-hover:text-white transition-colors duration-300">{{ __('Marketplace') }}</span>
                         </div>
                     </a>
 
                     <!-- Desktop Navigation -->
-                    <div class="hidden md:flex items-center gap-1 flex-1 justify-center relative {{ app()->getLocale()==='ar' ? 'mr-6' : 'ml-6' }}"
+                    <div class="hidden md:flex items-center gap-1 flex-1 justify-center relative {{ __('ml-6') }}"
                          x-data="{ 
                              showBot: false, 
                              botLeft: 0, 
@@ -310,38 +310,38 @@
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                             </div>
-                            <span>{{ __('nav.home') }}</span>
+                            <span>{{ __('Home') }}</span>
                         </a>
-                        <a href="{{ route('prices.index') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_prices')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('prices.index') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/30 to-amber-600/30 group-hover:from-amber-400/40 group-hover:to-amber-600/40 flex items-center justify-center transition-all">
                                 <span class="text-base">📊</span>
                             </div>
-                            <span>{{ __('nav.prices') }}</span>
+                            <span>{{ __('Prices') }}</span>
                         </a>
-                        <a href="{{ route('listings.create') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_sell')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('listings.create') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6A8F3B]/30 to-[#5a7a2f]/30 group-hover:from-[#6A8F3B]/50 group-hover:to-[#5a7a2f]/50 flex items-center justify-center transition-all">
                                 <span class="text-base">🫒</span>
                             </div>
-                            <span>{{ __('nav.sell_your_oil') }}</span>
+                            <span>{{ __('Sell Your Oil / Olives') }}</span>
                         </a>
-                        <a href="{{ route('services.index') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_services_hub') ?: __('nav.services_hub')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.index') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                             </div>
-                            <span>{{ __('nav.services_hub') }}</span>
+                            <span>{{ __('Service Hub') }}</span>
                         </a>
-                        <a href="{{ route('services.pricing') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_our_services') ?: __('nav.our_services')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                        <a href="{{ route('services.pricing') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                             <div class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                             </div>
-                            <span>{{ __('nav.our_services') }}</span>
+                            <span>{{ __('Our Digital Services') }}</span>
                         </a>
                         @auth
-                            <a href="{{ route('dashboard') }}" @mouseenter="moveBot($event, {{ Js::from(__('nav.tooltip_dashboard')) }})" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
+                            <a href="{{ route('dashboard') }}" class="group px-4 py-2 rounded-xl hover:bg-white/15 transition-all duration-200 font-medium flex items-center gap-2 text-sm">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C8A356]/30 to-[#b08a3c]/30 group-hover:from-[#C8A356]/40 group-hover:to-[#b08a3c]/40 flex items-center justify-center transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                                 </div>
-                                <span>{{ __('nav.dashboard') }}</span>
+                                <span>{{ __('Dashboard') }}</span>
                             </a>
                         @endauth
                     </div>
@@ -410,7 +410,7 @@
                                                     <p class="text-[10px] text-gray-400 mt-1" x-text="new Date(n.created_at).toLocaleString()"></p>
                                                 </div>
                                             </div>
-                                             <div x-show="!n.read_at" class="absolute top-1/2 -translate-y-1/2 {{ app()->getLocale()==='ar' ? 'left-3' : 'right-3' }} w-2.5 h-2.5 bg-[#6A8F3B] rounded-full shadow-sm shadow-[#6A8F3B]/30"></div>
+                                             <div x-show="!n.read_at" class="absolute top-1/2 -translate-y-1/2 {{ __('right-3') }} w-2.5 h-2.5 bg-[#6A8F3B] rounded-full shadow-sm shadow-[#6A8F3B]/30"></div>
                                         </a>
                                     </template>
                                     <div x-show="notifications.length === 0" class="px-4 py-8 text-center text-gray-400 italic text-sm">
@@ -429,6 +429,9 @@
                                         'ar' => '🇹🇳',
                                         'fr' => '🇫🇷',
                                         'en' => '🇬🇧',
+                                        'es' => '🇪🇸',
+                                        'zh' => '🇨🇳',
+                                        'ja' => '🇯🇵',
                                         default => '🇹🇳'
                                     };
                                 @endphp
@@ -441,9 +444,9 @@
                                  x-transition:enter="transition ease-out duration-200" 
                                  x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
                                  x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
-                                 class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-2 w-24 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
-                                @php $switchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
-                                <a href="{{ url('ar' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50' : '' }}">
+                                 class="absolute {{ __('right-0') }} mt-2 w-36 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
+                                @php $switchPath = preg_replace('#^/(ar|fr|en|es|zh|ja)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                                <a href="{{ url('ar' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ __('') }}">
                                     <span class="text-sm">🇹🇳</span> العربية (AR)
                                 </a>
                                 <a href="{{ url('fr' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">
@@ -451,6 +454,15 @@
                                 </a>
                                 <a href="{{ url('en' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">
                                     <span class="text-sm">🇬🇧</span> English (EN)
+                                </a>
+                                <a href="{{ url('es' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='es' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇪🇸</span> Español (ES)
+                                </a>
+                                <a href="{{ url('zh' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='zh' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇨🇳</span> 中文 (ZH)
+                                </a>
+                                <a href="{{ url('ja' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ja' ? 'bg-gray-50' : '' }}">
+                                    <span class="text-sm">🇯🇵</span> 日本語 (JA)
                                 </a>
                             </div>
                         </div>
@@ -472,7 +484,7 @@
                                      x-transition:leave="transition ease-in duration-150" 
                                      x-transition:leave-start="opacity-100 scale-100" 
                                      x-transition:leave-end="opacity-0 scale-95" 
-                                     class="absolute {{ app()->getLocale()==='ar' ? 'left-0' : 'right-0' }} mt-3 w-60 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 border border-gray-100/50 py-2 z-[100] overflow-hidden">
+                                     class="absolute {{ __('right-0') }} mt-3 w-60 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 border border-gray-100/50 py-2 z-[100] overflow-hidden">
                                     
                                     <!-- User Info Header -->
                                     <div class="px-4 py-3 bg-gradient-to-r from-[#6A8F3B]/10 to-[#C8A356]/10 border-b border-gray-100">
@@ -485,14 +497,14 @@
                                             <div class="w-8 h-8 rounded-lg bg-[#6A8F3B]/10 group-hover:bg-[#6A8F3B]/20 flex items-center justify-center transition-all">
                                                 <svg class="w-4 h-4 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                                             </div>
-                                            <span class="font-medium text-sm">{{ __('nav.dashboard') }}</span>
+                                            <span class="font-medium text-sm">{{ __('Dashboard') }}</span>
                                         </a>
                                         <a href="{{ route('messages.inbox') }}" class="group px-4 py-2.5 text-gray-700 hover:bg-blue-50 transition-all duration-200 flex items-center gap-3">
                                             <div class="w-8 h-8 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center transition-all relative">
                                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                                                 <span x-show="unreadCount > 0" x-cloak class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center" x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
                                             </div>
-                                            <span class="font-medium text-sm">{{ __('nav.inbox') }}</span>
+                                            <span class="font-medium text-sm">{{ __('Inbox') }}</span>
                                             <span x-show="unreadCount > 0" x-cloak class="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full" x-text="unreadCount > 99 ? '99+' : unreadCount"></span>
                                         </a>
 
@@ -507,7 +519,7 @@
                                             <div class="w-8 h-8 rounded-lg bg-amber-100 group-hover:bg-amber-200 flex items-center justify-center transition-all">
                                                 <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                                             </div>
-                                            <span class="font-medium text-sm">{{ __('nav.admin_panel') }}</span>
+                                            <span class="font-medium text-sm">{{ __('Admin Panel') }}</span>
                                         </a>
                                         @endif
                                     </div>
@@ -515,11 +527,11 @@
                                     <div class="border-t border-gray-100 mt-1 pt-1">
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                            <button type="submit" class="group w-full text-{{ app()->getLocale()==='ar' ? 'right' : 'left' }} px-4 py-2.5 text-red-600 hover:bg-red-50 transition-all duration-200 flex items-center gap-3">
+                                            <button type="submit" class="group w-full text-{{ __('left') }} px-4 py-2.5 text-red-600 hover:bg-red-50 transition-all duration-200 flex items-center gap-3">
                                                 <div class="w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 flex items-center justify-center transition-all">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                                                 </div>
-                                                <span class="font-medium text-sm">{{ __('nav.logout') }}</span>
+                                                <span class="font-medium text-sm">{{ __('Logout') }}</span>
                                             </button>
                                         </form>
                                     </div>
@@ -528,7 +540,7 @@
                         @else
                             <a href="{{ route('login') }}" class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/95 text-[#6A8F3B] rounded-full hover:bg-white transition-all duration-200 font-semibold shadow-lg shadow-black/10 hover:shadow-xl text-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-                                <span>{{ __('nav.login') }}</span>
+                                <span>{{ __('Login') }}</span>
                             </a>
                         @endauth
 
@@ -572,25 +584,25 @@
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
                                 <span class="text-lg">🛠</span>
                             </div>
-                            <span>{{ app()->getLocale() === 'ar' ? 'مركز الخدمات' : (app()->getLocale() === 'fr' ? 'Centre de Services' : 'Service Hub') }}</span>
+                            <span>{{ __('Service Hub') }}</span>
                         </a>
                         <a href="{{ route('services.pricing') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
                                 <span class="text-lg">📣</span>
                             </div>
-                            <span>{{ app()->getLocale() === 'ar' ? 'خدماتنا الرقمية' : (app()->getLocale() === 'fr' ? 'Nos Services Digitaux' : 'Our Digital Services') }}</span>
+                            <span>{{ __('Our Digital Services') }}</span>
                         </a>
                         <a href="{{ route('how-it-works') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </div>
-                            <span>{{ __('nav.how_it_works') }}</span>
+                            <span>{{ __('How It Works') }}</span>
                         </a>
                         <a href="{{ route('about') }}" class="px-4 py-3 hover:bg-white/15 rounded-xl transition-all duration-200 flex items-center gap-3 font-medium text-white/90 hover:text-white group">
                             <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                             </div>
-                            <span>{{ __('nav.about') }}</span>
+                            <span>{{ __('About') }}</span>
                         </a>
                         @auth
                             <div class="mt-2 pt-2 border-t border-white/20">
@@ -605,7 +617,7 @@
                                     <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-300 group-hover:text-amber-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                                     </div>
-                                    <span>{{ __('nav.admin_panel') }}</span>
+                                    <span>{{ __('Admin Panel') }}</span>
                                 </a>
                                 @endif
                             </div>
@@ -616,7 +628,7 @@
                                         <div class="w-9 h-9 rounded-lg bg-red-500/20 flex items-center justify-center text-red-300">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
                                         </div>
-                                        <span>{{ __('nav.logout') }}</span>
+                                        <span>{{ __('Logout') }}</span>
                                     </button>
                                 </form>
                             </div>
@@ -628,7 +640,7 @@
                                 </a>
                                 <a href="{{ route('login') }}" class="w-full px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-3 font-bold">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-                                    <span>{{ __('nav.login') }}</span>
+                                    <span>{{ __('Login') }}</span>
                                 </a>
                             </div>
                         @endauth
@@ -636,7 +648,7 @@
                         <!-- Language Switcher -->
                         <div class="mt-4 px-4 flex items-center justify-center gap-1 bg-white/10 rounded-xl p-1.5 mx-2">
                             @php $mobileSwitchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
-                            <a href="{{ url('ar' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='ar' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">العربية</a>
+                            <a href="{{ url('ar' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ __('text-white/80 hover:text-white hover:bg-white/10') }} rounded-lg font-bold text-xs transition-all duration-200">العربية</a>
                             <a href="{{ url('fr' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='fr' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">Français</a>
                             <a href="{{ url('en' . $mobileSwitchPath) }}" class="flex-1 text-center px-3 py-2 {{ app()->getLocale()==='en' ? 'bg-white text-[#6A8F3B] shadow-sm' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg font-bold text-xs transition-all duration-200">English</a>
                         </div>
@@ -661,7 +673,7 @@
                     <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    <span class="text-[9px] font-bold tracking-tight">{{ __('nav.home') }}</span>
+                    <span class="text-[9px] font-bold tracking-tight">{{ __('Home') }}</span>
                 </a>
 
                 <!-- Prices Tab -->
@@ -669,7 +681,7 @@
                     <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
                     </svg>
-                    <span class="text-[9px] font-bold tracking-tight">{{ __('nav.prices') }}</span>
+                    <span class="text-[9px] font-bold tracking-tight">{{ __('Prices') }}</span>
                 </a>
 
                 <!-- Sell Tab (Middle Highlighted Button) -->
@@ -686,7 +698,7 @@
                     <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
-                    <span class="text-[9px] font-bold tracking-tight">{{ __('nav.inbox') }}</span>
+                    <span class="text-[9px] font-bold tracking-tight">{{ __('Inbox') }}</span>
                     <span x-show="unreadCount > 0" x-cloak class="absolute top-0 right-4 w-4 h-4 bg-red-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center border border-white" x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
                 </a>
 
@@ -696,14 +708,14 @@
                         <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <span class="text-[9px] font-bold tracking-tight">{{ __('nav.dashboard') }}</span>
+                        <span class="text-[9px] font-bold tracking-tight">{{ __('Dashboard') }}</span>
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="flex flex-col items-center justify-center flex-1 py-1 transition-all duration-200 {{ request()->routeIs('login') ? 'text-[#C8A356]' : 'text-[#1B2A1B]/60 dark:text-white/60 hover:text-[#6A8F3B]' }}">
                         <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
-                        <span class="text-[9px] font-bold tracking-tight">{{ __('nav.login') }}</span>
+                        <span class="text-[9px] font-bold tracking-tight">{{ __('Login') }}</span>
                     </a>
                 @endauth
             </div>
@@ -773,10 +785,13 @@
                 <p class="text-gray-400 mb-2">{{ __('Email') }}: <span dir="ltr" style="unicode-bidi: embed;">contact@zintoop.com</span></p>
                 <p class="text-gray-400 mb-4">{{ __('Phone') }}: <span dir="ltr" style="unicode-bidi: embed;">+216 25 777 926</span></p>
                 <div class="flex flex-wrap gap-2">
-                    @php $footerSwitchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
-                    <a href="{{ url('ar' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='ar' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">العربية</a>
+                    @php $footerSwitchPath = preg_replace('#^/(ar|fr|en|es|zh|ja)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                    <a href="{{ url('ar' . $footerSwitchPath) }}" class="px-2 py-1 {{ __('bg-gray-800 text-gray-300 hover:bg-gray-700') }} rounded text-xs transition-all">العربية</a>
                     <a href="{{ url('fr' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='fr' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">FR</a>
                     <a href="{{ url('en' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='en' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">EN</a>
+                    <a href="{{ url('es' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='es' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">ES</a>
+                    <a href="{{ url('zh' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='zh' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">ZH</a>
+                    <a href="{{ url('ja' . $footerSwitchPath) }}" class="px-2 py-1 {{ app()->getLocale()==='ja' ? 'bg-[#6A8F3B] text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }} rounded text-xs transition-all">JA</a>
                 </div>
             </div>
         </div>

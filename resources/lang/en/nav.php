@@ -30,6 +30,8 @@ return [
     'my_listings' => 'My Listings',
     'marketplace' => 'Marketplace',
 
+    'services_hub' => 'Service Hub',
+    'our_services' => 'Our Digital Services',
     'sell_your_oil' => 'Sell Your Oil / Olives',
     'inbox' => 'Inbox',
     'live_prices' => 'Live Prices from Tunisian Markets',
@@ -40,4 +42,6 @@ return [
     'tooltip_how' => 'Learn how the platform works step by step 📖',
     'tooltip_about' => 'Who we are and our mission for Tunisian olive sector 🇹🇳',
     'tooltip_dashboard' => 'Your dashboard to manage your account and offers ⚙️',
+    'tooltip_services_hub' => 'Explore and order agricultural & business services 🛠️',
+    'tooltip_our_services' => 'Discover ZinToop digital solutions & promotion plans 📣',
 ];

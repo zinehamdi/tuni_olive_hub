@@ -30,6 +30,8 @@ return [
     'my_listings' => 'Mes annonces',
     'marketplace' => 'Marché',
 
+    'services_hub' => 'Centre de Services',
+    'our_services' => 'Nos Services Digitaux',
     'sell_your_oil' => 'Vendez votre huile/olives',
     'inbox' => 'Boîte de réception',
     'live_prices' => 'Prix en direct des marchés tunisiens',
@@ -40,4 +42,6 @@ return [
     'tooltip_how' => 'Découvrez le fonctionnement de la plateforme étape par étape 📖',
     'tooltip_about' => 'Qui nous sommes et notre mission pour le secteur oléicole tunisien 🇹🇳',
     'tooltip_dashboard' => 'Votre tableau de bord pour gérer votre compte et vos offres ⚙️',
+    'tooltip_services_hub' => 'Explorez et commandez des services agricoles et commerciaux 🛠️',
+    'tooltip_our_services' => 'Découvrez nos solutions et forfaits digitaux ZinToop 📣',
 ];

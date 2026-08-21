@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col md:flex-row" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col md:flex-row" dir="{{ __('ltr') }}"
     x-data="{
         sidebarOpen: false,
         editModal: null,
@@ -200,7 +200,7 @@
 
     <!-- LEFT SIDEBAR -->
     <aside x-cloak
-           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ app()->getLocale() === 'ar' ? 'translateX(100%)' : 'translateX(-100%)' }}')"
+           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ __('translateX(-100%)') }}')"
            class="fixed md:sticky top-0 md:top-[72px] h-screen md:h-[calc(100vh-72px)] w-72 bg-white border-r border-gray-100 shadow-xl md:shadow-none z-50 md:z-10 flex flex-col overflow-y-auto transition-transform duration-300 ltr:left-0 rtl:right-0 flex-shrink-0">
 
         <!-- Close btn (mobile) -->
@@ -324,41 +324,41 @@
         <nav class="p-3 space-y-0.5 flex-1">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'لوحة التحكم' : __('Dashboard') }}
+                {{ __('nav.dashboard') }}
             </a>
             @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'تعديل الخدمات' : __('Manage Services') }}
+                {{ __('Manage Services') }}
             </a>
             @else
             <a href="{{ route('listings.create') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'إضافة منتج' : __('Add Product') }}
+                {{ __('Add Product') }}
             </a>
             @endif
             @if(in_array(Auth::user()->role, ['farmer','mill']))
             <a href="#inventory-section" @click="sidebarOpen=false" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <span>{{ Auth::user()->role === 'mill' ? '🛢️' : '🌿' }}</span>
-                {{ Auth::user()->role === 'mill' ? (app()->getLocale() === 'ar' ? 'الخزانات والمخزون' : __('Tanks & Stock')) : (app()->getLocale() === 'ar' ? 'محاصيلي' : __('My Batches')) }}
+                {{ Auth::user()->role === 'mill' ? __('Tanks & Stock') : __('My Batches') }}
             </a>
             @endif
             @if(Auth::user()->role === 'carrier')
             <a href="#assigned-tasks" @click="sidebarOpen=false" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
-                <span>🚚</span>{{ app()->getLocale() === 'ar' ? 'مهام النقل' : __('Transport Tasks') }}
+                <span>🚚</span>{{ __('Transport Tasks') }}
             </a>
             @endif
             <a href="{{ route('messages.inbox') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'الرسائل' : __('Messages') }}
+                {{ __('Messages') }}
             </a>
             <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'سوق الزيتون' : __('Marketplace') }}
+                {{ __('Marketplace') }}
             </a>
             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                {{ app()->getLocale() === 'ar' ? 'الإعدادات' : __('Settings') }}
+                {{ __('nav.settings') }}
             </a>
         </nav>
 
@@ -657,17 +657,17 @@
                         </div>
                         <div>
                             <h2 class="font-extrabold text-gray-900 text-base flex items-center gap-2">
-                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المخبرية المعتمدة' : 'Certified Lab Analyses PDF' }}</span>
+                                <span>{{ __('Certified Lab Analyses PDF') }}</span>
                                 <span class="text-xs bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full font-bold">PDF</span>
                             </h2>
                             <p class="text-xs text-gray-500 mt-0.5">
-                                {{ app()->getLocale() === 'ar' ? 'قم برفع تحاليل زيت الزيتون بصيغة PDF لتعزيز ثقة المشترين في ملفك الشخصي' : 'Upload official PDF lab analysis certificates to boost buyer trust on your profile' }}
+                                {{ __('Upload official PDF lab analysis certificates to boost buyer trust on your profile') }}
                             </p>
                         </div>
                     </div>
                     <button @click="showUploadModal = true" class="px-4 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        <span>{{ app()->getLocale() === 'ar' ? 'إضافة تحليل PDF' : 'Add PDF Analysis' }}</span>
+                        <span>{{ __('Add PDF Analysis') }}</span>
                     </button>
                 </div>
 
@@ -771,7 +771,7 @@
                                     <iframe src="{{ $pdfUrl }}#toolbar=0&navpanes=0&scrollbar=0" class="w-full h-full border-0 pointer-events-none opacity-85 group-hover/pdf:opacity-100 group-hover/pdf:scale-105 transition-all duration-500"></iframe>
                                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent flex flex-col items-center justify-end p-3 text-center">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs shadow-lg">
-                                            👁️ {{ app()->getLocale() === 'ar' ? 'معاينة PDF بالكامل' : 'Open PDF Preview' }}
+                                            👁️ {{ __('Open PDF Preview') }}
                                         </span>
                                     </div>
                                 </div>
@@ -779,7 +779,7 @@
                                 <!-- Action Buttons -->
                                 <div class="p-3 bg-gray-50 flex items-center justify-between gap-2 text-xs">
                                     <button @click="activePdfModal = '{{ $pdfUrl }}'" class="flex-1 py-1.5 px-2 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1">
-                                        👁️ {{ app()->getLocale() === 'ar' ? 'معاينة الوثيقة' : 'Preview Document' }}
+                                        👁️ {{ __('Preview Document') }}
                                     </button>
                                     <form method="POST" action="{{ route('profile.lab_analysis.delete', $lab['id'] ?? '') }}" onsubmit="return confirm('{{ __('هل أنت تأكد من إزالة هذا الملف؟') }}');">
                                         @csrf
@@ -796,7 +796,7 @@
                 @else
                     <div class="p-6 bg-gray-50/80 rounded-2xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
                         <span class="text-2xl block mb-2">📜</span>
-                        <span>{{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة أي تحاليل مخبرية بصيغة PDF بعد.' : 'No PDF lab analysis reports added yet.' }}</span>
+                        <span>{{ __('No PDF lab analysis reports added yet.') }}</span>
                     </div>
                 @endif
 
@@ -809,7 +809,7 @@
                                 <div class="flex items-center gap-3">
                                     <span class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-black text-xs">PDF</span>
                                     <h3 class="font-bold text-sm sm:text-base text-white">
-                                        {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمية' : 'Official PDF Laboratory Certificate' }}
+                                        {{ __('Official PDF Laboratory Certificate') }}
                                     </h3>
                                 </div>
                                 <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -833,7 +833,7 @@
                             <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
                                 <h3 class="text-base font-extrabold text-gray-900 flex items-center gap-2">
                                     <span>📜</span>
-                                    <span>{{ app()->getLocale() === 'ar' ? 'إضافة تحليل مخبري جديد (PDF)' : 'Add Lab Analysis PDF' }}</span>
+                                    <span>{{ __('Add Lab Analysis PDF') }}</span>
                                 </h3>
                                 <button @click="showUploadModal = false" class="p-1 rounded-full text-gray-400 hover:text-gray-600">
                                     ✕
@@ -844,37 +844,37 @@
                                 @csrf
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">
-                                        {{ app()->getLocale() === 'ar' ? 'نوع ونوعية التحليل المخبري' : 'Analysis Type & Title' }} <span class="text-red-500">*</span>
+                                        {{ __('Analysis Type & Title') }} <span class="text-red-500">*</span>
                                     </label>
                                     <select name="title" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-bold bg-white text-gray-800">
-                                        <option value="award_gold_medal">{{ app()->getLocale() === 'ar' ? '🏆 جائزة وميدالية ذهبية دولية للجودة (Gold Medal Award)' : (app()->getLocale() === 'fr' ? '🏆 Médaille d\'Or Internationale de Qualité' : '🏆 International Gold Medal Award for Quality') }}</option>
-                                        <option value="iso_cert">{{ app()->getLocale() === 'ar' ? '📜 شهادة مطابقة وجودة إيزو (ISO / Bio Certificate)' : (app()->getLocale() === 'fr' ? '📜 Certificat Officiel ISO & Bio Biologique' : '📜 Official ISO & Bio Organic Certificate') }}</option>
-                                        <option value="acidity_peroxide">{{ app()->getLocale() === 'ar' ? '🧪 تحليل نسبة الحموضة والتأكسد (Acidity & Peroxide Value)' : (app()->getLocale() === 'fr' ? '🧪 Analyse d\'Acidité & Indice de Peroxydes' : '🧪 Acidity & Peroxide Value Analysis') }}</option>
-                                        <option value="comprehensive_quality">{{ app()->getLocale() === 'ar' ? '🏅 تحليل الجودة الشاملة والتصنيف الرسمية (Full Quality & Grade)' : (app()->getLocale() === 'fr' ? '🏅 Certificat de Qualité Globale & Grade' : '🏅 Comprehensive Quality & Grade Certificate') }}</option>
-                                        <option value="fatty_acids">{{ app()->getLocale() === 'ar' ? '🔬 تحليل التركيب الكيميائي والأحماض الدهنية (Fatty Acids)' : (app()->getLocale() === 'fr' ? '🔬 Profil des Acides Gras & Composition' : '🔬 Fatty Acid Profile & Composition') }}</option>
-                                        <option value="pesticides_screen">{{ app()->getLocale() === 'ar' ? '🌱 تحليل بقايا المبيدات والملوثات (Pesticides Screen)' : (app()->getLocale() === 'fr' ? '🌱 Analyse des Résidus de Pesticides' : '🌱 Pesticide Residues & Contaminants Screen') }}</option>
-                                        <option value="sensory_panel">{{ app()->getLocale() === 'ar' ? '👅 تحليل التذوق الحسي والتقييم الأورجانوستيك (Organoleptic)' : (app()->getLocale() === 'fr' ? '👅 Profil Sensoriel & Dégustation Organoleptique' : '👅 Organoleptic & Sensory Evaluation') }}</option>
-                                        <option value="other_lab_report">{{ app()->getLocale() === 'ar' ? '📋 تقرير تحليل أو شهادة رسمية عامة (General Official Certificate)' : (app()->getLocale() === 'fr' ? '📋 Certificat ou Rapport Officiel' : '📋 Official Certificate or Report') }}</option>
+                                        <option value="award_gold_medal">{{ __('🏆 International Gold Medal Award for Quality') }}</option>
+                                        <option value="iso_cert">{{ __('📜 Official ISO & Bio Organic Certificate') }}</option>
+                                        <option value="acidity_peroxide">{{ __('🧪 Acidity & Peroxide Value Analysis') }}</option>
+                                        <option value="comprehensive_quality">{{ __('🏅 Comprehensive Quality & Grade Certificate') }}</option>
+                                        <option value="fatty_acids">{{ __('🔬 Fatty Acid Profile & Composition') }}</option>
+                                        <option value="pesticides_screen">{{ __('🌱 Pesticide Residues & Contaminants Screen') }}</option>
+                                        <option value="sensory_panel">{{ __('👅 Organoleptic & Sensory Evaluation') }}</option>
+                                        <option value="other_lab_report">{{ __('📋 Official Certificate or Report') }}</option>
                                     </select>
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">
-                                        {{ app()->getLocale() === 'ar' ? 'اسم المخبر أو المؤسسة الرسمية' : 'Laboratory Name' }}
+                                        {{ __('Laboratory Name') }}
                                     </label>
-                                    <input type="text" name="lab_name" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: المخبر الوطني لزيوت الزيتون صفاقس' : 'e.g. National Olive Oil Laboratory' }}" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
+                                    <input type="text" name="lab_name" placeholder="{{ __('e.g. National Olive Oil Laboratory') }}" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">
-                                        {{ app()->getLocale() === 'ar' ? 'تاريخ إجراء التحليل' : 'Analysis Date' }}
+                                        {{ __('Analysis Date') }}
                                     </label>
                                     <input type="date" name="analysis_date" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent font-medium">
                                 </div>
 
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">
-                                        {{ app()->getLocale() === 'ar' ? 'ملف التحليل المخبري (PDF)' : 'PDF File' }} <span class="text-red-500">* (Max 20MB)</span>
+                                        {{ __('PDF File') }} <span class="text-red-500">* (Max 20MB)</span>
                                     </label>
                                     <input type="file" name="pdf_file" accept=".pdf,application/pdf" required class="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 bg-gray-50 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700">
                                 </div>
@@ -884,7 +884,7 @@
                                         {{ __('إلغاء') }}
                                     </button>
                                     <button type="submit" class="px-5 py-2 bg-gradient-to-r from-red-600 to-amber-600 text-white rounded-xl text-xs font-bold hover:shadow-lg transition">
-                                        {{ app()->getLocale() === 'ar' ? 'رفع وحفظ التحليل' : 'Upload PDF' }}
+                                        {{ __('Upload PDF') }}
                                     </button>
                                 </div>
                             </form>
@@ -910,7 +910,7 @@
                         </div>
                     </div>
                     <button @click="showAddCardModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1 cursor-pointer">
-                        ➕ {{ app()->getLocale() === 'ar' ? 'إضافة عرض / خدمة' : 'Add Card' }}
+                        ➕ {{ __('Add Card') }}
                     </button>
                 </div>
                 
@@ -939,7 +939,7 @@
                                     @if(($srv['price_type'] ?? 'fixed') === 'fixed')
                                         {{ number_format($srv['price'] ?? 0, 0) }} TND
                                     @else
-                                        {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Upon Request' }}
+                                        {{ __('Upon Request') }}
                                     @endif
                                 </span>
                             </div>
@@ -949,7 +949,7 @@
                                 <!-- Edit Button -->
                                 <button type="button" @click="editService = @js($srv); editIndex = {{ $index }}; showEditCardModal = true"
                                     class="flex-1 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
-                                    ✏️ {{ app()->getLocale() === 'ar' ? 'تعديل' : 'Edit' }}
+                                    ✏️ {{ __('Edit') }}
                                 </button>
                                 
                                 <!-- Delete Button -->
@@ -962,9 +962,9 @@
                                         $newServices = array_values($newServices);
                                     @endphp
                                     <input type="hidden" name="services" value="{{ json_encode($newServices) }}">
-                                    <button type="submit" onclick="return confirm('{{ app()->getLocale() === 'ar' ? 'هل أنت متأكد من حذف هذه الخدمة؟' : 'Are you sure you want to delete this service?' }}')"
+                                    <button type="submit" onclick="return confirm('{{ __('Are you sure you want to delete this service?') }}')"
                                         class="w-full py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer">
-                                        🗑️ {{ app()->getLocale() === 'ar' ? 'حذف' : 'Delete' }}
+                                        🗑️ {{ __('Delete') }}
                                     </button>
                                 </form>
                             </div>
@@ -974,9 +974,9 @@
                     @else
                     <div class="bg-amber-50/50 border border-dashed border-amber-200 rounded-2xl p-8 text-center text-xs text-amber-800">
                         <span class="text-2xl block mb-2">📋</span>
-                        <p class="font-medium mb-2">{{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة بطاقات عروض أو خدمات بعد.' : 'No service or product cards added yet.' }}</p>
+                        <p class="font-medium mb-2">{{ __('No service or product cards added yet.') }}</p>
                         <button @click="showAddCardModal = true" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition cursor-pointer">
-                            ➕ {{ app()->getLocale() === 'ar' ? 'أضف عرضك الأول الآن' : 'Add Your First Card' }}
+                            ➕ {{ __('Add Your First Card') }}
                         </button>
                     </div>
                     @endif
@@ -987,41 +987,41 @@
                     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showAddCardModal = false">
                         <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
                             <button @click="showAddCardModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
-                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>➕</span>{{ app()->getLocale() === 'ar' ? 'إضافة خدمة أو منتج جديد' : 'Add New Service/Product' }}</h3>
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>➕</span>{{ __('Add New Service/Product') }}</h3>
                         </div>
                         <form action="{{ route('profile.add.service-card') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                             @csrf
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service/Product Name' }} <span class="text-red-500">*</span></label>
-                                <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير زيت زيتون، استشارة محاسبية' : 'e.g. Export Contract' }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Service/Product Name') }} <span class="text-red-500">*</span></label>
+                                <input type="text" name="title" required placeholder="{{ __('e.g. Export Contract') }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                             </div>
                             <div x-data="{ priceType: 'fixed' }">
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Pricing Model') }}</label>
                                 <select name="price_type" x-model="priceType" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
-                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
-                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                    <option value="fixed">{{ __('Fixed Price') }}</option>
+                                    <option value="quote">{{ __('Price Upon Request') }}</option>
                                 </select>
                                 <div x-show="priceType === 'fixed'" class="mt-3" x-transition>
-                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}</label>
+                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Price (TND)') }}</label>
                                     <input type="number" name="price" min="0" placeholder="0" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                                 </div>
                             </div>
                             <!-- Service/Product Image -->
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                    {{ __('Service / Product Image') }}
                                 </label>
                                 <input type="file" name="image" accept="image/*"
                                     class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                                 <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB</p>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description' }}</label>
-                                <textarea name="description" rows="3" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل الخدمة أو المنتج وما الذي يتضمنه العرض...' : 'e.g. description' }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Description') }}</label>
+                                <textarea name="description" rows="3" placeholder="{{ __('e.g. description') }}" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
                             </div>
                             <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                                <button type="button" @click="showAddCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إضافة العرض' : 'Add Card' }}</button>
+                                <button type="button" @click="showAddCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ __('Cancel') }}</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ __('Add Card') }}</button>
                             </div>
                         </form>
                     </div>
@@ -1032,25 +1032,25 @@
                     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative border border-gray-100 text-right" @click.away="showEditCardModal = false">
                         <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-4">
                             <button @click="showEditCardModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
-                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>✏️</span>{{ app()->getLocale() === 'ar' ? 'تعديل الخدمة أو المنتج' : 'Edit Service/Product' }}</h3>
+                            <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><span>✏️</span>{{ __('Edit Service/Product') }}</h3>
                         </div>
                         <form action="{{ route('profile.update.service-card') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                             @csrf
                             <input type="hidden" name="index" :value="editIndex">
                             
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service/Product Name' }} <span class="text-red-500">*</span></label>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Service/Product Name') }} <span class="text-red-500">*</span></label>
                                 <input type="text" name="title" required x-model="editService.title" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                             </div>
                             
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Pricing Model') }}</label>
                                 <select name="price_type" x-model="editService.price_type" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
-                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
-                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                    <option value="fixed">{{ __('Fixed Price') }}</option>
+                                    <option value="quote">{{ __('Price Upon Request') }}</option>
                                 </select>
                                 <div x-show="editService.price_type === 'fixed'" class="mt-3" x-transition>
-                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}</label>
+                                    <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Price (TND)') }}</label>
                                     <input type="number" name="price" min="0" x-model="editService.price" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                                 </div>
                             </div>
@@ -1058,7 +1058,7 @@
                             <!-- Image -->
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                    {{ __('Service / Product Image') }}
                                 </label>
                                 <template x-if="editService.image">
                                     <div class="mb-2">
@@ -1067,16 +1067,16 @@
                                 </template>
                                 <input type="file" name="image" accept="image/*"
                                     class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
-                                <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB ({{ app()->getLocale() === 'ar' ? 'اتركه فارغاً للحفاظ على الصورة القديمة' : 'Leave empty to keep current image' }})</p>
+                                <p class="text-[10px] text-gray-400 mt-1">📸 PNG, JPG, GIF, WebP • Max 5MB ({{ __('Leave empty to keep current image') }})</p>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description' }}</label>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Description') }}</label>
                                 <textarea name="description" rows="3" x-model="editService.description" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
                             </div>
                             <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                                <button type="button" @click="showEditCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
-                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ app()->getLocale() === 'ar' ? 'حفظ التغييرات' : 'Save Changes' }}</button>
+                                <button type="button" @click="showEditCardModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">{{ __('Cancel') }}</button>
+                                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">{{ __('Save Changes') }}</button>
                             </div>
                         </form>
                     </div>
@@ -1191,7 +1191,7 @@
                     </h2>
                     <div class="flex items-center gap-2">
                         <button @click="showAddModal = true" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1.5 cursor-pointer">
-                            ➕ {{ app()->getLocale() === 'ar' ? 'إضافة خدمة / منتج' : 'Add Service/Product' }}
+                            ➕ {{ __('Add Service/Product') }}
                         </button>
                         <a href="{{ route('profile.edit') }}" class="bg-white text-indigo-700 px-4 py-1.5 rounded-xl text-xs font-bold hover:shadow-md transition flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -1208,7 +1208,7 @@
                             <button @click="showAddModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition">✕</button>
                             <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2">
                                 <span>➕</span>
-                                {{ app()->getLocale() === 'ar' ? 'إضافة خدمة أو منتج جديد' : 'Add New Service or Product' }}
+                                {{ __('Add New Service or Product') }}
                             </h3>
                         </div>
 
@@ -1218,26 +1218,26 @@
                             <!-- Title -->
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'اسم الخدمة / المنتج' : 'Service / Product Name' }} <span class="text-red-500">*</span>
+                                    {{ __('Service / Product Name') }} <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" name="title" required placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير زيت زيتون، استشارة محاسبية' : 'e.g. Olive Oil Export Contract' }}"
+                                <input type="text" name="title" required placeholder="{{ __('e.g. Olive Oil Export Contract') }}"
                                     class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
                             </div>
 
                             <!-- Pricing Model -->
                             <div x-data="{ priceType: 'fixed' }">
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}
+                                    {{ __('Pricing Model') }}
                                 </label>
                                 <select name="price_type" x-model="priceType" class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
-                                    <option value="fixed">{{ app()->getLocale() === 'ar' ? 'سعر محدد (ثابت)' : 'Fixed Price' }}</option>
-                                    <option value="quote">{{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}</option>
+                                    <option value="fixed">{{ __('Fixed Price') }}</option>
+                                    <option value="quote">{{ __('Price Upon Request') }}</option>
                                 </select>
 
                                 <!-- Price input -->
                                 <div x-show="priceType === 'fixed'" class="mt-3" x-transition>
                                     <label class="block text-xs font-bold text-gray-700 mb-2">
-                                        {{ app()->getLocale() === 'ar' ? 'السعر (بالدينار التونسي)' : 'Price (TND)' }}
+                                        {{ __('Price (TND)') }}
                                     </label>
                                     <input type="number" name="price" min="0" placeholder="0"
                                         class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
@@ -1247,7 +1247,7 @@
                             <!-- Service/Product Image -->
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'صورة الخدمة / العرض' : 'Service / Product Image' }}
+                                    {{ __('Service / Product Image') }}
                                 </label>
                                 <input type="file" name="image" accept="image/*"
                                     class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900">
@@ -1257,19 +1257,19 @@
                             <!-- Description -->
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-2">
-                                    {{ app()->getLocale() === 'ar' ? 'تفاصيل الخدمة / المنتج' : 'Description / What is included' }}
+                                    {{ __('Description / What is included') }}
                                 </label>
-                                <textarea name="description" rows="3" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل الخدمة أو المنتج وما الذي يتضمنه العرض...' : 'Briefly describe what this service/product includes...' }}"
+                                <textarea name="description" rows="3" placeholder="{{ __('Briefly describe what this service/product includes...') }}"
                                     class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white text-gray-900"></textarea>
                             </div>
 
                             <!-- Actions -->
                             <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
                                 <button type="button" @click="showAddModal = false" class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs transition">
-                                    {{ app()->getLocale() === 'ar' ? 'إلغاء' : 'Cancel' }}
+                                    {{ __('Cancel') }}
                                 </button>
                                 <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">
-                                    {{ app()->getLocale() === 'ar' ? 'إضافة العرض' : 'Add Card' }}
+                                    {{ __('Add Card') }}
                                 </button>
                             </div>
                         </form>
@@ -1335,7 +1335,7 @@
                                         @if(($srv['price_type'] ?? 'fixed') === 'fixed')
                                             {{ number_format($srv['price'] ?? 0, 0) }} TND
                                         @else
-                                            {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}
+                                            {{ __('Price Upon Request') }}
                                         @endif
                                     </span>
                                 </div>
@@ -1344,7 +1344,7 @@
                         </div>
                         @else
                         <div class="bg-amber-50/50 border border-dashed border-amber-200 rounded-xl p-5 text-center text-xs text-amber-800">
-                            {{ app()->getLocale() === 'ar' ? 'لم تقم بإضافة بطاقات خدمات تفصيلية بعد (مثل: عقد تصدير 150 د.ت). يمكنك إضافتها عبر تعديل الخدمات أعلاه.' : 'No detailed service cards added yet (e.g. Export Contract 150 DT). Add them via the Edit button above.' }}
+                            {{ __('No detailed service cards added yet (e.g. Export Contract 150 DT). Add them via the Edit button above.') }}
                         </div>
                         @endif
                     </div>
