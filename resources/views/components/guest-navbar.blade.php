@@ -74,24 +74,15 @@
                              x-transition:enter-start="opacity-0 scale-95 -translate-y-2" 
                              x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
                              class="absolute {{ __('right-0') }} mt-2 w-36 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-[110] overflow-hidden">
-                            @php $switchPath = preg_replace('#^/(ar|fr|en|es|zh|ja)#', '', request()->getPathInfo()) ?: '/'; @endphp
-                            <a href="{{ url('ar' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ __('') }}">
+                            @php $switchPath = preg_replace('#^/(ar|fr|en)#', '', request()->getPathInfo()) ?: '/'; @endphp
+                            <a href="{{ url('ar' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ar' ? 'bg-gray-50 text-[#6A8F3B]' : '' }}">
                                 <span class="text-sm">🇹🇳</span> العربية (AR)
                             </a>
-                            <a href="{{ url('fr' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50' : '' }}">
+                            <a href="{{ url('fr' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='fr' ? 'bg-gray-50 text-[#6A8F3B]' : '' }}">
                                 <span class="text-sm">🇫🇷</span> Français (FR)
                             </a>
-                            <a href="{{ url('en' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50' : '' }}">
+                            <a href="{{ url('en' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='en' ? 'bg-gray-50 text-[#6A8F3B]' : '' }}">
                                 <span class="text-sm">🇬🇧</span> English (EN)
-                            </a>
-                            <a href="{{ url('es' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='es' ? 'bg-gray-50' : '' }}">
-                                <span class="text-sm">🇪🇸</span> Español (ES)
-                            </a>
-                            <a href="{{ url('zh' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='zh' ? 'bg-gray-50' : '' }}">
-                                <span class="text-sm">🇨🇳</span> 中文 (ZH)
-                            </a>
-                            <a href="{{ url('ja' . $switchPath) }}" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-[#6A8F3B]/10 hover:text-[#6A8F3B] transition {{ app()->getLocale()==='ja' ? 'bg-gray-50' : '' }}">
-                                <span class="text-sm">🇯🇵</span> 日本語 (JA)
                             </a>
                         </div>
                     </div>
