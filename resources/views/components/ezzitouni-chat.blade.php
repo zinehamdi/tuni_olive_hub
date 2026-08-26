@@ -259,5 +259,25 @@ document.addEventListener('alpine:init', () => {
             return result;
         }
     }));
+
+    window.ezzitouniSendChoice = function(val) {
+        if (!val) return;
+        const chatEl = document.querySelector('div[x-data*="ezzitouniChat"]');
+        if (chatEl && window.Alpine) {
+            const data = Alpine.$data(chatEl);
+            if (data && typeof data.sendMessage === 'function') {
+                data.newMessage = val;
+                data.sendMessage();
+                return;
+            }
+        }
+        const input = document.querySelector('div[x-data*="ezzitouniChat"] input[type="text"]');
+        if (input) {
+            input.value = val;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            const submitBtn = document.querySelector('div[x-data*="ezzitouniChat"] button[type="submit"]');
+            if (submitBtn) submitBtn.click();
+        }
+    };
 });
 </script>

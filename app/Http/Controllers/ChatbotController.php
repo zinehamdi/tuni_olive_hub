@@ -166,206 +166,218 @@ class ChatbotController extends Controller
     private function handleFallbackIntent($message)
     {
         $state = session('chatbot_state');
+        $isLoggedIn = auth()->check();
+        $user = auth()->user();
+        $userName = $isLoggedIn ? htmlspecialchars($user->name) : '';
 
         // ============================================
-        // 1. REGISTRATION FLOW
-        // ============================================
-        if ($state === 'register_step_1') {
-            $role = 'normal';
-            if (str_contains($message, 'فلاح') || str_contains($message, 'farmer')) $role = 'farmer';
-            if (str_contains($message, 'ناقل') || str_contains($message, 'carrier')) $role = 'carrier';
-            if (str_contains($message, 'معصرة') || str_contains($message, 'mill')) $role = 'mill';
-            if (str_contains($message, 'معبئ') || str_contains($message, 'packer')) $role = 'packer';
-            
-            session(['chatbot_register_role' => $role]);
-            session(['chatbot_state' => 'register_step_2']);
-            
-            $roleNames = ['farmer' => 'فلاح', 'carrier' => 'ناقل', 'mill' => 'معصرة', 'packer' => 'مُعبئ', 'normal' => 'مستخدم عادي'];
-            return 'ممتاز! لقد اخترت (' . $roleNames[$role] . ').<br><br><b>الرجاء كتابة اسمك الكامل الآن:</b>';
-        }
-
-        if ($state === 'register_step_2') {
-            session(['chatbot_register_name' => $message]);
-            session(['chatbot_state' => 'register_step_3']);
-            return 'شكراً لك ' . htmlspecialchars($message) . '.<br><br><b>الرجاء كتابة رقم هاتفك للتواصل:</b>';
-        }
-
-        if ($state === 'register_step_3') {
-            session(['chatbot_register_phone' => $message]);
-            $role = session('chatbot_register_role', 'normal');
-            
-            if ($role === 'farmer') {
-                session(['chatbot_state' => 'register_farmer_step_4']);
-                return 'حسناً. <b>ما هو نوع الزيتون الذي تنتجه؟ (مثال: شتوي، ساحلي، الخ)</b>';
-            } elseif ($role === 'carrier') {
-                session(['chatbot_state' => 'register_carrier_step_4']);
-                return 'حسناً. <b>ما هي سعة شاحنتك (بالطن)؟</b>';
-            } elseif ($role === 'mill') {
-                session(['chatbot_state' => 'register_mill_step_4']);
-                return 'حسناً. <b>ما هو اسم المعصرة الخاصة بك؟</b>';
-            } else {
-                return $this->finishRegistrationFlow();
-            }
-        }
-
-        if ($state === 'register_farmer_step_4') {
-            session(['chatbot_register_olive_type' => $message]);
-            session(['chatbot_state' => 'register_farmer_step_5']);
-            return '<b>أين تقع ضيعتك (الموقع)؟</b>';
-        }
-
-        if ($state === 'register_farmer_step_5') {
-            session(['chatbot_register_farm_location' => $message]);
-            session(['chatbot_state' => 'register_farmer_step_6']);
-            return '<b>كم عدد أشجار الزيتون لديك تقريباً؟</b>';
-        }
-
-        if ($state === 'register_farmer_step_6') {
-            session(['chatbot_register_tree_number' => $message]);
-            return $this->finishRegistrationFlow();
-        }
-
-        if ($state === 'register_carrier_step_4') {
-            session(['chatbot_register_camion_capacity' => $message]);
-            return $this->finishRegistrationFlow();
-        }
-
-        if ($state === 'register_mill_step_4') {
-            session(['chatbot_register_mill_name' => $message]);
-            return $this->finishRegistrationFlow();
-        }
-
-        // ============================================
-        // 2. PRODUCT LISTING FLOW
+        // 1. PRODUCT LISTING FLOW (Choice-Driven)
         // ============================================
         if ($state === 'listing_step_1') {
             $cat = (str_contains($message, 'زيتون') || str_contains($message, 'olive') && !str_contains($message, 'oil')) ? 'olive' : 'oil';
             session(['chatbot_listing_category' => $cat]);
             session(['chatbot_state' => 'listing_step_2']);
-            return 'ممتاز! <b>ما هو الصنف (Variety)؟ (مثال: شتوي، شملاوي، الخ)</b>';
+
+            if ($cat === 'oil') {
+                return 'ممتاز، بيع <b>زيت الزيتون</b> 🛢️.<br><br><b>اختر صنف الزيت (Variety):</b><br>' .
+                       '<div class="flex flex-wrap gap-2 mt-3">' .
+                       $this->buildChoiceButton('شملالي (Chemlali)', 'شملالي') .
+                       $this->buildChoiceButton('شتوي (Chetoui)', 'شتوي') .
+                       $this->buildChoiceButton('وسلاتي (Oueslati)', 'وسلاتي') .
+                       $this->buildChoiceButton('زرازي (Zarrazi)', 'زرازي') .
+                       $this->buildChoiceButton('زلماطي (Zalmati)', 'زلماطي') .
+                       $this->buildChoiceButton('صنف آخر', 'أخرى') .
+                       '</div>';
+            } else {
+                return 'ممتاز، بيع <b>الزيتون (حب / سانية)</b> 🫒.<br><br><b>اختر صنف الزيتون:</b><br>' .
+                       '<div class="flex flex-wrap gap-2 mt-3">' .
+                       $this->buildChoiceButton('شملالي (معاصر)', 'شملالي') .
+                       $this->buildChoiceButton('شتوي', 'شتوي') .
+                       $this->buildChoiceButton('مسكي (طاولة)', 'مسكي') .
+                       $this->buildChoiceButton('بروني', 'بروني') .
+                       $this->buildChoiceButton('زرازي', 'زرازي') .
+                       $this->buildChoiceButton('سانية كاملة للخضارة', 'سانية') .
+                       '</div>';
+            }
         }
 
         if ($state === 'listing_step_2') {
-            session(['chatbot_listing_variety' => $message]);
+            $variety = $this->normalizeVariety($message);
+            session(['chatbot_listing_variety' => $variety]);
             session(['chatbot_state' => 'listing_step_3']);
-            return '<b>ما هي الكمية المتوفرة للبيع؟ (مثال: 500 لتر أو 2 طن)</b>';
+
+            $cat = session('chatbot_listing_category', 'oil');
+            if ($cat === 'oil') {
+                return 'أحسنت! <b>اختر درجة الجودة (Quality):</b><br>' .
+                       '<div class="flex flex-wrap gap-2 mt-3">' .
+                       $this->buildChoiceButton('🌟 بكر ممتاز (Extra Virgin)', 'بكر ممتاز') .
+                       $this->buildChoiceButton('🛢️ بكر (Virgin)', 'بكر') .
+                       $this->buildChoiceButton('🌿 بيولوجي (Bio Organic)', 'بيولوجي') .
+                       $this->buildChoiceButton('💡 وقاد (Lampante)', 'وقاد') .
+                       '</div>';
+            } else {
+                return 'أحسنت! <b>طريقة البيع والتسليم:</b><br>' .
+                       '<div class="flex flex-wrap gap-2 mt-3">' .
+                       $this->buildChoiceButton('⚖️ بيع بالكيلوغرام / الطن (مقطوع)', 'مقطوع') .
+                       $this->buildChoiceButton('🌳 سانية كاملة على رؤوس أشجارها (خضارة)', 'خضارة') .
+                       '</div>';
+            }
         }
 
         if ($state === 'listing_step_3') {
-            session(['chatbot_listing_quantity' => $message]);
-            session(['chatbot_state' => 'listing_step_4']);
-            return '<b>ما هو السعر المقترح؟ (اكتب السعر أو "حسب السوق")</b>';
-        }
-
-        if ($state === 'listing_step_4') {
-            $price = $message;
+            $quality = $this->normalizeQuality($message);
             $cat = session('chatbot_listing_category', 'oil');
-            $variety = session('chatbot_listing_variety', '');
-            $quantity = session('chatbot_listing_quantity', '');
-            
-            session()->forget(['chatbot_state', 'chatbot_listing_category', 'chatbot_listing_variety', 'chatbot_listing_quantity']);
-            
-            $url = "/listings/create?category={$cat}&variety=" . urlencode($variety) . "&quantity=" . urlencode($quantity) . "&price=" . urlencode($price);
-            
-            return 'تم جمع بيانات المنتج! 🎉<br><br>الاستمارة جاهزة، اضغط أدناه لنشر إعلانك:<br>' .
-                   '<a href="' . $url . '" class="bg-[#6A8F3B] text-white p-3 rounded-xl text-sm font-bold inline-block text-center w-full mt-3 shadow-md hover:bg-[#5a7a2f] transition">إكمال وإضافة المنتج</a>';
+            $variety = session('chatbot_listing_variety', 'chemlali');
+
+            session()->forget(['chatbot_state', 'chatbot_listing_category', 'chatbot_listing_variety']);
+
+            $createUrl = "/listings/create?category={$cat}&variety={$variety}" . ($quality ? "&quality={$quality}" : "");
+
+            if (!$isLoggedIn) {
+                return 'تم تجهيز بيانات إعلانك بنجاح! 🫒✨<br><br>' .
+                       '<b>ملاحظة:</b> يتطلب نشر الإعلان حساباً مجانياً لتتمكن المعاصر والمشترون من الاتصال بك مباشرة:<br><br>' .
+                       '<div class="flex flex-col gap-2 mt-2">' .
+                       '<a href="/register/role?role=farmer&redirect=' . urlencode($createUrl) . '" class="bg-[#16a34a] text-white p-3 rounded-xl text-xs font-bold text-center hover:bg-[#15803d] transition shadow-sm">👨‍🌾 إنشاء حساب فلاح مجاناً ونشر الإعلان</a>' .
+                       '<a href="/login?redirect=' . urlencode($createUrl) . '" class="bg-gray-700 text-white p-2.5 rounded-xl text-xs font-bold text-center hover:bg-gray-800 transition">🔑 لدي حساب بالفعل (تسجيل الدخول)</a>' .
+                       '</div>';
+            }
+
+            return 'تم تجهيز بيانات إعلانك بنجاح يا ' . $userName . '! 🎉<br><br>' .
+                   'الصنف والجودة محددين بدقة. اضغط أدناه لرفع صورة المنتج ونشر الإعلان فوراً:<br><br>' .
+                   '<a href="' . $createUrl . '" class="bg-[#6A8F3B] text-white p-3.5 rounded-xl text-sm font-bold text-center block shadow-lg hover:bg-[#5a7a2f] transition transform hover:scale-[1.02]">' .
+                   '📸 رفع الصورة ونشر الإعلان الآن' .
+                   '</a>';
         }
 
         // ============================================
-        // 3. APPOINTMENT / CONTACT FLOW
+        // 2. DEALS & OPPORTUNITIES FLOW (Choice-Driven)
         // ============================================
-        if ($state === 'appointment_step_1') {
-            session(['chatbot_apt_name' => $message]);
-            session(['chatbot_state' => 'appointment_step_2']);
-            return 'شكراً لك ' . htmlspecialchars($message) . '.<br><br><b>الرجاء كتابة رقم هاتفك:</b>';
-        }
-
-        if ($state === 'appointment_step_2') {
-            $name = session('chatbot_apt_name', '');
-            $phone = $message;
-            session()->forget(['chatbot_state', 'chatbot_apt_name']);
+        if ($state === 'deal_step_1') {
+            session()->forget(['chatbot_state']);
+            $dealCat = str_contains($message, 'نقل') ? 'transport' : (str_contains($message, 'زيتون') ? 'olive' : 'oil');
             
-            $url = "/services/appointment/consultation?name=" . urlencode($name) . "&phone=" . urlencode($phone);
-            
-            return 'معلوماتك جاهزة لحجز الموعد! 📅<br><br>اضغط أدناه لتأكيد حجزك عبر الواتساب مباشرة:<br>' .
-                   '<a href="' . $url . '" target="_blank" class="bg-[#2563eb] text-white p-3 rounded-xl text-sm font-bold inline-block text-center w-full mt-3 shadow-md hover:bg-[#1d4ed8] transition">تأكيد الحجز</a>';
-        }
-
-        // ============================================
-        // INTENT DETECTION (Starting the flows)
-        // ============================================
-        
-        // 1. Registration Intent
-        if (preg_match('/(تسجيل|حساب|انضمام|اشتراك|نعمل كونط|نحب نقيد|نسجل|قيدني|nsajel|compte|n7eb n9ayed|n9ayed|na3mel compte|inscrire|inscription|register|signup|join)/ui', $message)) {
-            session(['chatbot_state' => 'register_step_1']);
-            return 'يسعدنا انضمامك لمنصة ZinToop!<br><br><b>أولاً، ما هو دورك في المنصة؟ (اضغط على خيار أو اكتبه)</b><br>' .
-                   '<div class="flex flex-col gap-2 mt-3">' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'فلاح\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">👨‍🌾 فلاح (منتج)</button>' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'ناقل\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">🚚 ناقل</button>' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'معصرة\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">🏭 معصرة</button>' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'مستخدم عادي\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">👤 مستخدم عادي</button>' .
+            $dealsUrl = "/home#deals";
+            return 'إليك الصفقات والطلبات الكبرى المتاحة حالياً: 🤝<br><br>' .
+                   '<div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 leading-relaxed mb-3">' .
+                   '✨ تصفح طلبات الشراء الكبرى من المعاصر والمصدرين مباشرة بدون أي عمولات.' .
+                   '</div>' .
+                   '<div class="flex flex-col gap-2">' .
+                   '<a href="' . $dealsUrl . '" class="bg-[#d97706] text-white p-3 rounded-xl text-xs font-bold text-center hover:bg-[#b45309] transition shadow-sm">🔍 تصفح صفقات اليوم في البورصة</a>' .
+                   ($isLoggedIn ? '' : '<a href="/register?redirect=' . urlencode($dealsUrl) . '" class="bg-gray-800 text-white p-2.5 rounded-xl text-xs font-bold text-center hover:bg-gray-900 transition">📝 تسجيل حساب للمشاركة في الصفقات</a>') .
                    '</div>';
         }
-        
-        // 2. Product Listing Intent
+
+        // ============================================
+        // 3. REGISTRATION FLOW (Choice-Driven)
+        // ============================================
+        if ($state === 'register_step_1') {
+            $role = 'farmer';
+            if (str_contains($message, 'ناقل') || str_contains($message, 'carrier')) $role = 'carrier';
+            if (str_contains($message, 'معصرة') || str_contains($message, 'mill')) $role = 'mill';
+            if (str_contains($message, 'معبئ') || str_contains($message, 'packer')) $role = 'packer';
+            if (str_contains($message, 'مستخدم') || str_contains($message, 'normal')) $role = 'normal';
+
+            session()->forget(['chatbot_state']);
+            $url = "/register/role?role=" . $role;
+
+            return 'ممتاز! تم اختيار دورك. اضغط أدناه لإكمال تسجيل حسابك المجاني في دقيقة واحدة:<br><br>' .
+                   '<a href="' . $url . '" class="bg-[#6A8F3B] text-white p-3 rounded-xl text-sm font-bold text-center block shadow-md hover:bg-[#5a7a2f] transition">🚀 إكمال التسجيل الآن</a>';
+        }
+
+        // ============================================
+        // INTENT DETECTION
+        // ============================================
+
+        // 1. Product Listing / Selling Intent
         if (preg_match('/(بيع|إضافة منتج|زيتون|زيت|نحب نبيع|نهبط سلعة|نصب زيت|nbi3|nhebb nbi3|nhabbat sel3a|zite|zitoun|bi3|vendre|ajouter|produit|sell|add product|olive oil)/ui', $message)) {
             session(['chatbot_state' => 'listing_step_1']);
-            return 'تريد بيع منتجاتك؟ ممتاز! لمساعدتك في إنشاء الإعلان بسرعة:<br><br><b>هل تريد بيع (زيتون) أم (زيت)؟</b><br>' .
-                   '<div class="flex flex-col gap-2 mt-3">' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'زيتون\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">🫒 زيتون</button>' .
-                   '<button type="button" onclick="const i = document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] input[type=\\\'text\\\']\'); i.value=\'زيت\'; i.dispatchEvent(new Event(\'input\', { bubbles: true })); document.querySelector(\'div[x-data=\\\'ezzitouniChat()\\\'] button[type=\\\'submit\\\']\').click();" class="bg-gray-100 border border-gray-200 text-gray-800 p-2 rounded-xl text-sm hover:bg-gray-200 transition text-right">🛢️ زيت</button>' .
+            
+            $headerText = $isLoggedIn 
+                ? 'مرحباً بك يا ' . $userName . '! يسعدنا مساعدتك في نشر إعلانك. 🫒' 
+                : 'تريد بيع منتجاتك والوصول لآلاف المشترين والمعاصر؟ 🫒';
+
+            return $headerText . '<br><br><b>أولاً، اختر نوع المنتج:</b><br>' .
+                   '<div class="flex flex-col sm:flex-row gap-2 mt-3">' .
+                   $this->buildChoiceButton('🛢️ زيت زيتون', 'زيت') .
+                   $this->buildChoiceButton('🫒 زيتون حب / سانية', 'زيتون') .
                    '</div>';
         }
-        
-        // 3. Appointment / Contact Intent
-        if (preg_match('/(اتصال|تواصل|مساعدة|نكلمكم|عاونوني|مساعدة|مشكلة|nkalmkom|mouchkla|help|contact|aide|problème|appeler|موعد|استشارة|rendez-vous|appointment|consultation)/ui', $message)) {
-            session(['chatbot_state' => 'appointment_step_1']);
-            return 'يسعدنا تواصلك معنا لطلب استشارة أو موعد.<br><br><b>الرجاء كتابة اسمك الكريم أو اسم شركتك:</b>';
+
+        // 2. Deals / Opportunities Intent
+        if (preg_match('/(صفقة|صفقات|عروض كبرى|طلبات شراء|شراء كمية|تصدير بالجملة|deal|deals|bulk|opportunit|achats|offres)/ui', $message)) {
+            session(['chatbot_state' => 'deal_step_1']);
+            return 'مرحباً بك في قسم <b>الصفقات والفرص الكبرى</b> في ZinToop! 🤝<br><br><b>ما نوع الصفقات التي تهمك؟</b><br>' .
+                   '<div class="flex flex-col gap-2 mt-3">' .
+                   $this->buildChoiceButton('🛢️ صفقات زيت الزيتون (كميات كبرى)', 'صفقات زيت') .
+                   $this->buildChoiceButton('🫒 صفقات الزيتون والسانية', 'صفقات زيتون') .
+                   $this->buildChoiceButton('🚚 صفقات النقل واللوجستيك', 'صفقات نقل') .
+                   '</div>';
         }
 
-        // Export (Tasdir) Intent - Keep as direct link
-        if (preg_match('/(تصدير|ديوانة|لبرة|نصدر|tasdir|nsader|lbarra|export|diwana|exporter|exportation|customs|كراس الشروط|كيفاش|الشروط|القوانين|كيفاه|korraset chourout|koraset|korras|chorout|chourout|kifech|kiféh|kifeh|cahier des charges|comment|conditions|how|requirements|pdf)/ui', $message)) {
-            return 'مهتم بالتصدير (Export)؟ عملية التصدير تتطلب الالتزام بكراس الشروط الخاص بالديوانة التونسية.' .
-                   '<br><br><a href="/downloads/cahier_des_charges_export.pdf" download="cahier_des_charges_export.pdf" class="bg-[#6A8F3B] text-white p-2 rounded text-sm inline-block text-center w-full hover:bg-[#5a7a2f]">📄 تحميل كراس الشروط للزيت (PDF)</a>';
+        // 3. Registration Intent
+        if (preg_match('/(تسجيل|حساب|انضمام|اشتراك|نعمل كونط|نحب نقيد|نسجل|قيدني|nsajel|compte|n7eb n9ayed|n9ayed|na3mel compte|inscrire|inscription|register|signup|join)/ui', $message)) {
+            session(['chatbot_state' => 'register_step_1']);
+            return 'يسعدنا انضمامك لمنصة ZinToop! 🇹🇳<br><br><b>اختر صفتك للبدء:</b><br>' .
+                   '<div class="flex flex-col gap-2 mt-3">' .
+                   $this->buildChoiceButton('👨‍🌾 فلاح (منتج زيت أو زيتون)', 'فلاح') .
+                   $this->buildChoiceButton('🏭 صاحب معصرة', 'معصرة') .
+                   $this->buildChoiceButton('🚚 ناقل ومزود لوجستيك', 'ناقل') .
+                   $this->buildChoiceButton('👤 مشتري / مستخدم عادي', 'مستخدم عادي') .
+                   '</div>';
         }
-        
-        return 'عذراً، الخادم الخاص بالذكاء الاصطناعي مشغول حالياً. يمكنك استخدام الخيارات الأساسية مثل: بيع منتج، تصدير، أو الاتصال بالدعم.';
+
+        // 4. Appointment / Consultation Intent
+        if (preg_match('/(اتصال|تواصل|مساعدة|نكلمكم|عاونوني|مشكلة|nkalmkom|mouchkla|help|contact|aide|problème|appeler|موعد|استشارة|rendez-vous|appointment|consultation)/ui', $message)) {
+            return 'يسعدنا تقديم الاستشارة والمساعدة من خبرائنا في ZinToop! 📅<br><br>' .
+                   '<div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-900 mb-3">' .
+                   'يمكنك حجز موعد استشارة تجارية، قانونية، أو استفسار حول التصدير مباشرة.' .
+                   '</div>' .
+                   '<a href="/services/appointment/consultation" class="bg-[#2563eb] text-white p-3 rounded-xl text-xs font-bold text-center block hover:bg-[#1d4ed8] transition shadow-md">📅 حجز موعد استشارة الآن</a>';
+        }
+
+        // 5. Export / Cahier des charges Intent
+        if (preg_match('/(تصدير|ديوانة|لبرة|نصدر|tasdir|nsader|lbarra|export|diwana|exporter|exportation|customs|كراس الشروط|كيفاش|الشروط|القوانين|كيفاه|korraset chourout|koraset|korras|chorout|chourout|kifech|kiféh|kifeh|cahier des charges|comment|conditions|how|requirements|pdf)/ui', $message)) {
+            return 'مهتم بالتصدير (Export)؟ 🌍 عملية التصدير التونسي تخضع لكراس الشروط المعتمد لسنة 2026.<br><br>' .
+                   '<a href="/downloads/cahier_des_charges_export.pdf" download="cahier_des_charges_export.pdf" class="bg-[#6A8F3B] text-white p-3 rounded-xl text-xs font-bold block text-center hover:bg-[#5a7a2f] shadow-md">📄 تحميل كراس الشروط الرسمي للتصدير (PDF)</a>';
+        }
+
+        return 'أهلاً بك! أنا «الزيتوني»، مستشارك في منصة ZinToop. كيف يمكنني مساعدتك اليوم؟<br><br>' .
+               '<div class="flex flex-wrap gap-2 mt-2">' .
+               $this->buildChoiceButton('🛢️ بيع زيت أو زيتون', 'نحب نبيع زيت') .
+               $this->buildChoiceButton('🤝 تصفح الصفقات الكبرى', 'صفقات اليوم') .
+               $this->buildChoiceButton('📄 كراس شروط التصدير', 'كراس الشروط') .
+               $this->buildChoiceButton('📅 حجز استشارة', 'حجز موعد استشارة') .
+               '</div>';
     }
 
-    private function finishRegistrationFlow()
+    private function buildChoiceButton($label, $value)
     {
-        $role = session('chatbot_register_role', 'normal');
-        $name = session('chatbot_register_name', '');
-        $phone = session('chatbot_register_phone', '');
-        
-        $params = [
-            'role' => $role,
-            'name' => $name,
-            'phone' => $phone,
-        ];
-        
-        if ($role === 'farmer') {
-            $params['olive_type'] = session('chatbot_register_olive_type', '');
-            $params['farm_location'] = session('chatbot_register_farm_location', '');
-            $params['tree_number'] = session('chatbot_register_tree_number', '');
-        } elseif ($role === 'carrier') {
-            $params['camion_capacity'] = session('chatbot_register_camion_capacity', '');
-        } elseif ($role === 'mill') {
-            $params['mill_name'] = session('chatbot_register_mill_name', '');
-        }
-        
-        // End of flow: clear session state
-        session()->forget([
-            'chatbot_state', 'chatbot_register_role', 'chatbot_register_name', 'chatbot_register_phone',
-            'chatbot_register_olive_type', 'chatbot_register_farm_location', 'chatbot_register_tree_number',
-            'chatbot_register_camion_capacity', 'chatbot_register_mill_name'
-        ]);
-        
-        $queryString = http_build_query($params);
-        $url = "/register/role?" . $queryString;
-        
-        return 'لقد جمعت كل المعلومات المطلوبة! 🎉<br><br>الاستمارة الخاصة بك جاهزة. اضغط على الزر أدناه لإكمال التسجيل وإضافة صورتك:<br>' .
-               '<a href="' . $url . '" class="bg-[#6A8F3B] text-white p-3 rounded-xl text-sm font-bold inline-block text-center w-full mt-3 shadow-md hover:bg-[#5a7a2f] transition">إكمال التسجيل واستكمال الاستمارة</a>';
+        $escapedVal = addslashes(htmlspecialchars($value));
+        return '<button type="button" onclick="if(window.ezzitouniSendChoice){window.ezzitouniSendChoice(\'' . $escapedVal . '\');}else{const i=document.querySelector(\'div[x-data*=\\\'ezzitouniChat\\\'] input[type=\\\'text\\\']\');if(i){i.value=\'' . $escapedVal . '\';i.dispatchEvent(new Event(\'input\',{bubbles:true}));const b=document.querySelector(\'div[x-data*=\\\'ezzitouniChat\\\'] button[type=\\\'submit\\\']\');if(b)b.click();}}" class="bg-white border border-[#6A8F3B]/30 hover:border-[#6A8F3B] text-[#1B2A1B] hover:bg-[#6A8F3B] hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm transform active:scale-95 text-center flex-1 min-w-[120px]">' . $label . '</button>';
+    }
+
+    private function normalizeVariety($msg)
+    {
+        if (str_contains($msg, 'شملالي') || str_contains($msg, 'chemlali')) return 'chemlali';
+        if (str_contains($msg, 'شتوي') || str_contains($msg, 'chetoui')) return 'chetoui';
+        if (str_contains($msg, 'وسلاتي') || str_contains($msg, 'oueslati')) return 'oueslati';
+        if (str_contains($msg, 'زرازي') || str_contains($msg, 'zarrazi')) return 'zarrazi';
+        if (str_contains($msg, 'زلماطي') || str_contains($msg, 'zalmati')) return 'zalmati';
+        if (str_contains($msg, 'مسكي') || str_contains($msg, 'meski')) return 'meski';
+        if (str_contains($msg, 'بروني') || str_contains($msg, 'barouni')) return 'barouni';
+        if (str_contains($msg, 'شمشالي') || str_contains($msg, 'chemchali')) return 'chemchali';
+        if (str_contains($msg, 'جربوي') || str_contains($msg, 'gerboui')) return 'gerboui';
+        if (str_contains($msg, 'سيالي') || str_contains($msg, 'sayali')) return 'sayali';
+        return 'chemlali';
+    }
+
+    private function normalizeQuality($msg)
+    {
+        if (str_contains($msg, 'ممتاز') || str_contains($msg, 'extra')) return 'extra_virgin';
+        if (str_contains($msg, 'بكر') && !str_contains($msg, 'ممتاز')) return 'virgin';
+        if (str_contains($msg, 'بيولوجي') || str_contains($msg, 'عضوي') || str_contains($msg, 'bio')) return 'organic';
+        if (str_contains($msg, 'وقاد') || str_contains($msg, 'lampante')) return 'lampante';
+        return null;
     }
 
     private function getDefaultPrompt()
