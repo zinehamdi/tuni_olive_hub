@@ -28,7 +28,7 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        $supported = ['ar', 'fr', 'en'];
+        $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
         $fallback  = config('app.fallback_locale', 'ar');
 
         // 1. Read locale from the URL prefix ({locale} route parameter)

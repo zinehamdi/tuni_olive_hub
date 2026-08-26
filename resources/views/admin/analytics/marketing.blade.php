@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 flex flex-col md:flex-row" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" x-data="{ sidebarOpen: false }">
+<div class="min-h-screen bg-gray-50 flex flex-col md:flex-row" dir="{{ __('ltr') }}" x-data="{ sidebarOpen: false }">
     
     <!-- Mobile Sidebar Overlay -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" x-transition></div>
 
     <!-- Sidebar -->
     <aside x-cloak
-           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ app()->getLocale() === 'ar' ? 'translateX(100%)' : 'translateX(-100%)' }}')"
+           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ __('translateX(-100%)') }}')"
            class="fixed md:sticky top-0 md:top-[72px] bottom-0 md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 ltr:left-0 rtl:right-0">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -125,11 +125,11 @@
                         <tr class="hover:bg-gray-50/50 transition">
                             <td class="px-6 py-4 text-center">
                                 @if($a->event_type === 'purchase')
-                                    <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-black">{{ app()->getLocale() === 'ar' ? 'شراء' : 'Purchase' }}</span>
+                                    <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-black">{{ __('Purchase') }}</span>
                                 @elseif($a->event_type === 'checkout_initiated')
-                                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-black">{{ app()->getLocale() === 'ar' ? 'بدء شراء' : 'Checkout' }}</span>
+                                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-black">{{ __('Checkout') }}</span>
                                 @elseif($a->event_type === 'add_to_cart')
-                                    <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-black">{{ app()->getLocale() === 'ar' ? 'إضافة للسلة' : 'Add to Cart' }}</span>
+                                    <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-black">{{ __('Add to Cart') }}</span>
                                 @else
                                     <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">{{ $a->event_type }}</span>
                                 @endif
@@ -162,7 +162,7 @@
                                         <span class="text-[#6A8F3B] font-bold flex items-center gap-1">
                                             <span>👤</span>
                                             {{ $a->likely_user->name }} 
-                                            <span class="text-[10px] bg-[#6A8F3B]/10 text-[#6A8F3B] px-1.5 py-0.5 rounded-full">{{ app()->getLocale() === 'ar' ? 'محتمل (ربط جلسة)' : 'Likely (Stitched)' }}</span>
+                                            <span class="text-[10px] bg-[#6A8F3B]/10 text-[#6A8F3B] px-1.5 py-0.5 rounded-full">{{ __('Likely (Stitched)') }}</span>
                                         </span>
                                         <span class="text-gray-500 text-xs">{{ $a->likely_user->email }}</span>
                                     </div>

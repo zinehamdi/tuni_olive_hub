@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ __('ltr') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>500 - {{ app()->getLocale() === 'ar' ? 'خطأ داخلي في الخادم | ZinToop' : 'Internal Server Error | ZinToop' }}</title>
+    <title>500 - {{ __('Internal Server Error | ZinToop') }}</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +50,7 @@
             
             <!-- Error Code Banner -->
             <div class="inline-block px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-400 text-sm font-black tracking-widest uppercase mb-6">
-                🚨 {{ app()->getLocale() === 'ar' ? 'خطأ 500' : 'Error 500' }}
+                🚨 {{ __('Error 500') }}
             </div>
 
             <!-- Gigantic Status Number -->
@@ -61,23 +61,21 @@
             <!-- Titles & Explanations -->
             <div class="space-y-4 mb-10">
                 <h2 class="text-2xl md:text-3xl font-black text-[#a8d060]">
-                    {{ app()->getLocale() === 'ar' ? 'حدث خطأ في النظام' : 'Server Error' }}
+                    {{ __('Server Error') }}
                 </h2>
                 <p class="text-white/70 text-sm md:text-base leading-relaxed">
-                    {{ app()->getLocale() === 'ar' 
-                        ? 'نعتذر منك، حدثت مشكلة غير متوقعة أثناء معالجة طلبك. لقد تم تسجيل هذا الخطأ وسيقوم فريق الدعم الفني لـ ZinToop بإصلاحه فوراً.' 
-                        : 'Apologies, an unexpected issue occurred while processing your request. This has been logged, and the ZinToop engineering team will resolve it shortly.' }}
+                    {{ __('Apologies, an unexpected issue occurred while processing your request. This has been logged, and the ZinToop engineering team will resolve it shortly.') }}
                 </p>
             </div>
 
             <!-- Action Button -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="{{ url('/') }}" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4a6425] text-white font-bold text-base shadow-lg shadow-[#6A8F3B]/25 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2">
-                    🏠 {{ app()->getLocale() === 'ar' ? 'العودة للرئيسية' : 'Return Home' }}
+                    🏠 {{ __('Return Home') }}
                 </a>
                 @auth
                 <a href="{{ route('dashboard') }}" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-base transition duration-200 flex items-center justify-center gap-2">
-                    📊 {{ app()->getLocale() === 'ar' ? 'لوحة التحكم' : 'Dashboard' }}
+                    📊 {{ __('Dashboard') }}
                 </a>
                 @endauth
             </div>
@@ -85,7 +83,7 @@
 
         <!-- Footer -->
         <p class="text-white/40 text-xs mt-8">
-            © {{ now()->year }} ZinToop. {{ app()->getLocale() === 'ar' ? 'جميع الحقوق محفوظة.' : 'All Rights Reserved.' }}
+            © {{ now()->year }} ZinToop. {{ __('All Rights Reserved.') }}
         </p>
     </div>
 </body>

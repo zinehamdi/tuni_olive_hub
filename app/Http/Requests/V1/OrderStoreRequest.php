@@ -16,6 +16,28 @@ class OrderStoreRequest extends FormRequest
     return Auth::check();
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('unit')) {
+            $rawUnit = strtolower(trim((string) $this->input('unit')));
+            $unit = match($rawUnit) {
+                'liter', 'litre', 'l', 'لتر' => 'l',
+                'kilogram', 'kg', 'كلغ' => 'kg',
+                'tonne', 'ton', 'طن' => 'ton',
+                default => $rawUnit
+            };
+            $this->merge(['unit' => $unit]);
+        }
+
+        if (!$this->has('payment_method') || empty($this->input('payment_method'))) {
+            $this->merge(['payment_method' => 'cod']);
+        }
+
+        if (!$this->has('buyer_id') || empty($this->input('buyer_id'))) {
+            $this->merge(['buyer_id' => Auth::id()]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -26,7 +48,7 @@ class OrderStoreRequest extends FormRequest
                 Rule::exists('listings', 'id')->where(fn($q) => $q->where('status', 'active')),
             ],
             'qty' => ['required','numeric','min:0.001'],
-            'unit' => ['required','in:l,kg,ton'],
+            'unit' => ['required','in:l,kg,ton,liter,litre,tonne'],
             'price_unit' => ['required','numeric','min:0'],
             'payment_method' => ['required','in:cod,flouci,d17,stripe,bank_lc'],
             'meta' => ['nullable','array'],

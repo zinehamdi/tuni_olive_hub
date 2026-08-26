@@ -58,6 +58,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::match(['put', 'patch'], 'listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'update']);
         Route::delete('listings/{listing}', [\App\Http\Controllers\Api\V1\ListingController::class, 'destroy']);
 
+        Route::post('loads/summon', [\App\Http\Controllers\LoadController::class, 'summon']);
         Route::apiResource('loads', \App\Http\Controllers\Api\V1\LoadController::class);
 
     // Orders
@@ -65,6 +66,7 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::get('orders/{order}', [\App\Http\Controllers\Api\V1\OrderController::class, 'show']);
     Route::post('orders', [\App\Http\Controllers\Api\V1\OrderController::class, 'store']);
     Route::patch('orders/{order}/transition', [\App\Http\Controllers\Api\V1\OrderController::class, 'transition']);
+    Route::patch('orders/{order}/counter-offer', [\App\Http\Controllers\Api\V1\OrderController::class, 'counterOffer']);
 
         // Carrier Offers
     Route::post('loads/{load}/offers', [\App\Http\Controllers\Api\V1\CarrierOfferController::class, 'store']);

@@ -46,6 +46,9 @@ class RegisteredUserController extends Controller
             ]);
         }
 
+        if (in_array(app()->getLocale(), ['es', 'zh', 'ja'])) {
+            $request->merge(['role' => 'normal']);
+        }
         $role = $request->input('role');
 
         $phoneRule = app()->environment('testing')

@@ -135,8 +135,37 @@ class MessageController extends Controller
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
         
-        // Get active transporters
-        $carriers = User::where('role', 'carrier')->get();
+        // Determine seller address for proximity calculation
+        $sellerUser = in_array($authUser->role, ['farmer', 'mill', 'packer']) ? $authUser : $user;
+        $sellerAddr = $sellerUser->addresses()->first();
+        $sellerLat = $sellerAddr?->lat ? (float) $sellerAddr->lat : null;
+        $sellerLng = $sellerAddr?->lng ? (float) $sellerAddr->lng : null;
+        $sellerGov = $sellerAddr?->governorate;
+
+        // Get active transporters sorted by proximity to seller
+        $carriers = User::where('role', 'carrier')
+            ->with('addresses')
+            ->get()
+            ->map(function($carrier) use ($sellerLat, $sellerLng, $sellerGov) {
+                $carrierAddr = $carrier->addresses->first();
+                $cLat = $carrierAddr?->lat ? (float) $carrierAddr->lat : null;
+                $cLng = $carrierAddr?->lng ? (float) $carrierAddr->lng : null;
+                $cGov = $carrierAddr?->governorate;
+
+                if ($sellerLat && $sellerLng && $cLat && $cLng) {
+                    $dist = \App\Services\TransportPricingService::calculateDistance($sellerLat, $sellerLng, $cLat, $cLng);
+                } elseif ($sellerGov && $cGov && mb_strtolower($sellerGov) === mb_strtolower($cGov)) {
+                    $dist = 12.0; // Same governorate
+                } else {
+                    $dist = 60.0; // Regional fallback
+                }
+
+                $carrier->distance_km = $dist;
+                $carrier->governorate_label = $cGov ?? $carrier->location ?? __('Tunisia');
+                return $carrier;
+            })
+            ->sortBy('distance_km')
+            ->values();
         
         // Get active listings for both participants to allow proposing deals
         $availableListings = \App\Models\Listing::with('product')

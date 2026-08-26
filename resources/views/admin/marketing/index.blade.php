@@ -12,7 +12,7 @@
                 <p class="text-gray-600">{{ __('View and manage client marketing requests') }}</p>
             </div>
             <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition font-semibold">
-                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 {{ __('') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 {{ __('Back to Dashboard') }}
@@ -28,7 +28,7 @@
         <!-- Appointments Table -->
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
             <div class="overflow-x-auto">
-                <table class="w-full text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}">
+                <table class="w-full text-{{ __('left') }}">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-100">
                             <th class="px-6 py-4 text-sm font-bold text-gray-700">{{ __('Client') }}</th>

@@ -4,7 +4,7 @@
 @php
     $q = $query ?? [];
 @endphp
-<div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen bg-gray-50 text-gray-900">
+<div dir="{{ __('ltr') }}" class="min-h-screen bg-gray-50 text-gray-900">
   
   <!-- Hero Section -->
   <div class="relative w-full h-[40vh] min-h-[350px] flex flex-col items-center justify-center overflow-hidden">
@@ -67,9 +67,9 @@
                           
                           <!-- Product Type Badge -->
                           @if($listing->product->type === 'oil')
-                              <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫗 {{ app()->getLocale() === 'ar' ? 'زيت زيتون' : (app()->getLocale() === 'fr' ? 'Huile d\'olive' : 'Olive Oil') }}</span>
+                              <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫗 {{ __('Olive Oil') }}</span>
                           @else
-                              <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫒 {{ app()->getLocale() === 'ar' ? 'زيتون' : (app()->getLocale() === 'fr' ? 'Olives' : 'Olives') }}</span>
+                              <span class="absolute top-3 right-3 bg-white/95 text-[#6A8F3B] px-3 py-1 rounded-full text-xs font-bold shadow-md">🫒 {{ __('Olives') }}</span>
                           @endif
                       @else
                           <!-- Fallback to icon if no image -->
@@ -87,9 +87,9 @@
                   
                   <div class="p-4">
                       @php
-                          $cardProductType = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : (app()->getLocale() === 'fr' ? 'Olives' : 'Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : (app()->getLocale() === 'fr' ? 'Huile d\'olive' : 'Olive Oil'));
+                          $cardProductType = $listing->product->type === 'olive' ? (__('Olives')) : (__('Olive Oil'));
                           $cardQuality = $listing->product->quality ? ' ' . $listing->product->quality : '';
-                          $cardCity = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
+                          $cardCity = $listing->seller->addresses->first() ? (__(' from ')) . ($listing->seller->addresses->first()->governorate ?? '') : '';
                       @endphp
                       <div class="font-bold text-lg text-gray-900 mb-2 leading-tight">
                           {{ $cardProductType }} {{ $listing->product->variety }}{{ $cardQuality }}{{ $cardCity }}
@@ -121,7 +121,7 @@
                       
                       @if($listing->product->price)
                           <div class="text-lg font-bold text-[#6A8F3B] mb-3">
-                              {{ number_format($listing->product->price, 2) }} {{ app()->getLocale() === 'ar' ? 'دينار' : 'TND' }}
+                              {{ number_format($listing->product->price, 2) }} {{ __('TND') }}
                           </div>
                       @endif
                       

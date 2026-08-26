@@ -7,6 +7,8 @@ use App\Http\Requests\V1\OrderStoreRequest;
 use App\Http\Requests\V1\OrderTransitionRequest;
 use App\Events\OrderStatusChanged;
 use App\Services\Chat;
+use App\Services\EzZitouniDealMediator;
+use App\Jobs\SendUnreadDealEmail;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\Payments\LocalPaymentAdapter;
@@ -35,14 +37,49 @@ class OrderController extends ApiController
         $order = Order::create($data);
         $this->audit('order.created', 'order', $order->id);
         
-        // Notify seller
+        // Notify seller via in-app & push
         if ($order->seller) {
             $order->seller->notify(new \App\Notifications\NewDeal($order));
+            
+            // Queue 5-minute delayed email reminder if still unread/pending
+            SendUnreadDealEmail::dispatch($order->id, (int)$order->seller_id)->delay(now()->addMinutes(5));
         }
 
         $thread = Chat::ensureThread('order', $order->id, [$order->buyer_id, $order->seller_id]);
-        Chat::system($thread, 'تم إنشاء طلب جديد.');
+        EzZitouniDealMediator::onDealCreated($thread, $order);
+
         return $this->ok(new OrderResource($order->load(['buyer','seller','listing'])), 201);
+    }
+
+    public function counterOffer(Request $request, Order $order)
+    {
+        $user = $request->user();
+        if (!in_array((int)$user->id, [(int)$order->buyer_id, (int)$order->seller_id], true) && $user->role !== 'admin') {
+            abort(403, trans('auth.forbidden_action'));
+        }
+
+        $request->validate([
+            'price_unit' => 'required|numeric|min:0.1',
+        ]);
+
+        $newPriceUnit = (float) $request->price_unit;
+        $order->price_unit = (string) $newPriceUnit;
+        $order->total = (string) ((float)$order->qty * $newPriceUnit);
+        $order->status = Order::STATUS_PENDING;
+        $order->save();
+
+        $recipientId = ((int)$user->id === (int)$order->buyer_id) ? (int)$order->seller_id : (int)$order->buyer_id;
+        $recipient = \App\Models\User::find($recipientId);
+
+        if ($recipient) {
+            $recipient->notify(new \App\Notifications\NewDeal($order));
+            SendUnreadDealEmail::dispatch($order->id, $recipientId)->delay(now()->addMinutes(5));
+        }
+
+        $thread = Chat::ensureThread('order', $order->id, [$order->buyer_id, $order->seller_id]);
+        EzZitouniDealMediator::onCounterOffer($thread, $order, $user->name);
+
+        return $this->ok(new OrderResource($order->fresh()->load(['buyer','seller','listing'])));
     }
 
     public function transition(OrderTransitionRequest $request, Order $order)
@@ -58,7 +95,6 @@ class OrderController extends ApiController
         $nextVerb = $request->validated()['next'];
         $next = $map[$nextVerb];
 
-        // Simple role enforcement: confirm/ready by seller, cancel by buyer/seller (or admin via policy), ship by seller, deliver by carrier/admin (validated via POD in Trip)
         $user = $request->user();
         if (in_array($nextVerb, ['confirm','ready','ship'], true) && (int)$user->id !== (int)$order->seller_id && $user->role !== 'admin') {
             abort(403, trans('auth.forbidden_action'));
@@ -71,7 +107,6 @@ class OrderController extends ApiController
 
         // Enforce strict business rules
         if ($nextVerb === 'confirm') {
-            // clamp total
             $order->total = (string) ((float) $order->qty * (float) $order->price_unit);
             
             // Automatically decrement quantity on the listing when a deal is confirmed
@@ -80,14 +115,13 @@ class OrderController extends ApiController
                 $newQty = (float) $listing->quantity - (float) $order->qty;
                 
                 if ($newQty < 0) {
-                    abort(422, 'الكمية المطلوبة غير متوفرة حالياً.'); // Insufficient stock
+                    abort(422, 'الكمية المطلوبة غير متوفرة حالياً.');
                 }
                 
                 $listing->quantity = (string) $newQty;
                 
-                // Auto-archive listing if stock is depleted
                 if ($newQty <= 0) {
-                    $listing->status = 'archived';
+                    $listing->status = 'sold';
                 }
                 
                 $listing->save();
@@ -95,18 +129,14 @@ class OrderController extends ApiController
         }
 
         if ($nextVerb === 'ready') {
-            // Freeze quantity-related fields (application-level: do not allow edits after ready)
-            // Could set a meta flag to indicate packing started
             $meta = $order->meta ?? [];
             $meta['pack_started_at'] = now()->toISOString();
             $order->meta = $meta;
         }
 
         if ($nextVerb === 'ship') {
-            // Load must exist or be created, and be matched or have a trip created
             $load = \App\Models\Load::where('order_id', $order->id)->first();
             if (!$load) {
-                // Auto-create load from order
                 $sellerDefault = $order->seller?->addresses()->first();
                 $buyerDefault = $order->buyer?->addresses()->first();
                 if (!$sellerDefault || !$buyerDefault) {
@@ -126,10 +156,7 @@ class OrderController extends ApiController
                     'status' => \App\Models\Load::ST_NEW,
                     'meta' => ['pricing_auto' => true],
                 ]);
-                $thread = \App\Services\Chat::ensureThread('load', $load->id, [$order->seller_id]);
-                \App\Services\Chat::system($thread, '🔗 تم إنشاء حمولة للطلب #'.$order->id);
             }
-            // Only allow shipping when matched or trip exists
             $isMatched = $load->status === \App\Models\Load::ST_MATCHED;
             $hasTrip = \App\Models\Trip::whereJsonContains('load_ids', $load->id)->exists();
             if (!$isMatched && !$hasTrip) {
@@ -138,7 +165,6 @@ class OrderController extends ApiController
         }
 
         if ($nextVerb === 'deliver') {
-            // Ensure all loads for this order are delivered and POD verified
             $loads = \App\Models\Load::where('order_id', $order->id)->get();
             if ($loads->isEmpty()) {
                 abort(422, trans('micro.pod_required'));
@@ -166,8 +192,6 @@ class OrderController extends ApiController
         // Post-transition side-effects
         if ($nextVerb === 'deliver') {
             if ($order->payment_method === 'cod' && $order->payment_status !== Order::PAY_COLLECTED) {
-                // تعليق: استخدم خدمة الدفع بدلاً من التغيير المباشر
-                // EN: Use payment service instead of direct status change
                 $paymentService = new LocalPaymentAdapter();
                 $result = $paymentService->capture([
                     'order_id' => $order->id,
@@ -181,10 +205,23 @@ class OrderController extends ApiController
                 }
             }
         }
+
         $this->audit('order.transition', 'order', $order->id);
         event(new OrderStatusChanged($order->id, $from, $next));
+
         $thread = Chat::ensureThread('order', $order->id, [$order->buyer_id, $order->seller_id]);
-        Chat::system($thread, "🧾 حالة الطلب: {$from} → {$next}");
+
+        if ($nextVerb === 'confirm') {
+            EzZitouniDealMediator::onDealConfirmed($thread, $order);
+        } elseif ($nextVerb === 'cancel') {
+            EzZitouniDealMediator::onDealRejected($thread, $order, $user->name);
+        } elseif ($nextVerb === 'deliver') {
+            $load = \App\Models\Load::where('order_id', $order->id)->first();
+            if ($load) {
+                EzZitouniDealMediator::onDeliveryCompleted($thread, $load);
+            }
+        }
+
         return $this->ok(new OrderResource($order->fresh()->load(['buyer','seller','listing'])));
     }
 }

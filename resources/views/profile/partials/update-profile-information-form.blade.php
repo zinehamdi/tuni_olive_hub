@@ -348,8 +348,8 @@
                     </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{{ app()->getLocale() === 'ar' ? '📍 العنوان والموقع الجغرافي' : '📍 Location & Address' }}</h3>
-                    <p class="text-sm sm:text-base text-gray-600">{{ app()->getLocale() === 'ar' ? 'حدد الولاية والمعتمدية والعنوان الكامل ليظهر في بروفايلك للزوار والعملاء' : 'Set your governorate, delegation, and full address' }}</p>
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{{ __('📍 Location & Address') }}</h3>
+                    <p class="text-sm sm:text-base text-gray-600">{{ __('Set your governorate, delegation, and full address') }}</p>
                 </div>
             </div>
 
@@ -357,10 +357,10 @@
                 <!-- Governorate Select -->
                 <div>
                     <label for="governorate" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
-                        {{ app()->getLocale() === 'ar' ? 'الولاية' : 'Governorate' }} <span class="text-red-500">*</span>
+                        {{ __('Governorate') }} <span class="text-red-500">*</span>
                     </label>
                     <select id="governorate" name="governorate" required class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-bold bg-white text-gray-800">
-                        <option value="">-- {{ app()->getLocale() === 'ar' ? 'اختر الولاية' : 'Select Governorate' }} --</option>
+                        <option value="">-- {{ __('Select Governorate') }} --</option>
                         @foreach($govsList as $gov)
                             <option value="{{ $gov }}" {{ $currentGov === $gov ? 'selected' : '' }}>{{ $gov }}</option>
                         @endforeach
@@ -370,22 +370,22 @@
                 <!-- Delegation Input -->
                 <div>
                     <label for="delegation" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
-                        {{ app()->getLocale() === 'ar' ? 'المعتمدية / المنطقة' : 'Delegation / City' }}
+                        {{ __('Delegation / City') }}
                     </label>
                     <input type="text" id="delegation" name="delegation" 
                         value="{{ $currentDeleg }}"
-                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: طينة، صفاقس الجنوبية، بوحجلة...' : 'e.g. Thyna, Bouhajla' }}"
+                        placeholder="{{ __('e.g. Thyna, Bouhajla') }}"
                         class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-medium bg-white">
                 </div>
 
                 <!-- Full Street Address -->
                 <div class="md:col-span-2">
                     <label for="address" class="block text-xs sm:text-sm font-bold text-gray-900 mb-2">
-                        {{ app()->getLocale() === 'ar' ? 'العنوان التفصيلي (الشارع / طريق / الحي)' : 'Full Street Address' }}
+                        {{ __('Full Street Address') }}
                     </label>
                     <input type="text" id="address" name="address" 
                         value="{{ $currentAddr }}"
-                        placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: طريق قابس كلم 4، نهج الزيتونة' : 'e.g. Route Gabes Km 4, Olive Street' }}"
+                        placeholder="{{ __('e.g. Route Gabes Km 4, Olive Street') }}"
                         class="w-full px-3.5 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 font-medium bg-white">
                 </div>
             </div>
@@ -652,8 +652,8 @@
                     }">
                         <input type="hidden" name="services" :value="JSON.stringify(services)">
 
-                        <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-2">🛠️ {{ app()->getLocale() === 'ar' ? 'بطاقات الخدمات التفصيلية' : 'Detailed Service Cards' }}</h4>
-                        <p class="text-xs sm:text-sm text-gray-500 mb-4">{{ app()->getLocale() === 'ar' ? 'أضف خدمات محددة مثل (عقد تصدير 150 د.ت، فحص جودة 50 د.ت) لتظهر كبطاقات مستقلة للزبائن.' : 'Add specific services (e.g., Export Contract 150 TND, Quality Inspection 50 TND) to display them as individual cards.' }}</p>
+                        <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-2">🛠️ {{ __('Detailed Service Cards') }}</h4>
+                        <p class="text-xs sm:text-sm text-gray-500 mb-4">{{ __('Add specific services (e.g., Export Contract 150 TND, Quality Inspection 50 TND) to display them as individual cards.') }}</p>
 
                         <!-- Services Cards List -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -672,7 +672,7 @@
                                         <div class="flex items-center gap-2">
                                             <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg">
                                                 <span x-show="srv.price_type === 'fixed'"><span x-text="srv.price"></span> TND</span>
-                                                <span x-show="srv.price_type === 'quote'">{{ app()->getLocale() === 'ar' ? 'طلب تسعيرة' : 'Get Quote' }}</span>
+                                                <span x-show="srv.price_type === 'quote'">{{ __('Get Quote') }}</span>
                                             </span>
                                         </div>
                                         <p class="text-xs text-gray-500 line-clamp-2" x-text="srv.description"></p>
@@ -681,40 +681,40 @@
                             </template>
                             <template x-if="services.length === 0">
                                 <div class="col-span-full border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center text-gray-400 text-xs">
-                                    {{ app()->getLocale() === 'ar' ? 'لا توجد خدمات تفصيلية مضافة بعد. يمكنك إضافتها أدناه.' : 'No detailed services added yet. You can add them below.' }}
+                                    {{ __('No detailed services added yet. You can add them below.') }}
                                 </div>
                             </template>
                         </div>
 
                         <!-- Form to Add New Service Card -->
                         <div class="bg-white border-2 border-dashed border-indigo-100 rounded-2xl p-4 sm:p-5 space-y-4">
-                            <h5 class="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'إضافة بطاقة خدمة جديدة' : 'Add New Service Card' }}</h5>
+                            <h5 class="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider">{{ __('Add New Service Card') }}</h5>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'اسم الخدمة' : 'Service Title' }} <span class="text-red-500">*</span></label>
-                                    <input type="text" x-model="newTitle" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: عقد تصدير' : 'e.g. Export Contract' }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ __('Service Title') }} <span class="text-red-500">*</span></label>
+                                    <input type="text" x-model="newTitle" placeholder="{{ __('e.g. Export Contract') }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'طريقة التسعير' : 'Pricing Model' }}</label>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ __('Pricing Model') }}</label>
                                     <select x-model="newPriceType" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%234a5568%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1rem_1rem] bg-no-repeat rtl:bg-[left_0.75rem_center] ltr:bg-[right_0.75rem_center] rtl:pl-8 ltr:pr-8">
-                                        <option value="fixed">{{ app()->getLocale() === 'ar' ? '💰 سعر محدد' : 'Fixed Price' }}</option>
-                                        <option value="quote">{{ app()->getLocale() === 'ar' ? '💬 سعر عند الطلب' : 'Quote Needed' }}</option>
+                                        <option value="fixed">{{ __('Fixed Price') }}</option>
+                                        <option value="quote">{{ __('Quote Needed') }}</option>
                                     </select>
                                 </div>
                                 <div x-show="newPriceType === 'fixed'">
-                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'السعر (د.ت)' : 'Price (TND)' }}</label>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">{{ __('Price (TND)') }}</label>
                                     <input type="number" x-model="newPrice" placeholder="150" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 </div>
                             </div>
                             
                             <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">{{ app()->getLocale() === 'ar' ? 'وصف تفصيلي للخدمة' : 'Service Description' }}</label>
-                                <textarea x-model="newDesc" rows="2" placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب وصفاً موجزاً لما تتضمنه الخدمة...' : 'Briefly describe what this service includes...' }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">{{ __('Service Description') }}</label>
+                                <textarea x-model="newDesc" rows="2" placeholder="{{ __('Briefly describe what this service includes...') }}" class="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
                             </div>
                             
                             <button type="button" @click="addService()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition">
-                                ➕ {{ app()->getLocale() === 'ar' ? 'إضافة الخدمة إلى القائمة' : 'Add Service to List' }}
+                                ➕ {{ __('Add Service to List') }}
                             </button>
                         </div>
                     </div>

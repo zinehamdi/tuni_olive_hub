@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', app()->getLocale() === 'ar' ? 'مركز الخدمات ومزودي الخدمات' : (app()->getLocale() === 'fr' ? 'Hub des Services' : 'Services Hub'))
+@section('title', __('Services Hub'))
 
 @section('content')
 
@@ -73,7 +73,7 @@
         }
         
         if (empty($desc)) {
-            $desc = $defaultDescsGlobal[$p->role][app()->getLocale()] ?? ($defaultDescsGlobal[$p->role]['ar'] ?? (app()->getLocale() === 'fr' ? 'Prestataire de services agricoles enregistré.' : (app()->getLocale() === 'ar' ? 'مزود خدمات فلاحية وتجارية مسجل في منصتنا' : 'Registered agricultural service provider.')));
+            $desc = $defaultDescsGlobal[$p->role][app()->getLocale()] ?? ($defaultDescsGlobal[$p->role]['ar'] ?? (app()->getLocale() === 'fr' ? 'Prestataire de services agricoles enregistré.' : (__('Registered agricultural service provider.'))));
         }
 
         return [$p->id => [
@@ -174,15 +174,13 @@
             <div class="relative z-10">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#C8A356]/20 text-[#F5E5C0] border border-[#C8A356]/40 backdrop-blur-md mb-4">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1.5 mr-1.5"></span>
-                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات المتكامل للقطاع الفلاحي والتصدير' : (app()->getLocale() === 'fr' ? 'Hub Unifié de Services & Prestataires' : 'Unified Services & Providers Hub') }}
+                    {{ __('Unified Services & Providers Hub') }}
                 </span>
                 <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight">
-                    {{ app()->getLocale() === 'ar' ? 'مركز الخدمات ومزودي الخدمات' : (app()->getLocale() === 'fr' ? 'Hub des Services et Prestataires' : 'Services & Providers Hub') }}
+                    {{ __('Services & Providers Hub') }}
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-300 mt-2 max-w-3xl leading-relaxed">
-                    {{ app()->getLocale() === 'ar' 
-                        ? 'اكتشف خدماتنا الرقمية للتسويق والتصدير، وتصفح دليل مزودي الخدمات المحليين من ناقلين، معاصر، محاسبين، ومعدات فلاحية.' 
-                        : (app()->getLocale() === 'fr' ? 'Découvrez nos services de marketing et d\'exportation, et explorez l\'annuaire des prestataires locaux.' : 'Discover our digital marketing & export services, and explore the directory of local service providers.') }}
+                    {{ __('Discover our digital marketing & export services, and explore the directory of local service providers.') }}
                 </p>
             </div>
         </div>
@@ -194,17 +192,15 @@
                         <div class="absolute right-0 top-0 w-80 h-80 bg-[#6A8F3B]/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="relative z-10 text-right">
                             <h3 class="text-2xl font-black text-white mb-2">
-                                {{ app()->getLocale() === 'ar' ? 'هل أنت مزود خدمات فلاحية أو تجارية؟' : (app()->getLocale() === 'fr' ? 'Êtes-vous un prestataire de services agricoles ou commerciaux ?' : 'Are you an agricultural or commercial service provider?') }}
+                                {{ __('Are you an agricultural or commercial service provider?') }}
                             </h3>
                             <p class="text-gray-300 text-sm max-w-xl">
-                                {{ app()->getLocale() === 'ar' 
-                                    ? 'سجل معنا الآن كـ ناقل، معصرة، وحدة تعبئة، محاسب، أو شركة معدات، واعرض خدماتك أمام آلاف الفلاحين والمنتجين مجاناً!' 
-                                    : (app()->getLocale() === 'fr' ? 'Inscrivez-vous en tant que transporteur, moulin, comptable ou fournisseur d\'équipement et proposez vos services.' : 'Register now as a carrier, mill, packer, accountant, or equipment provider and display your services to thousands of farmers.') }}
+                                {{ __('Register now as a carrier, mill, packer, accountant, or equipment provider and display your services to thousands of farmers.') }}
                             </p>
                         </div>
                         <a href="{{ route('services.register') }}" class="relative z-10 px-8 py-4 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white font-black rounded-2xl shadow-xl hover:scale-105 transition duration-300 flex items-center gap-2">
                             <span>📝</span>
-                            {{ app()->getLocale() === 'ar' ? 'سجل كمزود خدمة الآن' : (app()->getLocale() === 'fr' ? 'Inscrivez-vous maintenant' : 'Register as a Provider Now') }}
+                            {{ __('Register as a Provider Now') }}
                         </a>
                     </div>
                 </div>
@@ -216,9 +212,9 @@
                     <span class="text-3xl">👥</span>
                 <div>
                     <h2 class="text-2xl font-black text-[#1B2A1B]">
-                        {{ app()->getLocale() === 'ar' ? 'دليل مزودي الخدمات المحليين' : (app()->getLocale() === 'fr' ? 'Annuaire des Prestataires Locaux' : 'Local Service Providers Directory') }}
+                        {{ __('Local Service Providers Directory') }}
                     </h2>
-                    <p class="text-gray-500 text-xs mt-1">{{ app()->getLocale() === 'ar' ? 'تواصل مباشرة مع مقدمي الخدمات الفلاحية واللوجستية في تونس' : (app()->getLocale() === 'fr' ? 'Contactez directement les prestataires agricoles et logistiques en Tunisie' : 'Contact agricultural & logistics providers in Tunisia directly') }}</p>
+                    <p class="text-gray-500 text-xs mt-1">{{ __('Contact agricultural & logistics providers in Tunisia directly') }}</p>
                 </div>
                 </div>
 
@@ -227,32 +223,32 @@
                     <form method="GET" action="{{ route('services.index') }}#directory" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                         <!-- Search input -->
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'بحث باسم المزود' : 'Search Provider' }}</label>
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: شركة النقل السريع...' : 'e.g. Transport Co...' }}" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B]">
+                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Search Provider') }}</label>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('e.g. Transport Co...') }}" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B]">
                         </div>
 
                         <!-- Provider Type -->
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'نوع الخدمة' : 'Service Type' }}</label>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Service Type') }}</label>
                             <select name="type" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23ffffff%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
-                                <option value="" >{{ app()->getLocale() === 'ar' ? '-- جميع الخدمات --' : '-- All Services --' }}</option>
-                                <option value="carrier"  {{ request('type') === 'carrier' ? 'selected' : '' }}>🚛 {{ app()->getLocale() === 'ar' ? 'ناقل بري وبحري' : 'Carrier' }}</option>
-                                <option value="mill"  {{ request('type') === 'mill' ? 'selected' : '' }}>🏢 {{ app()->getLocale() === 'ar' ? 'معصرة زيتون' : 'Olive Mill' }}</option>
-                                <option value="packer"  {{ request('type') === 'packer' ? 'selected' : '' }}>📦 {{ app()->getLocale() === 'ar' ? 'وحدة تعبئة وتغليف' : 'Packer' }}</option>
-                                <option value="transiteur"  {{ request('type') === 'transiteur' ? 'selected' : '' }}>🛃 {{ app()->getLocale() === 'ar' ? 'مخلص جمركي' : 'Customs Broker' }}</option>
-                                <option value="comptable"  {{ request('type') === 'comptable' ? 'selected' : '' }}>📊 {{ app()->getLocale() === 'ar' ? 'محاسب' : 'Accountant' }}</option>
-                                <option value="service_bureau"  {{ request('type') === 'service_bureau' ? 'selected' : '' }}>📝 {{ app()->getLocale() === 'ar' ? 'مكتب خدمات إدارية' : 'Service Bureau' }}</option>
-                                <option value="agri_equipment"  {{ request('type') === 'agri_equipment' ? 'selected' : '' }}>🚜 {{ app()->getLocale() === 'ar' ? 'معدات وآليات فلاحية' : 'Agri-Equipment' }}</option>
-                                <option value="agri_materials"  {{ request('type') === 'agri_materials' ? 'selected' : '' }}>🌱 {{ app()->getLocale() === 'ar' ? 'مواد فلاحية وأسمدة' : 'Agri-Materials' }}</option>
-                                <option value="agri_study_office"  {{ request('type') === 'agri_study_office' ? 'selected' : '' }}>📐 {{ app()->getLocale() === 'ar' ? 'مكتب دراسات فلاحية' : 'Agri-Study Office' }}</option>
+                                <option value="" >{{ __('-- All Services --') }}</option>
+                                <option value="carrier"  {{ request('type') === 'carrier' ? 'selected' : '' }}>🚛 {{ __('Carrier') }}</option>
+                                <option value="mill"  {{ request('type') === 'mill' ? 'selected' : '' }}>🏢 {{ __('Olive Mill') }}</option>
+                                <option value="packer"  {{ request('type') === 'packer' ? 'selected' : '' }}>📦 {{ __('Packer') }}</option>
+                                <option value="transiteur"  {{ request('type') === 'transiteur' ? 'selected' : '' }}>🛃 {{ __('Customs Broker') }}</option>
+                                <option value="comptable"  {{ request('type') === 'comptable' ? 'selected' : '' }}>📊 {{ __('Accountant') }}</option>
+                                <option value="service_bureau"  {{ request('type') === 'service_bureau' ? 'selected' : '' }}>📝 {{ __('Service Bureau') }}</option>
+                                <option value="agri_equipment"  {{ request('type') === 'agri_equipment' ? 'selected' : '' }}>🚜 {{ __('Agri-Equipment') }}</option>
+                                <option value="agri_materials"  {{ request('type') === 'agri_materials' ? 'selected' : '' }}>🌱 {{ __('Agri-Materials') }}</option>
+                                <option value="agri_study_office"  {{ request('type') === 'agri_study_office' ? 'selected' : '' }}>📐 {{ __('Agri-Study Office') }}</option>
                             </select>
                         </div>
 
                         <!-- Governorate -->
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الولاية' : 'Governorate' }}</label>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">{{ __('Governorate') }}</label>
                             <select name="governorate" class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-2.5 text-gray-800 text-sm focus:outline-none focus:border-[#6A8F3B] appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23ffffff%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat rtl:bg-[left_1rem_center] ltr:bg-[right_1rem_center] rtl:pl-10 ltr:pr-10">
-                                <option value="" >{{ app()->getLocale() === 'ar' ? '-- جميع الولايات --' : '-- All Governorates --' }}</option>
+                                <option value="" >{{ __('-- All Governorates --') }}</option>
                                 @foreach(config('governorates', []) as $gov)
                                     <option value="{{ $gov }}"  {{ request('governorate') === $gov ? 'selected' : '' }}>{{ $gov }}</option>
                                 @endforeach
@@ -262,7 +258,7 @@
                         <!-- Action Buttons -->
                         <div class="flex gap-2">
                             <button type="submit" class="flex-1 py-3 px-4 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold rounded-xl shadow-lg transition duration-200 text-sm flex items-center justify-center gap-1 cursor-pointer">
-                                🔍 {{ app()->getLocale() === 'ar' ? 'تصفية' : 'Filter' }}
+                                🔍 {{ __('Filter') }}
                             </button>
                         <a href="{{ route('services.index') }}#directory" class="py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition duration-200 text-sm flex items-center justify-center cursor-pointer">
                             🔄
@@ -345,7 +341,7 @@
                             
                             <!-- Right Side: Governorate & Flag -->
                             <div class="relative z-10 flex items-center gap-1">
-                                <span class="text-white/90 font-black">{{ $provider->addresses->first()->governorate ?? (app()->getLocale() === 'ar' ? 'تونس (عام)' : 'Tunisia') }}</span>
+                                <span class="text-white/90 font-black">{{ $provider->addresses->first()->governorate ?? (__('Tunisia')) }}</span>
                                 <span>🇹🇳</span>
                             </div>
                             
@@ -388,20 +384,20 @@
 
                             <!-- Description -->
                             <p class="text-gray-500 text-[11px] leading-relaxed line-clamp-2 text-right flex-grow">
-                                {{ $card['description'] ?: (app()->getLocale() === 'ar' ? 'لا يوجد وصف تفصيلي متوفر لهذه الخدمة.' : (app()->getLocale() === 'fr' ? 'Aucune description détaillée disponible pour ce service.' : 'No detailed description available for this service.')) }}
+                                {{ $card['description'] ?: (__('No detailed description available for this service.')) }}
                             </p>
 
                             <!-- Price Display Container (Matches Prices page style) -->
                             <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
                                 <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
                                     <span class="w-1.5 h-1.5 rounded-full bg-[#6A8F3B]"></span>
-                                    {{ app()->getLocale() === 'ar' ? 'السعر التقديري' : (app()->getLocale() === 'fr' ? 'Prix estimé' : 'Estimated Price') }}
+                                    {{ __('Estimated Price') }}
                                 </span>
                                 <div class="text-base font-black text-[#C8A356] tracking-tight">
                                     @if(($card['price_type'] ?? 'fixed') === 'fixed' && !empty($card['price']))
                                         {{ number_format($card['price'], 0) }} <span class="text-[10px] font-normal text-gray-500">TND</span>
                                     @else
-                                        <span class="text-xs font-bold text-gray-600">{{ app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : (app()->getLocale() === 'fr' ? 'Sur demande' : 'Upon Request') }}</span>
+                                        <span class="text-xs font-bold text-gray-600">{{ __('Upon Request') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -411,14 +407,14 @@
                                     @click.stop="if (isGuest) { showRegisterGateModal = true; } else { activeProvider = providers[{{ $provider->id }}] || {}; showProviderModal = true; }"
                                     class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
                                 <span>🔍</span>
-                                {{ app()->getLocale() === 'ar' ? 'عرض تفاصيل المزود' : (app()->getLocale() === 'fr' ? 'Détails du prestataire' : 'Show Provider Details') }}
+                                {{ __('Show Provider Details') }}
                             </button>
                         </div>
                     </div>
                     @empty
                 <div class="col-span-full bg-gray-50 border border-gray-200 rounded-3xl p-12 text-center text-gray-500 shadow-inner">
                     <span class="text-4xl">📭</span>
-                    <p class="mt-2 font-bold">{{ app()->getLocale() === 'ar' ? 'لا يوجد مزودي خدمات يطابقون خيارات التصفية حالياً.' : (app()->getLocale() === 'fr' ? 'Aucun prestataire ne correspond aux filtres.' : 'No service providers match the filters.') }}</p>
+                    <p class="mt-2 font-bold">{{ __('No service providers match the filters.') }}</p>
                 </div>
                     @endforelse
                 </div>
@@ -470,11 +466,11 @@
                             </div>
 
                             <!-- Description -->
-                            <p class="text-gray-600 text-sm leading-relaxed font-medium mb-4" x-text="activeProvider && activeProvider.description ? activeProvider.description : '{{ app()->getLocale() === 'ar' ? 'لا يوجد وصف تفصيلي للمزود' : (app()->getLocale() === 'fr' ? 'Aucune description détaillée pour le prestataire' : 'No detailed description for provider') }}'"></p>
+                            <p class="text-gray-600 text-sm leading-relaxed font-medium mb-4" x-text="activeProvider && activeProvider.description ? activeProvider.description : '{{ __('No detailed description for provider') }}'"></p>
 
                             <!-- Services Tags inside big card -->
                             <div class="mb-4" x-show="activeProvider && activeProvider.services && activeProvider.services.length > 0">
-                                <h4 class="text-xs font-bold text-gray-400 mb-2">{{ app()->getLocale() === 'ar' ? 'قائمة الخدمات المتوفرة:' : 'Services list:' }}</h4>
+                                <h4 class="text-xs font-bold text-gray-400 mb-2">{{ __('Services list:') }}</h4>
                                 <div class="flex flex-wrap gap-1.5 justify-end">
                                     <template x-for="ps in (activeProvider ? activeProvider.services : [])">
                                         <span class="px-2.5 py-1 rounded-xl bg-indigo-50 border border-indigo-100 text-xs text-indigo-700 font-semibold" x-text="ps.title"></span>
@@ -484,21 +480,21 @@
                             
                             <!-- Price display -->
                             <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-5 flex items-center justify-between">
-                                <span class="text-xs font-bold text-gray-500">{{ app()->getLocale() === 'ar' ? 'سعر الخدمة المقدر:' : 'Estimated Price:' }}</span>
+                                <span class="text-xs font-bold text-gray-500">{{ __('Estimated Price:') }}</span>
                                 <div class="text-lg font-bold text-[#C8A356]">
                                     <span x-show="activeProvider && activeProvider.price_type === 'fixed' && activeProvider.price"><span x-text="activeProvider ? activeProvider.price : ''"></span> TND</span>
-                                    <span x-show="!activeProvider || activeProvider.price_type !== 'fixed' || !activeProvider.price">{{ app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : 'Upon Request' }}</span>
+                                    <span x-show="!activeProvider || activeProvider.price_type !== 'fixed' || !activeProvider.price">{{ __('Upon Request') }}</span>
                                 </div>
                             </div>
 
                             <!-- CTA Buttons -->
                             <div class="flex gap-2" x-show="activeProvider">
                                 <button type="button" @click="handleFullProfile(activeProvider ? activeProvider.url : '#')" class="flex-grow text-center py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-sm transition duration-200 cursor-pointer">
-                                    👁 {{ app()->getLocale() === 'ar' ? 'عرض الملف الكامل' : 'View Full Profile' }}
+                                    👁 {{ __('View Full Profile') }}
                                 </button>
                                 <button type="button" @click="handleWhatsApp(activeProvider ? activeProvider.phone : '')" class="flex-grow text-center py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center justify-center gap-1.5 transition duration-200 cursor-pointer">
                                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
-                                    <span>{{ app()->getLocale() === 'ar' ? 'واتساب' : 'WhatsApp' }}</span>
+                                    <span>{{ __('WhatsApp') }}</span>
                                 </button>
                             </div>
                         </div>
@@ -539,10 +535,10 @@
                     🔒
                 </div>
                 <h3 class="text-xl font-black text-gray-900 leading-snug">
-                    {{ app()->getLocale() === 'ar' ? 'انضم إلى منصة زين للتواصل المباشر' : 'Join ZinToop for Direct Contact' }}
+                    {{ __('Join ZinToop for Direct Contact') }}
                 </h3>
                 <p class="text-xs text-gray-500 mt-2 leading-relaxed max-w-xs">
-                    {{ app()->getLocale() === 'ar' ? 'للتواصل المباشر مع هذا المزود ومشاهدة رقم الهاتف والملف الكامل، أنشئ حسابك المجاني في ثوانٍ.' : 'Create a free account in seconds to view direct phone numbers and full profiles.' }}
+                    {{ __('Create a free account in seconds to view direct phone numbers and full profiles.') }}
                 </p>
             </div>
 
@@ -550,25 +546,25 @@
             <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 mb-6 space-y-2.5 text-xs text-emerald-800 text-right font-medium">
                 <div class="flex items-center gap-2">
                     <span class="text-base">✅</span>
-                    <span>{{ app()->getLocale() === 'ar' ? 'تواصل مباشر عبر الواتساب والمكالمات بدون عمولات' : 'Direct WhatsApp & phone calls without commissions' }}</span>
+                    <span>{{ __('Direct WhatsApp & phone calls without commissions') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base">✅</span>
-                    <span>{{ app()->getLocale() === 'ar' ? 'إضافة طلباتك وعروضك في سوق زيت الزيتون التونسي' : 'Post your offers & requests in the Tunisian marketplace' }}</span>
+                    <span>{{ __('Post your offers & requests in the Tunisian marketplace') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-base">✅</span>
-                    <span>{{ app()->getLocale() === 'ar' ? 'حساب مجاني 100% يتيح لك الاستفادة من جميع الخدمات' : '100% free account with full access to all features' }}</span>
+                    <span>{{ __('100% free account with full access to all features') }}</span>
                 </div>
             </div>
 
             <!-- Action CTA Buttons -->
             <div class="space-y-3">
                 <a href="{{ route('register') }}" class="w-full py-3.5 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-black rounded-xl shadow-lg shadow-[#6A8F3B]/30 transition duration-200 text-sm flex items-center justify-center gap-2">
-                    🚀 {{ app()->getLocale() === 'ar' ? 'إنشاء حساب مجاني في ثوانٍ' : 'Create Free Account' }}
+                    🚀 {{ __('Create Free Account') }}
                 </a>
                 <a href="{{ route('login') }}" class="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold rounded-xl border border-gray-200 transition duration-200 text-xs flex items-center justify-center gap-1.5">
-                    🔐 {{ app()->getLocale() === 'ar' ? 'لديك حساب بالفعل؟ تسجيل الدخول' : 'Already have an account? Log In' }}
+                    🔐 {{ __('Already have an account? Log In') }}
                 </a>
             </div>
         </div>
@@ -605,7 +601,7 @@
                     <div>
                         <h3 class="text-xl font-black text-gray-900" x-text="activeServiceName">باقة التسويق</h3>
                         <p class="text-xs text-gray-500 mt-0.5">
-                            {{ app()->getLocale() === 'ar' ? 'أدخل تفاصيلك لتأكيد الحجز وبدء الحملة فوراً' : 'Fill details to confirm your instant booking' }}
+                            {{ __('Fill details to confirm your instant booking') }}
                         </p>
                     </div>
                 </div>
@@ -617,8 +613,8 @@
             <!-- Price display -->
             <div class="bg-gray-50 border border-gray-150 rounded-2xl p-4 mb-6 flex items-center justify-between relative z-10">
                 <span class="text-sm font-semibold text-gray-600">
-                    <span x-show="activeServiceId == 5">{{ app()->getLocale() === 'ar' ? 'الميزانية المقدرة:' : 'Estimated Budget:' }}</span>
-                    <span x-show="activeServiceId != 5">{{ app()->getLocale() === 'ar' ? 'الميزانية الأسبوعية المقدرة:' : 'Estimated Weekly Budget:' }}</span>
+                    <span x-show="activeServiceId == 5">{{ __('Estimated Budget:') }}</span>
+                    <span x-show="activeServiceId != 5">{{ __('Estimated Weekly Budget:') }}</span>
                 </span>
                 <div class="text-2xl font-black text-[#C8A356] flex items-baseline gap-1">
                     <span x-text="activeServicePrice">0</span>
@@ -631,11 +627,11 @@
                 @csrf
                 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'تفاصيل الطلب أو الاستفسار' : 'Inquiry / Order Details' }} <span class="text-red-400">*</span></label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">{{ __('Inquiry / Order Details') }} <span class="text-red-400">*</span></label>
                     <textarea name="business_info" 
                               required
                               rows="3" 
-                              placeholder="{{ app()->getLocale() === 'ar' ? 'اكتب تفاصيل طلبك هنا لنقوم بالتواصل معك داخل المنصة...' : 'Type your request details here for direct platform contact...' }}"
+                              placeholder="{{ __('Type your request details here for direct platform contact...') }}"
                               class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all"></textarea>
                 </div>
 
@@ -643,13 +639,11 @@
                 <button type="submit" 
                         class="w-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#6A8F3B]/20 active:scale-[0.98] transition-all duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer mt-4">
                     <span>📩</span>
-                    {{ app()->getLocale() === 'ar' ? 'إرسال الطلب المباشر عبر المنصة' : 'Send Direct Request' }}
+                    {{ __('Send Direct Request') }}
                 </button>
                 
                 <p class="text-[10px] text-center text-gray-400 mt-3 leading-relaxed">
-                    {{ app()->getLocale() === 'ar' 
-                        ? 'سيتم تسجيل طلبك مباشرة في حسابك بالمنصة وسيتواصل معك فريقنا أو المزود داخل صندوق الرسائل.' 
-                        : 'Your request will be submitted to your account inbox directly.' }}
+                    {{ __('Your request will be submitted to your account inbox directly.') }}
                 </p>
             </form>
 

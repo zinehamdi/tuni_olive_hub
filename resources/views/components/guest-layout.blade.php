@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ __('ltr') }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +19,7 @@
             <!-- Logo -->
             <div class="mb-8">
                 <a href="/" class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(app()->getLocale() === 'ar' ? 'brand.name_ar' : 'brand.name_latin') }}" style="height: 128px; width: 128px;" class="rounded-full object-contain bg-white p-3 shadow-lg hover:scale-105 transition border border-gray-100 h-24 w-24 sm:h-32 sm:w-32">
+                    <img src="{{ asset('images/zintoop-logo.png') }}" alt="{{ __(__('brand.name_latin')) }}" style="height: 128px; width: 128px;" class="rounded-full object-contain bg-white p-3 shadow-lg hover:scale-105 transition border border-gray-100 h-24 w-24 sm:h-32 sm:w-32">
                     <div class="text-center">
                         <h1 class="text-2xl font-bold text-gray-900">منصة زيت الزيتون التونسي</h1>
                         <h2 class="text-2xl font-bold text-gray-900">Tunisian Olive Oil Platform</h2>

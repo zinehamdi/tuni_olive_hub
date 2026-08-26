@@ -1,8 +1,10 @@
 <x-guest-layout>
     <div class="mx-auto max-w-lg">
-        <!-- Register Card -->
+        @php
+            $isInternational = in_array(app()->getLocale(), ['es', 'zh', 'ja']);
+        @endphp
         <div class="bg-white rounded-2xl shadow-2xl p-5 border border-gray-100">
-            <form method="GET" action="{{ route('register.role') }}" class="space-y-4" x-data="{ role: '' }">
+            <form method="GET" action="{{ route('register.role') }}" class="space-y-4" x-data="{ role: '{{ $isInternational ? 'normal' : '' }}' }">
                 <h2 class="text-xl font-bold text-center mb-4 text-[#6A8F3B]">{{ __('Select your role') }}</h2>
                 
                 <!-- Role Selection with Icons -->
@@ -14,6 +16,7 @@
                         <span>{{ __('Role') }} <span class="text-red-600">*</span></span>
                     </label>
                     
+                    @if(!$isInternational)
                     <!-- Farmer -->
                     <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'farmer' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">
                         <input type="radio" name="role" value="farmer" x-model="role" class="text-[#6A8F3B] focus:ring-[#6A8F3B] w-5 h-5">
@@ -77,6 +80,7 @@
                             </div>
                         </div>
                     </label>
+                    @endif
 
                     <!-- Normal User -->
                     <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#6A8F3B] hover:bg-[#6A8F3B]/5 transition-all" :class="role === 'normal' ? 'border-[#6A8F3B] bg-[#6A8F3B]/10' : ''">

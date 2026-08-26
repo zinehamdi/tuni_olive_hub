@@ -12,11 +12,34 @@ class Chat
 {
     public static function ensureThread(string $type, int $id, array $participants = []): Thread
     {
-        $thread = Thread::firstOrCreate([
+        if (count($participants) >= 2) {
+            $sortedParticipants = [(int) $participants[0], (int) $participants[1]];
+            sort($sortedParticipants);
+
+            // Find existing direct_message thread between these participants
+            $thread = Thread::where('object_type', 'direct_message')
+                ->where(function($q) use ($sortedParticipants) {
+                    $q->whereJsonContains('participants', $sortedParticipants[0])
+                      ->whereJsonContains('participants', $sortedParticipants[1]);
+                })
+                ->first();
+
+            if ($thread) {
+                return $thread;
+            }
+
+            // Create unified direct_message thread
+            return Thread::create([
+                'object_type' => 'direct_message',
+                'object_id' => 0,
+                'participants' => $sortedParticipants,
+            ]);
+        }
+
+        return Thread::firstOrCreate([
             'object_type' => $type,
             'object_id' => $id,
         ], [ 'participants' => $participants ]);
-        return $thread;
     }
 
     public static function system(Thread $thread, string $body): Message

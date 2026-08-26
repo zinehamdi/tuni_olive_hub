@@ -12,7 +12,7 @@
                 <p class="text-gray-600">{{ __('Update appointment details and status') }}</p>
             </div>
             <a href="{{ route('admin.marketing.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition font-semibold">
-                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 {{ __('') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 {{ __('Back') }}

@@ -59,12 +59,12 @@
     </div>
     
     <!-- Product Info -->
-    <div class="p-3 {{ app()->getLocale() === 'ar' ? 'text-right' : '' }}">
+    <div class="p-3 {{ __('') }}">
         <div class="font-semibold text-gray-900 mb-2">{{ $title }}</div>
         
         <!-- Variety & Quality Badges -->
         @if($variety || $quality)
-            <div class="flex items-center gap-2 mb-2 {{ app()->getLocale() === 'ar' ? 'flex-row-reverse' : '' }}">
+            <div class="flex items-center gap-2 mb-2 {{ __('') }}">
                 @if($variety)
                     <span class="px-2 py-0.5 rounded bg-[#6A8F3B] text-white text-xs font-medium">{{ $variety }}</span>
                 @endif

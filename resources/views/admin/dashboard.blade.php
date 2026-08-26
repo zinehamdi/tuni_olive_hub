@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 flex flex-col md:flex-row" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" x-data="{ sidebarOpen: false }">
+<div class="min-h-screen bg-gray-50 flex flex-col md:flex-row" dir="{{ __('ltr') }}" x-data="{ sidebarOpen: false }">
     
     <!-- Mobile Sidebar Overlay -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" x-transition></div>
 
     <!-- Sidebar -->
     <aside x-cloak
-           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ app()->getLocale() === 'ar' ? 'translateX(100%)' : 'translateX(-100%)' }}')"
+           x-effect="$el.style.transform = window.innerWidth >= 768 ? '' : (sidebarOpen ? 'translateX(0)' : '{{ __('translateX(-100%)') }}')"
            class="fixed md:sticky top-0 md:top-[72px] bottom-0 md:h-[calc(100vh-72px)] w-72 bg-white shadow-2xl md:shadow-lg z-50 md:z-10 flex flex-col transition-transform duration-300 ltr:left-0 rtl:right-0">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -295,7 +295,7 @@
                                 <p class="text-xs text-blue-600 font-bold mt-1">{{ $appointment->phone }}</p>
                             </div>
                             <span class="px-2.5 py-1 bg-orange-100 text-orange-700 text-[10px] font-black uppercase rounded-lg">
-                                {{ app()->getLocale() === 'ar' ? 'معلق' : 'Pending' }}
+                                {{ __('Pending') }}
                             </span>
                         </div>
                         <div class="text-sm text-gray-700 font-medium mb-3 line-clamp-1">{{ $appointment->business_info }}</div>
@@ -309,7 +309,7 @@
                 @else
                 <div class="flex-1 flex flex-col items-center justify-center text-gray-400 py-8">
                     <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    <p class="font-bold">{{ app()->getLocale() === 'ar' ? 'لا توجد مواعيد معلقة' : 'No pending appointments' }}</p>
+                    <p class="font-bold">{{ __('No pending appointments') }}</p>
                 </div>
                 @endif
             </div>

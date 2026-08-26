@@ -119,8 +119,8 @@
                         {{ number_format($listing->product->price, 2) }} {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}/
                         @php
                             $unitLabel = $listing->unit === 'liter'
-                                ? (app()->getLocale() === 'ar' ? 'لتر' : 'L')
-                                : (app()->getLocale() === 'ar' ? 'كلغ' : 'kg');
+                                ? (__('L'))
+                                : (__('kg'));
                         @endphp
                         {{ $unitLabel }}
                     </div>

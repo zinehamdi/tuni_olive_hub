@@ -191,15 +191,15 @@
                             </h3>
                             <span class="px-2.5 py-0.5 bg-white/20 rounded-lg text-[11px] text-white font-bold tracking-wider">
                                 @if($user->role === 'farmer')
-                                    🌾 {{ app()->getLocale() === 'ar' ? 'مزارع زيتون' : 'Olive Grower' }}
+                                    🌾 {{ __('Olive Grower') }}
                                 @elseif($user->role === 'mill')
-                                    🏭 {{ app()->getLocale() === 'ar' ? 'معصرة زيتون' : 'Oil Mill' }}
+                                    🏭 {{ __('Oil Mill') }}
                                 @elseif($user->role === 'packer')
-                                    📦 {{ app()->getLocale() === 'ar' ? 'وحدة تعبئة' : 'Packaging' }}
+                                    📦 {{ __('Packaging') }}
                                 @elseif($user->role === 'carrier')
-                                    🚛 {{ app()->getLocale() === 'ar' ? 'ناقل بري' : 'Transporter' }}
+                                    🚛 {{ __('Transporter') }}
                                 @else
-                                    ✨ {{ app()->getLocale() === 'ar' ? 'عضو منصة الزين' : 'Member' }}
+                                    ✨ {{ __('Member') }}
                                 @endif
                             </span>
                         </div>
@@ -221,9 +221,9 @@
                                     <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
                                         <span class="text-gray-600 font-bold flex items-center gap-1.5">
                                             <span>🌳</span>
-                                            <span>{{ app()->getLocale() === 'ar' ? 'عدد أشجار الزيتون' : 'Olive Trees' }}</span>
+                                            <span>{{ __('Olive Trees') }}</span>
                                         </span>
-                                        <span class="font-extrabold text-emerald-900">{{ number_format($user->tree_number) }} {{ app()->getLocale() === 'ar' ? 'شجرة' : 'trees' }}</span>
+                                        <span class="font-extrabold text-emerald-900">{{ number_format($user->tree_number) }} {{ __('trees') }}</span>
                                     </div>
                                 @endif
 
@@ -231,7 +231,7 @@
                                     <div class="flex items-center justify-between bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100/50">
                                         <span class="text-gray-600 font-bold flex items-center gap-1.5">
                                             <span>🏭</span>
-                                            <span>{{ app()->getLocale() === 'ar' ? 'اسم المعصرة' : 'Mill Name' }}</span>
+                                            <span>{{ __('Mill Name') }}</span>
                                         </span>
                                         <span class="font-extrabold text-emerald-900">{{ $user->mill_name }}</span>
                                     </div>
@@ -244,14 +244,14 @@
                                     $userGov = $addresses->first()?->governorate ?? $user->governorate ?? $user->farm_location ?? null;
                                     
                                     $fullAddressParts = array_filter([$userStreet, $userDelegation, $userGov]);
-                                    $fullAddressStr = !empty($fullAddressParts) ? implode(' - ', $fullAddressParts) : ($userGov ?? (app()->getLocale() === 'ar' ? 'تونس' : 'Tunisia'));
+                                    $fullAddressStr = !empty($fullAddressParts) ? implode(' - ', $fullAddressParts) : ($userGov ?? (__('Tunisia')));
                                 @endphp
                                 <div class="flex items-start gap-2.5 text-gray-800 bg-gray-50/80 p-3 rounded-2xl border border-gray-100">
                                     <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 shadow-sm font-bold text-sm">
                                         📍
                                     </div>
                                     <div class="flex flex-col min-w-0">
-                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'العنوان والموقع' : 'Address & Location' }}</span>
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ __('Address & Location') }}</span>
                                         <span class="font-extrabold text-xs text-gray-900 leading-snug">{{ $fullAddressStr }}</span>
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@
                                             📞
                                         </div>
                                         <div class="flex flex-col min-w-0">
-                                            <span class="text-[10px] font-bold text-emerald-800/80 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'الهاتف والواتساب' : 'Phone & WhatsApp' }}</span>
+                                            <span class="text-[10px] font-bold text-emerald-800/80 uppercase tracking-wider">{{ __('Phone & WhatsApp') }}</span>
                                             @auth
                                                 <a href="tel:{{ $phoneNum }}" class="font-extrabold text-xs text-emerald-950 hover:text-emerald-700 transition" dir="ltr">{{ $phoneNum }}</a>
                                             @else
@@ -278,11 +278,11 @@
                                     @auth
                                         <a href="https://wa.me/{{ $cleanWhatsapp }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-extrabold shadow-sm transition flex items-center gap-1 shrink-0">
                                             <span>💬</span>
-                                            <span>{{ app()->getLocale() === 'ar' ? 'واتساب' : 'WhatsApp' }}</span>
+                                            <span>{{ __('WhatsApp') }}</span>
                                         </a>
                                     @else
                                         <a href="{{ route('register') }}" class="text-[10px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-lg transition shrink-0">
-                                            🔒 {{ app()->getLocale() === 'ar' ? 'سجل' : 'Register' }}
+                                            🔒 {{ __('Register') }}
                                         </a>
                                     @endauth
                                 </div>
@@ -295,7 +295,7 @@
                                         ✉️
                                     </div>
                                     <div class="flex flex-col min-w-0">
-                                        <span class="text-[10px] font-bold text-blue-800/80 uppercase tracking-wider">{{ app()->getLocale() === 'ar' ? 'البريد الإلكتروني' : 'Email Address' }}</span>
+                                        <span class="text-[10px] font-bold text-blue-800/80 uppercase tracking-wider">{{ __('Email Address') }}</span>
                                         @auth
                                             <a href="mailto:{{ $emailAddr }}" class="font-extrabold text-xs text-blue-950 hover:text-blue-700 transition truncate">{{ $emailAddr }}</a>
                                         @else
@@ -316,7 +316,7 @@
                         <div class="px-4 py-3 bg-gradient-to-r from-amber-600 via-emerald-600 to-teal-600 flex justify-between items-center">
                             <h3 class="font-bold text-white text-sm flex items-center gap-2">
                                 <span class="text-base">📜</span>
-                                <span>{{ app()->getLocale() === 'ar' ? 'التحاليل والشهادات المعتمدة' : 'Certified Reports & Awards' }}</span>
+                                <span>{{ __('Certified Reports & Awards') }}</span>
                             </h3>
                             <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-black uppercase tracking-wider shadow-sm">
                                 PDF
@@ -425,7 +425,7 @@
                                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent flex flex-col items-center justify-end p-4 text-center">
                                                 <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs shadow-lg transform group-hover/pdf:scale-105 transition duration-300">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                    <span>{{ app()->getLocale() === 'ar' ? 'معاينة وثيقة PDF بالكامل' : 'Open Full PDF Preview' }}</span>
+                                                    <span>{{ __('Open Full PDF Preview') }}</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -434,7 +434,7 @@
                                         <div class="p-3 bg-gray-50 flex items-center justify-center text-xs">
                                             <button @click="activePdfModal = '{{ $pdfUrl }}'" class="w-full py-2 px-3 bg-white border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 text-gray-700 font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                <span>{{ app()->getLocale() === 'ar' ? 'تكبير واستعراض الوثيقة' : 'Full Screen Preview' }}</span>
+                                                <span>{{ __('Full Screen Preview') }}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -443,7 +443,7 @@
                             @else
                                 <div class="p-6 bg-gray-50/80 rounded-2xl text-center text-xs text-gray-500 border border-dashed border-gray-200">
                                     <span class="text-3xl block mb-2">📜</span>
-                                    <span>{{ app()->getLocale() === 'ar' ? 'لا تتوفر تحاليل مخبرية مرفوعة حالياً لهذا البروفايل.' : 'No PDF lab analysis reports available yet.' }}</span>
+                                    <span>{{ __('No PDF lab analysis reports available yet.') }}</span>
                                 </div>
                             @endif
                         </div>
@@ -459,7 +459,7 @@
                                         <div class="flex items-center gap-3">
                                             <span class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-black text-xs">PDF</span>
                                             <h3 class="font-bold text-sm sm:text-base text-white">
-                                                {{ app()->getLocale() === 'ar' ? 'معاينة وثيقة التحليل المخبري الرسمي' : 'Official PDF Laboratory Certificate' }}
+                                                {{ __('Official PDF Laboratory Certificate') }}
                                             </h3>
                                         </div>
                                         <button @click="activePdfModal = null" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -486,7 +486,7 @@
                         <div class="px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-700 flex justify-between items-center">
                             <h2 class="font-bold text-white text-sm flex items-center gap-2">
                                 <span class="text-base">💼</span>
-                                <span>{{ app()->getLocale() === 'ar' ? 'الخدمات والعروض المتوفرة' : 'Services & Solutions Offered' }}</span>
+                                <span>{{ __('Services & Solutions Offered') }}</span>
                             </h2>
                             <span class="px-2 py-0.5 bg-white/20 rounded-lg text-[10px] text-white font-bold uppercase tracking-wider">PRO</span>
                         </div>
@@ -513,7 +513,7 @@
                                     </span>
                                 @endif
                                 <span class="px-3 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold">
-                                    💰 {{ $priceType === 'fixed' && !empty($price) ? number_format($price, 0) . ' TND' : (app()->getLocale() === 'ar' ? 'السعر حسب الطلب' : 'Price Upon Request') }}
+                                    💰 {{ $priceType === 'fixed' && !empty($price) ? number_format($price, 0) . ' TND' : (__('Price Upon Request')) }}
                                 </span>
                             </div>
 
@@ -529,7 +529,7 @@
 
                             @if(!empty($servicesList))
                             <div class="mt-6 pt-6 border-t border-gray-100">
-                                <h3 class="text-sm font-bold text-gray-900 mb-4">{{ app()->getLocale() === 'ar' ? 'الخدمات المتوفرة والأسعار' : 'Services Offered & Prices' }}</h3>
+                                <h3 class="text-sm font-bold text-gray-900 mb-4">{{ __('Services Offered & Prices') }}</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     @foreach($servicesList as $srv)
                                     <div class="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md hover:border-indigo-100 transition duration-300 text-right">
@@ -545,7 +545,7 @@
                                                     @if(($srv['price_type'] ?? 'fixed') === 'fixed')
                                                         {{ number_format($srv['price'] ?? 0, 0) }} TND
                                                     @else
-                                                        {{ app()->getLocale() === 'ar' ? 'سعر عند الطلب' : 'Price Upon Request' }}
+                                                        {{ __('Price Upon Request') }}
                                                     @endif
                                                 </span>
                                             </div>
@@ -563,7 +563,7 @@
                                 @auth
                                     <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $user->phone) }}" target="_blank" class="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center gap-2 transition">
                                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.224-3.52s.126.074.39.231c1.56.93 3.351 1.421 5.22 1.422 5.513 0 10-4.487 10-10 0-2.673-1.04-5.186-2.93-7.076-1.89-1.889-4.403-2.928-7.07-2.929-5.515 0-10.002 4.487-10.002 10 0 1.763.461 3.486 1.332 5.012l.145.255-1.111 4.056 4.126-1.082z"/></svg>
-                                        {{ app()->getLocale() === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' }}
+                                        {{ __('Contact on WhatsApp') }}
                                     </a>
                                     @if($user->email)
                                     <a href="mailto:{{ $user->email }}" class="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm flex items-center gap-2 transition">
@@ -572,7 +572,7 @@
                                     @endif
                                 @else
                                     <a href="{{ route('register') }}" class="px-6 py-3 rounded-xl bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white font-bold text-sm flex items-center gap-2 transition shadow-lg">
-                                        🔒 {{ app()->getLocale() === 'ar' ? 'سجل مجاناً للتواصل مع هذا المزود' : 'Register Free to Contact Provider' }}
+                                        🔒 {{ __('Register Free to Contact Provider') }}
                                     </a>
                                 @endauth
                             </div>

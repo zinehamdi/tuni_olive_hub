@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', app()->getLocale() === 'ar' ? 'خدماتنا وأسعارها' : (app()->getLocale() === 'fr' ? 'Nos Services & Tarifs' : 'Our Services & Pricing'))
+@section('title', __('Our Services & Pricing'))
 
 @section('content')
 
@@ -34,7 +34,7 @@
         <div class="relative z-10">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#C8A356]/20 text-[#F5E5C0] border border-[#C8A356]/40 backdrop-blur-md mb-4">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1.5 mr-1.5"></span>
-                {{ app()->getLocale() === 'ar' ? 'نمو وتطوير قطاع زيت الزيتون' : (app()->getLocale() === 'fr' ? 'Croissance & Tech Huile d\'Olive' : 'Olive Oil Growth & Tech Solutions') }}
+                {{ __('Olive Oil Growth & Tech Solutions') }}
             </span>
             <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight">
                 @if(app()->getLocale() === 'ar')
@@ -46,11 +46,7 @@
                 @endif
             </h1>
             <p class="text-xs sm:text-sm text-gray-300 mt-2 max-w-3xl leading-relaxed">
-                {{ app()->getLocale() === 'ar'
-                    ? 'زد أرباحك، وسّع نطاق عملائك، وابنِ حضوراً محلياً ودولياً متميزاً مع أفضل المتخصصين في تكنولوجيا زيت الزيتون.'
-                    : (app()->getLocale() === 'fr'
-                        ? 'Augmentez vos profits, élargissez votre clientèle et développez votre présence locale et internationale.'
-                        : 'Increase your profits, expand your customer base, and build a premium local and international presence.') }}
+                {{ __('Increase your profits, expand your customer base, and build a premium local and international presence.') }}
             </p>
         </div>
     </div>
@@ -64,12 +60,10 @@
                         <div class="text-center mb-8">
                             <span class="text-4xl">🧮</span>
                             <h2 class="text-2xl md:text-3xl font-black text-white mt-2">
-                                {{ app()->getLocale() === 'ar' ? 'حاسبة ربح التبويز' : 'Tunisian Tabouiz Profit Calculator' }}
+                                {{ __('Tunisian Tabouiz Profit Calculator') }}
                             </h2>
                             <p class="text-gray-300 text-xs md:text-sm mt-2 max-w-xl mx-auto">
-                                {{ app()->getLocale() === 'ar'
-                                    ? 'أدخل وزن الزيتون ونسبة استخلاص معصرتك لتقدير إنتاجك من الزيت والأرباح الصافية المتوقعة فوراً!'
-                                    : 'Estimate your oil yield in kg/liters and your projected tabouiz profit based on standard milling parameters.' }}
+                                {{ __('Estimate your oil yield in kg/liters and your projected tabouiz profit based on standard milling parameters.') }}
                             </p>
                         </div>
 
@@ -105,7 +99,7 @@
                                 {{-- Input 1: Olive Weight --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'وزن الزيتون (كجم):' : 'Olive Weight (kg):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ __('Olive Weight (kg):') }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="oliveWeight + ' كجم'"></span>
                                     </div>
                                     <input type="range" min="100" max="20000" step="100" x-model="oliveWeight" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
@@ -114,7 +108,7 @@
                                 {{-- Input 2: Yield Percentage --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'نسبة الاستخلاص / المردودية (%):' : 'Oil Extraction Yield (%):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ __('Oil Extraction Yield (%):') }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="yieldPct + ' %'"></span>
                                     </div>
                                     <input type="range" min="10" max="30" step="1" x-model="yieldPct" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
@@ -123,7 +117,7 @@
                                 {{-- Input 3: Price per Kg --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'سعر كيلوجرام الزيت (د.ت):' : 'Oil Price per kg (TND):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ __('Oil Price per kg (TND):') }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="oilPrice + ' د.ت'"></span>
                                     </div>
                                     <input type="range" min="10" max="30" step="0.5" x-model="oilPrice" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
@@ -132,17 +126,17 @@
                                 {{-- Input 4: Olive Purchase Price per kg --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'سعر شراء كيلو الزيتون (د.ت):' : 'Olive Purchase Price per kg (TND):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ __('Olive Purchase Price per kg (TND):') }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="olivePricePerKg + ' د.ت'"></span>
                                     </div>
                                     <input type="range" min="0" max="5" step="0.1" x-model="olivePricePerKg" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
-                                    <p class="text-white/40 text-[10px] mt-1">{{ app()->getLocale() === 'ar' ? 'اجعلها 0 إذا كنت تنتج الزيتون الخاص بك دون شرائه' : 'Set to 0 if you grow your own olives' }}</p>
+                                    <p class="text-white/40 text-[10px] mt-1">{{ __('Set to 0 if you grow your own olives') }}</p>
                                 </div>
 
                                 {{-- Input 5: Milling Cost per kg --}}
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="text-white text-xs font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة عصر الكيلو (د.ت):' : 'Milling Cost per kg (TND):' }}</label>
+                                        <label class="text-white text-xs font-semibold">{{ __('Milling Cost per kg (TND):') }}</label>
                                         <span class="text-[#a8d060] font-black text-sm" x-text="parseFloat(millingCostPerKg).toFixed(3) + ' د.ت'"></span>
                                     </div>
                                     <input type="range" min="0.100" max="0.500" step="0.010" x-model="millingCostPerKg" class="w-full accent-[#6A8F3B] bg-white/10 rounded-lg h-2 cursor-pointer">
@@ -153,27 +147,27 @@
                              <div class="bg-[#172d19] border border-[#6A8F3B]/30 rounded-2xl p-6 flex flex-col justify-between">
                                  <div class="space-y-4">
                                      <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع من الزيت (وزن):' : 'Estimated Oil Yield (Weight):' }}</span>
+                                         <span class="text-gray-200 text-sm font-semibold">{{ __('Estimated Oil Yield (Weight):') }}</span>
                                          <span class="text-[#a8d060] font-black text-xl md:text-2xl" x-text="oilKg + ' كجم'"></span>
                                      </div>
                                      <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'الحجم المعادل باللتر (كثافة 0.916):' : 'Equivalent Volume (Density 0.916):' }}</span>
+                                         <span class="text-gray-200 text-sm font-semibold">{{ __('Equivalent Volume (Density 0.916):') }}</span>
                                          <span class="text-white font-black text-lg md:text-xl" x-text="oilLiters + ' لتر'"></span>
                                      </div>
                                      <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'القيمة الإجمالية للمبيعات:' : 'Total Gross Value:' }}</span>
+                                         <span class="text-gray-200 text-sm font-semibold">{{ __('Total Gross Value:') }}</span>
                                          <span class="text-[#C8A356] font-black text-xl md:text-2xl" x-text="totalValue + ' د.ت'"></span>
                                      </div>
                                      <div class="flex justify-between items-center border-b border-white/5 pb-3" x-show="olivePricePerKg > 0">
-                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة شراء الزيتون الإجمالية:' : 'Total Olive Purchase Cost:' }}</span>
+                                         <span class="text-gray-200 text-sm font-semibold">{{ __('Total Olive Purchase Cost:') }}</span>
                                          <span class="text-red-400 font-black text-base md:text-lg" x-text="'- ' + totalOliveCost + ' د.ت'"></span>
                                      </div>
                                      <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                                         <span class="text-gray-200 text-sm font-semibold">{{ app()->getLocale() === 'ar' ? 'تكلفة العصر الإجمالية:' : 'Total Milling Cost:' }}</span>
+                                         <span class="text-gray-200 text-sm font-semibold">{{ __('Total Milling Cost:') }}</span>
                                          <span class="text-red-400 font-black text-base md:text-lg" x-text="'- ' + totalMilling + ' د.ت'"></span>
                                      </div>
                                      <div class="flex justify-between items-center bg-[#C8A356]/15 p-4 rounded-xl border border-[#C8A356]/30 mt-2">
-                                         <span class="text-[#C8A356] font-extrabold text-base">{{ app()->getLocale() === 'ar' ? 'صافي الأرباح المقدرة:' : 'Net Projected Profit:' }}</span>
+                                         <span class="text-[#C8A356] font-extrabold text-base">{{ __('Net Projected Profit:') }}</span>
                                          <span class="text-emerald-400 font-black text-2xl md:text-3xl" x-text="netProfit + ' د.ت'"></span>
                                      </div>
                                  </div>
@@ -181,11 +175,11 @@
                                 {{-- Social WhatsApp Share Loop --}}
                                 <div class="mt-6">
                                     <button @click="
-                                        const msg = encodeURIComponent('{{ app()->getLocale() === 'ar' ? 'لقد قمت بحساب أرباحي المتوقعة عبر حاسبة ربح التبويز من ZinToop! الوزن: ' : 'Calculated my tabouiz profit using ZinToop Calculator! Olives: ' }}' + oliveWeight + ' kg | {{ app()->getLocale() === 'ar' ? 'الإنتاج المتوقع: ' : 'Yield: ' }}' + oilKg + ' kg (approx. ' + oilLiters + ' Liters) | {{ app()->getLocale() === 'ar' ? 'الأرباح الصافية المقدرة: ' : 'Net profit: ' }}' + netProfit + ' TND. {{ app()->getLocale() === 'ar' ? 'احسب أرباحك الآن مجاناً عبر الرابط: ' : 'Calculate yours free: ' }}' + window.location.href);
+                                        const msg = encodeURIComponent('{{ __('Calculated my tabouiz profit using ZinToop Calculator! Olives: ') }}' + oliveWeight + ' kg | {{ __('Yield: ') }}' + oilKg + ' kg (approx. ' + oilLiters + ' Liters) | {{ __('Net profit: ') }}' + netProfit + ' TND. {{ __('Calculate yours free: ') }}' + window.location.href);
                                         window.open('https://wa.me/?text=' + msg, '_blank');
                                     " class="w-full py-3.5 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-sm shadow-lg shadow-green-600/30">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                        {{ app()->getLocale() === 'ar' ? 'مشاركة الحساب عبر واتساب' : 'Share Results via WhatsApp' }}
+                                        {{ __('Share Results via WhatsApp') }}
                                     </button>
                                 </div>
                             </div>
@@ -224,12 +218,12 @@
             <button @click="annual = false"
                 :class="!annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-gray-500 hover:text-white'"
                 class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300">
-                {{ app()->getLocale() === 'ar' ? 'شهري' : (app()->getLocale() === 'fr' ? 'Mensuel' : 'Monthly') }}
+                {{ __('Monthly') }}
             </button>
             <button @click="annual = true"
                 :class="annual ? 'bg-[#6A8F3B] text-white shadow-lg' : 'text-gray-500 hover:text-white'"
                 class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2">
-                {{ app()->getLocale() === 'ar' ? 'سنوي' : (app()->getLocale() === 'fr' ? 'Annuel' : 'Annual') }}
+                {{ __('Annual') }}
                 <span class="px-2 py-0.5 bg-[#C8A356] text-black text-[10px] font-black rounded-full">-20%</span>
             </button>
         </div>
@@ -251,9 +245,9 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-[#1B2A1B]">
-                        {{ app()->getLocale() === 'ar' ? 'خدمات التسويق الرقمي' : (app()->getLocale() === 'fr' ? 'Marketing Digital' : 'Digital Marketing') }}
+                        {{ __('Digital Marketing') }}
                     </h2>
-                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'حضور قوي على الإنترنت' : 'Strong online presence' }}</p>
+                    <p class="text-gray-500 text-xs">{{ __('Strong online presence') }}</p>
                 </div>
             </div>
 
@@ -271,7 +265,7 @@
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,163,86,0.15),transparent_50%)]"></div>
                         
                         <div class="relative z-10 flex items-center gap-1">
-                            <span class="text-[#a8d060] font-black">{{ app()->getLocale() === 'ar' ? 'تسويق رقمي' : (app()->getLocale() === 'fr' ? 'Marketing' : 'Marketing') }}</span>
+                            <span class="text-[#a8d060] font-black">{{ __('Marketing') }}</span>
                             <span>📣</span>
                         </div>
                         
@@ -288,7 +282,7 @@
 
                         <!-- Results -->
                         <div class="p-3 bg-gray-50 rounded-xl border border-gray-150 text-right flex-grow mb-1">
-                            <p class="text-[10px] text-[#6A8F3B] font-bold mb-1">{{ app()->getLocale() === 'ar' ? 'النتائج المتوقعة:' : 'Expected Results:' }}</p>
+                            <p class="text-[10px] text-[#6A8F3B] font-bold mb-1">{{ __('Expected Results:') }}</p>
                             <p class="text-gray-700 text-[11px] leading-relaxed font-medium line-clamp-3">
                                 {{ app()->getLocale() === 'ar' ? $service->results_ar : (app()->getLocale() === 'fr' ? $service->results_fr : $service->results_en) }}
                             </p>
@@ -298,16 +292,16 @@
                         <div class="bg-gray-50 border border-gray-150 rounded-xl p-3 text-center shrink-0">
                             <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-gray-500 mb-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-[#6A8F3B]"></span>
-                                {{ app()->getLocale() === 'ar' ? 'الميزانية المقدرة' : 'Estimated Budget' }}
+                                {{ __('Estimated Budget') }}
                             </span>
                             <div class="text-base font-black text-[#C8A356] tracking-tight">
                                 {{ number_format($service->price_tnd_weekly, 0) }} 
                                 <span class="text-[10px] font-normal text-gray-500">
                                     {{ $service->currency }}
                                     @if($service->id == 5)
-                                        /{{ app()->getLocale() === 'ar' ? 'خدمة' : 'service' }}
+                                        /{{ __('service') }}
                                     @else
-                                        /{{ app()->getLocale() === 'ar' ? 'أسبوع' : 'week' }}
+                                        /{{ __('week') }}
                                     @endif
                                 </span>
                             </div>
@@ -316,7 +310,7 @@
                         <!-- CTA Button -->
                         <button type="button" class="w-full py-2 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white text-[11px] font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
                             <span>📅</span>
-                            {{ app()->getLocale() === 'ar' ? 'احجز موعد' : 'Book Appointment' }}
+                            {{ __('Book Appointment') }}
                         </button>
                     </div>
                 </div>
@@ -332,9 +326,9 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-[#1B2A1B]">
-                        {{ app()->getLocale() === 'ar' ? 'الاستشارات وخدمات التصدير' : (app()->getLocale() === 'fr' ? 'Conseil & Export' : 'Consulting & Export Services') }}
+                        {{ __('Consulting & Export Services') }}
                     </h2>
-                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'مرافقة احترافية للأسواق العالمية' : 'Professional guidance for global markets' }}</p>
+                    <p class="text-gray-500 text-xs">{{ __('Professional guidance for global markets') }}</p>
                 </div>
             </div>
 
@@ -419,9 +413,9 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-[#1B2A1B]">
-                        {{ app()->getLocale() === 'ar' ? 'خدمات التطوير التقني' : (app()->getLocale() === 'fr' ? 'Développement Technique' : 'Technical Development') }}
+                        {{ __('Technical Development') }}
                     </h2>
-                    <p class="text-gray-500 text-xs">{{ app()->getLocale() === 'ar' ? 'حلول برمجية متخصصة' : 'Specialized software solutions' }}</p>
+                    <p class="text-gray-500 text-xs">{{ __('Specialized software solutions') }}</p>
                 </div>
             </div>
 
@@ -540,7 +534,7 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
+     dir="{{ __('ltr') }}"
      x-cloak>
     
     <!-- Backdrop -->
@@ -566,7 +560,7 @@
                 <div>
                     <h3 class="text-xl font-black text-gray-900" x-text="activeServiceName">باقة التسويق</h3>
                     <p class="text-xs text-gray-500 mt-0.5">
-                        {{ app()->getLocale() === 'ar' ? 'أدخل تفاصيلك لتأكيد الحجز وبدء الحملة فوراً' : 'Fill details to confirm your instant booking' }}
+                        {{ __('Fill details to confirm your instant booking') }}
                     </p>
                 </div>
             </div>
@@ -578,8 +572,8 @@
         <!-- Price display -->
         <div class="bg-gray-50 border border-gray-150 rounded-2xl p-4 mb-6 flex items-center justify-between relative z-10">
             <span class="text-sm font-semibold text-gray-600">
-                <span x-show="activeServiceId == 5">{{ app()->getLocale() === 'ar' ? 'الميزانية المقدرة:' : 'Estimated Budget:' }}</span>
-                <span x-show="activeServiceId != 5">{{ app()->getLocale() === 'ar' ? 'الميزانية الأسبوعية المقدرة:' : 'Estimated Weekly Budget:' }}</span>
+                <span x-show="activeServiceId == 5">{{ __('Estimated Budget:') }}</span>
+                <span x-show="activeServiceId != 5">{{ __('Estimated Weekly Budget:') }}</span>
             </span>
             <div class="text-2xl font-black text-[#C8A356] flex items-baseline gap-1">
                 <span x-text="activeServicePrice">0</span>
@@ -592,28 +586,28 @@
             @csrf
             
             <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'الاسم بالكامل أو اسم النشاط التجاري' : 'Full Name / Business Name' }} <span class="text-red-400">*</span></label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ __('Full Name / Business Name') }} <span class="text-red-400">*</span></label>
                 <input type="text" 
                        name="name" 
                        required 
-                       placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: معصرة الزيتون الكبرى...' : 'e.g. Olive Oil Mill Co.' }}"
+                       placeholder="{{ __('e.g. Olive Oil Mill Co.') }}"
                        class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم الهاتف أو الواتساب' : 'Phone / WhatsApp Number' }} <span class="text-red-400">*</span></label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ __('Phone / WhatsApp Number') }} <span class="text-red-400">*</span></label>
                 <input type="tel" 
                        name="phone" 
                        required 
-                       placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: 216XXXXXXXX+' : 'e.g. +216XXXXXXXX' }}"
+                       placeholder="{{ __('e.g. +216XXXXXXXX') }}"
                        class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'معلومات إضافية عن نشاطك (اختياري)' : 'Additional Info (Optional)' }}</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-2">{{ __('Additional Info (Optional)') }}</label>
                 <textarea name="business_info" 
                           rows="2" 
-                          placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: رابط صفحة الفيسبوك أو تفاصيل المنتج...' : 'e.g. Facebook page link or product details...' }}"
+                          placeholder="{{ __('e.g. Facebook page link or product details...') }}"
                           class="w-full bg-gray-50 border border-gray-250 rounded-xl px-4 py-3 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition-all"></textarea>
             </div>
 
@@ -621,13 +615,11 @@
             <button type="submit" 
                     class="w-full bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] hover:from-[#5a7a2f] hover:to-[#4e6a28] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#6A8F3B]/20 active:scale-[0.98] transition-all duration-200 text-sm flex items-center justify-center gap-2 cursor-pointer mt-6">
                 <span>💬</span>
-                {{ app()->getLocale() === 'ar' ? 'احجز الآن وتواصل عبر واتساب' : 'Book & Chat on WhatsApp' }}
+                {{ __('Book & Chat on WhatsApp') }}
             </button>
             
             <p class="text-[10px] text-center text-gray-400 mt-3 leading-relaxed">
-                {{ app()->getLocale() === 'ar' 
-                    ? 'بمجرد النقر، سيتم تسجيل طلبك في نظامنا وفتح محادثة مباشرة وآمنة معك على الواتساب لإكمال التجهيز.' 
-                    : 'Clicking registers your lead instantly and opens a secure live chat on WhatsApp to finalize setup.' }}
+                {{ __('Clicking registers your lead instantly and opens a secure live chat on WhatsApp to finalize setup.') }}
             </p>
         </form>
 

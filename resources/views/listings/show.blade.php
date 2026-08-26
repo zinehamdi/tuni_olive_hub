@@ -625,7 +625,7 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                     <div class="space-y-4">
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Quantity (') . $listing->unit . ')' }}</label>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('Quantity') }} ({{ $listing->unit }})</label>
                                                 <input type="number" x-model.number="dealQty" min="{{ $listing->formatted_min_order ?? 1 }}" step="any" class="w-full border-gray-300 focus:border-[#6A8F3B] focus:ring-[#6A8F3B] rounded-xl shadow-sm text-lg py-3 px-4">
                                                 @if($listing->min_order)
                                                     <p class="text-xs text-gray-500 mt-1">{{ __('Minimum order: ') }} {{ $listing->formatted_min_order }} {{ $listing->unit }}</p>
@@ -1035,12 +1035,13 @@ document.addEventListener('alpine:init', () => {
                 const data = await res.json();
                 if (data.success || data.data) {
                     // Success, redirect to chat
-                    window.location.href = '{{ route('messages.show', $listing->seller) }}';
+                    window.location.href = '{{ route('messages.show', ['locale' => app()->getLocale(), 'user' => $listing->seller_id]) }}';
                 } else {
-                    alert(data.message || 'Error creating order.');
+                    const errMsg = data.message || (data.errors ? Object.values(data.errors).flat().join('\n') : '{{ __("Error creating order.") }}');
+                    alert(errMsg);
                 }
             } catch (e) {
-                alert('Network error.');
+                alert('{{ __("Network error.") }}');
             } finally {
                 this.makingDeal = false;
             }

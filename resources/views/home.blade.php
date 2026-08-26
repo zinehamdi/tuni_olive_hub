@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-12 {{ app()->getLocale()==='ar' ? 'text-right' : '' }}">
+<div class="space-y-12 {{ __('') }}">
     <x-hero-animation />
     
     <x-price-ticker />
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 @php
                                     $cardProductType = $listing->product->type === 'olive' ? (app()->getLocale() === 'ar' ? 'زيتون' : __('Olives')) : (app()->getLocale() === 'ar' ? 'زيت زيتون' : __('Olive Oil'));
                                     $cardQuality = $listing->product->quality ? ' ' . $listing->product->quality : '';
-                                    $cardCity = $listing->seller->addresses->first() ? (app()->getLocale() === 'ar' ? ' من ' : ' from ') . ($listing->seller->addresses->first()->governorate ?? '') : '';
+                                    $cardCity = $listing->seller->addresses->first() ? (__(' from ')) . ($listing->seller->addresses->first()->governorate ?? '') : '';
                                 @endphp
                                 <div class="font-bold text-lg text-gray-900 mb-2 leading-tight">
                                     {{ $cardProductType }} {{ $listing->product->variety }}{{ $cardQuality }}{{ $cardCity }}
