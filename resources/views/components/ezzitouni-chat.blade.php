@@ -194,7 +194,7 @@ document.addEventListener('alpine:init', () => {
             this.isTyping = true;
 
             try {
-                // Send to backend
+                // Send to backend with active locale
                 const response = await fetch('{{ route('chatbot.chat') }}', {
                      method: 'POST',
                      headers: {
@@ -204,6 +204,7 @@ document.addEventListener('alpine:init', () => {
                      },
                      body: JSON.stringify({
                          message: userMsg,
+                         locale: '{{ app()->getLocale() }}',
                          history: this.messages.slice(0, -1) // Send previous messages for context
                      })
                  });
