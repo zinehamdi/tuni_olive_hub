@@ -90,7 +90,7 @@
                     <span class="text-3xl font-black text-white">
                         {{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2) : '—' }}
                     </span>
-                    <span class="text-sm font-bold text-[#F5E5C0]">TND/لتر</span>
+                    <span class="text-sm font-bold text-[#F5E5C0]">TND/{{ $locale === 'ar' ? 'لتر' : 'L' }}</span>
                 </div>
                 <div class="mt-2 flex items-center justify-between text-xs text-gray-400 border-t border-white/10 pt-2">
                     <span>{{ __('محدث يومياً من الأسواق') }}</span>
@@ -111,7 +111,7 @@
                     <span class="text-3xl font-black text-white">
                         {{ isset($tunisianOliveAvg) ? number_format((float)$tunisianOliveAvg, 2) : '—' }}
                     </span>
-                    <span class="text-sm font-bold text-[#F5E5C0]">TND/كغ</span>
+                    <span class="text-sm font-bold text-[#F5E5C0]">TND/{{ $locale === 'ar' ? 'كغ' : 'kg' }}</span>
                 </div>
                 <div class="mt-2 flex items-center justify-between text-xs text-gray-400 border-t border-white/10 pt-2">
                     <span>{{ __('أسواق الإنتاج الرئيسيّة') }}</span>
@@ -233,14 +233,15 @@
                         $priceAvg = $row->price_avg ? (float)$row->price_avg : null;
                         $priceMax = $row->price_max ? (float)$row->price_max : null;
                         $unit = $row->unit ?? ($isOil ? 'liter' : 'kg');
-                        $unitLabel = $unit === 'liter' ? 'لتر' : ($unit === 'kg' ? 'كغ' : $unit);
+                        $unitLabel = $unit === 'liter' ? ($locale === 'ar' ? 'لتر' : 'L') : ($unit === 'kg' ? ($locale === 'ar' ? 'كغ' : 'kg') : $unit);
                         $currency = $row->currency ?? 'TND';
                         $quality = $row->quality ?? ($isOil ? 'EVOO' : 'ممتاز');
                         $variety = $row->variety ?? '';
                         $gov = $row->governorate ?? '';
                         $soukRaw = $row->souk_name ?? '';
-                        $soukDisplay = $locale === 'ar' ? ($soukNames[$soukRaw] ?? $soukRaw) : $soukRaw;
-                        $searchText = implode(' ', [$soukDisplay, $soukRaw, $gov, $variety, $quality, $isOil ? 'زيت زيتون oil' : 'زيتون حب olive']);
+                        $soukDisplay = __($soukRaw ?: 'سوق تونس');
+                        $govDisplay = __($gov ?: 'تونس');
+                        $searchText = implode(' ', [$soukDisplay, $soukRaw, $gov, $govDisplay, $variety, $quality, $isOil ? 'زيت زيتون oil' : 'زيتون حب olive']);
 
                         // Calculate range percentage for visual progress bar
                         $rangePct = 50;
@@ -263,11 +264,11 @@
                                 <div class="flex items-center gap-2">
                                     <span class="text-xl">🇹🇳</span>
                                     <h3 class="font-extrabold text-base text-white leading-tight">
-                                        {{ __($soukDisplay ?: 'سوق تونس') }}
+                                        {{ $soukDisplay }}
                                     </h3>
                                 </div>
                                 <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#C8A356] text-gray-950 shadow-sm">
-                                    {{ __($gov ?: 'تونس') }}
+                                    {{ $govDisplay }}
                                 </span>
                             </div>
 

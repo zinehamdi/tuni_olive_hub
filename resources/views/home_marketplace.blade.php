@@ -219,7 +219,11 @@
             <!-- Quick Stats -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8 max-w-6xl mx-auto" data-bot-explain="{{ __('These are some quick stats about the platform') }}">
                 <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                    <div class="text-3xl font-bold">{{ number_format($platformStats['visits'] ?? 0) }}</div>
+                    @php
+                        $visitsCount = (int)($platformStats['visits'] ?? 0);
+                        $formattedVisits = $visitsCount >= 1000 ? (number_format($visitsCount / 1000, 1) . 'K') : number_format($visitsCount);
+                    @endphp
+                    <div class="text-3xl font-bold">{{ $formattedVisits }}</div>
                     <div class="text-sm text-white/80">{{ __('Total Visits') }}</div>
                 </div>
                 <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">

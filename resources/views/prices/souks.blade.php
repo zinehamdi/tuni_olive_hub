@@ -102,14 +102,15 @@
                     $priceAvg = $row->price_avg ? (float)$row->price_avg : null;
                     $priceMax = $row->price_max ? (float)$row->price_max : null;
                     $unit = $row->unit ?? ($isOil ? 'liter' : 'kg');
-                    $unitLabel = $unit === 'liter' ? 'لتر' : ($unit === 'kg' ? 'كغ' : $unit);
+                    $unitLabel = $unit === 'liter' ? ($locale === 'ar' ? 'لتر' : 'L') : ($unit === 'kg' ? ($locale === 'ar' ? 'كغ' : 'kg') : $unit);
                     $currency = $row->currency ?? 'TND';
                     $quality = $row->quality ?? ($isOil ? 'EVOO' : 'ممتاز');
                     $variety = $row->variety ?? '';
                     $gov = $row->governorate ?? '';
                     $soukRaw = $row->souk_name ?? '';
-                    $soukDisplay = $locale === 'ar' ? ($soukNames[$soukRaw] ?? $soukRaw) : $soukRaw;
-                    $searchText = implode(' ', [$soukDisplay, $soukRaw, $gov, $variety, $quality, $isOil ? 'زيت زيتون oil' : 'زيتون حب olive']);
+                    $soukDisplay = __($soukRaw ?: 'سوق تونس');
+                    $govDisplay = __($gov ?: 'تونس');
+                    $searchText = implode(' ', [$soukDisplay, $soukRaw, $gov, $govDisplay, $variety, $quality, $isOil ? 'زيت زيتون oil' : 'زيتون حب olive']);
 
                     $rangePct = 50;
                     if ($priceMin && $priceMax && $priceAvg && $priceMax > $priceMin) {
@@ -131,11 +132,11 @@
                             <div class="flex items-center gap-2">
                                 <span class="text-xl">🇹🇳</span>
                                 <h3 class="font-extrabold text-base text-white leading-tight">
-                                    {{ $soukDisplay ?: 'سوق تونس' }}
+                                    {{ $soukDisplay }}
                                 </h3>
                             </div>
                             <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#C8A356] text-gray-950 shadow-sm">
-                                {{ $gov ?: 'تونس' }}
+                                {{ $govDisplay }}
                             </span>
                         </div>
 
@@ -146,7 +147,7 @@
                                 @else
                                     <span class="text-emerald-300 font-bold">🌿 {{ __('زيتون حب') }}</span>
                                 @endif
-                                @if($variety) <span class="opacity-75">({{ $variety }})</span> @endif
+                                @if($variety) <span class="opacity-75">({{ __($variety) }})</span> @endif
                             </span>
                             <span class="text-[10px] opacity-80 bg-white/10 px-2 py-0.5 rounded">{{ $date }}</span>
                         </div>
@@ -186,7 +187,7 @@
                                 <span>{{ $changePct }}</span>
                             </div>
                             <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-bold">
-                                {{ $quality }}
+                                {{ __($quality) }}
                             </span>
                         </div>
                     </div>
