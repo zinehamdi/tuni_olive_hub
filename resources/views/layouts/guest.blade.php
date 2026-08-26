@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ __('ltr') }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,7 @@
                 default => 'Log in or create your free ZinToop account to connect directly with olive oil producers and mills in Tunisia.',
             };
             $defaultGuestKeywords = match($locale) {
-                'ar' => 'الشملالي, الشتوي, سلالات الزيتون في تونس, أنواع الزيتون التونسي, أحسن أنواع زيت الزيتون في العالم, أحسن سلالات الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت الزيتون التونسي, سوق زيت الزيتون, زين توب',
+                'ar' => 'الشملالي, الشتوي, أصناف الزيتون في تونس, أنواع الزيتون التونسي, أحسن أنواع زيت الزيتون في العالم, أحسن أصناف الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت الزيتون التونسي, سوق زيت الزيتون, زين توب',
                 'fr' => 'variétés d\'olives tunisiennes, chemlali, chetoui, olives en tunisie, meilleures huiles d\'olive au monde, meilleures variétés d\'olivier, le plus grand marché d\'huile d\'olive, prix d\'huile d\'olive en tunisie, prix mondial d\'huile d\'olive, moyen le plus facile pour vendre et acheter l\'huile d\'olive, huile d\'olive tunisie, zintoop',
                 default => 'chemlali, chetoui, tunisian olive varieties, varieties of olives in tunisia, best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, zintoop',
             };

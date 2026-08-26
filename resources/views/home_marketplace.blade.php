@@ -6,7 +6,7 @@
 @section('og_description', 'تسوق زيت الزيتون التونسي الأصلي بجودة عالية من المزارعين والمعاصر مباشرة')
 
 @section('content')
-<div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="min-h-screen" 
+<div dir="{{ __('ltr') }}" class="min-h-screen" 
      x-data="marketplace"
      @keydown.escape.window="articleModalOpen = false"
      @mobile-menu-toggled.window="mobileMenuOpen = $event.detail.open">
@@ -171,7 +171,7 @@
                     <!-- Olive Varieties Article Shortcut -->
                     <a href="{{ route('article.varieties') }}" 
                        class="group flex items-center gap-3 px-6 py-3 bg-[#6A8F3B] text-white rounded-full border-2 border-white/20 hover:bg-[#5a7a2f] transition-all shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(106,143,59,0.5)] transform hover:-translate-y-1 active:scale-95">
-                        <span class="font-black uppercase tracking-widest text-[10px]">تعرف على سلالات الزيتون التونسي</span>
+                        <span class="font-black uppercase tracking-widest text-[10px]">تعرف على أصناف الزيتون التونسي</span>
                         <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/40 transition">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -182,7 +182,7 @@
             </div>
 
             <!-- Search Bar with Location -->
-            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-2" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'هنا يمكنك البحث عن المنتجات، وتحديد موقعك لرؤية الأقرب إليك!' : 'Here you can search for products and locate yourself to find nearby offers!' }}">
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-2" data-bot-explain="{{ __('Here you can search for products and locate yourself to find nearby offers!') }}">
                 <div class="flex flex-col md:flex-row gap-2">
                     <div class="flex-1 relative">
                         <input type="text" 
@@ -217,7 +217,7 @@
             </div>
 
             <!-- Quick Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8 max-w-6xl mx-auto" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'هذه بعض الإحصائيات السريعة حول المنصة' : 'These are some quick stats about the platform' }}">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8 max-w-6xl mx-auto" data-bot-explain="{{ __('These are some quick stats about the platform') }}">
                 <div class="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
                     <div class="text-3xl font-bold">{{ number_format($platformStats['visits'] ?? 0) }}</div>
                     <div class="text-sm text-white/80">{{ __('Total Visits') }}</div>
@@ -252,7 +252,7 @@
     <section class="max-w-7xl mx-auto px-4 pt-10 pb-2 overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
             <div class="relative">
-                <div class="absolute -top-4 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} w-10 h-1 bg-[#6A8F3B] rounded-full"></div>
+                <div class="absolute -top-4 {{ __('left-0') }} w-10 h-1 bg-[#6A8F3B] rounded-full"></div>
                 <h2 class="text-2xl font-black text-gray-900 tracking-tight">{{ __('Live Marketplace Opportunities') }}</h2>
             </div>
             <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full">
@@ -292,7 +292,7 @@
                     <div class="h-full bg-gradient-to-br from-[#1b381c] to-[#0d1f0e] rounded-[1.5rem] border border-[#6A8F3B]/30 hover:border-[#6A8F3B]/60 shadow-md hover:shadow-xl transition-all duration-300 p-5 flex flex-col hover:-translate-y-1 relative overflow-hidden">
                         
                         <!-- Color Stripe -->
-                        <div class="absolute top-0 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} bottom-0 w-1.5 
+                        <div class="absolute top-0 {{ __('left-0') }} bottom-0 w-1.5 
                             {{ $deal->type === 'demand' ? 'bg-amber-400' : ($deal->type === 'service' ? 'bg-blue-400' : 'bg-emerald-400') }}"></div>
 
                         <!-- Header -->
@@ -427,7 +427,7 @@
                         <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}" 
                              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" alt="Article" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         @if(isset($article->category[app()->getLocale()]))
-                        <div class="absolute top-4 {{ app()->getLocale()==='ar' ? 'right-4' : 'left-4' }} bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-[#6A8F3B] shadow-sm">{{ $article->category[app()->getLocale()] }}</div>
+                        <div class="absolute top-4 {{ __('left-4') }} bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-[#6A8F3B] shadow-sm">{{ $article->category[app()->getLocale()] }}</div>
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </a>
@@ -443,8 +443,8 @@
                             <a href="{{ route('articles.show', $article->id) }}" 
                                     class="inline-flex items-center gap-2 text-[#6A8F3B] font-bold text-sm group/btn hover:underline transition-all">
                                 <span>{{ __('Show More') }}</span>
-                                <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:{{ app()->getLocale()==='ar' ? '-translate-x-1' : 'translate-x-1' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ app()->getLocale()==='ar' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7' }}" />
+                                <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:{{ __('translate-x-1') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ __('M9 5l7 7-7 7') }}" />
                                 </svg>
                             </a>
                         </div>
@@ -467,7 +467,7 @@
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-gray-100 mb-4">
                             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                             <span class="text-[10px] font-bold uppercase tracking-wider text-gray-600">
-                                {{ app()->getLocale() === 'ar' ? 'سوق حر ومجاني 100%' : (app()->getLocale() === 'fr' ? 'Marché 100% Gratuit' : '100% Free Marketplace') }}
+                                {{ __('100% Free Marketplace') }}
                             </span>
                         </div>
                         
@@ -543,7 +543,7 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end text-right" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end text-right" dir="{{ __('ltr') }}">
                 
                 <!-- 1. Distance Filter -->
                 <div>
@@ -664,7 +664,7 @@
                 <!-- Products Grid View -->
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <template x-for="listing in filteredListings" :key="listing.id">
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'انقر على عرض التفاصيل لرؤية المزيد عن هذا المنتج وكيفية الشراء' : 'Click View Details to learn more about this product and how to buy' }}">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="h-48 flex items-center justify-center relative overflow-hidden">
                                 <template x-if="listing.media && listing.media.length > 0">
@@ -942,7 +942,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white py-16 px-4 mt-12" data-bot-explain="{{ app()->getLocale() === 'ar' ? 'هل أنت منتج أو صاحب معصرة؟ انضم إلينا وابدأ البيع مجاناً!' : 'Are you a producer or mill owner? Join us and start selling for free!' }}">
+    <section class="bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white py-16 px-4 mt-12" data-bot-explain="{{ __('Are you a producer or mill owner? Join us and start selling for free!') }}">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">{{ __('Do you have a product to sell?') }}</h2>
             <p class="text-xl text-white/90 mb-8">{{ __('Join thousands of sellers and list your product today') }}</p>
