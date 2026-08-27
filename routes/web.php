@@ -89,8 +89,8 @@ Route::middleware(['web', 'set.locale'])->group(function () {
             }
         }
             
-        $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(30), function () {
-            return \App\Models\Article::where('is_active', true)->latest()->take(3)->get();
+        $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(15), function () {
+            return \App\Models\Article::where('is_active', true)->orderBy('id', 'asc')->get();
         });
         
         $deals = \Illuminate\Support\Facades\Cache::remember('home_deals', now()->addMinutes(10), function () {

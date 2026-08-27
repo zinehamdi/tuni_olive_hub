@@ -415,42 +415,88 @@
     </div>
     @endif
 
-    <!-- Latest Articles / Ads Section -->
+    <!-- Latest Articles / Knowledge Hub Carousel Section -->
     @if(isset($articles) && $articles->count() > 0)
-    <section class="max-w-7xl mx-auto px-4 pt-12 pb-4">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl font-bold text-gray-900">{{ __('Latest Articles') }}</h2>
+    <section class="max-w-7xl mx-auto px-4 pt-12 pb-6" x-data="{
+        scroll(direction) {
+            const container = this.$refs.articlesSlider;
+            const scrollAmount = container.clientWidth * 0.75;
+            const isRTL = document.documentElement.dir === 'rtl';
+            const multiplier = isRTL ? -direction : direction;
+            container.scrollBy({ left: multiplier * scrollAmount, behavior: 'smooth' });
+        }
+    }">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#6A8F3B]/10 text-[#6A8F3B] text-xs font-bold uppercase tracking-wider mb-2">
+                    <span>📚</span>
+                    <span>{{ __('Guides & Market Insights') }}</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">{{ __('Latest Articles') }}</h2>
+            </div>
+            
+            <!-- Navigation Controls (Desktop & Mobile) -->
+            <div class="flex items-center gap-2">
+                <button @click="scroll(-1)" 
+                        type="button"
+                        aria-label="Previous articles"
+                        class="w-10 h-10 rounded-full bg-white border border-gray-200 hover:border-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white text-gray-700 shadow-sm flex items-center justify-center transition-all duration-300 transform active:scale-95">
+                    <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button @click="scroll(1)" 
+                        type="button"
+                        aria-label="Next articles"
+                        class="w-10 h-10 rounded-full bg-white border border-gray-200 hover:border-[#6A8F3B] hover:bg-[#6A8F3B] hover:text-white text-gray-700 shadow-sm flex items-center justify-center transition-all duration-300 transform active:scale-95">
+                    <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
         </div>
         
-        <!-- Articles Carousel / Grid -->
-        <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-8 scrollbar-hide">
+        <!-- Articles Swipeable Carousel -->
+        <div x-ref="articlesSlider" 
+             class="flex gap-5 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 pt-2 px-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
             @foreach($articles as $article)
-            <div class="w-full md:min-w-0 snap-center flex-shrink-0 px-1">
-                <div class="group bg-white rounded-3xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.15)] border border-gray-100/50 hover:shadow-[0_30px_60px_-12px_rgba(106,143,59,0.25)] transition-all duration-500 overflow-hidden h-full flex flex-col">
-                    <a href="{{ route('articles.show', $article->id) }}" class="aspect-[16/9] bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] relative overflow-hidden block">
-                        <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}" 
-                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" alt="Article" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="w-[84vw] sm:w-[340px] md:w-[370px] snap-start flex-shrink-0 flex flex-col">
+                <div class="group bg-white rounded-3xl shadow-[0_15px_40px_-15px_rgba(0,0,0,0.1)] border border-gray-100/80 hover:border-[#6A8F3B]/30 hover:shadow-[0_25px_50px_-12px_rgba(106,143,59,0.2)] transition-all duration-500 overflow-hidden h-full flex flex-col">
+                    <a href="{{ route('articles.show', $article->id) }}" class="aspect-[16/9] bg-gradient-to-br from-[#183b1c] to-[#6A8F3B] relative overflow-hidden block">
+                        <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'images/') ? asset($article->image) : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : asset('images/' . $article->image))) }}" 
+                             onerror="this.onerror=null;this.src='{{ asset('images/hero_slide_1.png') }}'" 
+                             alt="{{ $article->title[app()->getLocale()] ?? 'Article' }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         @if(isset($article->category[app()->getLocale()]))
-                        <div class="absolute top-4 {{ __('left-4') }} bg-white/95 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-[#6A8F3B] shadow-sm">{{ $article->category[app()->getLocale()] }}</div>
-                        @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </a>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            {{ $article->created_at->format('M d, Y') }}
+                        <div class="absolute top-3.5 {{ app()->getLocale() === 'ar' ? 'right-3.5' : 'left-3.5' }} bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-extrabold text-[#183b1c] shadow-md border border-white/50">
+                            {{ $article->category[app()->getLocale()] }}
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#6A8F3B] transition-colors leading-tight">{{ $article->title[app()->getLocale()] ?? '' }}</h3>
-                        <p class="text-gray-500 text-sm line-clamp-2 mb-6 leading-relaxed">{{ $article->content[app()->getLocale()] ?? '' }}</p>
+                        @endif
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </a>
+                    <div class="p-5 sm:p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-2.5">
+                            <svg class="w-3.5 h-3.5 text-[#6A8F3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>{{ $article->created_at ? $article->created_at->format('M d, Y') : now()->format('M d, Y') }}</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-2.5 group-hover:text-[#6A8F3B] transition-colors leading-snug line-clamp-2">
+                            {{ $article->title[app()->getLocale()] ?? '' }}
+                        </h3>
+                        <p class="text-gray-500 text-xs sm:text-sm line-clamp-2 mb-4 leading-relaxed">
+                            {{ Str::limit(strip_tags($article->content[app()->getLocale()] ?? ''), 120) }}
+                        </p>
                         
-                        <div class="mt-auto">
+                        <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
                             <a href="{{ route('articles.show', $article->id) }}" 
-                                    class="inline-flex items-center gap-2 text-[#6A8F3B] font-bold text-sm group/btn hover:underline transition-all">
-                                <span>{{ __('Show More') }}</span>
-                                <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:{{ __('translate-x-1') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ __('M9 5l7 7-7 7') }}" />
+                               class="inline-flex items-center gap-1.5 text-[#6A8F3B] font-bold text-xs sm:text-sm group/btn hover:text-[#183b1c] transition-colors">
+                                <span>{{ __('Read Article') }}</span>
+                                <svg class="w-4 h-4 rtl:rotate-180 transition-transform duration-300 group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
                                 </svg>
                             </a>
+                            <span class="text-[10px] font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md">
+                                #{{ $article->id }}
+                            </span>
                         </div>
                     </div>
                 </div>

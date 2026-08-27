@@ -22,7 +22,7 @@ class StrategicSeoArticlesSeeder extends Seeder
                     'fr' => 'Export & Commerce',
                     'ar' => 'التصدير والتجارة',
                 ],
-                'image' => 'images/hero_slide_1.png',
+                'image' => 'images/articles/import_b2b_sourcing.jpg',
                 'is_active' => true,
                 'content' => [
                     'en' => "Tunisia stands as one of the world's leading producers and the foremost exporter of organic olive oil globally. For international importers, distributors, restaurant chains, and food manufacturers, sourcing Tunisian extra virgin olive oil (EVOO) represents an outstanding strategic advantage in terms of cost-efficiency, chemical purity, and high polyphenol content.\n\n"
@@ -59,144 +59,113 @@ class StrategicSeoArticlesSeeder extends Seeder
                 'id' => 2,
                 'title' => [
                     'en' => 'Private Label & Contract Bottling Olive Oil in Tunisia: Complete Guide',
-                    'fr' => 'Huile d\'Olive en Marque Privée en Tunisie : Guide du Co-Packing & Embouteillage',
-                    'ar' => 'تصنيع وتعبئة زيت الزيتون بالعلامة الخاصة في تونس: دليل الشركات والمستوردين',
+                    'fr' => 'Marque Privée et Conditionnement d\'Huile d\'Olive en Tunisie : Guide B2B',
+                    'ar' => 'العلامة الخاصة والتعبئة لزيت الزيتون التونسي: دليل الشركات والموزعين',
                 ],
                 'category' => [
                     'en' => 'Private Label',
                     'fr' => 'Marque Privée',
                     'ar' => 'العلامة الخاصة',
                 ],
-                'image' => 'images/hero_slide_2.png',
+                'image' => 'images/articles/private_label_bottles.jpg',
                 'is_active' => true,
                 'content' => [
-                    'en' => "Launching a private label olive oil brand allows food retailers, gourmet brands, and hospitality groups to market high-grade Mediterranean EVOO under their own signature identity.\n\n"
-                        . "### Advantages of Co-Packing in Tunisia\n"
-                        . "1. **Cost Efficiency**: Turnkey production costs in Tunisia provide high margins compared to European packaging facilities.\n"
-                        . "2. **Custom Cultivar Profiles**: Select between smooth Chemlali (central and southern Tunisia) and robust, peppery Chetoui (northern Tunisia).\n"
-                        . "3. **Packaging Versatility**: Automated bottling lines support 250ml, 500ml, 750ml, 1L bottles, and 3L/5L tins with nitrogen injection to guarantee freshness.\n\n"
-                        . "Explore accredited packaging units on ZinToop: https://zintoop.com/en/private-label-olive-oil-tunisia",
-                    'fr' => "Le développement d'une marque privée (Private Label) d'huile d'olive en Tunisie permet aux distributeurs et épiceries fines de proposer une huile d'excellence sous leur propre marque.\n\n"
-                        . "### Les Avantages du Co-Packing en Tunisie\n"
-                        . "- Maîtrise des coûts de mise en bouteille.\n"
-                        . "- Sélection des profils variétaux (Chemlali fruité doux ou Chétoui corsé).\n"
-                        . "- Lignes d'embouteillage modernes avec injection d'azote pour préserver les arômes.\n\n"
-                        . "Consultez nos services de conditionnement : https://zintoop.com/fr/marque-privee-huile-olive-tunisie",
-                    'ar' => "يتيح تصنيع زيت الزيتون بالعلامة الخاصة (Private Label) للشركات وسلاسل التوزيع إطلاق علامتها التجارية الخاصة بزيت بكر ممتاز تونسي عالي الجودة.\n\n"
-                        . "### ميزات التعبئة في تونس:\n"
-                        . "- تكلفة تصنيع وتعبئة تنافسية للغاية.\n"
-                        . "- اختيار الأصناف المناسبة (شملالي ناعم أو شتاوي غني بمضادات الأكسدة).\n"
-                        . "- خطوط تعبئة آلية حديثة بالغاز الخامل للحفاظ على الجودة.\n\n"
-                        . "اكتشف خدمات التعبئة المعتمدة: https://zintoop.com/ar/علامة-خاصة-زيت-زيتون-تونس",
+                    'en' => "Private labeling (OEM / White Label) allows international retailers, gourmet brands, and supermarket distributors to bottle authentic Tunisian Extra Virgin Olive Oil under their own brand identity.\n\n"
+                        . "### Packaging Options\n"
+                        . "- **Marasca & Dorica Dark Glass**: 250ml, 500ml, 750ml, 1L.\n"
+                        . "- **Lithographed Tin Cans**: 1L, 3L, 5L with tamper-evident pourers.\n"
+                        . "- **Bag-in-Box (BiB)**: Modern 3L and 5L oxygen-barrier packaging.\n\n"
+                        . "Learn more about our certified packaging partners: https://zintoop.com/en/private-label-olive-oil-tunisia",
+                    'fr' => "Le conditionnement sous marque privée (Private Label) permet aux distributeurs et marques internationales de commercialiser de l'huile d'olive extra vierge tunisienne d'excellence sous leur propre étiquette.",
+                    'ar' => "تتيح خدمات التعبئة بالعلامة الخاصة (White Label / Private Label) للموزعين والشركات العالمية تعبئة أجود أنواع زيت الزيتون التونسي البكر الممتاز بعبوات مخصصة وهوية بصرية تحمل علامتهم التجارية.",
                 ],
             ],
             [
                 'id' => 3,
                 'title' => [
                     'en' => 'Tunisian Olive Oil Price Outlook 2026: Trends, Data & Market Factors',
-                    'fr' => 'Prix de l\'Huile d\'Olive en Tunisie 2026 : Tendances du Marché & Facteurs Clés',
-                    'ar' => 'مؤشرات وتوقعات أسعار زيت الزيتون في تونس 2026: تحليل السوق والبورصة',
+                    'fr' => 'Perspectives et Prix de l\'Huile d\'Olive en Tunisie 2026 : Analyse du Marché',
+                    'ar' => 'توقعات أسعار زيت الزيتون في تونس 2026: تحليل السوق والإنتاج والأسعار',
                 ],
                 'category' => [
-                    'en' => 'Market Intelligence',
-                    'fr' => 'Marché & Cours',
-                    'ar' => 'أسعار السوق',
+                    'en' => 'Market Analysis',
+                    'fr' => 'Analyse du Marché',
+                    'ar' => 'تحليل السوق',
                 ],
-                'image' => 'images/hero_slide_3.png',
+                'image' => 'images/articles/market_price_charts.jpg',
                 'is_active' => true,
                 'content' => [
-                    'en' => "Olive oil pricing in Tunisia is driven by seasonal climate patterns, Mediterranean harvest yields across Spain and Italy, and international export demand.\n\n"
-                        . "### Regional Price Dynamics\n"
-                        . "Prices vary noticeably across Tunisian governorates based on local milling capacity and olive cultivar:\n"
-                        . "- **Sfax & Central Souks**: Major national trading hub with high liquidity for Chemlali oil.\n"
-                        . "- **Kairouan & Sahel**: Intense local and export demand for early-harvest extra virgin lots.\n"
-                        . "- **Northern Regions (Baja, Zaghouan, Bizerte)**: Renowned for intense, green-fruity Chetoui oil commanding premium prices.\n\n"
-                        . "Check live regional prices updated daily on ZinToop: https://zintoop.com/en/olive-oil-prices",
-                    'fr' => "Les cours de l'huile d'olive en Tunisie sont influencés par la pluviométrie, le volume de récolte en Espagne et en Italie, ainsi que la demande internationale à l'exportation.\n\n"
-                        . "Consultez les cours régionaux en direct : https://zintoop.com/fr/prix-huile-olive-tunisie",
-                    'ar' => "تتأثر أسعار زيت الزيتون في تونس بحجم الصابة الوطنية، والظروف المناخية في حوض المتوسط، ومستويات الطلب العالمي للتصدير.\n\n"
-                        . "تابع الأسعار الحية المحدثة يومياً حسب الولايات: https://zintoop.com/ar/أسعار-زيت-الزيتون-تونس",
+                    'en' => "The 2025/2026 Tunisian olive oil campaign is characterized by strong export momentum, favorable climatic conditions in central regions, and steady international demand across European and North American markets.\n\n"
+                        . "Track daily live souk prices across all Tunisian governorates: https://zintoop.com/en/prices",
+                    'fr' => "La campagne oléicole 2025/2026 en Tunisie s'annonce prometteuse avec une reprise des volumes et une forte attractivité sur les marchés d'exportation.",
+                    'ar' => "تحليل شامل لاتجاهات أسعار زيت الزيتون في تونس للموسم الجديد، وعلاقة الأسعار المحلية ببورصة إسبانيا (Jaén) وإيطاليا والطلب العالمي على التصدير.",
                 ],
             ],
             [
                 'id' => 4,
                 'title' => [
                     'en' => 'Chemlali vs Chetoui: Sourcing the Right Tunisian Olive Oil Variety',
-                    'fr' => 'Chemlali vs Chétoui : Quelle Variété d\'Huile d\'Olive Tunisienne Choisir ?',
-                    'ar' => 'مقارنة بين زيت الشملالي والشتاوي: دليلك لاختيار الصنف التونسي الأنسب',
+                    'fr' => 'Chemlali vs Chétoui : Guide des Variétés d\'Huile d\'Olive Tunisienne',
+                    'ar' => 'مقارنة الشملالي والشتوي: دليلك لاختيار صنف زيت الزيتون التونسي المناسب',
                 ],
                 'category' => [
-                    'en' => 'Varieties & Quality',
-                    'fr' => 'Variétés & Qualité',
+                    'en' => 'Cultivars & Taste',
+                    'fr' => 'Variétés & Terroir',
                     'ar' => 'الأصناف والجودة',
                 ],
-                'image' => 'images/hero_slide_1.png',
+                'image' => 'images/articles/chemlali_vs_chetoui.jpg',
                 'is_active' => true,
                 'content' => [
-                    'en' => "Tunisia is home to two primary flagship olive cultivars that account for over 90% of national production:\n\n"
-                        . "### 1. Chemlali (الشملالي)\n"
-                        . "- **Geography**: Central and Southern Tunisia (Sfax, Kairouan, Sahel, Zarzis).\n"
-                        . "- **Profile**: Delicate, sweet, and mild with fruity almond and golden apple notes.\n"
-                        . "- **Best for**: Global blending, everyday culinary use, and international palates seeking low bitterness.\n\n"
-                        . "### 2. Chetoui (الشتوي)\n"
-                        . "- **Geography**: Northern Tunisia (Baja, Jendouba, Bizerte, Kef).\n"
-                        . "- **Profile**: Robust, peppery, herbaceous with rich green-artichoke notes.\n"
-                        . "- **Best for**: Premium monovarietal bottling and high-antioxidant health positioning.\n\n"
-                        . "Discover variety listings on ZinToop: https://zintoop.com/en/catalog",
-                    'fr' => "La Tunisie compte deux variétés majeures représentant plus de 90% de son oliveraie :\n\n"
-                        . "- **Le Chemlali** : Originaire du Centre et du Sud (Sfax, Kairouan, Sahel), il offre un goût fruité doux, rond et équilibré.\n"
-                        . "- **Le Chétoui** : Cultivé au Nord (Béja, Bizerte, Le Kef), il se caractérise par une intensité herbacée remarquable et une très forte teneur en polyphénols.",
-                    'ar' => "تمتلك تونس صنفين رئيسيين يمثلان أكثر من 90% من بساتين الزيتون:\n\n"
-                        . "- **الشملالي**: صنف الوسط والجنوب (صفاقس، القيروان، الساحل، جرجيس)، يتميز بمذاق ناعم وفواكه ناضجة ومثالي للخلط التجاري.\n"
-                        . "- **الشتاوي**: صنف الشمال التونسي (باجة، جندوبة، بنزرت، الكاف)، يتميز بنكهة عشبية قوية ومرارة خفيفة فاخرة وغنى فائق بمضادات الأكسدة.",
+                    'en' => "Tunisia boasts two primary native olive varieties that account for over 90% of the national olive forest:\n\n"
+                        . "- **Chemlali (الشتوي / الوسط والجنوب)**: Dominates Sfax, Sahel, and southern regions. Produces a golden, balanced, fruity oil with subtle almond notes, perfect for international blending.\n"
+                        . "- **Chetoui (الشمال)**: Grown in northern valleys. Renowned for its intense green color, robust herbal aroma, and exceptionally high polyphenol count (antioxidants).\n\n"
+                        . "Explore varieties guide: https://zintoop.com/en/olive-varieties",
+                    'fr' => "Le Chemlali (Centre et Sud) et le Chétoui (Nord) constituent les deux piliers de l'oléiculture tunisienne, offrant des profils aromatiques uniques adaptés à tous les besoins culinaires et industriels.",
+                    'ar' => "مقارنة دقيقة بين الشملالي (الأكثر انتشاراً بالوسط والجنوب ويمتاز بطعمه المتوازن المناسب للمزج) والشتوي (شمال تونس، غني جداً بمضادات الأكسدة والبوليفينول والحدة المحبوبة).",
                 ],
             ],
             [
                 'id' => 5,
                 'title' => [
                     'en' => 'Organic Extra Virgin Olive Oil from Tunisia: Certified Bio Sourcing',
-                    'fr' => 'Huile d\'Olive Extra Vierge Biologique de Tunisie : Normes & Certification Bio',
-                    'ar' => 'زيت الزيتون البيولوجي البكر الممتاز في تونس: الشهادات ومزايا التصدير',
+                    'fr' => 'Huile d\'Olive Biologique Tunisienne : Certification et Export Bio',
+                    'ar' => 'زيت الزيتون العضوي (البيولوجي) التونسي: فرص التصدير والشهادات المعتمدة',
                 ],
                 'category' => [
-                    'en' => 'Organic & Bio',
-                    'fr' => 'Bio & Organique',
-                    'ar' => 'الزيت العضوي',
+                    'en' => 'Organic (Bio)',
+                    'fr' => 'Bio & Terroir',
+                    'ar' => 'الزيت البيولوجي',
                 ],
-                'image' => 'images/hero_slide_2.png',
+                'image' => 'images/articles/organic_bio_olive_oil.jpg',
                 'is_active' => true,
                 'content' => [
-                    'en' => "Tunisia has established itself as the world's leading exporter of certified organic olive oil outside Europe, with over 300,000 hectares of certified organic olive groves.\n\n"
-                        . "### Key International Certifications\n"
-                        . "- **EU Organic (Euro-feuille)**: Full equivalence with European organic farming regulations.\n"
-                        . "- **USDA NOP (National Organic Program)**: For the United States and North American markets.\n"
-                        . "- **JAS (Japanese Agricultural Standards)** & Bio Suisse certification.\n\n"
-                        . "Filter organic certified lots on ZinToop: https://zintoop.com/en/bulk-tunisian-olive-oil?organic=1",
-                    'fr' => "La Tunisie est le premier exportateur mondial d'huile d'olive biologique avec plus de 300 000 hectares d'oliveraies certifiées bio sans engrais chimiques ni pesticides.",
-                    'ar' => "تعد تونس المصدر الأول لزيت الزيتون العضوي (البيولوجي) في العالم بمساحات تتجاوز 300 ألف هكتار من البساتين الطبيعية الحاصلة على شهادات المطابقة الأوروبية والأمريكية.",
+                    'en' => "With more than 250,000 hectares of certified organic olive groves, Tunisia is the world leader in certified organic olive oil exports. Natural arid conditions in central and southern Tunisia naturally protect trees from pests without synthetic pesticides.\n\n"
+                        . "Browse verified organic producers: https://zintoop.com/en/tunisian-olive-oil-suppliers",
+                    'fr' => "Leader mondial des exportations d'huile d'olive bio hors UE, la Tunisie bénéficie d'un climat naturellement protecteur qui limite les traitements chimiques.",
+                    'ar' => "تونس هي المصدر الأول عالمياً لزيت الزيتون البيولوجي خارج الاتحاد الأوروبي بمساحة تتجاوز 250 ألف هكتار من الغابات المعتمدة عضوياً بشهادات دولية.",
                 ],
             ],
             [
                 'id' => 6,
                 'title' => [
                     'en' => 'FOB vs CIF Terms: Shipping Olive Oil from Tunisian Commercial Ports',
-                    'fr' => 'Incoterms FOB vs CIF : Expédition d\'Huile d\'Olive depuis les Ports Tunisiens',
-                    'ar' => 'شروط الشحن الدولي FOB و CIF لتصدير زيت الزيتون من الموانئ التونسية',
+                    'fr' => 'Incoterms FOB vs CIF : Logistique Maritime d\'Export d\'Huile d\'Olive en Tunisie',
+                    'ar' => 'شحن زيت الزيتون من موانئ تونس: الفارق بين عقود FOB و CIF وشروط Flexitank',
                 ],
                 'category' => [
                     'en' => 'Logistics & Shipping',
-                    'fr' => 'Logistique & Transit',
-                    'ar' => 'الشحن واللوجستيك',
+                    'fr' => 'Logistique & Ports',
+                    'ar' => 'اللوجستيك والشحن',
                 ],
-                'image' => 'images/hero_slide_3.png',
+                'image' => 'images/articles/shipping_flexitank_ports.jpg',
                 'is_active' => true,
                 'content' => [
-                    'en' => "When executing international olive oil contracts from Tunisia, selecting the appropriate Incoterm determines liability, insurance, and freight costs:\n\n"
-                        . "- **FOB (Free on Board - Rades / Sfax)**: The seller covers domestic trucking, customs clearance, and loading onto the vessel. The buyer handles ocean freight and destination import tariffs.\n"
-                        . "- **CIF (Cost, Insurance & Freight)**: The seller arranges and pays for ocean transport and maritime cargo insurance up to the buyer's destination port.\n\n"
-                        . "Explore logistics and transit services on ZinToop: https://zintoop.com/en/servicehub",
-                    'fr' => "Le choix entre FOB (Free On Board) et CIF (Cost, Insurance and Freight) est capital lors de la conclusion de contrats d'exportation d'huile d'olive au départ des ports de Radès et Sfax.",
-                    'ar' => "يحدد اختيار شرط الشحن (FOB أو CIF) مسؤولية النقل البحري والتأمين في عقود تصدير زيت الزيتون التونسي.",
+                    'en' => "When contracting olive oil shipments from Tunisian ports (Sfax, Rades, Bizerte, Sousse), international buyers must clearly establish Incoterms:\n\n"
+                        . "- **FOB (Free on Board)**: Seller handles customs clearance, ONH certificate, and loads onto the vessel. Buyer manages sea freight.\n"
+                        . "- **CIF (Cost, Insurance & Freight)**: Seller covers shipping and marine insurance to the destination port.\n\n"
+                        . "Connect with logistics partners on ZinToop: https://zintoop.com/en/servicehub",
+                    'fr' => "Comprendre les Incoterms FOB et CIF pour sécuriser vos importations maritimes d'huile d'olive tunisienne depuis les ports de Sfax et Radès.",
+                    'ar' => "دليل المصدر والمستورد لفهم شروط الشحن البحري Incoterms والفرق بين تسليم الميناء التونسي (FOB) والتسليم مع التأمين والشحن حتى ميناء الوصول (CIF).",
                 ],
             ],
             [
@@ -211,7 +180,7 @@ class StrategicSeoArticlesSeeder extends Seeder
                     'fr' => 'Réglementation',
                     'ar' => 'القوانين والإجراءات',
                 ],
-                'image' => 'images/hero_slide_1.png',
+                'image' => 'images/articles/onh_lab_analysis_inspection.jpg',
                 'is_active' => true,
                 'content' => [
                     'en' => "Exporting olive oil from Tunisia requires adherence to the national export regulatory framework established by the Ministry of Trade and the National Oil Board (ONH).\n\n"
@@ -232,13 +201,34 @@ class StrategicSeoArticlesSeeder extends Seeder
                     'fr' => 'Production & Moulin',
                     'ar' => 'الفلاحة والمعاصر',
                 ],
-                'image' => 'images/hero_slide_2.png',
+                'image' => 'images/articles/tabouiz_yield_calculation.jpg',
                 'is_active' => true,
                 'content' => [
                     'en' => "In Tunisia, olive oil extraction yield is traditionally measured in 'Tabouiz' (التبويز) — the amount of olive fruit (in kg or wiba) required to produce a standard measure of olive oil.\n\n"
                         . "Calculate your harvest extraction return and list your oil directly on ZinToop: https://zintoop.com/en/catalog",
                     'fr' => "Le 'Tabouiz' désigne en Tunisie le taux de rendement de l'extraction de l'huile d'olive à partir du poids d'olives triturées au moulin.",
                     'ar' => "التبويز هو المصطلح التونسي التقليدي لحساب نسبة استخراج الزيت من الزيتون المعصور، وهو المقياس الأساسي لتحديد مردودية الصابة وأرباح الفلاحين والمعاصر.",
+                ],
+            ],
+            [
+                'id' => 9,
+                'title' => [
+                    'en' => 'The Ultimate B2B Sourcing Marketplace for Tunisian Olive Oil',
+                    'fr' => 'La Marketplace B2B de Référence pour l\'Huile d\'Olive Tunisienne',
+                    'ar' => 'سوق المعاملات المباشرة B2B لزيت الزيتون التونسي: الموردون والمطاعم والفنادق',
+                ],
+                'category' => [
+                    'en' => 'B2B Marketplace',
+                    'fr' => 'Marketplace B2B',
+                    'ar' => 'سوق المعاملات',
+                ],
+                'image' => 'images/articles/b2b_marketplace_trading.jpg',
+                'is_active' => true,
+                'content' => [
+                    'en' => "How ZinToop connects certified Tunisian olive oil mills, packaging units, and organic farmers directly with international buyers, HORECA chains, and food distributors worldwide.\n\n"
+                        . "Join our B2B trade network today: https://zintoop.com/en/catalog",
+                    'fr' => "Découvrez comment ZinToop digitalise la filière oléicole tunisienne en connectant directement moulins, conditionneurs et acheteurs internationaux.",
+                    'ar' => "كيف تساهم منصة ZinToop في ربط معاصر الزيتون ووحدات التعبئة والفلاحين مباشرة بكبرى الفنادق وسلاسل المطاعم والمشترين الدوليين دون وسطاء.",
                 ],
             ],
         ];
