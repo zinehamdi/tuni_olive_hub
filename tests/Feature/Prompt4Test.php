@@ -103,7 +103,7 @@ class Prompt4Test extends TestCase
         $this->actingAs($buyer)->getJson("/api/v1/invoices/{$id}")->assertOk();
         $this->actingAs($seller)->getJson("/api/v1/invoices/{$id}")->assertOk();
         // Random user forbidden
-        $rand = User::factory()->create();
+        $rand = User::factory()->create(['role' => 'normal']);
         $this->actingAs($rand)->getJson("/api/v1/invoices/{$id}")->assertStatus(403);
 
         // Request payout by payee (seller)

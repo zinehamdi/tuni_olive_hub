@@ -247,11 +247,41 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::get('/messages/{user}/get', [\App\Http\Controllers\MessageController::class, 'getMessages'])->name('messages.get');
 });
 
-// Price Routes (Public)
+// ═══════════════════════════════════════════════════════════════
+// PRICE HUBS (🇹🇳 National Tunisian Hub + 🌍 International Hub)
+// ═══════════════════════════════════════════════════════════════
 Route::middleware('set.locale')->group(function () {
+    // 🇹🇳 1. National Tunisian Market Price Hub
     Route::get('/prices', [\App\Http\Controllers\PriceController::class, 'index'])->name('prices.index');
-    Route::get('/prices/souks', [\App\Http\Controllers\PriceController::class, 'souks'])->name('prices.souks');
+    Route::get('/souks', [\App\Http\Controllers\PriceController::class, 'souks'])->name('prices.souks');
+
+    // 🌍 2. International & Global Olive Oil Benchmark Price Hub
+    Route::get('/international-olive-oil-prices', [\App\Http\Controllers\PriceController::class, 'international'])->name('prices.international');
+    Route::get('/global-prices', [\App\Http\Controllers\PriceController::class, 'international'])->name('prices.global');
+    Route::get('/prix-huile-olive-international', [\App\Http\Controllers\PriceController::class, 'international'])->name('prices.international.fr');
+    Route::get('/أسعار-زيت-الزيتون-العالمية', [\App\Http\Controllers\PriceController::class, 'international'])->name('prices.international.ar');
     Route::get('/prices/world', [\App\Http\Controllers\PriceController::class, 'world'])->name('prices.world');
+
+    // Programmatic B2B SEO Landing Pages
+    Route::get('/bulk-tunisian-olive-oil', [\App\Http\Controllers\SeoLandingController::class, 'bulkOliveOil'])->name('seo.bulk');
+    Route::get('/huile-olive-tunisienne-en-vrac', [\App\Http\Controllers\SeoLandingController::class, 'bulkOliveOil'])->name('seo.bulk.fr');
+    Route::get('/زيت-الزيتون-التونسي-بالجملة', [\App\Http\Controllers\SeoLandingController::class, 'bulkOliveOil'])->name('seo.bulk.ar');
+
+    Route::get('/tunisian-olive-oil-suppliers', [\App\Http\Controllers\SeoLandingController::class, 'suppliers'])->name('seo.suppliers');
+    Route::get('/fournisseurs-huile-olive-tunisienne', [\App\Http\Controllers\SeoLandingController::class, 'suppliers'])->name('seo.suppliers.fr');
+    Route::get('/موردي-زيت-الزيتون-التونسي', [\App\Http\Controllers\SeoLandingController::class, 'suppliers'])->name('seo.suppliers.ar');
+
+    Route::get('/olive-oil-mills-tunisia', [\App\Http\Controllers\SeoLandingController::class, 'mills'])->name('seo.mills');
+    Route::get('/moulins-huile-olive-tunisie', [\App\Http\Controllers\SeoLandingController::class, 'mills'])->name('seo.mills.fr');
+    Route::get('/معاصر-الزيتون-تونس', [\App\Http\Controllers\SeoLandingController::class, 'mills'])->name('seo.mills.ar');
+
+    Route::get('/olive-oil-packers-tunisia', [\App\Http\Controllers\SeoLandingController::class, 'packers'])->name('seo.packers');
+    Route::get('/conditionneurs-huile-olive-tunisie', [\App\Http\Controllers\SeoLandingController::class, 'packers'])->name('seo.packers.fr');
+    Route::get('/تعبئة-زيت-الزيتون-تونس', [\App\Http\Controllers\SeoLandingController::class, 'packers'])->name('seo.packers.ar');
+
+    Route::get('/private-label-olive-oil-tunisia', [\App\Http\Controllers\SeoLandingController::class, 'privateLabel'])->name('seo.private_label');
+    Route::get('/marque-privee-huile-olive-tunisie', [\App\Http\Controllers\SeoLandingController::class, 'privateLabel'])->name('seo.private_label.fr');
+    Route::get('/علامة-خاصة-زيت-زيتون-تونس', [\App\Http\Controllers\SeoLandingController::class, 'privateLabel'])->name('seo.private_label.ar');
 });
 
 }); // end locale prefix group 1
@@ -466,17 +496,35 @@ Route::get('/email-preview/new-listing', function(){
 });
 
 // ═══════════════════════════════════════════════════════════════
-// ROOT URL + CATCH-ALL REDIRECTS (old non-prefixed URLs → /ar/...)
+// ROOT URL + CATCH-ALL REDIRECTS (old non-prefixed & ?lang= URLs)
 // ═══════════════════════════════════════════════════════════════
 
-// Root URL → redirect to default locale
-Route::get('/', function () {
-    $locale = session('locale', config('app.fallback_locale', 'ar'));
-    return redirect('/' . $locale, 302);
+// Root URL → redirect to target locale (handles ?lang=en → /en)
+Route::get('/', function (Request $request) {
+    $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
+    $reqLang = $request->query('lang');
+    $locale = ($reqLang && in_array($reqLang, $supported, true))
+        ? $reqLang
+        : session('locale', config('app.fallback_locale', 'ar'));
+
+    $query = $request->except('lang');
+    $queryString = !empty($query) ? '?' . http_build_query($query) : '';
+
+    return redirect('/' . $locale . $queryString, 301);
 });
 
-// Old non-prefixed URLs → 301 redirect to default locale
-Route::get('{any}', function ($any) {
-    $locale = session('locale', config('app.fallback_locale', 'ar'));
-    return redirect('/' . $locale . '/' . $any, 301);
-})->where('any', '^(?!api|admin|auth|healthz|og-image|sitemap|feed|google-merchant|shopping-feed|landing|email-preview|lang|livewire|public|broadcasting|ar|fr|en|es|zh|ja|images|storage|css|js|build|favicon\.ico|manifest\.webmanifest).*');
+// Fallback route: 301 single-hop redirect for old non-prefixed & query-parameter URLs
+Route::fallback(function (Request $request) {
+    $path = trim($request->path(), '/');
+    $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
+    $reqLang = $request->query('lang');
+    $locale = ($reqLang && in_array($reqLang, $supported, true))
+        ? $reqLang
+        : session('locale', config('app.fallback_locale', 'ar'));
+
+    // Preserve all query parameters except 'lang'
+    $query = $request->except('lang');
+    $queryString = !empty($query) ? '?' . http_build_query($query) : '';
+
+    return redirect('/' . $locale . ($path ? '/' . $path : '') . $queryString, 301);
+});

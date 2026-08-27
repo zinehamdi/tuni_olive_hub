@@ -79,13 +79,20 @@
     </script>
 
     <!-- Alternate Language Links for SEO (path-based, not query-param) -->
+    @if(isset($customHreflang) && is_array($customHreflang))
+    <link rel="alternate" hreflang="ar" href="{{ $customHreflang['ar'] ?? url('ar' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="fr" href="{{ $customHreflang['fr'] ?? url('fr' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="en" href="{{ $customHreflang['en'] ?? url('en' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $customHreflang['x-default'] ?? $customHreflang['ar'] ?? url('ar' . $pathWithoutLocale) }}">
+    @else
     <link rel="alternate" hreflang="ar" href="{{ url('ar' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="fr" href="{{ url('fr' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="en" href="{{ url('en' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="x-default" href="{{ url('ar' . $pathWithoutLocale) }}">
+    @endif
 
     <!-- Canonical URL — the current locale version of this page -->
-    <link rel="canonical" href="{{ url(app()->getLocale() . $pathWithoutLocale) }}">
+    <link rel="canonical" href="{{ $customCanonical ?? url(app()->getLocale() . $pathWithoutLocale) }}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">

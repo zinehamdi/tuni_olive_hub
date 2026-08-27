@@ -42,11 +42,13 @@ class PublicController extends Controller
 
     public function sitemap()
     {
-        $listings = \App\Models\Listing::where('status', 'active')->latest()->take(500)->get(['id','updated_at']);
-        $articles = \App\Models\Article::where('is_active', true)->latest()->take(100)->get(['id','updated_at']);
-        $premiumProducts = \App\Models\Product::where('export_ready', true)->latest()->take(100)->get(['id','updated_at']);
+        $listings = \App\Models\Listing::where('status', 'active')->latest()->take(1000)->get(['id','updated_at']);
+        $articles = \App\Models\Article::where('is_active', true)->latest()->take(200)->get(['id','updated_at']);
+        $premiumProducts = \App\Models\Product::where('export_ready', true)->latest()->take(200)->get(['id','updated_at']);
         
-        $xml = view('public.sitemap', compact('listings', 'articles', 'premiumProducts'))->render();
+        $regionalSouks = array_keys(\App\Models\SoukPrice::getFamousSouks());
+        
+        $xml = view('public.sitemap', compact('listings', 'articles', 'premiumProducts', 'regionalSouks'))->render();
         return response($xml, 200)->header('Content-Type', 'application/xml; charset=utf-8');
     }
 

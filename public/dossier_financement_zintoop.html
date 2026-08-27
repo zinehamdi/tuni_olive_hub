@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOSSIER D'INVESTISSEMENT & FINANCEMENT - ZINTOOP (SEED 2026)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f1f12',
+                            primary: '#183b1c',
+                            primaryLight: '#235328',
+                            olive: '#6A8F3B',
+                            gold: '#B28D3F',
+                            goldLight: '#FDF8EC',
+                            goldDark: '#8A6A24',
+                            surface: '#F8FAFC',
+                            charcoal: '#1E293B',
+                            border: '#94A3B8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 8mm 10mm;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1E293B;
+            background-color: #CBD5E1;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .page {
+            background: #FFFFFF;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 14mm 16mm 12mm 16mm;
+            margin: 18px auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .page {
+                width: 100% !important;
+                min-height: 100vh !important;
+                margin: 0 !important;
+                padding: 10mm 12mm 8mm 12mm !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+            .page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+        }
+
+        .section-badge {
+            background: #183b1c;
+            color: white;
+            font-weight: 800;
+            font-size: 12px;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-colored-bar {
+            background: linear-gradient(135deg, #183b1c 0%, #0f2412 100%);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .footer-colored-bar {
+            background: linear-gradient(135deg, #0e1e11 0%, #183b1c 100%);
+            color: rgba(255,255,255,0.95);
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tag-operational {
+            background: #DCFCE7;
+            color: #14532D;
+            border: 1px solid #4ADE80;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-mvp {
+            background: #FFEDD5;
+            color: #9A3412;
+            border: 1px solid #FB923C;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .tag-planned {
+            background: #E0E7FF;
+            color: #1E1B4B;
+            border: 1px solid #818CF8;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .card-neutral {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+        }
+
+        .card-accent {
+            background: #F8FAFC;
+            border: 1px solid #94A3B8;
+            border-left: 4px solid #B28D3F;
+            border-radius: 8px;
+        }
+
+        /* High-Contrast Crisp Tables with Explicit Cell Borders */
+        .bordered-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1.5px solid #64748B;
+        }
+        .bordered-table th {
+            border: 1px solid #64748B;
+            background-color: #E2E8F0;
+            color: #0F172A;
+            font-weight: 800;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .bordered-table td {
+            border: 1px solid #94A3B8;
+            padding: 8px 10px;
+            color: #1E293B;
+            font-size: 11.5px;
+        }
+        .bordered-table tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 1 : COUVERTURE & EXECUTIVE SUMMARY                          -->
+    <!-- ================================================================= -->
+    <div class="page border-t-8 border-[#183b1c]">
+        
+        <div class="space-y-6">
+            <!-- Header Bar -->
+            <div class="header-colored-bar">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-lg bg-white p-1 flex items-center justify-center">
+                        <img src="images/zintoop-logo.png" alt="ZinToop Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight text-white font-sans leading-none">Zin<span class="text-[#E2C078]">Toop</span></h1>
+                        <p class="text-[9.5px] uppercase tracking-[0.22em] text-[#A8D060] font-bold mt-1">Digital Operating Layer • Filière Oléicole</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block px-3.5 py-1 bg-white/15 border border-white/40 rounded-full text-[10px] font-extrabold text-white uppercase tracking-wider">
+                        Dossier d'Investissement Seed
+                    </span>
+                    <p class="text-[10px] text-white/80 font-medium mt-1">Kairouan, Tunisie • Exercice 2026</p>
+                </div>
+            </div>
+
+            <!-- Main Title Box -->
+            <div class="space-y-3.5 py-1">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#183b1c]/10 border border-[#183b1c]/30 text-[#183b1c] text-xs font-black">
+                    <span>🌱 Demande de Financement Amorçage (Seed)</span>
+                    <span>•</span>
+                    <span class="text-[#8A6A24]">150 000 TND</span>
+                </div>
+
+                <h2 class="text-4xl font-black font-serif leading-tight text-gray-900 tracking-tight">
+                    DOSSIER DE DEMANDE <span class="text-[#183b1c]">DE FINANCEMENT</span>
+                </h2>
+
+                <p class="text-lg font-bold text-[#8A6A24] font-sans">
+                    ZINTOOP : Plateforme Numérique de Coordination & Services Oléicoles
+                </p>
+
+                <p class="text-xs sm:text-[13px] text-gray-800 leading-relaxed text-justify bg-gray-50 border-l-4 border-[#183b1c] p-4 rounded-r-lg border-y border-r border-gray-300">
+                    <b>Thèse d'investissement :</b> La filière oléicole tunisienne est fragmentée, l'information y est dispersée, et les flux dépendent lourdement de démarches manuelles et de réseaux informels. <b>ZinToop</b> déploie la couche d'infrastructure numérique qui connecte producteurs, huileries, transporteurs, conditionneurs et acheteurs, en structurant les profils, les opportunités commerciales et les flux de services.
+                </p>
+            </div>
+
+            <!-- Key Investment Metrics Strip -->
+            <div class="grid grid-cols-4 gap-3.5">
+                <div class="card-neutral p-3 text-center border-gray-300 shadow-xs">
+                    <p class="text-[10px] uppercase font-bold text-gray-600">Montant Demandé</p>
+                    <p class="text-2xl font-black text-[#183b1c] mt-1">150 000 TND</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5">Seed / 12 mois</p>
+                </div>
+                <div class="card-neutral p-3 text-center border-gray-300 shadow-xs">
+                    <p class="text-[10px] uppercase font-bold text-gray-600">Maturité Produit</p>
+                    <p class="text-2xl font-black text-[#8A6A24] mt-1">MVP Live</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5">En ligne sur zintoop.com</p>
+                </div>
+                <div class="card-neutral p-3 text-center border-gray-300 shadow-xs">
+                    <p class="text-[10px] uppercase font-bold text-gray-600">Adoption Initiale</p>
+                    <p class="text-2xl font-black text-gray-900 mt-1">955 Acteurs</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5">24 gouvernorats</p>
+                </div>
+                <div class="card-neutral p-3 text-center border-gray-300 shadow-xs">
+                    <p class="text-[10px] uppercase font-bold text-gray-600">Objectif à 12 Mois</p>
+                    <p class="text-2xl font-black text-emerald-800 mt-1">45 000 TND</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5">CA Année 1</p>
+                </div>
+            </div>
+
+            <!-- 1. Executive Summary -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">1</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Executive Summary : Synthèse du Projet</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-xs leading-relaxed text-gray-800 text-justify">
+                    <div class="card-neutral p-3.5 space-y-2 border-gray-300">
+                        <b class="text-gray-900 block text-xs font-bold">🏢 L'Entreprise & La Vision :</b>
+                        <p>
+                            ZinToop est une entreprise technologique implantée à Kairouan, au cœur du bassin oléicole tunisien. Elle développe un écosystème SaaS-Enabled Marketplace opérant sur un modèle <i>Asset-Light</i> (sans possession directe de stock physique).
+                        </p>
+                        <p>
+                            Son ambition est de devenir la plateforme de référence pour la mise en relation, la coordination logistique et la fourniture de services spécialisés (marketing, export, ERP).
+                        </p>
+                    </div>
+
+                    <div class="card-accent p-3.5 space-y-2 border-gray-300">
+                        <b class="text-[#8A6A24] block text-xs font-bold">🎯 Objectif de la Levée de 150 000 TND :</b>
+                        <p>
+                            Après avoir conçu et déployé le MVP en totale autonomie technique, le fondateur cherche à financer le <b>passage de l'adoption gratuite à la monétisation structurée</b>.
+                        </p>
+                        <p>
+                            Les fonds serviront à recruter une force commerciale de terrain (Customer Success), structurer les opérations logistiques et tester les abonnements et services payants.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#E2C078]"></span>
+                <span>ZINTOOP • Plateforme SaaS Agritech & Marketplace</span>
+                <span class="text-white/40">•</span>
+                <span>contact@zintoop.com</span>
+            </div>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 1 / 6</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 2 : LE PROBLÈME, POURQUOI MAINTENANT & LA SOLUTION           -->
+    <!-- ================================================================= -->
+    <div class="page">
+        <!-- Header Bar -->
+        <div class="header-colored-bar mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#A8D060]"></span>
+                <span class="text-xs font-black tracking-wider uppercase text-white">ZINTOOP • FRICTION OPÉRATIONNELLE & SOLUTION EN 3 PHASES</span>
+            </div>
+            <span class="text-[10px] font-bold text-white bg-white/15 px-2.5 py-0.5 rounded">Sections 2, 3 & 4</span>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-[12.5px] text-gray-800">
+            
+            <!-- 2. Le Problème Réel : La Fragmentation Opérationnelle -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">2</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Le Problème : La Fragmentation et les Démarches Manuelles</h3>
+                </div>
+                <p class="text-gray-700 leading-relaxed text-justify">
+                    Le défi fondamental de la filière oléicole tunisienne n'est pas uniquement l'exportation en vrac, mais <b>l'extrême fragmentation de l'écosystème</b>. Les échanges reposent quasi-exclusivement sur des appels téléphoniques, des messages informels et des intermédiaires non régulés.
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-red-50/80 border border-red-300 rounded-lg p-3 space-y-1.5 text-justify">
+                        <b class="text-red-950 block font-bold text-xs">🌾 Pour le Producteur & l'Huilerie :</b>
+                        <ul class="list-disc list-inside text-gray-800 space-y-1">
+                            <li>Difficulté à identifier en temps réel les besoins des acheteurs fiables.</li>
+                            <li>Opacité sur les capacités et disponibilités des pressoirs voisins.</li>
+                            <li>Recherche fastidieuse de transporteurs disponibles au moment de la récolte.</li>
+                            <li>Isolement face aux exigences réglementaires et de labellisation.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-amber-50/80 border border-amber-300 rounded-lg p-3 space-y-1.5 text-justify">
+                        <b class="text-amber-950 block font-bold text-xs">🌍 Pour l'Acheteur & le Prestataire :</b>
+                        <ul class="list-disc list-inside text-gray-800 space-y-1">
+                            <li>Temps et coût élevés pour cartographier et vérifier les producteurs.</li>
+                            <li>Absence de plateforme centralisée pour comparer les offres et variétés.</li>
+                            <li>Complexité du suivi logistique et du contrôle de la conformité des lots.</li>
+                            <li>Dépendance envers des circuits informels sans garanties de traçabilité.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Pourquoi Maintenant ? (Why Now?) -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">3</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Pourquoi Maintenant ? Les Facteurs Conjoncturels Favorables</h3>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-gray-800">
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block font-bold text-xs">📱 Démocratisation Numérique :</b>
+                        <p class="text-gray-700 leading-snug">Adoption massive du smartphone et de WhatsApp par les agriculteurs, rendant possible un onboarding simplifié.</p>
+                    </div>
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block font-bold text-xs">🏷️ Pression sur la Valeur Ajoutée :</b>
+                        <p class="text-gray-700 leading-snug">Nécessité pour les acteurs locaux de dépasser la vente brute pour capturer la valeur du conditionnement et de la marque.</p>
+                    </div>
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block font-bold text-xs">🤖 Accessibilité Cloud & IA :</b>
+                        <p class="text-gray-700 leading-snug">Disponibilité d'infrastructures d'IA (API Gemini) permettant de concevoir des interfaces intuitives en dialecte arabe.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. La Solution ZinToop : Architecture en 3 Phases -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">4</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">La Solution : Un Écosystème Déployé en 3 Phases Progressives</h3>
+                </div>
+                
+                <div class="space-y-2">
+                    <div class="border-l-4 border-emerald-600 bg-gray-50 p-2.5 rounded-r-lg border-y border-r border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-[#183b1c] font-bold text-xs">PHASE 1 — Accès Numérique & Structuration du Marché (ACTUELLE)</b>
+                            <span class="tag-operational">Déployé & Actif</span>
+                        </div>
+                        <p class="text-gray-700 mt-1 leading-snug">Profils numériques qualifiés pour chaque métier, annuaire géolocalisé, publication d'offres et demandes, visibilité gratuite pour l'adoption.</p>
+                    </div>
+
+                    <div class="border-l-4 border-blue-600 bg-gray-50 p-2.5 rounded-r-lg border-y border-r border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-blue-900 font-bold text-xs">PHASE 2 — Automatisation des Flux & Outils Métier (POST-FINANCEMENT)</b>
+                            <span class="tag-mvp">En validation pilote</span>
+                        </div>
+                        <p class="text-gray-700 mt-1 leading-snug">Mise en relation logistique sécurisée (Code PIN), gestion des demandes de transport, outils de calcul de rendement (Tabouiz), alertes de marché.</p>
+                    </div>
+
+                    <div class="border-l-4 border-[#8A6A24] bg-gray-50 p-2.5 rounded-r-lg border-y border-r border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-[#8A6A24] font-bold text-xs">PHASE 3 — Services à Forte Valeur Ajoutée & Co-Packing (MOYEN TERME)</b>
+                            <span class="tag-planned">Feuille de route</span>
+                        </div>
+                        <p class="text-gray-700 mt-1 leading-snug">Abonnements professionnels, packs digitaux pour exportateurs, facilitation du réseau de co-packing pour valoriser l'huile embouteillée.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <span>ZINTOOP • Dossier d'Investissement Seed • Problème & Solution</span>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 2 / 6</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 3 : LE PRODUIT EXISTANT & L'INNOVATION PAR L'USAGE          -->
+    <!-- ================================================================= -->
+    <div class="page">
+        <!-- Header Bar -->
+        <div class="header-colored-bar mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#A8D060]"></span>
+                <span class="text-xs font-black tracking-wider uppercase text-white">ZINTOOP • LE PRODUIT EXISTANT & L'INNOVATION PRATIQUE</span>
+            </div>
+            <span class="text-[10px] font-bold text-white bg-white/15 px-2.5 py-0.5 rounded">Sections 5 & 6</span>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-[12.5px] text-gray-800">
+            
+            <!-- 5. Le Produit : Ce qui existe et tourne aujourd'hui -->
+            <section class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="section-badge">5</span>
+                        <h3 class="text-base font-black text-[#183b1c] tracking-tight">Le Produit : Modules Fonctionnels Actuellement en Production</h3>
+                    </div>
+                    <span class="text-[10px] text-gray-600 font-mono font-bold">zintoop.com • Stack Laravel</span>
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    Contrairement aux projets au stade d'idée, ZinToop s'appuie sur une <b>plateforme opérationnelle et accessible publiquement</b>, regroupant 6 modules interconnectés :
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">🛒 Marketplace & Annonces</b>
+                            <span class="tag-operational">Opérationnel</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Publication de lots par variété (Chemlali, Chétoui), conditionnement et volume. 130+ offres actives en ligne.</p>
+                    </div>
+
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">👥 Onboarding Multi-Rôles</b>
+                            <span class="tag-operational">Opérationnel</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Espaces dédiés pour 5 rôles : Agriculteurs, Huileries, Conditionneurs, Transporteurs et Acheteurs.</p>
+                    </div>
+
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">🚚 Logistique & Transport ("PIN")</b>
+                            <span class="tag-mvp">MVP en test</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Mise en relation avec transporteurs avec sécurisation des trajets via code PIN de livraison partagé.</p>
+                    </div>
+
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">🤖 Assistant IA "Zitouni"</b>
+                            <span class="tag-operational">Opérationnel</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Interface conversationnelle (API Gemini) guidant les utilisateurs en derja/arabe/français vers les bons formulaires.</p>
+                    </div>
+
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">🧮 Simulateur Tabouiz</b>
+                            <span class="tag-operational">Opérationnel</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Outil de calcul de profit net et d'estimation d'huile en fonction du poids d'olives et du coût de trituration.</p>
+                    </div>
+
+                    <div class="card-neutral p-3 space-y-1 border-gray-300">
+                        <div class="flex items-center justify-between">
+                            <b class="text-gray-900 font-bold text-xs">💼 Catalogue Services & Devis</b>
+                            <span class="tag-operational">Opérationnel</span>
+                        </div>
+                        <p class="text-gray-700 leading-snug">Catalogue tarifé de prestations digitales, juridiques et logicielles accessibles sur <i>/services/pricing</i>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Innovation : Démonstration par l'Impact Pratique -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">6</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Innovation : La Réduction des Frictions par la Numérisation</h3>
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    L'innovation de ZinToop réside dans l'adaptation de technologies modernes aux réalités du terrain agricole :
+                </p>
+
+                <!-- 3 Comparison Boxes (Problem -> Manual -> ZinToop -> Benefit) -->
+                <div class="space-y-2">
+                    <div class="bg-gray-50 border border-gray-300 rounded-lg p-2.5 grid grid-cols-4 gap-3 items-center">
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-red-800 block">Problème Métier</span>
+                            <b class="text-gray-900 text-xs">Recherche de transport</b>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-gray-600 block">Processus Manuel Actuel</span>
+                            <p class="text-gray-700 leading-snug">Multiples appels, bouche-à-oreille informel, prix opaques.</p>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-[#183b1c] block">Mécanisme ZinToop</span>
+                            <p class="text-gray-800 font-medium leading-snug">Annuaire géolocalisé et matching de transport avec code PIN.</p>
+                        </div>
+                        <div class="bg-emerald-50 p-2 rounded border border-emerald-300">
+                            <span class="text-[9.5px] uppercase font-bold text-emerald-900 block">Bénéfice Concret</span>
+                            <b class="text-emerald-950 text-xs leading-snug">Gain de temps & transaction sécurisée</b>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 rounded-lg p-2.5 grid grid-cols-4 gap-3 items-center">
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-red-800 block">Problème Métier</span>
+                            <b class="text-gray-900 text-xs">Fracture numérique</b>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-gray-600 block">Processus Manuel Actuel</span>
+                            <p class="text-gray-700 leading-snug">Rejet des formulaires web complexes en français/anglais.</p>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-[#183b1c] block">Mécanisme ZinToop</span>
+                            <p class="text-gray-800 font-medium leading-snug">Assistant "Zitouni" (API Gemini) guidant la saisie en derja/arabe.</p>
+                        </div>
+                        <div class="bg-emerald-50 p-2 rounded border border-emerald-300">
+                            <span class="text-[9.5px] uppercase font-bold text-emerald-900 block">Bénéfice Concret</span>
+                            <b class="text-emerald-950 text-xs leading-snug">Inclusion immédiate sans barrière</b>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 rounded-lg p-2.5 grid grid-cols-4 gap-3 items-center">
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-red-800 block">Problème Métier</span>
+                            <b class="text-gray-900 text-xs">Qualification Export B2B</b>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-gray-600 block">Processus Manuel Actuel</span>
+                            <p class="text-gray-700 leading-snug">Foires coûteuses ou courriels non qualifiés sans suivi.</p>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] uppercase font-bold text-[#183b1c] block">Mécanisme ZinToop</span>
+                            <p class="text-gray-800 font-medium leading-snug">Filtrage IP/pays des visiteurs et transmission WhatsApp.</p>
+                        </div>
+                        <div class="bg-emerald-50 p-2 rounded border border-emerald-300">
+                            <span class="text-[9.5px] uppercase font-bold text-emerald-900 block">Bénéfice Concret</span>
+                            <b class="text-emerald-950 text-xs leading-snug">Réactivité immédiate sur les leads</b>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <span>ZINTOOP • Le Produit Existant & L'Innovation Pratique</span>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 3 / 6</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 4 : TRACTION ANALYTIQUE, MARCHÉ (TAM/SAM/SOM) & BUSINESS MODEL-->
+    <!-- ================================================================= -->
+    <div class="page">
+        <!-- Header Bar -->
+        <div class="header-colored-bar mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#A8D060]"></span>
+                <span class="text-xs font-black tracking-wider uppercase text-white">ZINTOOP • TRACTION RÉELLE, MARCHÉ & BUSINESS MODEL</span>
+            </div>
+            <span class="text-[10px] font-bold text-white bg-white/15 px-2.5 py-0.5 rounded">Sections 7, 8 & 9</span>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-[12.5px] text-gray-800">
+            
+            <!-- 7. Traction et Validation Initiale -->
+            <section class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="section-badge">7</span>
+                        <h3 class="text-base font-black text-[#183b1c] tracking-tight">Traction et Validation Initiale de l'Intérêt du Marché</h3>
+                    </div>
+                    <span class="text-[10px] font-bold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded border border-emerald-300">Données Réelles Serveur</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-3 text-center">
+                    <div class="card-neutral p-2.5 border-gray-300">
+                        <span class="text-gray-600 text-[10px] block">Visiteurs Uniques</span>
+                        <b class="text-xl font-black text-gray-900">36 565</b>
+                        <span class="text-[9.5px] text-gray-600 block mt-0.5">100% organique</span>
+                    </div>
+                    <div class="card-neutral p-2.5 border-gray-300">
+                        <span class="text-gray-600 text-[10px] block">Comptes Validés</span>
+                        <b class="text-xl font-black text-[#183b1c]">955</b>
+                        <span class="text-[9.5px] text-gray-600 block mt-0.5">Taux conv. : 2.6%</span>
+                    </div>
+                    <div class="card-neutral p-2.5 border-gray-300">
+                        <span class="text-gray-600 text-[10px] block">Producteurs & Huileries</span>
+                        <b class="text-xl font-black text-[#8A6A24]">738</b>
+                        <span class="text-[9.5px] text-gray-600 block mt-0.5">657 fellahs + 81 moulins</span>
+                    </div>
+                    <div class="card-neutral p-2.5 border-gray-300">
+                        <span class="text-gray-600 text-[10px] block">Annonces Actives</span>
+                        <b class="text-xl font-black text-emerald-800">130+</b>
+                        <span class="text-[9.5px] text-gray-600 block mt-0.5">En circulation</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-emerald-50/80 border border-emerald-300 rounded-lg p-3 space-y-1">
+                        <b class="text-emerald-950 font-bold block text-xs">Ce que ces chiffres démontrent :</b>
+                        <p class="text-emerald-900 leading-snug">Un intérêt réel et spontané des acteurs de terrain pour une vitrine digitale centralisée, sans aucun budget marketing payant.</p>
+                    </div>
+                    <div class="bg-amber-50/80 border border-amber-300 rounded-lg p-3 space-y-1">
+                        <b class="text-amber-950 font-bold block text-xs">Ce qu'il reste à valider avec le financement :</b>
+                        <p class="text-amber-950 leading-snug">La transformation de cette base d'utilisateurs gratuits en abonnements payants, en transactions récurrentes et en commissions.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Dimensionnement du Marché (TAM / SAM / SOM Bottom-Up) -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">8</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Marché Adressable (Approche Réaliste Bottom-Up)</h3>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="card-neutral p-3 border-gray-300">
+                        <span class="text-[9.5px] uppercase font-bold text-gray-600 block">TAM (Services AgriTech Oléicole)</span>
+                        <b class="text-lg font-black text-gray-900">45 M TND</b>
+                        <p class="text-[9.5px] text-gray-600 mt-1 leading-tight">Marché potentiel des services numériques et de traçabilité pour les ~1 700 huileries et exportateurs tunisiens.</p>
+                    </div>
+                    <div class="bg-emerald-50/80 border border-emerald-300 rounded-lg p-3">
+                        <span class="text-[9.5px] uppercase font-bold text-emerald-900 block">SAM (Cible Immédiate Écosystème)</span>
+                        <b class="text-lg font-black text-[#183b1c]">6.5 M TND</b>
+                        <p class="text-[9.5px] text-emerald-950 mt-1 leading-tight">~500 acteurs professionnels (huileries modernes, conditionneurs, traders) prêts à payer pour des outils et du lead gen.</p>
+                    </div>
+                    <div class="bg-amber-50/80 border border-amber-300 rounded-lg p-3">
+                        <span class="text-[9.5px] uppercase font-bold text-amber-900 block">SOM (Cible Réaliste à 3 Ans)</span>
+                        <b class="text-lg font-black text-[#8A6A24]">380 000 TND</b>
+                        <p class="text-[9.5px] text-amber-950 mt-1 leading-tight">Capture de ~5% du SAM via 150 abonnés SaaS payants, 60 packs digitaux et commissions d'export qualifiées.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. Le Modèle Économique Structuré par Échéance -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">9</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Modèle Économique : 5 Flux de Revenus Structurés</h3>
+                </div>
+
+                <div class="space-y-1.5">
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex justify-between items-center">
+                        <div>
+                            <b class="text-gray-900 text-xs">1. Abonnements SaaS Professionnels</b>
+                            <span class="text-gray-600 text-[10px] block">Tableaux de bord avancés pour huileries, alertes cours du jour et badge vérifié.</span>
+                        </div>
+                        <span class="text-right font-mono font-bold text-[#183b1c] text-xs">80 à 250 TND / mois</span>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex justify-between items-center">
+                        <div>
+                            <b class="text-gray-900 text-xs">2. Services Marketing & Acquisition B2B (Actif en ligne)</b>
+                            <span class="text-gray-600 text-[10px] block">Packs de croissance digitale, campagnes messages et génération de leads ciblés.</span>
+                        </div>
+                        <span class="text-right font-mono font-bold text-[#183b1c] text-xs">215 à 550 TND / pack</span>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex justify-between items-center">
+                        <div>
+                            <b class="text-gray-900 text-xs">3. Conseil Réglementaire, Export & Contrats (Actif en ligne)</b>
+                            <span class="text-gray-600 text-[10px] block">Accompagnement cahiers des charges ONH, contrats Incoterms et analyses de marché.</span>
+                        </div>
+                        <span class="text-right font-mono font-bold text-[#183b1c] text-xs">150 à 300 TND / prestation</span>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex justify-between items-center">
+                        <div>
+                            <b class="text-gray-900 text-xs">4. Solutions Logicielles & ERP Pressoir (Actif en ligne)</b>
+                            <span class="text-gray-600 text-[10px] block">Vitrine numérique dédiée, boutique e-commerce export ou logiciel de gestion des cuves.</span>
+                        </div>
+                        <span class="text-right font-mono font-bold text-[#183b1c] text-xs">1 900 à 3 500 TND / projet</span>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg flex justify-between items-center">
+                        <div>
+                            <b class="text-gray-900 text-xs">5. Success Fees sur Deals Export Qualifiés (Moyen terme)</b>
+                            <span class="text-gray-600 text-[10px] block">Uniquement lorsqu'une mise en relation qualifiée par ZinToop débouche sur un contrat d'export.</span>
+                        </div>
+                        <span class="text-right font-mono font-bold text-[#183b1c] text-xs">1.5% à 2% du contrat</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <span>ZINTOOP • Traction, Dimensionnement de Marché & Monétisation</span>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 4 / 6</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 5 : PROJECTIONS FINANCIÈRES & UTILISATION DES FONDS (150K TND)-->
+    <!-- ================================================================= -->
+    <div class="page">
+        <!-- Header Bar -->
+        <div class="header-colored-bar mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#A8D060]"></span>
+                <span class="text-xs font-black tracking-wider uppercase text-white">ZINTOOP • PROJECTIONS FINANCIÈRES & UTILISATION DES FONDS</span>
+            </div>
+            <span class="text-[10px] font-bold text-white bg-white/15 px-2.5 py-0.5 rounded">Sections 10 & 11</span>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-[12.5px] text-gray-800">
+            
+            <!-- 10. Projections Financières et Hypothèses Bottom-Up -->
+            <section class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="section-badge">10</span>
+                        <h3 class="text-base font-black text-[#183b1c] tracking-tight">Projections Financières sur 3 Ans (Hypothèses Conservatrices)</h3>
+                    </div>
+                    <span class="text-[10px] text-gray-600 font-mono font-bold">Modèle Bottom-Up</span>
+                </div>
+
+                <div class="overflow-hidden rounded-lg shadow-xs">
+                    <table class="bordered-table">
+                        <thead>
+                            <tr>
+                                <th>Ligne de Revenus</th>
+                                <th class="text-center">Année 1 (2026)</th>
+                                <th class="text-center">Année 2 (2027)</th>
+                                <th class="text-center">Année 3 (2028)</th>
+                                <th>Hypothèses Clés de Calcul</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-gray-900">Abonnements SaaS Pro</td>
+                                <td class="text-center font-mono font-bold">9 600 TND</td>
+                                <td class="text-center font-mono font-bold">36 000 TND</td>
+                                <td class="text-center font-mono font-bold">108 000 TND</td>
+                                <td class="text-gray-600 text-[10.5px]">8 clients An 1 (100 TND/m) → 25 clients An 2 → 60 clients An 3</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Services Marketing & Devis</td>
+                                <td class="text-center font-mono font-bold">14 400 TND</td>
+                                <td class="text-center font-mono font-bold">38 000 TND</td>
+                                <td class="text-center font-mono font-bold">82 000 TND</td>
+                                <td class="text-gray-600 text-[10.5px]">Packs hebdomadaires vendus aux producteurs et marques en saison</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Conseil Export & Contrats</td>
+                                <td class="text-center font-mono font-bold">4 500 TND</td>
+                                <td class="text-center font-mono font-bold">16 000 TND</td>
+                                <td class="text-center font-mono font-bold">35 000 TND</td>
+                                <td class="text-gray-600 text-[10.5px]">15 dossiers An 1 (moy. 300 TND) → 50 dossiers An 2</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Solutions Logicielles & ERP</td>
+                                <td class="text-center font-mono font-bold">16 500 TND</td>
+                                <td class="text-center font-mono font-bold">40 000 TND</td>
+                                <td class="text-center font-mono font-bold">75 000 TND</td>
+                                <td class="text-gray-600 text-[10.5px]">6 à 8 projets web/ERP An 1 (1.9k à 3.5k TND) → 15 projets An 2</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Success Fees Export B2B</td>
+                                <td class="text-center font-mono font-bold">0 TND (test)</td>
+                                <td class="text-center font-mono font-bold">20 000 TND</td>
+                                <td class="text-center font-mono font-bold">80 000 TND</td>
+                                <td class="text-gray-600 text-[10.5px]">Phase pilote An 1 → 1.8% sur deals qualifiés concrétisés en An 2/3</td>
+                            </tr>
+                            <tr class="bg-emerald-100 font-bold text-emerald-950 border-t-2 border-emerald-600">
+                                <td>CHIFFRE D'AFFAIRES TOTAL</td>
+                                <td class="text-center font-mono text-[#183b1c] text-sm font-black">45 000 TND</td>
+                                <td class="text-center font-mono text-[#183b1c] text-sm font-black">150 000 TND</td>
+                                <td class="text-center font-mono text-[#183b1c] text-sm font-black">380 000 TND</td>
+                                <td class="text-emerald-950 text-[11px]">Seuil de rentabilité opérationnelle atteint en fin d'Année 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 11. Utilisation Détaillée des Fonds (150 000 TND) -->
+            <section class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="section-badge">11</span>
+                        <h3 class="text-base font-black text-[#183b1c] tracking-tight">Utilisation des Fonds : Répartition & Livrables Mesurables</h3>
+                    </div>
+                    <span class="text-[10px] font-bold bg-amber-100 text-amber-950 px-2.5 py-0.5 rounded border border-amber-400">Budget 12 Mois</span>
+                </div>
+
+                <div class="overflow-hidden rounded-lg shadow-xs">
+                    <table class="bordered-table">
+                        <thead>
+                            <tr>
+                                <th>Poste de Dépense</th>
+                                <th class="text-center">Montant (TND)</th>
+                                <th class="text-center">%</th>
+                                <th>Objectif Concret & Livrable Mesurable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-gray-900">Acquisition Commerciale & Sales</td>
+                                <td class="text-center font-mono font-bold text-[#183b1c]">54 000 TND</td>
+                                <td class="text-center font-mono font-bold">36%</td>
+                                <td class="text-gray-700 leading-snug">Recrutement d'un profil Sales/Terrain pour convertir les huileries et sécuriser les premiers abonnés payants.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Coordination Opérations Logistiques</td>
+                                <td class="text-center font-mono font-bold text-[#183b1c]">42 000 TND</td>
+                                <td class="text-center font-mono font-bold">28%</td>
+                                <td class="text-gray-700 leading-snug">Animation du réseau de transporteurs et suivi des flux de chargement sur les gouvernorats prioritaires.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Évolutions Produit & Infrastructure Cloud</td>
+                                <td class="text-center font-mono font-bold text-[#183b1c]">24 000 TND</td>
+                                <td class="text-center font-mono font-bold">16%</td>
+                                <td class="text-gray-700 leading-snug">Optimisation des flux de paiement, hébergement sécurisé et intégration poussée des API conversationnelles.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Frais Juridiques & Conformité</td>
+                                <td class="text-center font-mono font-bold text-[#183b1c]">18 000 TND</td>
+                                <td class="text-center font-mono font-bold">12%</td>
+                                <td class="text-gray-700 leading-snug">Immatriculation formelle, contrats cadres de prestation et labellisation Startup Act (Startup Tunisia).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Fonds de Roulement & Imprévus</td>
+                                <td class="text-center font-mono font-bold text-[#183b1c]">12 000 TND</td>
+                                <td class="text-center font-mono font-bold">8%</td>
+                                <td class="text-gray-700 leading-snug">Réserve de trésorerie pour amortir la saisonnalité de la campagne oléicole.</td>
+                            </tr>
+                            <tr class="bg-gray-200 font-bold text-gray-950 border-t-2 border-gray-600">
+                                <td>TOTAL FINANCEMENT RECHERCHÉ</td>
+                                <td class="text-center font-mono text-base font-black text-[#183b1c]">150 000 TND</td>
+                                <td class="text-center font-mono font-bold">100%</td>
+                                <td class="text-gray-900 text-xs font-bold">Validation du modèle économique et atteinte de l'autonomie financière</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <span>ZINTOOP • Projections Financières & Allocation des Fonds</span>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 5 / 6</span>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 6 : FEUILLE DE ROUTE, ÉQUIPE, RISQUES & CONCLUSION          -->
+    <!-- ================================================================= -->
+    <div class="page">
+        <!-- Header Bar -->
+        <div class="header-colored-bar mb-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-[#183b1c]"></span>
+                <span class="text-xs font-black tracking-wider uppercase text-white">ZINTOOP • FEUILLE DE ROUTE, ÉQUIPE, RISQUES & CONCLUSION</span>
+            </div>
+            <span class="text-[10px] font-bold text-white bg-white/15 px-2.5 py-0.5 rounded">Sections 12, 13, 14 & 15</span>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-[12.5px] text-gray-800">
+            
+            <!-- 12. Feuille de Route à 12 Mois (Roadmap) -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">12</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Feuille de Route à 12 Mois (Milestones Débloqués par le Financement)</h3>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2.5 text-[10.5px]">
+                    <div class="card-neutral p-2.5 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block text-xs font-bold">M1 à M3 : Structuration</b>
+                        <p class="text-gray-700 leading-snug">Recrutement commercial, amélioration de l'onboarding mobile, activation des régions clés (Kairouan, Sfax, Sahel).</p>
+                    </div>
+                    <div class="card-neutral p-2.5 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block text-xs font-bold">M4 à M6 : Monétisation</b>
+                        <p class="text-gray-700 leading-snug">Lancement des pilotes SaaS payants, validation des abonnements huileries, premiers packs digitaux.</p>
+                    </div>
+                    <div class="card-neutral p-2.5 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block text-xs font-bold">M7 à M9 : Expansion</b>
+                        <p class="text-gray-700 leading-snug">Accélération du matching transport, partenariats avec laboratoires d'analyses et conditionneurs.</p>
+                    </div>
+                    <div class="card-neutral p-2.5 space-y-1 border-gray-300">
+                        <b class="text-[#183b1c] block text-xs font-bold">M10 à M12 : Répétabilité</b>
+                        <p class="text-gray-700 leading-snug">Mesure des Unit Economics, clôture de la campagne avec ~45k TND de CA, préparation de l'échelle.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13. L'Équipe et Plan de Recrutement Réaliste -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">13</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">L'Équipe Fondatrice & Recrutements Ciblés</h3>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="card-neutral p-3 space-y-1.5 border-gray-300">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-lg bg-[#183b1c] text-[#E2C078] font-bold text-sm flex items-center justify-center">ZH</div>
+                            <div>
+                                <b class="text-gray-900 block text-xs">Fondateur & Lead Développeur</b>
+                                <span class="text-gray-600 text-[10px]">Full-Stack • Architecture Cloud • Kairouan</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 leading-snug text-justify">
+                            Capacité d'exécution démontrée par la conception, le codage et la mise en ligne autonome de l'intégralité du MVP et de sa base d'utilisateurs.
+                        </p>
+                    </div>
+
+                    <div class="bg-amber-50/80 border border-amber-300 rounded-lg p-3 space-y-1.5">
+                        <b class="text-amber-950 block text-xs font-bold">👥 Profils Clés à Recruter (Budget Levée) :</b>
+                        <ul class="list-disc list-inside text-gray-800 space-y-1">
+                            <li><b>Business Developer / Sales Terrain :</b> Conversion des huileries et relation clients.</li>
+                            <li><b>Responsable Logistique & Partenariats :</b> Animation du réseau transporteurs et dépôts.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14. Gestion des Risques et Stratégies d'Atténuation -->
+            <section class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="section-badge">14</span>
+                    <h3 class="text-base font-black text-[#183b1c] tracking-tight">Analyse des Risques & Stratégies d'Atténuation</h3>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2.5 text-[10.5px]">
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg space-y-0.5">
+                        <b class="text-red-950 block text-xs">1. Résistance au numérique</b>
+                        <p class="text-gray-700 leading-snug"><b>Atténuation :</b> Gratuité de l'annuaire, formulaires ultra-simplifiés en dialecte et support WhatsApp.</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg space-y-0.5">
+                        <b class="text-red-950 block text-xs">2. Saisonnalité de récolte</b>
+                        <p class="text-gray-700 leading-snug"><b>Atténuation :</b> Lissage hors-campagne via services de conseil, projets web et conditionnement export.</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-300 p-2.5 rounded-lg space-y-0.5">
+                        <b class="text-red-950 block text-xs">3. Conversion vers payant</b>
+                        <p class="text-gray-700 leading-snug"><b>Atténuation :</b> Démarrage par micro-forfaits à ROI immédiat (packs marketing, visibilité de lots prioritaires).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15. Conclusion & Synthèse pour le Comité d'Investissement -->
+            <div class="bg-gradient-to-r from-[#183b1c] to-[#0f2412] text-white p-4 rounded-xl flex items-center justify-between border border-[#183b1c] shadow-sm">
+                <div class="space-y-1 max-w-lg">
+                    <h4 class="font-bold text-sm text-[#E2C078]">Pourquoi ZinToop représente une opportunité stratégique :</h4>
+                    <p class="text-xs text-white/90 leading-relaxed text-justify">
+                        Un problème opérationnel réel dans le premier secteur exportateur du pays, un produit technique déjà déployé et validé par l'usage, et un plan d'utilisation des fonds rigoureusement orienté vers la validation des revenus.
+                    </p>
+                </div>
+                <div class="text-right shrink-0">
+                    <span class="inline-block px-4 py-2 bg-[#B28D3F] text-white font-black text-xs rounded-lg shadow-xs">
+                        Demande Seed : 150 000 TND
+                    </span>
+                    <p class="text-[9.5px] text-white/80 mt-1">Éligible Financement Startup Tunisia</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-colored-bar mt-4">
+            <span>ZINTOOP • Clôture du Dossier de Demande de Financement Seed • 2026</span>
+            <span class="font-extrabold text-[#E2C078] bg-white/10 px-2 py-0.5 rounded">Page 6 / 6</span>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -163,9 +163,10 @@
                 $dbProviders = collect($cachedProviders)->shuffle()->take(30);
 
                 $platformAds = [
-                    ['icon' => '🌐', 'text_ar' => 'هل تريد موقعاً احترافياً؟ نبني لك حضوراً رقمياً قوياً', 'text_en' => 'Need a professional website? We build powerful digital presences', 'text_fr' => 'Besoin d\'un site pro? Nous créons votre présence digitale', 'url' => $pricingUrl],
-                    ['icon' => '📱', 'text_ar' => 'تطوير تطبيقات الموبايل iOS & Android — أسعار تنافسية', 'text_en' => 'Mobile App Development iOS & Android — Competitive pricing', 'text_fr' => 'Développement d\'apps mobiles iOS & Android — Prix compétitifs', 'url' => $pricingUrl],
-                    ['icon' => '🚀', 'text_ar' => 'حملات إعلانية على ميتا وجوجل للمنتجين والمصدرين', 'text_en' => 'Meta & Google ad campaigns for olive oil producers & exporters', 'text_fr' => 'Campagnes Meta & Google pour producteurs d\'huile d\'olive', 'url' => $pricingUrl],
+                    ['icon' => '🫒', 'text_ar' => 'سوق زيت الزيتون التونسي — ربط مباشر بين الفلاحين والمعاصر والمشترين', 'text_en' => 'Tunisian Olive Oil Marketplace — Direct connection between farmers, mills & buyers', 'text_fr' => 'Marketplace Huile d\'Olive — Connexion directe producteurs, moulins et acheteurs', 'url' => route('catalog')],
+                    ['icon' => '📦', 'text_ar' => 'خدمات التعبئة والتصدير والعلامة الخاصة للمنتجين التونسيين', 'text_en' => 'Private Label, Bottling & Export Support for Tunisian Olive Oil', 'text_fr' => 'Mise en bouteille, marque privée et export d\'huile d\'olive tunisienne', 'url' => route('services.pricing')],
+                    ['icon' => '🚛', 'text_ar' => 'نقل آمن لزيت الزيتون بين الولايات التونسية برمز التحقق PIN', 'text_en' => 'Secure olive oil transport across Tunisian governorates with PIN verification', 'text_fr' => 'Transport sécurisé d\'huile d\'olive entre gouvernorats avec code PIN', 'url' => route('services.index')],
+                    ['icon' => '📊', 'text_ar' => 'متابعة يومية لأسعار زيت الزيتون في المعاصر والأسواق التونسية', 'text_en' => 'Daily olive oil prices across Tunisian souks and mills', 'text_fr' => 'Cours et prix quotidiens de l\'huile d\'olive en Tunisie', 'url' => route('prices.index')],
                 ];
 
                 $roleIcons = [

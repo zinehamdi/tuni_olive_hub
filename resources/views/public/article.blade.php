@@ -162,6 +162,32 @@
   }]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@@type": "ListItem",
+      "position": 1,
+      "name": "ZinToop",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@@type": "ListItem",
+      "position": 2,
+      "name": "{{ __('Articles') }}",
+      "item": "{{ url(app()->getLocale() . '/articles/' . $article->id) }}"
+    },
+    {
+      "@@type": "ListItem",
+      "position": 3,
+      "name": "{{ localized($article->title) ?? '' }}",
+      "item": "{{ url()->current() }}"
+    }
+  ]
+}
+</script>
 @endpush
 
 @endsection
