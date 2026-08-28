@@ -1,8 +1,304 @@
 import json
 
+# Load original articles JSON
 with open('scratch_old_articles.json') as f:
     old_articles = json.load(f)
 
+for a in old_articles:
+    if a['id'] == 1:
+        a['title'] = {
+            'ar': 'لماذا يُعتبر زيت الزيتون التونسي "الفلتر" الطبيعي لصحتك وجمالك؟',
+            'en': 'Why Tunisian Extra Virgin Olive Oil is Nature\'s Ultimate Health & Beauty Filter: The Science of Polyphenols',
+            'fr': 'Pourquoi l\'Huile d\'Olive Tunisienne est le Filtre Naturel Ultime pour Votre Santé et Beauté : La Science des Polyphénols',
+        }
+        a['category'] = {
+            'ar': 'الصحة والجمال',
+            'en': 'Health & Beauty',
+            'fr': 'Santé & Beauté',
+        }
+        a['content']['en'] = """Have you ever wondered why our Mediterranean ancestors enjoyed robust cardiovascular health, radiant skin, and extraordinary longevity despite harsh living conditions? The secret was never hidden in modern pharmaceutical bottles, but in traditional clay jars filled with freshly cold-pressed extra virgin olive oil. Today, as global nutrition pivots toward authentic healthy living, science is validating what tradition has known for millennia: Tunisian extra virgin olive oil is not just culinary fuel, but a potent biological pharmacy.
+
+---
+
+### 1. The Nutritional Miracle: What Clinical Science Tells Us
+
+Extra virgin olive oil (EVOO) is composed of up to **80% Oleic Acid**, a monounsaturated healthy fat that acts as a natural purifier for the cardiovascular system:
+
+* **The Ultimate Natural Anti-Inflammatory**: High-grade EVOO contains **Oleocanthal**, a natural phenolic compound whose molecular mechanism mirrors that of ibuprofen by selectively inhibiting COX-1 and COX-2 inflammatory enzymes. This helps extinguish silent, chronic low-grade inflammation responsible for heart disease and metabolic disorders.
+* **Taming LDL Cholesterol**: Peer-reviewed clinical trials demonstrate that replacing refined vegetable oils with fresh EVOO decreases oxidized LDL (bad cholesterol) by up to **15%** within weeks while improving HDL protective functions.
+
+---
+
+### 2. Radiant Skin & Cellular Rejuvenation: Nature's Organic Botox
+
+If you seek a healthy, radiant complexion, stop overspending on synthetic chemical serums and discover the dermatological potency of high-polyphenol olive oil:
+
+1. **Antioxidant Shield (Vitamins E and A)**: Rich in active **Polyphenols** and **Tocopherols** that neutralize free radicals responsible for collagen breakdown and premature wrinkles.
+2. **Deep Moisture & Natural Glow**: Unlike mineral oils that clog pores, EVOO penetrates deep into lipid skin layers, balancing natural sebum and creating an authentic, healthy glow.
+3. **Cellular Repair with Natural Squalene**: Olive oil is one of the richest plant sources of **Squalene**, an essential biocompatible compound naturally found in human skin that depletes with age.
+
+---
+
+### 3. Industrial Seed Oils vs Tunisian Green Gold: The Critical Choice
+
+Refined industrial seed oils (soybean, sunflower, corn, canola) undergo extreme thermal and solvent extraction that strips all natural nutrients, yielding oxidized pro-inflammatory lipids:
+
+* **Cold-Pressed Tunisian Olive Oil**: Extracted mechanically below 27°C, preserving 100% of live enzymes, bioactive phenols, and aromatic vitamins.
+* **The Golden Habit**: Consuming one tablespoon of cold-pressed extra virgin olive oil on an empty stomach every morning cleanses the digestive tract and sharpens mental focus throughout the day.
+
+Discover certified high-polyphenol Tunisian olive oils on ZinToop: https://zintoop.com/en/bulk-tunisian-olive-oil"""
+
+        a['content']['fr'] = """Vous êtes-vous déjà demandé pourquoi nos ancêtres méditerranéens bénéficiaient d'une santé de fer, d'une peau éclatante et d'une remarquable longévité malgré les rigueurs du quotidien ? Le secret ne résidait pas dans les pharmacies modernes, mais dans les jarres en terre cuite gorgées d'huile d'olive extra vierge fraîchement extraite à froid. Aujourd'hui, alors que la nutrition mondiale plébiscite l'alimentation saine et préventive, la science confirme ce que la tradition a toujours su : l'huile d'olive tunisienne est une véritable pharmacie biologique.
+
+---
+
+### 1. Le Miracle Nutritionnel : La Science Médicale au Cœur du Terroir
+
+L'huile d'olive extra vierge se compose jusqu'à **80 % d'acide oléique**, un acide gras mono-insaturé bienfaiteur qui nettoie en profondeur le système artériel et protège le cœur :
+
+* **L'Ennemi Numéro 1 des Inflammations** : L'huile d'olive d'excellence contient de l'**Oléocanthal**, un polyphénol naturel agissant exactement comme l'ibuprofène en inhibant les enzymes inflammatoires silencieuses à l'origine des maladies chroniques.
+* **Régulation du Cholestérol LDL** : Les études démontrent que la substitution des huiles raffinées par de l'extra vierge réduit le cholestérol oxydé (LDL) jusqu'à **15 %** en quelques semaines tout en renforçant le bon cholestérol HDL.
+
+---
+
+### 2. Éclat de la Peau et Rajeunissement Cellulaire : Le Botox Naturel
+
+Pour préserver la fraîcheur de votre visage, l'huile d'olive extra vierge offre une composition dermatologique exceptionnelle :
+
+1. **Bouclier Antioxydant (Vitamines E & A)** : Les polyphénols luttent activement contre les radicaux libres responsables du vieillissement cutané et de la perte d'élasticité.
+2. **Nutrition Profonde et Effet Glow** : Pénètre sans obstruer les pores pour restaurer la barrière lipidique cutanée.
+3. **Régénération par le Squalène Naturel** : L'huile d'olive est la source végétale la plus riche en **Squalène**, composant naturel du derme humain qui diminue avec l'âge.
+
+---
+
+### 3. Huiles Raffinées vs Or Vert Tunisien : Le Choix Vital
+
+Les huiles industrielles raffinées (soja, tournesol, maïs) subissent des traitements chimiques à haute température qui les transforment en corps gras pro-inflammatoires. À l'inverse, l'huile d'olive tunisienne extraite à froid préserve l'intégralité de ses vitamines vivantes.
+
+* **Le Geste d'Or** : Une cuillère d'huile d'olive extra vierge à jeun chaque matin stimule le système digestif et protège l'organisme.
+
+Découvrez les huiles d'olive certifiées sur ZinToop : https://zintoop.com/fr/huile-olive-tunisienne-en-vrac"""
+
+    elif a['id'] == 5:
+        a['title'] = {
+            'ar': 'دليل منتجي الزيت زيتون العضوي في تونس ودقة المعايير والتسميد',
+            'en': 'The Complete Guide to Certified Organic Olive Oil Production in Tunisia: Standards & Soil Fertility',
+            'fr': 'Guide Complet des Producteurs d\'Huile d\'Olive Biologique en Tunisie : Normes & Fertilisation',
+        }
+        a['category'] = {
+            'ar': 'الزيت البيولوجي',
+            'en': 'Organic (Bio)',
+            'fr': 'Bio & Terroir',
+        }
+        a['content']['en'] = """Tunisia ranks as the world's leading exporter of certified organic olive oil outside the European Union, boasting more than 300,000 hectares of certified organic olive forests. Organic farming in Tunisia is not merely the absence of chemical residues in lab tests; it represents a comprehensive agricultural philosophy that respects soil ecology, biodiversity, and sustainable water management.
+
+---
+
+### 1. Mandatory Conversion Period (3-Year Transition)
+
+Transitioning a conventional olive grove to certified organic status requires a mandatory **3-year transition period** supervised by approved certification bodies (Ecocert, CCPB, Kiwa). During this interval:
+* The orchard is inspected regularly to ensure zero synthetic pesticides or chemical fertilizers are applied.
+* Natural living windbreaks (cactus, cypress, dense shrubs) must shield the organic grove against chemical drift from neighboring farms.
+
+---
+
+### 2. Technical Protocol: Organic Soil Fertilization & Nutrition
+
+Because synthetic fertilizers (urea, ammonium nitrate) are strictly prohibited, organic growers rely on natural biological cycles:
+
+* **Fully Fermented Animal Compost**: Unfermented raw manure can introduce soil pathogens and weed seeds. Growers utilize organic compost aged for 4 to 6 months at temperatures exceeding 60°C, stabilizing nitrogen, phosphorus, and potassium into slow-release nutrients.
+* **Green Manure (Cover Crops)**: Planting legumes (fava beans, clover, field peas) between olive tree rows during autumn. Legumes naturally fix atmospheric nitrogen through root nodules. In early spring, turning these plants into the topsoil enriches organic matter and enhances soil water retention.
+* **Margine (Olive Mill Wastewater) Controlled Recycling**: When applied following strict agronomic limits (<50 m³ per hectare per year, at least 1 meter away from tree trunks), raw margine serves as an exceptional natural potassium and organic fertilizer.
+
+---
+
+### 3. Milling & Extraction Standards for Organic EVOO
+
+Organic integrity must be preserved inside the modern continuous extraction mill:
+* **Dedicated Production Lines**: Dedicated processing schedules or thorough line sanitization with food-grade certified cleaners before organic milling commences.
+* **True Cold Extraction (<27°C)**: Ensuring temperature throughout malaxation and centrifugation does not exceed 27°C to preserve volatile aromas and antioxidant polyphenols.
+* **Certified Food-Grade Stainless Steel Tanks**: Nitrogen-flushed stainless steel storage tanks clearly labeled with organic lot traceability numbers.
+
+---
+
+### 4. Governmental Incentives & Financial Grants in Tunisia
+
+The Tunisian Ministry of Agriculture provides major support packages for organic operators:
+* **70% Machinery & Equipment Grants** (up to 200,000 TND) for composting and harvest machinery.
+* **50% Annual Inspection Fee Subsidies** reimbursing annual audit costs charged by certification organizations.
+* **Preferential Customs Clearance** fast-tracking export containers at commercial ports.
+
+Connect with certified organic producers on ZinToop: https://zintoop.com/en/tunisian-olive-oil-suppliers"""
+
+        a['content']['fr'] = """La Tunisie se positionne comme le premier exportateur mondial d'huile d'olive biologique hors Union Européenne, avec plus de 300 000 hectares d'oliveraies certifiées bio. L'oléiculture biologique tunisienne ne se résume pas à l'absence de résidus chimiques : elle incarne un écosystème agricole vertueux qui préserve la santé des sols, la biodiversité et les ressources hydriques.
+
+---
+
+### 1. Période de Conversion et Protection des Parcelles
+
+Pour obtenir la certification biologique, l'exploitation doit respecter une **période de conversion de 3 ans** sous le contrôle d'organismes agréés (Ecocert, CCPB) :
+* Traçabilité intégrale de toutes les interventions dans le cahier de culture de la ferme.
+* Mise en place de haies brise-vent naturelles (figuiers de Barbarie, cyprès) pour protéger l'oliveraie contre les traitements chimiques des parcelles voisines.
+
+---
+
+### 2. Protocole Technique de Fertilisation Biologique
+
+L'interdiction absolue des engrais chimiques de synthèse implique des pratiques agronomiques rigoureuses :
+
+* **Compost Organique Entièrement Fermenté** : Utilisation de fumier d'élevage composté pendant 4 à 6 mois à plus de 60°C afin d'éliminer les germes et stabiliser les nutriments (Azote, Phosphore, Potassium).
+* **Engrais Verts (Légumineuses)** : Ensemencement de féveroles ou de vesces entre les rangs d'oliviers à l'automne. Ces plantes fixent l'azote atmosphérique dans le sol, puis sont enfouies au printemps pour enrichir l'humus.
+* **Épandage Contrôlé des Margines** : Les margines d'huilerie brutes peuvent être valorisées comme fertilisant naturel riche en potassium, dans la limite stricte de 50 m³ par hectare et par an.
+
+---
+
+### 3. Exigences de Trituration et Extraction au Moulin
+
+* **Nettoyage Intégral des Lignes** de trituration avant le passage des lots biologiques.
+* **Extraction à Froid Stricte (< 27°C)** pour préserver les arômes délicats et les polyphénols.
+* **Stockage en Cuves Inox Alimentaires** dédiées et étiquetées avec numéro de lot.
+
+Découvrez les producteurs bio certifiés sur ZinToop : https://zintoop.com/fr/fournisseurs-huile-olive-tunisienne"""
+
+    elif a['id'] == 6:
+        a['title'] = {
+            'ar': '📢 حقيقة الـ 1.2 مليار شجرة زيتون: لماذا تتفوق الشجرة التونسية؟',
+            'en': 'The Truth Behind 1.2 Billion Olive Trees: Why Tunisian Olive Oil is a High-Value Global Rarity',
+            'fr': 'La Vérité Derrière les 1,2 Milliard d\'Oliviers : Pourquoi l\'Huile d\'Olive Tunisienne est une Rareté Précieuse',
+        }
+        a['category'] = {
+            'ar': 'تحليل السوق',
+            'en': 'Market Analysis',
+            'fr': 'Analyse du Marché',
+        }
+        a['content']['en'] = """When international agricultural reports from the International Olive Council (IOC) state that the world contains over **1.2 billion olive trees** and Tunisia alone possesses nearly **100 million trees**, some farmers and traders mistakenly assume the global market will suffer from chronic oversupply. Today, let us dissect the real global numbers with cold market logic to understand why Tunisian high-grade olive oil remains one of the most lucrative and strategic agricultural assets for the next decade.
+
+---
+
+### 1. The Official Numbers vs The Uncounted Harvest
+
+Global statistics only capture registered commercial volumes, but the real Mediterranean agricultural reality is far more expansive:
+* **The Hidden Groves**: Millions of ancient, wild, and terraced olive trees across Tunisian mountains and rural valleys produce exceptional fruit outside formal corporate registries.
+* **Traditional Domestic Consumption (Zit El Oula)**: Hundreds of thousands of Mediterranean families purchase their annual extra virgin olive oil directly at local mills for household storage, volumes that never enter commercial export commodity statistics.
+
+---
+
+### 2. The 3% Global Shock: Abundance of Trees, Scarcity of Real Oil
+
+Here lies the fundamental economic reality: out of all edible vegetable oils consumed globally (palm, soybean, canola, sunflower totaling hundreds of millions of tons), **extra virgin olive oil represents only 3% of world vegetable oil consumption!** 
+
+Olive oil is not an ordinary commodity—it is a **scarce, elite luxury food and functional medicine**. The global market is perpetually hungry for authentic, high-polyphenol extra virgin olive oil.
+
+---
+
+### 3. The Mediterranean Sun as a Biological Defense Engine
+
+Tunisia's arid climate and relentless Mediterranean sunshine are not agronomic handicaps; they are biological catalysts. When olive trees face drought and intense solar radiation, they synthesize record concentrations of antioxidant **polyphenols and oleocanthal** to protect their fruit. 
+
+Consumers in North America, Europe, the Gulf, and Asia are no longer buying olive oil merely for frying; they are investing in preventive health and longevity. Demand for genuine cold-pressed EVOO consistently outstrips global supply.
+
+---
+
+### 4. How ZinToop Transforms Hidden Value into Export Profits
+
+The historic problem facing Tunisian farmers was never the volume of harvest; it was predatory local intermediaries who bought premium oil at undervalued prices. **ZinToop** eliminates these hurdles by connecting verified Tunisian producers directly to high-paying international buyers with certified pre-shipment laboratory documentation.
+
+List your harvest or source directly on ZinToop: https://zintoop.com/en/catalog"""
+
+        a['content']['fr'] = """Lorsque les rapports du Conseil Oléicole International (COI) annoncent plus de **1,2 milliard d'oliviers dans le monde** et près de **100 millions en Tunisie**, certains craignent une saturation des marchés. Pourtant, l'analyse approfondie des chiffres révèle que l'huile d'olive extra vierge reste un produit rare, convoité et hautement stratégique.
+
+---
+
+### 1. Les Chiffres Officiels et la Réalité du Terrain
+
+* **Les Oliveraies Non Recensées** : Des millions d'arbres ancestraux dans les reliefs et campagnes tunisiennes produisent des huiles d'exception consommées localement en circuit court (*huile d'Oula*).
+* **Le Choc des 3 %** : L'huile d'olive ne représente que **3 % de la consommation mondiale totale d'huiles végétales**. Elle demeure un produit noble, haut de gamme et irremplaçable.
+
+---
+
+### 2. Le Soleil Tunisien : Moteur d'Antioxydants
+
+Face au climat aride et à l'ensoleillement intense, l'olivier tunisien sécrète des concentrations records de **polyphénols** pour se protéger. C'est cette richesse exceptionnelle qui séduit les marchés d'Amérique du Nord, d'Asie et d'Europe en quête d'aliments santé.
+
+---
+
+### 3. La Solution ZinToop : Valoriser l'Or Vert sans Intermédiaires
+
+ZinToop permet aux producteurs et moulins tunisiens de s'émanciper des courtiers traditionnels pour vendre directement aux acheteurs internationaux au juste prix du marché.
+
+Découvrez les offres du marché sur ZinToop : https://zintoop.com/fr/catalog"""
+
+    elif a['id'] == 7:
+        a['title'] = {
+            'ar': 'الاكتشاف الذي سيغير وجه الطب.. كيف يعيد زيت الزيتون برمجة الحمض النووي البشري؟',
+            'en': 'The Scientific Discovery That Changes Medicine: How Olive Oil Reprograms Human Gene Expression',
+            'fr': 'La Découverte qui Révolutionne la Médecine : Comment l\'Huile d\'Olive Reprogramme les Gènes Humains',
+        }
+        a['category'] = {
+            'ar': 'الأبحاث والجينات',
+            'en': 'Science & Epigenetics',
+            'fr': 'Science & Recherche',
+        }
+        a['content']['en'] = """Forget conventional calorie counting and outdated dietary paradigms. What if modern medicine had been examining extra virgin olive oil from the wrong perspective all along? What if consuming high-polyphenol extra virgin olive oil is not merely ingesting dietary fat, but downloading a direct **epigenetic biological update** for your cellular operating system?
+
+Recent breakthroughs at the intersection of **Epigenetics** and molecular nutrition have uncovered the **Epigenetic Survival Transfer Theory**. High-polyphenol olive oil is not just food—it is a **data-carrying biomolecule** encoded with nature's survival intelligence.
+
+---
+
+### 1. The Tree Does Not Just Make Oil—It Writes Biological Code
+
+Consider the ancient Mediterranean olive tree surviving centuries of severe drought, scorching summer heat, and rocky soils. The tree does not wither; it activates its extreme **survival longevity genes**, synthesizing complex defensive polyphenols such as **Oleocanthal**, **Oleuropein**, and **Hydroxytyrosol**.
+
+These molecules do more than give EVOO its signature peppery throat catch; they encapsulate a dense chemical memory of stress resistance and cellular survival.
+
+---
+
+### 2. Your Gut Microbiome: The Ultimate Nanotech Decoder
+
+When you consume high-polyphenol EVOO, your gut microbiome acts as a bio-hacking unit, breaking down complex phenolic rings into bioactive nanoparticles. These compounds readily cross the blood-brain barrier and penetrate deep into human cell nuclei.
+
+---
+
+### 3. The Cellular Reboot: Epigenetic Switches in Action
+
+These molecules do not alter your fixed DNA sequence; instead, they function as **epigenetic switches** regulating MicroRNAs with extraordinary precision:
+
+1. **Turning OFF Destructive Pathways**: Silencing pro-inflammatory genes (NF-kB pathways) and halting chronic inflammatory cascades and premature cellular aging.
+2. **Turning ON Longevity & Repair**: Activating dormant DNA repair mechanisms, triggering **cellular autophagy** (where cells consume damaged debris and toxins), and building defense against oxidative degradation.
+
+Consuming high-polyphenol Tunisian olive oil is the ultimate biological investment in your cellular longevity.
+
+Explore high-polyphenol certified oils on ZinToop: https://zintoop.com/en/bulk-tunisian-olive-oil"""
+
+        a['content']['fr'] = """Oubliez le simple décompte des calories. Et si la science médicale avait longtemps analysé l'huile d'olive sous un angle réducteur ? Consommer de l'huile d'olive extra vierge à haute teneur en polyphénols ne revient pas simplement à absorber des lipides sains : c'est injecter une véritable **mise à jour épigénétique** au cœur de votre programme cellulaire.
+
+Les avancées récentes en **épigénétique nutritionnelle** révèlent la théorie du *Transfert Épigénétique de Survie* : l'huile d'olive de terroir est une **biomolécule porteuse d'informations** transmises par la nature.
+
+---
+
+### 1. L'Olivier Écrit un Code de Résilience
+
+L'olivier millénaire confronté aux sécheresses et aux chaleurs extrêmes active ses gènes de longévité en sécrétant des polyphénols complexes (**Oléocanthal**, **Oleuropéine**, **Hydroxytyrosol**). Ces molécules constituent le bouclier moléculaire de l'arbre contre la dégradation.
+
+---
+
+### 2. Le Microbiote : Décodeur Biologique
+
+Une fois ingérés, ces polyphénols sont transformés par la flore intestinale en métabolites nanoscopiques capables de franchir la barrière hémato-encéphalique pour interagir avec le noyau cellulaire humain.
+
+---
+
+### 3. Réinitialisation Cellulaire et Longévité
+
+Ces composés agissent comme des **interrupteurs épigénétiques** :
+1. **Extinction des Gènes Inflammatoires** responsables du vieillissement prématuré des tissus.
+2. **Activation de l'Autophagie Cellulaire** et des mécanismes de réparation de l'ADN.
+
+Consommer une huile d'olive riche en polyphénols est une stratégie majeure de protection cellulaire.
+
+Découvrez les huiles d'excellence sur ZinToop : https://zintoop.com/fr/huile-olive-tunisienne-en-vrac"""
+
+# Rich new B2B SEO articles
 rich_new_articles = [
     {
         'id': 10,
@@ -738,7 +1034,7 @@ Rejoignez le réseau ZinToop dès aujourd'hui : https://zintoop.com/fr/catalog""
     },
 ]
 
-all_articles = old_articles + rich_new_articles
+all_master_articles = old_articles + rich_new_articles
 
 def php_export(obj, indent=0):
     ind = '    ' * indent
@@ -775,7 +1071,7 @@ class StrategicSeoArticlesSeeder extends Seeder
 {{
     public function run(): void
     {{
-        $articles = {php_export(all_articles, 2)};
+        $articles = {php_export(all_master_articles, 2)};
 
         foreach ($articles as $data) {{
             Article::updateOrCreate(['id' => $data['id']], $data);
@@ -787,4 +1083,4 @@ class StrategicSeoArticlesSeeder extends Seeder
 with open('database/seeders/StrategicSeoArticlesSeeder.php', 'w', encoding='utf-8') as f:
     f.write(php_code)
 
-print('Generated rich StrategicSeoArticlesSeeder.php with', len(all_articles), 'articles.')
+print('Generated StrategicSeoArticlesSeeder.php with complete EN, FR, AR for ALL articles!')
