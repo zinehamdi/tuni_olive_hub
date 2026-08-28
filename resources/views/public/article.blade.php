@@ -56,12 +56,8 @@
                     </div>
                 </div>
 
-                <div class="prose prose-xl prose-green max-w-none text-gray-700 leading-relaxed font-serif">
-                    {!! preg_replace(
-                        '~(https?://[^\s<]+)~i',
-                        '<a href="$1" target="_blank" class="text-[#6A8F3B] underline hover:text-[#5b7c32] break-all">$1</a>',
-                        nl2br(e($article->content[app()->getLocale()] ?? ''))
-                    ) !!}
+                <div class="prose prose-lg md:prose-xl prose-emerald max-w-none text-gray-800 leading-relaxed">
+                    {!! Illuminate\Support\Str::markdown($article->content[app()->getLocale()] ?? $article->content['ar'] ?? $article->content['en'] ?? '') !!}
                 </div>
 
                 <!-- Related Articles Section -->
@@ -151,7 +147,7 @@
   "@@type": "Article",
   "headline": "{{ localized($article->title) ?? '' }}",
   "image": [
-    "{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}"
+    "{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image)) }}"
   ],
   "datePublished": "{{ $article->created_at->toIso8601String() }}",
   "dateModified": "{{ $article->updated_at->toIso8601String() }}",

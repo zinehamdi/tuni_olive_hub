@@ -200,7 +200,7 @@ Découvrez les offres en vrac disponibles : https://zintoop.com/fr/huile-olive-t
 * يتراوح الحد الأدنى للطلب (MOQ) في تونس عادة بين **2,000 إلى 5,000 زجاجة** للعلامات الناشئة، ويصل إلى حاويات كاملة (20ft Container تحمل حوالي 12,000 إلى 15,000 زجاجة 750ml) للطلبات الكبرى.
 * تستغرق فترة التصنيع والطباعة والتعبئة من **15 إلى 25 يوماً** من تاريخ اعتماد التصميم والتحاليل المخبرية.
 
-تواصل مع وحدات التعبئة المعتمدة على ZinToop: https://zintoop.com/ar/تعبئة-زيت-الزيتون-بالعلامة-الخاصة-تونس""",
+تواصل مع وحدات التعبئة المعتمدة على ZinToop: https://zintoop.com/ar/علامة-خاصة-زيت-زيتون-تونس""",
             'en': """Private label olive oil contract manufacturing (OEM / White Label) represents the fastest, most cost-effective path for gourmet brands, supermarket chains, and food distributors to launch their own branded Extra Virgin Olive Oil without capital investments in milling or bottling infrastructure.
 
 ---
