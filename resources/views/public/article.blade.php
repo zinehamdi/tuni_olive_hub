@@ -6,15 +6,15 @@
 @section('twitter_title', localized($article->title) ?? '')
 @section('og_description', Str::limit(strip_tags($article->content[app()->getLocale()] ?? ''), 150))
 @section('description', Str::limit(strip_tags($article->content[app()->getLocale()] ?? ''), 150))
-@section('og_image', Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? url($article->image) : (Storage::disk('public')->exists($article->image) ? url(Storage::url($article->image)) : url('images/' . $article->image))))
-@section('twitter_image', Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? url($article->image) : (Storage::disk('public')->exists($article->image) ? url(Storage::url($article->image)) : url('images/' . $article->image))))
+@section('og_image', Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image)))
+@section('twitter_image', Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image)))
 
 @section('content')
 <div class="bg-gray-100 min-h-screen py-10">
     <div class="max-w-4xl mx-auto px-4">
         <!-- Back Button -->
         <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#6A8F3B] mb-6 transition-all font-bold text-sm group">
-            <svg class="w-5 h-5 {{ __('') }} group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 rtl:rotate-180 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             {{ __('Back to Marketplace') }}
@@ -22,13 +22,13 @@
 
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
             <!-- Image inside the card -->
-            <div class="w-full h-[250px] md:h-[350px] overflow-hidden relative">
-                <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : (Storage::disk('public')->exists($article->image) ? Storage::url($article->image) : asset('images/' . $article->image))) }}" 
-                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" 
+            <div class="w-full h-[260px] md:h-[380px] overflow-hidden relative bg-gradient-to-br from-[#183b1c] to-[#6A8F3B]">
+                <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image)) }}" 
+                     onerror="this.onerror=null;this.src='{{ asset('images/hero_slide_1.png') }}'" 
                      alt="{{ localized($article->title) ?? '' }}" 
                      class="w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 bg-[#6A8F3B] text-white px-6 py-2 font-black text-xs uppercase tracking-widest">
-                    {{ $article->category[app()->getLocale()] ?? __('Article') }}
+                <div class="absolute bottom-0 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} bg-[#183b1c] text-white px-6 py-2.5 font-black text-xs uppercase tracking-widest shadow-lg">
+                    {{ $article->category[app()->getLocale()] ?? $article->category['en'] ?? $article->category['ar'] ?? __('Article') }}
                 </div>
             </div>
 
@@ -98,8 +98,8 @@
                             <div class="w-[280px] md:w-[320px] flex-shrink-0 snap-center py-2">
                                 <a href="{{ route('articles.show', $related->id) }}" class="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border-2 border-gray-200 hover:border-[#6A8F3B]/30">
                                     <div class="aspect-[16/9] bg-gray-200 overflow-hidden relative flex-shrink-0">
-                                        <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, 'storage/') ? asset($related->image) : (Storage::disk('public')->exists($related->image) ? Storage::url($related->image) : asset('images/' . $related->image))) }}" 
-                                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80'" 
+                                        <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, ['storage/', 'images/']) ? asset($related->image) : asset('images/' . $related->image)) }}" 
+                                             onerror="this.onerror=null;this.src='{{ asset('images/hero_slide_1.png') }}'" 
                                              alt="{{ $related->title[app()->getLocale()] ?? '' }}" 
                                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                         @if(isset($related->category[app()->getLocale()]) || isset($related->category['en']) || isset($related->category['ar']))
