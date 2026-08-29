@@ -1,11 +1,87 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ __('ltr') }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        @php
+            $locale = app()->getLocale();
+            $isRegister = request()->is('*register*');
+            $isLogin = request()->is('*login*');
+
+            if ($isRegister) {
+                $defaultGuestTitle = match($locale) {
+                    'ar' => 'زين توب | التسجيل وإنشاء حساب مجاني',
+                    'fr' => 'ZinToop | Inscription Gratuite & Création de Compte',
+                    default => 'ZinToop | Free Registration & Account Creation',
+                };
+                $defaultGuestDesc = match($locale) {
+                    'ar' => 'سجل الآن مجاناً في منصة زين توب لتسويق وشراء زيت الزيتون التونسي والتواصل المباشر مع الفلاحين وأصحاب المعاصر والمشترين بدون وسيط.',
+                    'fr' => 'Inscrivez-vous gratuitement sur ZinToop pour acheter ou vendre de l\'huile d\'olive tunisienne et contacter directement les producteurs sans intermédiaire.',
+                    default => 'Join ZinToop for free to buy and sell Tunisian extra virgin olive oil directly with certified farmers and mills without broker fees.',
+                };
+            } elseif ($isLogin) {
+                $defaultGuestTitle = match($locale) {
+                    'ar' => 'زين توب | تسجيل الدخول',
+                    'fr' => 'ZinToop | Connexion',
+                    default => 'ZinToop | Member Login',
+                };
+                $defaultGuestDesc = match($locale) {
+                    'ar' => 'سجل دخولك إلى حسابك في منصة زين توب لإدارة عروض زيت الزيتون وطلبات الشراء والتواصل المباشر.',
+                    'fr' => 'Connectez-vous à votre compte ZinToop pour gérer vos annonces, commandes et contacts directs.',
+                    default => 'Log in to your ZinToop account to manage your listings, purchase inquiries, and direct communication.',
+                };
+            } else {
+                $defaultGuestTitle = match($locale) {
+                    'ar' => 'زين توب | السوق التونسي الأول لزيت الزيتون',
+                    'fr' => 'ZinToop | 1ère Marketplace d\'Huile d\'Olive en Tunisie',
+                    default => 'ZinToop | Leading Tunisian Olive Oil Marketplace',
+                };
+                $defaultGuestDesc = match($locale) {
+                    'ar' => 'زين توب - المنصة الأولى لزيت الزيتون والدليل التجاري في تونس. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.',
+                    'fr' => 'ZinToop - Première plateforme d\'huile d\'olive et annuaire B2B en Tunisie.',
+                    default => 'ZinToop - Premier Tunisian Olive Oil Marketplace & B2B Directory.',
+                };
+            }
+
+            $pageTitle = $title ?? $defaultGuestTitle;
+            $pageDesc = $description ?? $defaultGuestDesc;
+            $ogImg = $ogImage ?? asset('images/zintoop-logo.png');
+        @endphp
+
+        <title>{{ $pageTitle }}</title>
+        <meta name="description" content="{{ $pageDesc }}">
+        <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="ZinToop">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="{{ $pageTitle }}">
+        <meta property="og:description" content="{{ $pageDesc }}">
+        <meta property="og:image" content="{{ $ogImg }}">
+        <meta property="og:image:secure_url" content="{{ $ogImg }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="ZinToop Tunisian Olive Oil Platform">
+        <meta property="og:locale" content="{{ $locale === 'ar' ? 'ar_TN' : ($locale === 'fr' ? 'fr_FR' : 'en_US') }}">
+        <meta property="fb:app_id" content="2280950462734613">
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:url" content="{{ url()->current() }}">
+        <meta name="twitter:title" content="{{ $pageTitle }}">
+        <meta name="twitter:description" content="{{ $pageDesc }}">
+        <meta name="twitter:image" content="{{ $ogImg }}">
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/zintoop-logo.png') }}">
 
         <!-- Scripts -->
         @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))

@@ -31,13 +31,19 @@
         <meta name="author" content="{{ $locale === 'ar' ? 'زين توب' : 'ZinToop' }}">
         <meta name="robots" content="index, follow">
         
+        <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />
+        <meta property="fb:app_id" content="2280950462734613">
+        
         <!-- Open Graph Meta Tags -->
         <meta property="og:type" content="website">
-        <meta property="og:site_name" content="{{ config('app.name') }}">
+        <meta property="og:site_name" content="ZinToop">
         <meta property="og:title" content="@yield('og_title', $defaultGuestTitle)">
         <meta property="og:description" content="@yield('og_description', $defaultGuestDesc)">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
+        <meta property="og:image:secure_url" content="@yield('og_image', asset('images/zintoop-logo.png'))">
+        <meta property="og:image:width" content="600">
+        <meta property="og:image:height" content="600">
         <meta property="og:locale" content="{{ $locale === 'ar' ? 'ar_TN' : ($locale === 'fr' ? 'fr_FR' : 'en_US') }}">
         
         <!-- Twitter Card Meta Tags -->
