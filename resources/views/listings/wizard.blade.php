@@ -642,12 +642,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                        const files = Array.from($event.target.files);
                                        if (files.length > 5) { showToast('يمكنك رفع 5 صور كحد أقصى', 'error'); return; }
                                        formData.images = files;
-                                       formData.imagePreview = [];
-                                       files.forEach((file, idx) => {
-                                           const reader = new FileReader();
-                                           reader.onload = (e) => { formData.imagePreview.push(e.target.result); };
-                                           reader.readAsDataURL(file);
-                                       });
+                                       formData.imagePreview = files.map(file => URL.createObjectURL(file));
                                    "
                                    class="hidden">
                         </div>
@@ -874,37 +869,101 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        async compressImage(file, maxWidth = 800) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        
+        async compressImage(file, maxWidth = 1024) {
+            // Fail-safe: if file is not an image or already small (< 300KB), return original file directly
+            if (!file || !file.type || !file.type.startsWith('image/') || file.size < 300 * 1024) {
+                return file;
+            }
+
+            try {
+                // Modern and ultra-fast createImageBitmap if supported (zero base64 RAM overhead)
+                if (typeof createImageBitmap === 'function') {
+                    try {
+                        const bitmap = await createImageBitmap(file);
+                        let { width, height } = bitmap;
                         if (width > maxWidth) {
                             height = Math.round((height * maxWidth) / width);
                             width = maxWidth;
                         }
-                        
+                        const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        canvas.toBlob((blob) => {
-                            resolve(new File([blob], file.name, {
-                                type: 'image/jpeg',
-                                lastModified: Date.now()
-                            }));
-                        }, 'image/jpeg', 0.8);
+                        if (ctx) {
+                            ctx.drawImage(bitmap, 0, 0, width, height);
+                            if (typeof bitmap.close === 'function') bitmap.close();
+                            const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.82));
+                            if (blob && blob.size > 0) {
+                                return new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                            }
+                        }
+                    } catch (bitmapErr) {
+                        console.warn('[compressImage] createImageBitmap fallback to ObjectURL', bitmapErr);
+                    }
+                }
+
+                // Fallback: URL.createObjectURL (avoids heavy base64 strings in RAM)
+                return await new Promise((resolve) => {
+                    const objectUrl = URL.createObjectURL(file);
+                    const img = new Image();
+                    
+                    const cleanup = () => {
+                        try { URL.revokeObjectURL(objectUrl); } catch(e) {}
                     };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
+
+                    img.onload = () => {
+                        try {
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            if (!ctx) {
+                                cleanup();
+                                return resolve(file);
+                            }
+                            ctx.drawImage(img, 0, 0, width, height);
+                            canvas.toBlob((blob) => {
+                                cleanup();
+                                if (blob && blob.size > 0) {
+                                    resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                                        type: 'image/jpeg',
+                                        lastModified: Date.now()
+                                    }));
+                                } else {
+                                    resolve(file);
+                                }
+                            }, 'image/jpeg', 0.82);
+                        } catch (canvasErr) {
+                            cleanup();
+                            resolve(file);
+                        }
+                    };
+
+                    img.onerror = () => {
+                        cleanup();
+                        resolve(file);
+                    };
+
+                    setTimeout(() => {
+                        cleanup();
+                        resolve(file);
+                    }, 3000);
+
+                    img.src = objectUrl;
+                });
+            } catch (err) {
+                console.warn('[compressImage] Global error, using raw file:', err);
+                return file;
+            }
         },
         
         
@@ -1253,9 +1312,14 @@ document.addEventListener('alpine:init', () => {
             // Compress all images client-side, then upload via XHR
             const images = this.formData.images || [];
 
-            Promise.all(images.map(file => this.compressImage(file, 1200)))
-                .then(compressedImages => {
-                    compressedImages.forEach(img => fd.append('images[]', img));
+            Promise.all(images.map(file => this.compressImage(file, 1024)))
+                .then(processedImages => {
+                    const validImages = (processedImages || []).filter(img => img instanceof File && img.size > 0);
+                    if (validImages.length > 0) {
+                        validImages.forEach(img => fd.append('images[]', img));
+                    } else if (images.length > 0) {
+                        images.forEach(img => fd.append('images[]', img));
+                    }
                     this.uploadPhase = 'uploading';
                     return this.uploadWithProgress(fd, action, csrfToken);
                 })
