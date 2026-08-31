@@ -48,7 +48,7 @@
 
             $pageTitle = $title ?? $defaultGuestTitle;
             $pageDesc = $description ?? $defaultGuestDesc;
-            $defaultOgImg = $isRegister ? (asset('images/zintoop-register-card.png') . '?v=3') : asset('images/zintoop-logo.png');
+            $defaultOgImg = $isRegister ? (asset('images/zintoop-register-card.png') . '?v=4') : asset('images/zintoop-logo.png');
             $ogImg = $ogImage ?? $defaultOgImg;
         @endphp
 
@@ -64,8 +64,8 @@
         <meta property="og:description" content="{{ $pageDesc }}">
         <meta property="og:image" content="{{ $ogImg }}">
         <meta property="og:image:secure_url" content="{{ $ogImg }}">
-        <meta property="og:image:width" content="1200">
-        <meta property="og:image:height" content="630">
+        <meta property="og:image:width" content="{{ $isRegister ? '2400' : '1200' }}">
+        <meta property="og:image:height" content="{{ $isRegister ? '1260' : '630' }}">
         <meta property="og:image:alt" content="ZinToop Tunisian Olive Oil Platform">
         <meta property="og:locale" content="{{ $locale === 'ar' ? 'ar_TN' : ($locale === 'fr' ? 'fr_FR' : 'en_US') }}">
         <meta property="fb:app_id" content="2280950462734613">
