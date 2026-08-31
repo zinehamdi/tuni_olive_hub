@@ -235,6 +235,7 @@
                             <optgroup label="📍 أصناف تونسية محلية">
                                 <option value="chemlali">شملالي – Chemlali (وسط/جنوب – زيت خفيف، ذهبي)</option>
                                 <option value="chetoui">شتوي – Chetoui (شمال – زيت قوي، مرّ، عطري)</option>
+                                <option value="chaibi">شعيبي – Chaibi (شعيبي – صنف تونسي أصيل، زيت عالي الجودة)</option>
                                 <option value="oueslati">وسلاتي – Oueslati (وسط – متوازن، ممتاز للجودة العالية)</option>
                                 <option value="zalmati">زلماتي – Zalmati (جنوب شرقي – ثقيل، مقاوم للجفاف)</option>
                                 <option value="zarrazi">زرازي – Zarrazi (قابس – غامق، ثابت في الطعم)</option>

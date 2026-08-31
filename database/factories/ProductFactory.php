@@ -22,6 +22,7 @@ class ProductFactory extends Factory
             // Local Tunisian varieties (most common)
             'chemlali',
             'chetoui',
+            'chaibi',
             'oueslati',
             'zalmati',
             'zarrazi',

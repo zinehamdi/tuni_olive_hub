@@ -319,6 +319,7 @@ document.addEventListener('alpine:init', () => {
         varietyTranslations: {
             'chemlali': 'شملالي',
             'chetoui': 'شتوي',
+            'chaibi': 'شعيبي',
             'meski': 'مسكي',
             'zalmati': 'زلمطي',
             'koroneiki': 'كورونيكي',

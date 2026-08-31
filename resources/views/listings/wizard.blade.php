@@ -142,6 +142,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             <optgroup label="📍 أصناف تونسية محلية – Local Tunisian Varieties">
                                 <option value="chemlali">{{ __('chemlali') }} – Chemlali (وسط/جنوب – زيت خفيف، ذهبي)</option>
                                 <option value="chetoui">{{ __('chetoui') }} – Chetoui (شمال – زيت قوي، مرّ، عطري)</option>
+                                <option value="chaibi">{{ __('chaibi') }} – Chaibi (شعيبي – صنف تونسي أصيل، زيت عالي الجودة)</option>
                                 <option value="oueslati">{{ __('oueslati') }} – Oueslati (وسط – متوازن، ممتاز للجودة العالية)</option>
                                 <option value="zalmati">{{ __('zalmati') }} – Zalmati (جنوب شرقي – ثقيل، مقاوم للجفاف)</option>
                                 <option value="zarrazi">{{ __('zarrazi') }} – Zarrazi (قابس – غامق، ثابت في الطعم)</option>
@@ -992,6 +993,7 @@ document.addEventListener('alpine:init', () => {
                     const varietyString = result.detected_variety.toLowerCase();
                     if (varietyString.includes('chemlali')) this.formData.variety = 'chemlali';
                     else if (varietyString.includes('chetoui')) this.formData.variety = 'chetoui';
+                    else if (varietyString.includes('chaibi') || varietyString.includes('شعيبي')) this.formData.variety = 'chaibi';
                     else if (varietyString.includes('oueslati')) this.formData.variety = 'oueslati';
                     else if (varietyString.includes('zalmati')) this.formData.variety = 'zalmati';
                     else if (varietyString.includes('zarrazi')) this.formData.variety = 'zarrazi';

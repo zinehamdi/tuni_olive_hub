@@ -91,7 +91,7 @@ class AiYieldController extends Controller
         ]);
 
         try {
-            $prompt = "You are an expert Tunisian agronomist. Look at this picture of an olive leaf, branch, or fruit. Detect the olive variety. It is most likely one of the following Tunisian or foreign varieties: Chemlali, Chetoui, Oueslati, Zalmati, Zarrazi, Barouni, Meski, Arbequina, Picual, Coratina, Koroneiki, Chemchali, Gerboui. Reply ONLY with the name of the variety in English letters (e.g. 'Chetoui'). Do not add any extra text.";
+            $prompt = "You are an expert Tunisian agronomist. Look at this picture of an olive leaf, branch, or fruit. Detect the olive variety. It is most likely one of the following Tunisian or foreign varieties: Chemlali, Chetoui, Chaibi, Oueslati, Zalmati, Zarrazi, Barouni, Meski, Arbequina, Picual, Coratina, Koroneiki, Chemchali, Gerboui. Reply ONLY with the name of the variety in English letters (e.g. 'Chetoui'). Do not add any extra text.";
             
             $result = $this->callGeminiVision($request, $prompt);
 
