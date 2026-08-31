@@ -48,7 +48,7 @@
 
             $pageTitle = $title ?? $defaultGuestTitle;
             $pageDesc = $description ?? $defaultGuestDesc;
-            $defaultOgImg = $isRegister ? asset('images/zintoop-register-card.png') : asset('images/zintoop-logo.png');
+            $defaultOgImg = $isRegister ? (asset('images/zintoop-register-card.png') . '?v=3') : asset('images/zintoop-logo.png');
             $ogImg = $ogImage ?? $defaultOgImg;
         @endphp
 
