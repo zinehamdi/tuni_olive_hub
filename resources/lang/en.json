@@ -1714,5 +1714,22 @@
     "Bottling & Packaging Units": "Bottling & Packaging Units",
     "Contract Bottling & Private Label Facilities": "Contract Bottling & Private Label Facilities",
     "Guides & Market Insights": "Guides & Market Insights",
-    "Read Article": "Read Article"
+    "Read Article": "Read Article",
+    "الرجاء اختيار نوع المنتج (زيت أو زيتون)": "Please select product type (Oil or Olives)",
+    "الرجاء اختيار الصنف (شملالي، شتوي...)": "Please select the variety (Chemlali, Chetoui...)",
+    "الرجاء إدخال الكمية المتاحة بشكل صحيح": "Please enter a valid available quantity",
+    "الرجاء إدخال الكمية التقديرية بالطن": "Please enter the estimated quantity in tons",
+    "الرجاء اختيار وحدة القياس": "Please select a unit of measurement",
+    "الرجاء إدخال عدد الأشجار للسانية": "Please enter the number of trees",
+    "الرجاء إدخال السعر أو اختيار \"السعر عند الطلب\"": "Please enter the price or select \"Price on request\"",
+    "الرجاء اختيار طريقة دفع واحدة على الأقل": "Please select at least one payment method",
+    "الرجاء اختيار خيار تسليم واحد على الأقل": "Please select at least one delivery option",
+    "الرجاء إدخال الموقع أو اختيار الولاية على الأقل": "Please enter the location or select the governorate",
+    "يرجى إرفاق صورة واحدة على الأقل لمنتجك لإتمام نشر العرض 📷": "Please attach at least one photo for your product to publish the listing 📷",
+    "الرجاء إرفاق صورة واحدة على الأقل لمنتجك لإتاحة العرض 📷": "Please attach at least one photo for your product to publish the listing 📷",
+    "حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.": "An error occurred while submitting the form. Please try again.",
+    "انتهت صلاحية الجلسة. يرجى تحديث الصفحة والمحاولة مرة أخرى.": "Session expired. Please refresh the page and try again.",
+    "فشل نشر العرض. يرجى التأكد من ملء جميع الحقول المطلوبة والمحاولة مرة أخرى.": "Failed to publish listing. Please check required fields and try again.",
+    "خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.": "Network connection error. Please check your internet connection.",
+    "انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.": "Upload timed out. Please try again with smaller photos."
 }

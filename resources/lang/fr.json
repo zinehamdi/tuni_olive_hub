@@ -1390,5 +1390,22 @@
     "Bottling & Packaging Units": "Unités d'Embouteillage & Conditionnement",
     "Contract Bottling & Private Label Facilities": "Installations de Conditionnement sous Marque Privée",
     "Guides & Market Insights": "Guides & Analyses de Marché",
-    "Read Article": "Lire l'Article"
+    "Read Article": "Lire l'Article",
+    "الرجاء اختيار نوع المنتج (زيت أو زيتون)": "Veuillez sélectionner le type de produit (Huile ou Olives)",
+    "الرجاء اختيار الصنف (شملالي، شتوي...)": "Veuillez choisir la variété (Chemlali, Chétoui...)",
+    "الرجاء إدخال الكمية المتاحة بشكل صحيح": "Veuillez entrer la quantité disponible valide",
+    "الرجاء إدخال الكمية التقديرية بالطن": "Veuillez entrer la quantité estimée en tonnes",
+    "الرجاء اختيار وحدة القياس": "Veuillez choisir l'unité de mesure",
+    "الرجاء إدخال عدد الأشجار للسانية": "Veuillez entrer le nombre d'arbres",
+    "الرجاء إدخال السعر أو اختيار \"السعر عند الطلب\"": "Veuillez entrer le prix ou choisir \"Prix sur demande\"",
+    "الرجاء اختيار طريقة دفع واحدة على الأقل": "Veuillez choisir au moins un moyen de paiement",
+    "الرجاء اختيار خيار تسليم واحد على الأقل": "Veuillez choisir au moins une option de livraison",
+    "الرجاء إدخال الموقع أو اختيار الولاية على الأقل": "Veuillez indiquer le lieu ou sélectionner le gouvernorat",
+    "يرجى إرفاق صورة واحدة على الأقل لمنتجك لإتمام نشر العرض 📷": "Veuillez joindre au moins une photo pour votre produit pour publier l'offre 📷",
+    "الرجاء إرفاق صورة واحدة على الأقل لمنتجك لإتاحة العرض 📷": "Veuillez joindre au moins une photo pour votre produit pour publier l'offre 📷",
+    "حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.": "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer.",
+    "انتهت صلاحية الجلسة. يرجى تحديث الصفحة والمحاولة مرة أخرى.": "La session a expiré. Veuillez actualiser la page et réessayer.",
+    "فشل نشر العرض. يرجى التأكد من ملء جميع الحقول المطلوبة والمحاولة مرة أخرى.": "Échec de la publication. Veuillez vérifier les champs obligatoires et réessayer.",
+    "خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.": "Erreur de connexion réseau. Veuillez vérifier votre connexion Internet.",
+    "انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.": "Délai de téléversement dépassé. Veuillez réessayer avec des photos plus légères."
 }

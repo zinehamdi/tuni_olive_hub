@@ -1113,58 +1113,58 @@ document.addEventListener('alpine:init', () => {
             switch(this.currentStep) {
                 case 1:
                     if (!this.formData.category) {
-                        showToast('الرجاء اختيار نوع المنتج', 'error');
+                        showToast(@js(__('الرجاء اختيار نوع المنتج (زيت أو زيتون)')), 'error');
                         return false;
                     }
                     break;
                 case 2:
                     if (!this.formData.variety) {
-                        showToast('الرجاء اختيار الصنف', 'error');
+                        showToast(@js(__('الرجاء اختيار الصنف (شملالي، شتوي...)')), 'error');
                         return false;
                     }
                     break;
                 case 3:
                     if (!this.formData.quantity || this.formData.quantity <= 0) {
-                        showToast(this.formData.sale_mode === 'saniya' ? 'الرجاء إدخال الكمية التقديرية بالطن' : 'الرجاء إدخال الكمية المتاحة', 'error');
+                        showToast(this.formData.sale_mode === 'saniya' ? @js(__('الرجاء إدخال الكمية التقديرية بالطن')) : @js(__('الرجاء إدخال الكمية المتاحة بشكل صحيح')), 'error');
                         return false;
                     }
                     if (!this.formData.unit) {
-                        showToast('الرجاء اختيار الوحدة', 'error');
+                        showToast(@js(__('الرجاء اختيار وحدة القياس')), 'error');
                         return false;
                     }
                     if (this.formData.sale_mode === 'saniya' && (!this.formData.tree_count || this.formData.tree_count <= 0)) {
-                        showToast('الرجاء إدخال عدد الأشجار للسانية', 'error');
+                        showToast(@js(__('الرجاء إدخال عدد الأشجار للسانية')), 'error');
                         return false;
                     }
                     break;
                 case 4:
                     if (!this.formData.price_on_request && (!this.formData.price || this.formData.price <= 0)) {
-                        showToast('الرجاء إدخال السعر', 'error');
+                        showToast(@js(__('الرجاء إدخال السعر أو اختيار "السعر عند الطلب"')), 'error');
                         return false;
                     }
                     break;
                 case 5:
                     if (this.formData.payment_methods.length === 0) {
-                        showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error');
+                        showToast(@js(__('الرجاء اختيار طريقة دفع واحدة على الأقل')), 'error');
                         return false;
                     }
                     break;
                 case 6:
                     if (this.formData.delivery_options.length === 0) {
-                        showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error');
+                        showToast(@js(__('الرجاء اختيار خيار تسليم واحد على الأقل')), 'error');
                         return false;
                     }
                     break;
                 case 7:
                     // Location validation - at least governorate is required
                     if (!this.formData.governorate && !this.formData.location_text) {
-                        showToast('الرجاء إدخال الموقع أو اختيار الولاية على الأقل', 'error');
+                        showToast(@js(__('الرجاء إدخال الموقع أو اختيار الولاية على الأقل')), 'error');
                         return false;
                     }
                     break;
                 case 8:
                     if (!this.formData.images || this.formData.images.length === 0) {
-                        showToast('الرجاء إرفاق صورة واحدة على الأقل لمنتجك لإتاحة العرض 📷', 'error');
+                        showToast(@js(__('الرجاء إرفاق صورة واحدة على الأقل لمنتجك لإتاحة العرض 📷')), 'error');
                         return false;
                     }
                     return true;
@@ -1279,19 +1279,49 @@ document.addEventListener('alpine:init', () => {
             // Clear any previous errors
             this.errorMessage = '';
 
-            // Validate current step
-            if (!this.validateStep()) {
-                this.errorMessage = 'الرجاء التأكد من ملء جميع الحقول المطلوبة';
+            // 1. Category validation
+            if (!this.formData.category) {
+                this.errorMessage = @js(__('الرجاء اختيار نوع المنتج (زيت أو زيتون)'));
+                showToast(this.errorMessage, 'error');
+                this.currentStep = 1;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
+            // 2. Variety validation
             if (!this.formData.variety) {
-                this.errorMessage = 'الرجاء اختيار الصنف';
+                this.errorMessage = @js(__('الرجاء اختيار الصنف (شملالي، شتوي...)'));
+                showToast(this.errorMessage, 'error');
+                this.currentStep = 2;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
+            // 3. Quantity validation
+            if (!this.formData.quantity || parseFloat(this.formData.quantity) <= 0) {
+                this.errorMessage = @js(__('الرجاء إدخال الكمية المتاحة بشكل صحيح'));
+                showToast(this.errorMessage, 'error');
+                this.currentStep = 3;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // 4. Price validation
             if (!this.formData.price && !this.formData.price_on_request) {
-                this.errorMessage = 'الرجاء إدخال السعر';
+                this.errorMessage = @js(__('الرجاء إدخال السعر أو اختيار "السعر عند الطلب"'));
+                showToast(this.errorMessage, 'error');
+                this.currentStep = 4;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // 5. Images validation
+            const rawImages = this.formData.images || [];
+            if (rawImages.length === 0) {
+                this.errorMessage = @js(__('يرجى إرفاق صورة واحدة على الأقل لمنتجك لإتمام نشر العرض 📷'));
+                showToast(this.errorMessage, 'error');
+                this.currentStep = 8;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
@@ -1310,15 +1340,13 @@ document.addEventListener('alpine:init', () => {
             fd.delete('images[]');
 
             // Compress all images client-side, then upload via XHR
-            const images = this.formData.images || [];
-
-            Promise.all(images.map(file => this.compressImage(file, 1024)))
+            Promise.all(rawImages.map(file => this.compressImage(file, 1024)))
                 .then(processedImages => {
                     const validImages = (processedImages || []).filter(img => img instanceof File && img.size > 0);
                     if (validImages.length > 0) {
                         validImages.forEach(img => fd.append('images[]', img));
-                    } else if (images.length > 0) {
-                        images.forEach(img => fd.append('images[]', img));
+                    } else if (rawImages.length > 0) {
+                        rawImages.forEach(img => fd.append('images[]', img));
                     }
                     this.uploadPhase = 'uploading';
                     return this.uploadWithProgress(fd, action, csrfToken);
@@ -1326,14 +1354,16 @@ document.addEventListener('alpine:init', () => {
                 .then(finalUrl => {
                     this.uploadPhase = 'processing';
                     // Navigate to the redirect target
-                    window.location.href = finalUrl || '{{ route("home") }}';
+                    window.location.href = finalUrl || '{{ route("home", ["locale" => app()->getLocale()]) }}';
                 })
                 .catch(err => {
                     console.error('Upload failed:', err);
-                    this.errorMessage = err.message || 'حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.';
+                    this.errorMessage = err.message || @js(__('حدث خطأ أثناء إرسال النموذج. الرجاء المحاولة مرة أخرى.'));
+                    showToast(this.errorMessage, 'error');
                     this.isSubmitting = false;
                     this.uploadProgress = 0;
                     this.uploadPhase = '';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
         },
 
@@ -1342,6 +1372,7 @@ document.addEventListener('alpine:init', () => {
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', url, true);
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('Accept', 'application/json');
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 xhr.timeout = 180000; // 3 minutes
 
@@ -1354,23 +1385,37 @@ document.addEventListener('alpine:init', () => {
 
                 xhr.onload = () => {
                     this.uploadProgress = 100;
-                    // XHR follows redirects transparently; responseURL = final destination
+                    try {
+                        const json = JSON.parse(xhr.responseText);
+                        if (xhr.status >= 200 && xhr.status < 300 && json.success) {
+                            resolve(json.redirect || xhr.responseURL);
+                            return;
+                        }
+                        if (json.message || json.errors) {
+                            let msg = json.message || '';
+                            if (json.errors) {
+                                const errList = Object.values(json.errors).flat();
+                                if (errList.length > 0) msg = errList[0];
+                            }
+                            reject(new Error(msg));
+                            return;
+                        }
+                    } catch (e) {}
+
+                    if (xhr.status === 419) {
+                        reject(new Error(@js(__('انتهت صلاحية الجلسة. يرجى تحديث الصفحة والمحاولة مرة أخرى.'))));
+                        return;
+                    }
+
                     if (xhr.status >= 200 && xhr.status < 400) {
                         resolve(xhr.responseURL);
                     } else {
-                        // Try to extract validation errors from response
-                        let msg = 'فشل الإرسال. الرجاء المحاولة مرة أخرى.';
-                        try {
-                            const json = JSON.parse(xhr.responseText);
-                            if (json.message) msg = json.message;
-                            if (json.errors) msg = Object.values(json.errors).flat().join(' | ');
-                        } catch (e) {}
-                        reject(new Error(msg));
+                        reject(new Error(@js(__('فشل نشر العرض. يرجى التأكد من ملء جميع الحقول المطلوبة والمحاولة مرة أخرى.'))));
                     }
                 };
 
-                xhr.onerror = () => reject(new Error('خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.'));
-                xhr.ontimeout = () => reject(new Error('انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.'));
+                xhr.onerror = () => reject(new Error(@js(__('خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.'))));
+                xhr.ontimeout = () => reject(new Error(@js(__('انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.'))));
 
                 xhr.send(formData);
             });

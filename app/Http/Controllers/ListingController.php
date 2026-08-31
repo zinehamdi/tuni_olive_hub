@@ -92,15 +92,56 @@ class ListingController extends Controller
                 'images' => 'required|array|min:1',
                 'images.*' => 'required|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
             ], [
-                'min_order.lte' => app()->getLocale() === 'ar' 
-                    ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
-                    : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
-                'images.required' => app()->getLocale() === 'ar' 
-                    ? 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.' 
-                    : (app()->getLocale() === 'fr' ? 'Veuillez joindre au moins une photo pour votre produit.' : 'Please attach at least one photo for your product.'),
-                'images.min' => app()->getLocale() === 'ar' 
-                    ? 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.' 
-                    : (app()->getLocale() === 'fr' ? 'Veuillez joindre au moins une photo pour votre produit.' : 'Please attach at least one photo for your product.'),
+                'category.required' => match(app()->getLocale()) {
+                    'ar' => 'الرجاء اختيار نوع المنتج (زيت أو زيتون).',
+                    'fr' => 'Veuillez sélectionner le type de produit (Huile ou Olives).',
+                    default => 'Please select product type (Oil or Olives).'
+                },
+                'variety.required' => match(app()->getLocale()) {
+                    'ar' => 'الرجاء اختيار صنف الزيت أو الزيتون (شملالي، شتوي...).',
+                    'fr' => 'Veuillez choisir la variété du produit (Chemlali, Chétoui...).',
+                    default => 'Please select the product variety (Chemlali, Chetoui...).'
+                },
+                'quantity.required' => match(app()->getLocale()) {
+                    'ar' => 'الرجاء إدخال الكمية المتاحة بشكل صحيح.',
+                    'fr' => 'Veuillez entrer la quantité disponible.',
+                    default => 'Please enter the available quantity.'
+                },
+                'quantity.min' => match(app()->getLocale()) {
+                    'ar' => 'الكمية يجب أن تكون أكبر من الصفر.',
+                    'fr' => 'La quantité doit être supérieure à zéro.',
+                    default => 'Quantity must be greater than zero.'
+                },
+                'price.numeric' => match(app()->getLocale()) {
+                    'ar' => 'الرجاء إدخال سعر صالح أو اختيار "السعر عند الطلب".',
+                    'fr' => 'Veuillez entrer un prix valide.',
+                    default => 'Please enter a valid price.'
+                },
+                'min_order.lte' => match(app()->getLocale()) {
+                    'ar' => 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.',
+                    'fr' => 'La commande minimum ne peut pas être supérieure à la quantité totale.',
+                    default => 'Minimum order cannot be greater than the total product quantity.'
+                },
+                'images.required' => match(app()->getLocale()) {
+                    'ar' => 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.',
+                    'fr' => 'Veuillez joindre au moins une photo pour votre produit.',
+                    default => 'Please attach at least one photo for your product.'
+                },
+                'images.min' => match(app()->getLocale()) {
+                    'ar' => 'يرجى إرفاق صورة واحدة على الأقل لمنتجك عند إضافة العرض.',
+                    'fr' => 'Veuillez joindre au moins une photo pour votre produit.',
+                    default => 'Please attach at least one photo for your product.'
+                },
+                'images.*.mimetypes' => match(app()->getLocale()) {
+                    'ar' => 'الملف المرفق غير صالح، يرجى إرفاق صور بصيغة JPG أو PNG أو WEBP.',
+                    'fr' => 'Format d\'image non valide (JPG, PNG ou WEBP acceptés).',
+                    default => 'Invalid image format (JPG, PNG, or WEBP accepted).'
+                },
+                'images.*.mimes' => match(app()->getLocale()) {
+                    'ar' => 'الملف المرفق غير صالح، يرجى إرفاق صور بصيغة JPG أو PNG أو WEBP.',
+                    'fr' => 'Format d\'image non valide (JPG, PNG ou WEBP acceptés).',
+                    default => 'Invalid image format (JPG, PNG, or WEBP accepted).'
+                },
             ]);
 
             // Set seller_id to authenticated user if not provided
@@ -269,6 +310,16 @@ class ListingController extends Controller
                 }
             })->afterResponse();
 
+            // Response for AJAX/XHR requests (Wizard)
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('home', ['locale' => app()->getLocale()]),
+                    'message' => __('Listing published successfully! 🎉'),
+                    'listing_id' => $listing->id,
+                ], 200);
+            }
+
             // Redirect to homepage with success message and new_listing_id for #1 ranking spot
             return Redirect::route('home')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
             
@@ -277,7 +328,18 @@ class ListingController extends Controller
                 'errors' => $e->errors(),
                 'user_id' => Auth::id()
             ]);
-            return Redirect::back()->withErrors($e->errors())->withInput()->with('error', __('Please ensure all required fields are filled.'));
+
+            $firstError = collect($e->errors())->flatten()->first() ?? __('Please ensure all required fields are filled.');
+
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $firstError,
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+
+            return Redirect::back()->withErrors($e->errors())->withInput()->with('error', $firstError);
             
         } catch (\Exception $e) {
             Log::error('❌ Listing Creation Error:', [
@@ -286,7 +348,18 @@ class ListingController extends Controller
                 'line' => $e->getLine(),
                 'user_id' => Auth::id()
             ]);
-            return Redirect::back()->withInput()->with('error', __('An error occurred while publishing the listing. Please try again.'));
+
+            $errorMsg = __('An error occurred while publishing the listing. Please try again.');
+
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMsg,
+                    'error' => config('app.debug') ? $e->getMessage() : null,
+                ], 500);
+            }
+
+            return Redirect::back()->withInput()->with('error', $errorMsg);
         }
     }
 
