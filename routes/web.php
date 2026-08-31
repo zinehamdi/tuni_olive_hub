@@ -198,7 +198,7 @@ Route::middleware(['web', 'set.locale'])->group(function () {
 
     // Stories (public fetch)
     Route::get('/user/{user}/stories', [StoryController::class, 'index'])->name('user.stories');
-    Route::get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->middleware('auth')->name('user.profile');
+    Route::get('/user/{user}', [\App\Http\Controllers\ProfileController::class, 'viewPublicProfile'])->name('user.profile');
 });
 
 Route::middleware(['auth', 'set.locale', 'onboarding'])->get('/dashboard', [\App\Http\Controllers\ProfileController::class, 'show'])->name('dashboard');

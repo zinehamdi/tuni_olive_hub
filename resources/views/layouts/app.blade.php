@@ -38,7 +38,7 @@
     <meta property="og:description" content="{{ trim($__env->yieldContent('og_description', $defaultDesc)) }}">
     <meta property="og:image" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
     <meta property="og:image:secure_url" content="{{ trim($__env->yieldContent('og_image', asset('images/zintoop-logo.png'))) }}">
-    <meta property="og:locale" content="{{ __('en_US') }}">
+    <meta property="og:locale" content="{{ $locale === 'ar' ? 'ar_TN' : ($locale === 'fr' ? 'fr_FR' : 'en_US') }}">
     <meta property="fb:app_id" content="{{ env('FACEBOOK_CLIENT_ID') }}">
     @yield('og_product_tags')
     <!-- Twitter Card -->

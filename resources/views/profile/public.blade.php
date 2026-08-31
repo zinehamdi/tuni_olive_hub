@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @php
     $locale = app()->getLocale();
     $isRTL = $locale === 'ar';
@@ -10,9 +12,52 @@
         'phone' => $phoneNum,
         'email' => $emailAddr,
     ];
+
+    // Compute User Title & Role Name for Social Cards
+    $roleMap = [
+        'farmer' => $locale === 'ar' ? 'مزارع زيتون' : 'Olive Grower',
+        'carrier' => $locale === 'ar' ? 'ناقل بري وبحري' : 'Transporter',
+        'mill' => $locale === 'ar' ? 'معصرة زيتون' : 'Oil Mill',
+        'packer' => $locale === 'ar' ? 'وحدة تعبئة وتغليف' : 'Packaging Facility',
+        'transiteur' => $locale === 'ar' ? 'مخلص جمركي' : 'Customs Broker',
+        'comptable' => $locale === 'ar' ? 'محاسب خبير' : 'Accountant',
+        'service_bureau' => $locale === 'ar' ? 'مكتب خدمات إدارية' : 'Service Bureau',
+        'agri_equipment' => $locale === 'ar' ? 'معدات وآليات فلاحية' : 'Agri-Equipment',
+        'agri_materials' => $locale === 'ar' ? 'مواد فلاحية وأسمدة' : 'Agri-Materials',
+        'agri_study_office' => $locale === 'ar' ? 'مكتب دراسات فلاحية' : 'Agri-Study Office',
+    ];
+    $displayRole = $roleMap[$user->role] ?? ($user->farm_name ?? $user->company_name ?? ($locale === 'ar' ? 'عضو منصة الزين' : 'Member'));
+    $gov = $user->addresses()->first()?->governorate ?? ($user->farm_location ?? 'تونس');
+
+    $shareTitle = trim($user->name . ' - ' . $displayRole . ' (' . $gov . ') | ZinToop');
+    $shareDesc = trim('الملف التجاري لـ ' . $user->name . ' (' . $displayRole . ' في ' . $gov . ') على منصة زين توب لزيت الزيتون التونسي. تواصل مباشرة واطلع على العروض والخدمات.');
+
+    // Social Sharing Image: User Profile Picture -> First Cover Photo -> Default ZinToop Logo
+    $shareImage = null;
+    if ($profilePhotoUrl) {
+        $shareImage = url($profilePhotoUrl);
+    } elseif ($coverPhotos->isNotEmpty()) {
+        $firstCover = $coverPhotos->first();
+        $shareImage = str_starts_with($firstCover, 'http') ? $firstCover : url($firstCover);
+    } else {
+        $shareImage = url('images/zintoop-logo.png');
+    }
+    if (str_starts_with($shareImage, 'http://')) {
+        $shareImage = str_replace('http://', 'https://', $shareImage);
+    }
 @endphp
 
-<x-app-layout>
+@section('title', $shareTitle)
+@section('description', $shareDesc)
+@section('og_type', 'profile')
+@section('og_title', $shareTitle)
+@section('og_description', $shareDesc)
+@section('og_image', $shareImage)
+@section('twitter_title', $shareTitle)
+@section('twitter_description', $shareDesc)
+@section('twitter_image', $shareImage)
+
+@section('content')
     <div class="min-h-screen bg-gray-50" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
         
         <!-- TOP COVER & AVATAR -->
@@ -816,4 +861,4 @@
         }
     </script>
     @endif
-</x-app-layout>
+@endsection

@@ -47,7 +47,7 @@
 
 @section('title', $shareTitle)
 @section('description', $shareDesc)
-@section('og_type', 'product')
+@section('og_type', 'website')
 @section('og_title', $shareTitle)
 @section('og_description', $shareDesc)
 @section('og_image', $shareImage)
@@ -56,11 +56,15 @@
 @section('twitter_image', $shareImage)
 
 @section('og_product_tags')
-    <meta property="product:price:amount" content="{{ $listing->price }}">
-    <meta property="product:price:currency" content="{{ $listing->currency ?? 'TND' }}">
-    <meta property="product:availability" content="in stock">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    @if(str_ends_with($shareImage, '.webp'))
+        <meta property="og:image:type" content="image/webp">
+    @elseif(str_ends_with($shareImage, '.png'))
+        <meta property="og:image:type" content="image/png">
+    @else
+        <meta property="og:image:type" content="image/jpeg">
+    @endif
 @endsection
 
 @push('head')
