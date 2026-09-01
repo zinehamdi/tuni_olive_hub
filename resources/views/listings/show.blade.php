@@ -73,13 +73,13 @@
     {
       "@@context": "https://schema.org/",
       "@@type": "Product",
-      "name": "{{ addslashes($schemaName) }}",
+      "name": {{ Js::from($schemaName) }},
       "image": [
-        @foreach($realImages as $img)"{{ $img }}"@if(!$loop->last),@endif
+        @foreach($realImages as $img){{ Js::from($img) }}@if(!$loop->last),@endif
         @endforeach
-        @if(empty($realImages))"{{ url('images/zintoop-logo.png') }}"@endif
+        @if(empty($realImages)){{ Js::from(url('images/zintoop-logo.png')) }}@endif
       ],
-      "description": "{{ addslashes($schemaDesc) }}",
+      "description": {{ Js::from($schemaDesc) }},
       "brand": {
         "@@type": "Brand",
         "name": "ZinToop"
@@ -87,8 +87,8 @@
       "category": "Cooking Oils",
       "offers": {
         "@@type": "Offer",
-        "url": "{{ url()->current() }}",
-        "priceCurrency": "{{ $listing->currency ?? 'TND' }}",
+        "url": {{ Js::from(url()->current()) }},
+        "priceCurrency": {{ Js::from($listing->currency ?? 'TND') }},
         "price": "{{ $listing->price }}",
         "priceValidUntil": "{{ now()->addDays(30)->format('Y-m-d') }}",
         "validFrom": "{{ $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
@@ -96,7 +96,7 @@
         "availability": "https://schema.org/InStock",
         "seller": {
           "@@type": "Organization",
-          "name": "{{ addslashes($listing->seller?->name ?? 'ZinToop Verified Seller') }}"
+          "name": {{ Js::from($listing->seller?->name ?? 'ZinToop Verified Seller') }}
         },
         "shippingDetails": {
           "@@type": "OfferShippingDetails",
@@ -107,7 +107,7 @@
           "shippingRate": {
             "@@type": "MonetaryAmount",
             "value": "0",
-            "currency": "{{ $listing->currency ?? 'TND' }}"
+            "currency": {{ Js::from($listing->currency ?? 'TND') }}
           },
           "deliveryTime": {
             "@@type": "ShippingDeliveryTime",
