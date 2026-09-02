@@ -584,9 +584,10 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         <!-- Governorate & Delegation -->
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block font-bold text-gray-900 mb-2">الولاية</label>
-                                <select x-model="formData.governorate"
-                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:outline-none text-lg">
+                                <label class="block font-bold text-gray-900 mb-1">الولاية <span class="text-red-500 font-extrabold">* (مطلوب)</span></label>
+                                <p class="text-xs text-gray-500 mb-2">اختر ولاية الضيعة أو المعصرة في تونس</p>
+                                <select x-model="formData.governorate" required
+                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:outline-none text-lg bg-white">
                                     <option value="">اختر الولاية</option>
                                     <option value="تونس">تونس</option>
                                     <option value="أريانة">أريانة</option>
@@ -615,9 +616,10 @@ console.log('[wizard] Variety selection mode - no product database needed');
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-bold text-gray-900 mb-2">المعتمدية (اختياري)</label>
+                                <label class="block font-bold text-gray-900 mb-1">المعتمدية (اختياري)</label>
+                                <p class="text-xs text-gray-500 mb-2">اسم المنطقة أو المعتمدية</p>
                                 <input type="text" x-model="formData.delegation"
-                                       placeholder="مثال: حمام الأنف"
+                                       placeholder="مثال: حمام الأنف، طينة، الجم..."
                                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:outline-none text-lg">
                             </div>
                         </div>
@@ -1158,9 +1160,9 @@ document.addEventListener('alpine:init', () => {
                     }
                     break;
                 case 7:
-                    // Location validation - at least governorate is required
-                    if (!this.formData.governorate && !this.formData.location_text) {
-                        showToast(@js(__('الرجاء إدخال الموقع أو اختيار الولاية على الأقل')), 'error');
+                    // Location validation - governorate in Tunisia is strictly required
+                    if (!this.formData.governorate) {
+                        showToast(@js(__('يرجى اختيار ولاية سانيتك أو معصرتك في تونس من القائمة.')), 'error');
                         return false;
                     }
                     break;
@@ -1197,6 +1199,15 @@ document.addEventListener('alpine:init', () => {
                 this.formData.longitude = position.coords.longitude.toFixed(6);
                 this.locationSuccess = true;
                 this.locationError = '';
+
+                // Check if coordinates fall outside Tunisia (Lat: 30.0-37.6, Lng: 7.4-12.0)
+                const lat = Number(this.formData.latitude);
+                const lng = Number(this.formData.longitude);
+                const isInsideTunisia = (lat >= 30.0 && lat <= 37.6 && lng >= 7.4 && lng <= 12.0);
+                if (!isInsideTunisia) {
+                    showToast(@js(__('📍 تم التقاط إحداثياتك. يرجى التأكد من اختيار ولاية سانيتك أو معصرتك في تونس من القائمة أدناه.')), 'info');
+                }
+
                 if (button) {
                     button.disabled = false;
                     button.innerHTML = '✓ تم تحديد الموقع بنجاح';
@@ -1227,6 +1238,14 @@ document.addEventListener('alpine:init', () => {
                                         this.formData.longitude = Number(data.longitude).toFixed(6);
                                         this.locationSuccess = true;
                                         this.locationError = '';
+
+                                        const lat = Number(this.formData.latitude);
+                                        const lng = Number(this.formData.longitude);
+                                        const isInsideTunisia = (lat >= 30.0 && lat <= 37.6 && lng >= 7.4 && lng <= 12.0);
+                                        if (!isInsideTunisia) {
+                                            showToast(@js(__('📍 تم التقاط إحداثياتك. يرجى التأكد من اختيار ولاية سانيتك أو معصرتك في تونس من القائمة أدناه.')), 'info');
+                                        }
+
                                         if (button) {
                                             button.disabled = false;
                                             button.innerHTML = '✓ تم تحديد الموقع بنجاح';

@@ -60,12 +60,12 @@ class ListingController extends Controller
         ]);
         
         try {
-        Log::error('🧩 Debug Upload:', [
-            'hasFile_images' => $request->hasFile('images'),
-            'input_images_type' => gettype($request->input('images')),
-            'allFiles' => array_keys($request->allFiles()),
-            'image_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
-        ]);
+            Log::info('🧩 Debug Upload:', [
+                'hasFile_images' => $request->hasFile('images'),
+                'input_images_type' => gettype($request->input('images')),
+                'allFiles' => array_keys($request->allFiles()),
+                'image_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
+            ]);
             // Validate the request
             $validated = $request->validate([
                 'category' => 'required|in:olive,oil',
@@ -84,7 +84,7 @@ class ListingController extends Controller
                 'location_text' => 'nullable|string',
                 'latitude' => 'nullable|numeric',
                 'longitude' => 'nullable|numeric',
-                'governorate' => 'nullable|string',
+                'governorate' => 'required|string|max:64',
                 'delegation' => 'nullable|string',
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
                 'tree_count' => 'nullable|integer|min:1',
@@ -111,6 +111,11 @@ class ListingController extends Controller
                     'ar' => 'الكمية يجب أن تكون أكبر من الصفر.',
                     'fr' => 'La quantité doit être supérieure à zéro.',
                     default => 'Quantity must be greater than zero.'
+                },
+                'governorate.required' => match(app()->getLocale()) {
+                    'ar' => 'يرجى تحديد ولاية المحصول أو المعصرة في تونس (منصة الزين مخصصة لمنتجات الزيتون التونسي).',
+                    'fr' => 'Veuillez sélectionner le gouvernorat de votre récolte ou huilerie en Tunisie (ZinToop est dédiée à l\'huile d\'olive tunisienne).',
+                    default => 'Please specify the governorate of your harvest or mill in Tunisia (ZinToop is dedicated to Tunisian olive products).'
                 },
                 'price.numeric' => match(app()->getLocale()) {
                     'ar' => 'الرجاء إدخال سعر صالح أو اختيار "السعر عند الطلب".',
@@ -200,6 +205,7 @@ class ListingController extends Controller
             // Create or update the seller's address if location data provided
             if ($request->has('latitude') && $request->has('longitude')) {
                 $user = Auth::user();
+                $safeGov = $request->governorate ?: ($user->addresses()->first()?->governorate ?? 'صفاقس');
                 
                 // Check if user already has an address, otherwise create one
                 $address = $user->addresses()->first();
@@ -209,7 +215,7 @@ class ListingController extends Controller
                     $address->update([
                         'lat' => $request->latitude,
                         'lng' => $request->longitude,
-                        'governorate' => $request->governorate,
+                        'governorate' => $safeGov,
                         'delegation' => $request->delegation,
                         'label' => $request->location_text ?? 'موقع المنتج',
                     ]);
@@ -219,7 +225,7 @@ class ListingController extends Controller
                     $address = $user->addresses()->create([
                         'lat' => $request->latitude,
                         'lng' => $request->longitude,
-                        'governorate' => $request->governorate,
+                        'governorate' => $safeGov,
                         'delegation' => $request->delegation,
                         'label' => $request->location_text ?? 'موقع المنتج',
                     ]);
