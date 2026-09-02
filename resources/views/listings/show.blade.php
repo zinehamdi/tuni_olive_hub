@@ -69,70 +69,69 @@
 
 @push('head')
     <!-- JSON-LD Product Schema for Google Rich Results & Shopping -->
+    @php
+        $productSchema = [
+            '@'.'context' => 'https://schema.org',
+            '@'.'type' => 'Product',
+            'name' => $schemaName,
+            'image' => !empty($realImages) ? array_values($realImages) : [url('images/zintoop-logo.png')],
+            'description' => $schemaDesc,
+            'brand' => [
+                '@'.'type' => 'Brand',
+                'name' => 'ZinToop'
+            ],
+            'category' => 'Cooking Oils',
+            'offers' => [
+                '@'.'type' => 'Offer',
+                'url' => url()->current(),
+                'priceCurrency' => $listing->currency ?? 'TND',
+                'price' => (string)$listing->price,
+                'priceValidUntil' => now()->addDays(30)->format('Y-m-d'),
+                'validFrom' => $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d'),
+                'itemCondition' => 'https://schema.org/NewCondition',
+                'availability' => 'https://schema.org/InStock',
+                'seller' => [
+                    '@'.'type' => 'Organization',
+                    'name' => $listing->seller?->name ?? 'ZinToop Verified Seller'
+                ],
+                'shippingDetails' => [
+                    '@'.'type' => 'OfferShippingDetails',
+                    'shippingDestination' => [
+                        '@'.'type' => 'DefinedRegion',
+                        'addressCountry' => 'TN'
+                    ],
+                    'shippingRate' => [
+                        '@'.'type' => 'MonetaryAmount',
+                        'value' => '0',
+                        'currency' => $listing->currency ?? 'TND'
+                    ],
+                    'deliveryTime' => [
+                        '@'.'type' => 'ShippingDeliveryTime',
+                        'handlingTime' => [
+                            '@'.'type' => 'QuantitativeValue',
+                            'minValue' => 1,
+                            'maxValue' => 3,
+                            'unitCode' => 'DAY'
+                        ],
+                        'transitTime' => [
+                            '@'.'type' => 'QuantitativeValue',
+                            'minValue' => 2,
+                            'maxValue' => 7,
+                            'unitCode' => 'DAY'
+                        ]
+                    ]
+                ],
+                'hasMerchantReturnPolicy' => [
+                    '@'.'type' => 'MerchantReturnPolicy',
+                    'applicableCountry' => 'TN',
+                    'returnPolicyCategory' => 'https://schema.org/MerchantReturnNotPermitted',
+                    'merchantReturnDays' => 0
+                ]
+            ]
+        ];
+    @endphp
     <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org/",
-      "@@type": "Product",
-      "name": {{ Js::from($schemaName) }},
-      "image": [
-        @foreach($realImages as $img){{ Js::from($img) }}@if(!$loop->last),@endif
-        @endforeach
-        @if(empty($realImages)){{ Js::from(url('images/zintoop-logo.png')) }}@endif
-      ],
-      "description": {{ Js::from($schemaDesc) }},
-      "brand": {
-        "@@type": "Brand",
-        "name": "ZinToop"
-      },
-      "category": "Cooking Oils",
-      "offers": {
-        "@@type": "Offer",
-        "url": {{ Js::from(url()->current()) }},
-        "priceCurrency": {{ Js::from($listing->currency ?? 'TND') }},
-        "price": "{{ $listing->price }}",
-        "priceValidUntil": "{{ now()->addDays(30)->format('Y-m-d') }}",
-        "validFrom": "{{ $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
-        "itemCondition": "https://schema.org/NewCondition",
-        "availability": "https://schema.org/InStock",
-        "seller": {
-          "@@type": "Organization",
-          "name": {{ Js::from($listing->seller?->name ?? 'ZinToop Verified Seller') }}
-        },
-        "shippingDetails": {
-          "@@type": "OfferShippingDetails",
-          "shippingDestination": {
-            "@@type": "DefinedRegion",
-            "addressCountry": "TN"
-          },
-          "shippingRate": {
-            "@@type": "MonetaryAmount",
-            "value": "0",
-            "currency": {{ Js::from($listing->currency ?? 'TND') }}
-          },
-          "deliveryTime": {
-            "@@type": "ShippingDeliveryTime",
-            "handlingTime": {
-              "@@type": "QuantitativeValue",
-              "minValue": 1,
-              "maxValue": 3,
-              "unitCode": "DAY"
-            },
-            "transitTime": {
-              "@@type": "QuantitativeValue",
-              "minValue": 2,
-              "maxValue": 7,
-              "unitCode": "DAY"
-            }
-          }
-        },
-        "hasMerchantReturnPolicy": {
-          "@@type": "MerchantReturnPolicy",
-          "applicableCountry": "TN",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-          "merchantReturnDays": 0
-        }
-      }
-    }
+    {!! json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
 @endpush
 

@@ -155,23 +155,23 @@
 @push('head')
 <script type="application/ld+json">
 {!! json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'BreadcrumbList',
+    '@'.'context' => 'https://schema.org',
+    '@'.'type' => 'BreadcrumbList',
     'itemListElement' => [
         [
-            '@type' => 'ListItem',
+            '@'.'type' => 'ListItem',
             'position' => 1,
             'name' => 'ZinToop',
             'item' => url('/')
         ],
         [
-            '@type' => 'ListItem',
+            '@'.'type' => 'ListItem',
             'position' => 2,
             'name' => __('Tunisian Prices'),
             'item' => route('prices.index')
         ],
         [
-            '@type' => 'ListItem',
+            '@'.'type' => 'ListItem',
             'position' => 3,
             'name' => __('International Prices'),
             'item' => url()->current()

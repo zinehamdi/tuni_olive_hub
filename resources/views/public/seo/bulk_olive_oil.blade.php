@@ -147,8 +147,8 @@
 @push('head')
 <script type="application/ld+json">
 {!! json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'AggregateOffer',
+    '@'.'context' => 'https://schema.org',
+    '@'.'type' => 'AggregateOffer',
     'priceCurrency' => 'TND',
     'lowPrice' => '16.00',
     'highPrice' => '26.00',

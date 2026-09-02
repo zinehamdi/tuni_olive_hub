@@ -1925,107 +1925,70 @@ document.addEventListener('alpine:init', () => {
 </script>
 
 <!-- Structured Data for Products (SEO) -->
+<!-- Structured Data for Products (SEO) -->
 @if(isset($featuredListings) && count($featuredListings) > 0)
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@@type": "ItemList",
-    "name": "منتجات زيت الزيتون التونسي",
-    "description": "مجموعة من منتجات زيت الزيتون والزيتون التونسي الأصلي",
-    "numberOfItems": {{ count($featuredListings) }},
-    "itemListElement": [
-        @foreach($featuredListings as $index => $listing)
-        {
-            "@@type": "ListItem",
-            "position": {{ $index + 1 }},
-            "item": {
-                "@@type": "Product",
-                "name": "{{ $listing->product->variety ?? 'زيت الزيتون' }}",
-                "description": "{!! $listing->product->type === 'oil' ? 'زيت زيتون' : 'زيتون' !!} - {{ $listing->product->quality ?? 'جودة عالية' }}",
-                "offers": {
-                    "@@type": "Offer",
-                    "price": "{{ $listing->price }}",
-                    "priceCurrency": "TND",
-                    "availability": "https://schema.org/InStock",
-                    "validFrom": "{{ $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d') }}",
-                    "seller": {
-                        "@@type": "Organization",
-                        "name": "{{ $listing->seller->name ?? 'بائع' }}"
-                    },
-                    "shippingDetails": {
-                        "@@type": "OfferShippingDetails",
-                        "shippingDestination": {
-                            "@@type": "DefinedRegion",
-                            "addressCountry": "TN"
-                        },
-                        "shippingRate": {
-                            "@@type": "MonetaryAmount",
-                            "value": "0",
-                            "currency": "TND"
-                        },
-                        "deliveryTime": {
-                            "@@type": "ShippingDeliveryTime",
-                            "handlingTime": {
-                                "@@type": "QuantitativeValue",
-                                "minValue": 1,
-                                "maxValue": 3,
-                                "unitCode": "DAY"
-                            },
-                            "transitTime": {
-                                "@@type": "QuantitativeValue",
-                                "minValue": 2,
-                                "maxValue": 7,
-                                "unitCode": "DAY"
-                            }
-                        }
-                    },
-                    "hasMerchantReturnPolicy": {
-                        "@@type": "MerchantReturnPolicy",
-                        "applicableCountry": "TN",
-                        "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                        "merchantReturnDays": 0
-                    }
-                },
-                "image": "{!! isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png') !!}",
-                "brand": {
-                    "@@type": "Brand",
-                    "name": "Tunisian Olive Oil"
-                },
-                "aggregateRating": {
-                    "@@type": "AggregateRating",
-                    "ratingValue": "4.5",
-                    "reviewCount": "1"
-                }
-            }
-        }{{ !$loop->last ? ',' : '' }}
-        @endforeach
-    ]
-}
-</script>
-
-<!-- Organization Schema -->
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@@type": "Organization",
-    "name": "منصة زيت الزيتون التونسي",
-    "alternateName": "Tunisian Olive Oil Platform",
-    "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/zintoop-logo.png') }}",
-    "description": "منصة تونسية متخصصة في تجارة زيت الزيتون والزيتون التونسي الأصلي",
-    "contactPoint": {
-        "@@type": "ContactPoint",
-        "contactType": "Customer Service",
-        "availableLanguage": ["Arabic", "French", "English"]
-    },
-    "sameAs": [
-        "{{ url('/') }}"
-    ],
-    "areaServed": {
-        "@@type": "Country",
-        "name": "Tunisia"
+@php
+    $itemListElements = [];
+    foreach($featuredListings as $index => $listing) {
+        $productVariety = $listing->product->variety ?? 'زيت الزيتون';
+        $productQuality = $listing->product->quality ?? 'جودة عالية';
+        $productType = ($listing->product->type ?? 'oil') === 'oil' ? 'زيت زيتون' : 'زيتون';
+        $img = isset($listing->media[0]) ? asset('storage/' . $listing->media[0]) : asset('images/zintoop-logo.png');
+        
+        $itemListElements[] = [
+            '@'.'type' => 'ListItem',
+            'position' => $index + 1,
+            'item' => [
+                '@'.'type' => 'Product',
+                'name' => $productVariety,
+                'description' => $productType . ' - ' . $productQuality,
+                'image' => $img,
+                'brand' => [
+                    '@'.'type' => 'Brand',
+                    'name' => 'ZinToop'
+                ],
+                'offers' => [
+                    '@'.'type' => 'Offer',
+                    'price' => (string)$listing->price,
+                    'priceCurrency' => 'TND',
+                    'availability' => 'https://schema.org/InStock',
+                    'validFrom' => $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d'),
+                    'seller' => [
+                        '@'.'type' => 'Organization',
+                        'name' => $listing->seller->name ?? 'ZinToop Verified Seller'
+                    ],
+                    'shippingDetails' => [
+                        '@'.'type' => 'OfferShippingDetails',
+                        'shippingDestination' => [
+                            '@'.'type' => 'DefinedRegion',
+                            'addressCountry' => 'TN'
+                        ],
+                        'shippingRate' => [
+                            '@'.'type' => 'MonetaryAmount',
+                            'value' => '0',
+                            'currency' => 'TND'
+                        ]
+                    ],
+                    'hasMerchantReturnPolicy' => [
+                        '@'.'type' => 'MerchantReturnPolicy',
+                        'applicableCountry' => 'TN',
+                        'returnPolicyCategory' => 'https://schema.org/MerchantReturnNotPermitted',
+                        'merchantReturnDays' => 0
+                    ]
+                ]
+            ]
+        ];
     }
-}
+@endphp
+<script type="application/ld+json">
+{!! json_encode([
+    '@'.'context' => 'https://schema.org',
+    '@'.'type' => 'ItemList',
+    'name' => 'منتجات زيت الزيتون التونسي - ZinToop',
+    'description' => 'عروض ومنتجات زيت الزيتون والزيتون التونسي الأصلي على منصة ZinToop',
+    'numberOfItems' => count($itemListElements),
+    'itemListElement' => $itemListElements
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endif
 

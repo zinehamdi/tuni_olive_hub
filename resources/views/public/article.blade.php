@@ -141,48 +141,65 @@
 </div>
 
 @push('head')
+@php
+    $articleImg = Str::startsWith($article->image, ['http://', 'https://']) 
+        ? $article->image 
+        : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image));
+        
+    $articleSchema = [
+        '@'.'context' => 'https://schema.org',
+        '@'.'type' => 'Article',
+        'headline' => localized($article->title) ?? '',
+        'image' => [$articleImg],
+        'datePublished' => $article->created_at ? $article->created_at->toIso8601String() : now()->toIso8601String(),
+        'dateModified' => $article->updated_at ? $article->updated_at->toIso8601String() : now()->toIso8601String(),
+        'author' => [
+            [
+                '@'.'type' => 'Organization',
+                'name' => 'ZinToop Marketplace',
+                'url' => url('/')
+            ]
+        ],
+        'publisher' => [
+            '@'.'type' => 'Organization',
+            'name' => 'ZinToop',
+            'logo' => [
+                '@'.'type' => 'ImageObject',
+                'url' => asset('images/zintoop-logo.png')
+            ]
+        ]
+    ];
+
+    $breadcrumbSchema = [
+        '@'.'context' => 'https://schema.org',
+        '@'.'type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@'.'type' => 'ListItem',
+                'position' => 1,
+                'name' => 'ZinToop',
+                'item' => url('/')
+            ],
+            [
+                '@'.'type' => 'ListItem',
+                'position' => 2,
+                'name' => __('Articles'),
+                'item' => url(app()->getLocale() . '/articles')
+            ],
+            [
+                '@'.'type' => 'ListItem',
+                'position' => 3,
+                'name' => localized($article->title) ?? '',
+                'item' => url()->current()
+            ]
+        ]
+    ];
+@endphp
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "Article",
-  "headline": "{{ localized($article->title) ?? '' }}",
-  "image": [
-    "{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, ['storage/', 'images/']) ? asset($article->image) : asset('images/' . $article->image)) }}"
-  ],
-  "datePublished": "{{ $article->created_at->toIso8601String() }}",
-  "dateModified": "{{ $article->updated_at->toIso8601String() }}",
-  "author": [{
-      "@@type": "Organization",
-      "name": "ZinToop Marketplace",
-      "url": "{{ url('/') }}"
-  }]
-}
+{!! json_encode($articleSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@@type": "ListItem",
-      "position": 1,
-      "name": "ZinToop",
-      "item": "{{ url('/') }}"
-    },
-    {
-      "@@type": "ListItem",
-      "position": 2,
-      "name": "{{ __('Articles') }}",
-      "item": "{{ url(app()->getLocale() . '/articles/' . $article->id) }}"
-    },
-    {
-      "@@type": "ListItem",
-      "position": 3,
-      "name": "{{ localized($article->title) ?? '' }}",
-      "item": "{{ url()->current() }}"
-    }
-  ]
-}
+{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 

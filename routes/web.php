@@ -513,10 +513,18 @@ Route::get('/', function (Request $request) {
     return redirect('/' . $locale . $queryString, 301);
 });
 
-// Fallback route: 301 single-hop redirect for old non-prefixed & query-parameter URLs
+// Fallback route: 301 single-hop redirect for old non-prefixed & query-parameter URLs, or 404 for real missing pages
 Route::fallback(function (Request $request) {
     $path = trim($request->path(), '/');
     $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
+    
+    // If URL already starts with a supported locale and reached fallback, it is a genuine 404
+    $segments = explode('/', $path);
+    $firstSegment = $segments[0] ?? '';
+    if (in_array($firstSegment, $supported, true)) {
+        abort(404);
+    }
+
     $reqLang = $request->query('lang');
     $locale = ($reqLang && in_array($reqLang, $supported, true))
         ? $reqLang

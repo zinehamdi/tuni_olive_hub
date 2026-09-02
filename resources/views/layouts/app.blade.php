@@ -54,15 +54,20 @@
     <!-- JSON-LD Schema (Structured Data for Google) -->
     <script type="application/ld+json">
     {!! json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'WebSite',
-        'name' => $defaultBrandName,
-        'alternateName' => 'ZinToop',
+        '@'.'context' => 'https://schema.org',
+        '@'.'type' => 'WebSite',
+        'name' => 'ZinToop',
+        'alternateName' => [
+            'ZinToop - Tunisian Olive Oil Marketplace',
+            'ZinToop B2B Hub',
+            'منصة الزين لزيت الزيتون التونسي',
+            'EZZINE TUNISIAN OLIVE OIL PLATFORM'
+        ],
         'url' => url('/'),
         'description' => $defaultDesc,
         'inLanguage' => app()->getLocale(),
         'potentialAction' => [
-            '@type' => 'SearchAction',
+            '@'.'type' => 'SearchAction',
             'target' => url(app()->getLocale()) . '?search={search_term_string}',
             'query-input' => 'required name=search_term_string',
         ],
@@ -70,11 +75,23 @@
     </script>
     <script type="application/ld+json">
     {!! json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'Organization',
+        '@'.'context' => 'https://schema.org',
+        '@'.'type' => 'Organization',
         'name' => 'ZinToop',
+        'legalName' => 'EZZINE TUNISIAN OLIVE OIL PLATFORM',
+        'alternateName' => [
+            'ZinToop - Tunisian Olive Oil Marketplace',
+            'منصة الزين لزيت الزيتون التونسي'
+        ],
         'url' => 'https://zintoop.com',
         'logo' => asset('images/zintoop-logo.png'),
+        'telephone' => '+21625777926',
+        'email' => 'contact@zintoop.com',
+        'address' => [
+            '@'.'type' => 'PostalAddress',
+            'addressLocality' => 'Kairouan',
+            'addressCountry' => 'TN'
+        ]
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
 
