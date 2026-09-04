@@ -75,6 +75,15 @@ class ProcessBotEventJob implements ShouldQueue
         $delaySeconds = rand($minDelay, $maxDelay);
 
         if ($this->channel === 'facebook_comment') {
+            $existingConv = \App\Models\BotConversation::where('channel', 'facebook_comment')
+                ->where('external_id', $this->externalId)
+                ->first();
+
+            if ($existingConv && !empty($existingConv->metadata['replied_publicly'])) {
+                Log::info("Comment {$this->externalId} already replied publicly, skipping duplicate event.");
+                return;
+            }
+
             // Like the comment first
             $fbService->likeComment($this->externalId);
 
@@ -91,6 +100,12 @@ class ProcessBotEventJob implements ShouldQueue
             // 2. Also send full consultative private Messenger message
             $privateRes = $fbService->sendPrivateReply($this->externalId, $reply);
             Log::info("Facebook private reply result", ['res' => $privateRes]);
+
+            if ($existingConv) {
+                $meta = $existingConv->metadata ?? [];
+                $meta['replied_publicly'] = true;
+                $existingConv->update(['metadata' => $meta]);
+            }
         } elseif ($this->channel === 'facebook_dm') {
             sleep(rand(2, 5)); // Short typing delay for Messenger
             $fbService->sendMessengerText($this->externalId, $reply);
