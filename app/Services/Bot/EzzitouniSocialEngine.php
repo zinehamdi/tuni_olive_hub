@@ -377,46 +377,52 @@ class EzzitouniSocialEngine
             ];
         }
 
-        try {
-            $response = Http::timeout(25)->post($url, [
-                'system_instruction' => [
-                    'parts' => [
-                        ['text' => $systemInstruction]
-                    ]
-                ],
-                'contents' => $contents,
-                'generationConfig' => [
-                    'temperature' => 0.7,
-                    'maxOutputTokens' => 1000,
-                ],
-            ]);
+        $modelsToTry = array_unique([$this->geminiModel, 'gemini-1.5-flash', 'gemini-2.0-flash']);
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        foreach ($modelsToTry as $model) {
+            try {
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$this->geminiApiKey}";
 
-                $shouldEscalate = false;
-                if (str_contains($reply, '[ESCALATE_ADMIN]')) {
-                    $shouldEscalate = true;
-                    $reply = str_replace('[ESCALATE_ADMIN]', '', $reply);
+                $response = Http::timeout(25)->retry(2, 600)->post($url, [
+                    'system_instruction' => [
+                        'parts' => [
+                            ['text' => $systemInstruction]
+                        ]
+                    ],
+                    'contents' => $contents,
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 1000,
+                    ],
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
+                    $shouldEscalate = false;
+                    if (str_contains($reply, '[ESCALATE_ADMIN]')) {
+                        $shouldEscalate = true;
+                        $reply = str_replace('[ESCALATE_ADMIN]', '', $reply);
+                    }
+
+                    $reply = trim($reply);
+
+                    return [
+                        'reply' => $reply,
+                        'intent' => $this->detectIntent($userMessage),
+                        'escalate' => $shouldEscalate,
+                    ];
                 }
 
-                $reply = trim($reply);
-
-                return [
-                    'reply' => $reply,
-                    'intent' => $this->detectIntent($userMessage),
-                    'escalate' => $shouldEscalate,
-                ];
+                Log::warning("Gemini model {$model} returned status {$response->status()}, trying fallback...");
+            } catch (\Throwable $e) {
+                Log::warning("Gemini exception on {$model}: " . $e->getMessage());
             }
-
-            Log::error("Gemini API Error for Bot: " . $response->body());
-        } catch (\Throwable $e) {
-            Log::error("Gemini Bot Exception: " . $e->getMessage());
         }
 
         return [
-            'reply' => "عسلامة ومرحباً بك في زين توب 🫒. تنجم تتبع أحدث الأسعار والعروض مباشرة على الرابط التالي: https://zintoop.com/ar",
+            'reply' => "عسلامة ومرحباً بك في زين توب 🫒. تنجم تتبع أحدث الأسعار والعروض مباشرة على الرابط التالي:\nhttps://zintoop.com/ar",
             'intent' => 'fallback',
             'escalate' => false,
         ];
