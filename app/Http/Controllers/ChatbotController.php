@@ -33,7 +33,7 @@ class ChatbotController extends Controller
             ]);
         }
 
-        $systemInstruction = \App\Models\BotSetting::get('bot_system_prompt') ?: config('ezzitouni.system_prompt', 'أنت مساعد ذكي لمنصة ZinToop.');
+        $systemInstruction = config('ezzitouni.system_prompt', 'أنت مساعد ذكي لمنصة ZinToop.');
 
         $languageMap = [
             'en' => 'English',
