@@ -53,65 +53,107 @@ class ProcessBotEventJob implements ShouldQueue
     ): void {
         Log::info("Processing Bot Event: {$this->channel} for ID: {$this->externalId}");
 
-        // Generate Contextual AI Response
-        $result = $engine->generateResponse(
-            $this->messageText,
-            $this->channel,
-            $this->externalId,
-            $this->userName,
-            $this->postId,
-            $this->postText
-        );
+        // Atomic lock to prevent duplicate concurrent processing from Meta webhook retries
+        $lockKey = "bot_reply_lock_" . md5($this->channel . '_' . $this->externalId);
+        $lock = \Illuminate\Support\Facades\Cache::lock($lockKey, 120);
 
-        $reply = $result['reply'];
-        if (empty($reply)) {
-            Log::info("No reply generated or bot silenced for {$this->externalId}");
+        if (!$lock->get()) {
+            Log::info("Duplicate execution skipped for {$this->externalId} (Lock already acquired).");
             return;
         }
 
-        // Apply Natural Human Delay
-        $minDelay = (int) BotSetting::get('comment_delay_min', '15');
-        $maxDelay = (int) BotSetting::get('comment_delay_max', '45');
-        $delaySeconds = rand($minDelay, $maxDelay);
+        try {
+            if ($this->channel === 'facebook_comment') {
+                $existingConv = \App\Models\BotConversation::firstOrCreate(
+                    ['channel' => 'facebook_comment', 'external_id' => $this->externalId],
+                    ['user_name' => $this->userName, 'status' => 'automated']
+                );
 
-        if ($this->channel === 'facebook_comment') {
-            $existingConv = \App\Models\BotConversation::where('channel', 'facebook_comment')
-                ->where('external_id', $this->externalId)
-                ->first();
+                if (!empty($existingConv->metadata['replied_publicly'])) {
+                    Log::info("Comment {$this->externalId} already replied publicly, skipping duplicate event.");
+                    return;
+                }
 
-            if ($existingConv && !empty($existingConv->metadata['replied_publicly'])) {
-                Log::info("Comment {$this->externalId} already replied publicly, skipping duplicate event.");
-                return;
-            }
-
-            // Like the comment first
-            $fbService->likeComment($this->externalId);
-
-            // Sleep for human delay before posting comment reply
-            if ($delaySeconds > 0) {
-                sleep($delaySeconds);
-            }
-
-            // 1. Post dynamic, contextual public comment reply (1 line)
-            $publicText = $engine->generatePublicCommentReply($this->messageText);
-            $replyRes = $fbService->replyToComment($this->externalId, $publicText);
-            Log::info("Facebook comment reply result", ['res' => $replyRes]);
-
-            // 2. Also send full consultative private Messenger message
-            $privateRes = $fbService->sendPrivateReply($this->externalId, $reply);
-            Log::info("Facebook private reply result", ['res' => $privateRes]);
-
-            if ($existingConv) {
+                // Immediately mark as replied to prevent race condition before sleep
                 $meta = $existingConv->metadata ?? [];
                 $meta['replied_publicly'] = true;
                 $existingConv->update(['metadata' => $meta]);
+
+                // Like the comment first
+                $fbService->likeComment($this->externalId);
+
+                // Fetch post text if not provided and postId exists
+                $postContent = $this->postText;
+                if (empty($postContent) && !empty($this->postId)) {
+                    $directive = \App\Models\FacebookPostDirective::where('post_id', $this->postId)
+                        ->orWhere('post_url', 'like', "%{$this->postId}%")
+                        ->first();
+                    if ($directive) {
+                        $postContent = $directive->hook_goal;
+                    }
+                }
+
+                // Generate Contextual AI Response
+                $result = $engine->generateResponse(
+                    $this->messageText,
+                    $this->channel,
+                    $this->externalId,
+                    $this->userName,
+                    $this->postId,
+                    $postContent
+                );
+
+                $reply = $result['reply'];
+                if (empty($reply)) {
+                    Log::info("No reply generated or bot silenced for {$this->externalId}");
+                    return;
+                }
+
+                // Apply Natural Human Delay
+                $minDelay = (int) BotSetting::get('comment_delay_min', '15');
+                $maxDelay = (int) BotSetting::get('comment_delay_max', '45');
+                $delaySeconds = rand($minDelay, $maxDelay);
+
+                if ($delaySeconds > 0) {
+                    sleep($delaySeconds);
+                }
+
+                // 1. Post dynamic, contextual public comment reply (1 line)
+                $publicText = $engine->generatePublicCommentReply($this->messageText);
+                $replyRes = $fbService->replyToComment($this->externalId, $publicText);
+                Log::info("Facebook comment reply result", ['res' => $replyRes]);
+
+                // 2. Also send full consultative private Messenger message
+                $privateRes = $fbService->sendPrivateReply($this->externalId, $reply);
+                Log::info("Facebook private reply result", ['res' => $privateRes]);
+            } else {
+                // Direct Messages (Messenger / WhatsApp)
+                $result = $engine->generateResponse(
+                    $this->messageText,
+                    $this->channel,
+                    $this->externalId,
+                    $this->userName,
+                    $this->postId,
+                    $this->postText
+                );
+
+                $reply = $result['reply'];
+                if (empty($reply)) {
+                    Log::info("No reply generated or bot silenced for {$this->externalId}");
+                    return;
+                }
+
+                if ($this->channel === 'facebook_dm') {
+                    sleep(rand(2, 4)); // Short typing delay for Messenger
+                    $fbService->sendMessengerText($this->externalId, $reply);
+                } elseif ($this->channel === 'whatsapp') {
+                    sleep(rand(2, 4)); // Short typing delay for WhatsApp
+                    $waService->sendTextMessage($this->externalId, $reply);
+                }
             }
-        } elseif ($this->channel === 'facebook_dm') {
-            sleep(rand(2, 5)); // Short typing delay for Messenger
-            $fbService->sendMessengerText($this->externalId, $reply);
-        } elseif ($this->channel === 'whatsapp') {
-            sleep(rand(2, 5)); // Short typing delay for WhatsApp
-            $waService->sendTextMessage($this->externalId, $reply);
+        } finally {
+            // Keep lock active for a short buffer to avoid immediate re-entry
+            // Lock will automatically expire after TTL
         }
     }
 }
