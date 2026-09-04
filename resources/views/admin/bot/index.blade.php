@@ -110,6 +110,12 @@
                             <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'أقصى تأخير للتعليقات (ثواني):' : 'Max Comment Delay (sec):' }}</label>
                             <input type="number" name="comment_delay_max" value="{{ $settings['comment_delay_max'] ?? 45 }}" min="1" max="300" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]">
                         </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم واتساب تنبيهات الإدارة:' : 'Admin WhatsApp Alert Number:' }}</label>
+                            <input type="text" name="admin_phone_alert" value="{{ $settings['admin_phone_alert'] ?? '+21625777926' }}" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]" dir="ltr">
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">
