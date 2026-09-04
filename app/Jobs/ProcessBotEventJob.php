@@ -83,11 +83,12 @@ class ProcessBotEventJob implements ShouldQueue
                 sleep($delaySeconds);
             }
 
-            // 1. Post public comment reply
-            $replyRes = $fbService->replyToComment($this->externalId, $reply);
+            // 1. Post dynamic, contextual public comment reply (1 line)
+            $publicText = $engine->generatePublicCommentReply($this->messageText);
+            $replyRes = $fbService->replyToComment($this->externalId, $publicText);
             Log::info("Facebook comment reply result", ['res' => $replyRes]);
 
-            // 2. Also send private Messenger message
+            // 2. Also send full consultative private Messenger message
             $privateRes = $fbService->sendPrivateReply($this->externalId, $reply);
             Log::info("Facebook private reply result", ['res' => $privateRes]);
         } elseif ($this->channel === 'facebook_dm') {
