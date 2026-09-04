@@ -51,6 +51,12 @@ class ProcessBotEventJob implements ShouldQueue
         MetaGraphApiService $fbService,
         WhatsAppCloudApiService $waService
     ): void {
+        $botEnabled = BotSetting::get('bot_enabled', '1');
+        if ($botEnabled === '0' || $botEnabled === 'false') {
+            Log::info("Bot disabled globally, aborting ProcessBotEventJob for {$this->externalId}");
+            return;
+        }
+
         Log::info("Processing Bot Event: {$this->channel} for ID: {$this->externalId}");
 
         // Atomic lock to prevent duplicate concurrent processing from Meta webhook retries

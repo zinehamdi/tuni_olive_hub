@@ -43,6 +43,12 @@ class MetaWebhookController extends Controller
 
         Log::info('Meta Webhook Event Received', ['object' => $object]);
 
+        $botEnabled = \App\Models\BotSetting::get('bot_enabled', '1');
+        if ($botEnabled === '0' || $botEnabled === 'false') {
+            Log::info('Meta Webhook received but bot is disabled globally.');
+            return response('EVENT_RECEIVED', 200);
+        }
+
         // 1. Handle Facebook Page Events (Comments & Messenger)
         if ($object === 'page') {
             $pageId = config('services.meta.page_id', env('META_PAGE_ID', '828942590302317'));
