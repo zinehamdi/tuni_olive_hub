@@ -186,16 +186,16 @@ class EzzitouniSocialEngine
             return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! تواصلنا معاك بخصوص الأسعار.. شنية الولاية أو السوق اللي تحب تعرف سومها اليوم؟";
         }
 
-        // 5. Scenario: Selling harvest / Farmer / Mill
-        if (preg_match('/(نبيع|عندي|طن|ترانط|محصول|صابة|معصرة|فلاح|حب)/u', $lowerMsg) || 
-            preg_match('/(بيع|عروض|فلاحين|صابة)/u', $lowerPost)) {
-            return "ربي يباركلك في الصابة والمحصول 🫒! قداش تقريباً الكمية اللي عندك ومن أي ولاية؟";
-        }
-
-        // 6. Scenario: Buying / Sourcing / Export
-        if (preg_match('/(نشري|شراء|تصدير|شحن|فليكسي|تصدير|export|achat)/u', $lowerMsg) || 
+        // 5. Scenario: Buying / Sourcing / Export (checked before selling)
+        if (preg_match('/(نشري|شراء|شاري|تصدير|شحن|فليكسي|توزيع|استيراد|export|achat|buy)/u', $lowerMsg) || 
             preg_match('/(تصدير|توزيع|شراء|استيراد)/u', $lowerPost)) {
             return "مرحباً بيك في منصة زيت الزيتون التونسي 🫒! قداش الكمية ونوعية الزيت (بكر ممتاز، معلب، أو صب) اللي تلوج عليها؟";
+        }
+
+        // 6. Scenario: Selling harvest / Farmer / Mill
+        if (preg_match('/(نبيع|بيع|عندي|محصول|صابة|معصرة|فلاح|حب)/u', $lowerMsg) || 
+            preg_match('/(بيع|عروض|فلاحين|صابة)/u', $lowerPost)) {
+            return "ربي يباركلك في الصابة والمحصول 🫒! قداش تقريباً الكمية اللي عندك ومن أي ولاية؟";
         }
 
         // 7. Default friendly single open question
