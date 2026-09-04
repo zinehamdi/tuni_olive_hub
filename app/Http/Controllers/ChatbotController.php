@@ -25,7 +25,7 @@ class ChatbotController extends Controller
         }
         app()->setLocale($locale);
 
-        $apiKey = config('services.gemini.key');
+        $apiKey = (string) config('services.gemini.key', env('GEMINI_API_KEY', ''));
         
         if (empty($apiKey)) {
             return response()->json([
@@ -94,7 +94,7 @@ class ChatbotController extends Controller
         }
 
         try {
-            $model = config('services.gemini.model', 'gemini-2.0-flash');
+            $model = (string) config('services.gemini.model', env('GEMINI_MODEL', 'gemini-2.5-flash'));
             
             $payload = [
                 'contents' => $contents,
