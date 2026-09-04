@@ -137,6 +137,16 @@ class RegisteredUserController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to queue welcome email: ' . $e->getMessage());
         }
 
+        // Queue personalized welcome WhatsApp message (delayed by 2-4 minutes)
+        if (!empty($user->phone)) {
+            try {
+                \App\Jobs\SendWhatsAppWelcomeJob::dispatch($user->id)
+                    ->delay(now()->addMinutes(rand(2, 4)));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to queue WhatsApp welcome message: ' . $e->getMessage());
+            }
+        }
+
         // Log the user in, and force remember me for non-admins to keep session open
         Auth::login($user, $user->role !== 'admin');
 

@@ -28,6 +28,9 @@
             <a href="{{ route('admin.analytics.marketing') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">📈</span> {{ app()->getLocale() === 'ar' ? 'تحليلات التسويق' : __('Marketing Analytics') }}
             </a>
+            <a href="{{ route('admin.bot.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
+                <span class="text-xl group-hover:scale-110 transition">🤖</span> {{ app()->getLocale() === 'ar' ? 'أتمتة الزيتوني' : 'Ezzitouni Bot' }}
+            </a>
             <a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">👥</span> {{ __('Manage Users') }}
             </a>

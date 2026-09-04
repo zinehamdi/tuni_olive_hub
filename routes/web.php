@@ -355,6 +355,17 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     // Hero Slideshow Management
     Route::post('hero-slides/catalog-bg', [\App\Http\Controllers\Admin\HeroSlideController::class, 'updateCatalogBg'])->name('hero-slides.catalog-bg');
     Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except(['show']);
+
+    // Ezzitouni Bot Automation & Directives Manager
+    Route::prefix('bot')->name('bot.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\BotManagerController::class, 'index'])->name('index');
+        Route::post('/settings', [\App\Http\Controllers\Admin\BotManagerController::class, 'updateSettings'])->name('settings.update');
+        Route::post('/directives', [\App\Http\Controllers\Admin\BotManagerController::class, 'storeDirective'])->name('directives.store');
+        Route::delete('/directives/{id}', [\App\Http\Controllers\Admin\BotManagerController::class, 'destroyDirective'])->name('directives.destroy');
+        Route::post('/rules', [\App\Http\Controllers\Admin\BotManagerController::class, 'storeRule'])->name('rules.store');
+        Route::delete('/rules/{id}', [\App\Http\Controllers\Admin\BotManagerController::class, 'destroyRule'])->name('rules.destroy');
+        Route::post('/conversations/{id}/toggle', [\App\Http\Controllers\Admin\BotManagerController::class, 'toggleConversationStatus'])->name('conversations.toggle');
+    });
 });
 
 // Dynamic OG Image for listings
