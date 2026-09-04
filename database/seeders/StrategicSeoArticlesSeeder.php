@@ -140,27 +140,270 @@ class StrategicSeoArticlesSeeder extends Seeder
                     "fr" => "La Tunisie s'impose aujourd'hui comme l'un des piliers majeurs de l'oléiculture mondiale et le premier exportateur mondial d'huile d'olive extra vierge biologique hors Union Européenne. Pour les négociants, importateurs, industriels agroalimentaires et réseaux de distribution, s'approvisionner directement en Tunisie garantit une huile d'une exceptionnelle pureté physico-chimique et une haute teneur en antioxydants polyphénols.\n\n---\n\n### 1. Choisir le Format d'Achat : Vrac ou Bouteilles Conditionnées\n\nLes opérations d'importation depuis la Tunisie s'articulent autour de deux filières principales :\n\n* **Expéditions en Vrac (Bulk)** :\n  * Chargement en **Flexitanks** alimentaires de 21 000 à 24 000 litres en conteneurs 20 pieds, en conteneurs **IBC** de 1 000 litres ou en fûts de 200 litres au départ des ports de Sfax et Radès.\n  * Solution privilégiée des embouteilleurs internationaux et des industriels pour l'assemblage et la commercialisation en grand volume.\n* **Conditionnement sous Marque Privée (Bottled & Private Label)** :\n  * Mise en bouteille en verre anti-UV (modèles Marasca et Dorica de 250ml à 1L) ou en bidons métalliques (3L et 5L) directement dans les unités certifiées en Tunisie.\n  * Prêt pour la distribution en rayons avec étiquetage et codes-barres conformes aux normes européennes et internationales.\n\n---\n\n### 2. Conformité Réglementaire et Contrôle ONH\n\nL'Office National de l'Huile (ONH) et les laboratoires agréés garantissent une traçabilité rigoureuse à chaque expédition :\n\n1. **Certificat d'Analyse Officiel (COA)** : Validation de l'acidité libre (< 0,8 % pour l'Extra Vierge), de l'indice de peroxyde (< 20 meq O2/kg) et des coefficients d'extinction K232 et K270.\n2. **Certificat d'Origine et Certificat de Circulation EUR.1** : Permettant de bénéficier des contingents douaniers préférentiels vers l'UE.\n3. **Certificat Phytosanitaire et Sanitaire** : Délivré par le Ministère de l'Agriculture tunisien.\n4. **Certification Biologique** : Émise par Ecocert ou CCPB pour les lots certifiés bio.\n\n---\n\n### 3. Gestion des Incoterms (FOB vs CIF)\n\n* **FOB (Free on Board - Ports de Radès / Sfax)** : L'exportateur tunisien prend en charge le dédouanement et le chargement à quai. L'acheteur gère le fret maritime.\n* **CIF (Coût, Assurance et Fret)** : L'exportateur assure le transport maritime jusqu'au port de destination convenu.\n\n---\n\n### 4. La Plateforme ZinToop pour vos Achats B2B\n\nAvec **ZinToop**, achetez en direct des moulins et producteurs tunisiens sans intermédiaires inutiles :\n* Accès à un réseau de moulins modernes, conditionneurs et coopératives vérifiés.\n* Consultation des cours réels des marchés régionaux et mercuriales en temps réel.\n* Demande d'échantillons et contractualisation sécurisée.\n\nDécouvrez les offres en vrac disponibles : https://zintoop.com/fr/huile-olive-tunisienne-en-vrac",
                 ],
             ],
-            [
+                        [
                 "id" => 11,
                 "title" => [
-                    "ar" => "العلامة الخاصة والتعبئة لزيت الزيتون التونسي: دليل الشركات والموزعين",
-                    "en" => "Private Label & Contract Bottling Olive Oil in Tunisia: Complete Guide",
-                    "fr" => "Marque Privée et Conditionnement d'Huile d'Olive en Tunisie : Guide B2B",
+                    "ar" => "دليل تسجيل وحماية العلامة التجارية لزيت الزيتون في تونس (INNORPI): الإجراءات، الوثائق، والأسعار 2026",
+                    "en" => "How to Register and Protect an Olive Oil Trademark in Tunisia (INNORPI): Complete Guide, Fees & Procedures",
+                    "fr" => "Guide d'Enregistrement et de Protection d'une Marque d'Huile d'Olive en Tunisie (INNORPI) : Démarches, Tarifs et Classes",
                 ],
                 "category" => [
-                    "ar" => "العلامة الخاصة",
-                    "en" => "Private Label",
-                    "fr" => "Marque Privée",
+                    "ar" => "الملكية الصناعية والعلامات",
+                    "en" => "Trademarks & IP",
+                    "fr" => "Propriété Industrielle",
                 ],
-                "image" => "images/articles/private_label_bottles.jpg",
+                "image" => "images/articles/innorpi_trademark_olive_oil.jpg",
                 "is_active" => true,
                 "content" => [
-                    "ar" => "تعتبر خدمة التعبئة بالعلامة الخاصة (White Label / Private Label / OEM) الخيار الأمثل للشركات العالمية، الموزعين، العلامات التجارية الفاخرة، وسلاسل السوبرماركت التي ترغب في إطلاق علامتها التجارية الخاصة بزيت الزيتون البكر الممتاز عالي الجودة دون الحاجة للاستثمار في مصانع عصر أو خطوط تعبئة باهظة الثمن.\n\n---\n\n### 1. خيارات العبوات ومواد التغليف المتاحة في تونس\n\nتوفر وحدات التعبئة الحديثة المعتمدة في تونس مجموعة متكاملة من خيارات التعبئة والتغليف المتوافقة مع معايير الأسواق الأوروبية والأمريكية والخليجية:\n\n* **العبوات الزجاجية الداكنة (Dark Glass Bottles)**:\n  * **الموديلات**: زجاجات *Marasca* (المربعة الأنيقة) و *Dorica* (الأسطوانية الكلاسيكية).\n  * **الأحجام**: 250 مل، 500 مل، 750 مل، 1 لتر.\n  * **اللون**: زجاج أخضر داكن (UV-Protect) لحماية الزيت من الأكسدة الضوئية والحفاظ على نضارة البوليفينول.\n* **الصفائح المعدنية (Tinplate Cans)**:\n  * **الأحجام**: 1 لتر، 3 لتر، و 5 لتر.\n  * **الميزات**: مطبوعة بتقنية الليثوغراف (Lithographed) بألوان وتصاميم شركتك، ومزودة بسدادات مانعة للتسريب وسهلة السكب.\n* **أكياس الصندوق (Bag-in-Box - BiB)**:\n  * عبوات عصرية سعة 3L و 5L توفر حماية هوائية مطلقة ضد الأكسجين حتى بعد فتح العبوة، وتلقى رواجاً هائلاً في قطاع الفنادق والمطاعم (HORECA).\n\n---\n\n### 2. مطابقة الملصقات والبيانات الغذائية الدولية\n\nعند تعبئة زيت الزيتون بعلامتك الخاصة، تتكفل وحدات التعبئة التونسية بضمان المطابقة الكاملة للملصق التجاري:\n1. **جدول الحقائق الغذائية (Nutrition Facts)** وفق معايير FDA الأمريكية أو اللائحة الأوروبية EU 1169/2011.\n2. **الباركود الدولي المعتمد (GS1 / EAN-13)**.\n3. **شعار الشهادات المعتمدة** (Organic EU, USDA Organic, ISO 22000, IFS Food, BRCGS).\n4. **تاريخ الإنتاج والصلاحية وتحديد رقم الدفعة (Batch / Lot Number)** لضمان التتبع الرقمي الكامل.\n\n---\n\n### 3. الحد الأدنى للطلب (MOQ) وفترات الإنتاج\n\n* يتراوح الحد الأدنى للطلب (MOQ) في تونس عادة بين **2,000 إلى 5,000 زجاجة** للعلامات الناشئة، ويصل إلى حاويات كاملة (20ft Container تحمل حوالي 12,000 إلى 15,000 زجاجة 750ml) للطلبات الكبرى.\n* تستغرق فترة التصنيع والطباعة والتعبئة من **15 إلى 25 يوماً** من تاريخ اعتماد التصميم والتحاليل المخبرية.\n\nتواصل مع وحدات التعبئة المعتمدة على ZinToop: https://zintoop.com/ar/علامة-خاصة-زيت-زيتون-تونس",
-                    "en" => "Private label olive oil contract manufacturing (OEM / White Label) represents the fastest, most cost-effective path for gourmet brands, supermarket chains, and food distributors to launch their own branded Extra Virgin Olive Oil without capital investments in milling or bottling infrastructure.\n\n---\n\n### 1. Premium Packaging & Bottling Formats in Tunisia\n\nCertified packaging units in Tunisia utilize automated bottling lines complying with international food safety standards (ISO 22000, IFS, BRCGS):\n\n* **UV-Protected Dark Glass Bottles**:\n  * **Profiles**: Traditional *Marasca* (square) and *Dorica* (cylindrical) bottles.\n  * **Capacities**: 250ml, 500ml, 750ml, and 1,000ml.\n  * **Protection**: Dark green and antique green glass filtering out photo-oxidative UV light.\n* **Lithographed Tinplate Cans**:\n  * **Capacities**: 1 Liter, 3 Liters, and 5 Liters.\n  * **Features**: Full-color lithographic brand printing with integrated non-drip retractable pourers.\n* **Bag-in-Box (BiB)**:\n  * 3L and 5L oxygen-barrier foil bladders ideal for foodservice, restaurants, and eco-conscious consumers.\n\n---\n\n### 2. Labeling & Regulatory Compliance\n\nPrivate label partners handle complete labeling adaptation for your target destination market:\n1. **Nutritional Facts Panels**: Compliant with FDA (USA), European Regulation EU 1169/2011, and SASO/GSO (Gulf).\n2. **GS1 Registered Barcodes (EAN-13 / UPC)**.\n3. **Official Certification Marks**: USDA Organic, EU Bio-leaf, Non-GMO, Halal, Kosher.\n4. **Laser Lot Numbering & Expiry Dates** ensuring end-to-end farm-to-shelf traceability.\n\n---\n\n### 3. Minimum Order Quantities (MOQ) & Production Lead Times\n\n* **Flexible MOQs**: Starting from 2,500 units for customized label runs, up to full 20ft ocean container loads (~14,000 bottles of 750ml).\n* **Rapid Turnaround**: Standard lead times range from 2 to 4 weeks upon label artwork approval and ONH laboratory clearance.\n\nDiscover certified private label bottling partners: https://zintoop.com/en/private-label-olive-oil-tunisia",
-                    "fr" => "Le conditionnement sous marque de distributeur (MDD / Private Label / OEM) offre aux importateurs, marques d'épicerie fine et chaînes de supermarchés l'opportunité de commercialiser une huile d'olive extra vierge tunisienne d'exception sous leur propre identité de marque, sans investissement industriel.\n\n---\n\n### 1. Formats et Emballages Disponibles en Tunisie\n\nLes unités d'embouteillage certifiées en Tunisie disposent d'équipements de pointe répondant aux certifications internationales (ISO 22000, IFS Food, BRC) :\n\n* **Bouteilles en Verre Sombre Anti-UV** :\n  * **Modèles** : *Marasca* (section carrée) et *Dorica* (section ronde).\n  * **Contenances** : 250 ml, 500 ml, 750 ml et 1 L.\n  * **Teinte** : Verre vert foncé protégeant les polyphénols contre la photo-oxydation.\n* **Bidons Métalliques Lithographiés** :\n  * **Formats** : 1L, 3L et 5L avec bec verseur intégré inviolable.\n* **Bag-in-Box (BiB)** :\n  * Poches sous vide de 3L et 5L assurant une conservation sous azote après ouverture.\n\n---\n\n### 2. Conformité de l'Étiquetage International\n\nNos partenaires adaptent vos étiquettes aux exigences réglementaires des marchés cibles :\n1. **Tableau des Valeurs Nutritionnelles** conforme aux normes UE (Règlement 1169/2011) ou FDA.\n2. **Code-barres GS1 / EAN-13**.\n3. **Mentions d'Origine et Logos Bio** (Euro-feuille, USDA Organic).\n\nDécouvrez nos solutions de conditionnement : https://zintoop.com/fr/marque-privee-huile-olive-tunisie",
+                    "ar" => "تعتبر تونس من أبرز القوى العالمية في إنتاج وتصدير زيت الزيتون البكر الممتاز، لكن الرهان الحقيقي اليوم لم يعد يقتصر على بيع الزيت سائباً (Bulk / Vrac)، بل في الانتقال الاستراتيجي نحو **التعليب وبناء علامات تجارية تونسية خاصة ومسجلة (Marque Déposée / Private Label)** تقتحم رفوف المتاجر العالمية وتضاعف القيمة المضافة لصالح الفلاح وصاحب المعصرة والمصدر التونسي.
+
+\"علامتك التجارية هي إمضاؤك وهويتك في السوق.. احمِها بتسجيلها قانونياً!\"
+
+---
+
+### 1. الإطار القانوني ومبدأ الحماية في تونس
+
+يخضع تسجيل وحماية العلامات التجارية في الجمهورية التونسية لأحكام **القانون عدد 36 لسنة 2001 المؤرخ في 17 أفريل 2001 المتعلق بعلامات الصنع والتجارة والخدمات**، بإشراف وزارة الصناعة عبر **المعهد الوطني للمواصفات والملكية الصناعية (INNORPI)**:
+
+* **القاعدة القانونية الذهبية**: ملكية العلامة التجارية في تونس **تُكتسب بالإيداع والتسجيل الرسمي لدى INNORPI وليس بمجرد الاستعمال التجاري في السوق** (La propriété s'acquiert par le dépôt, non par l'usage).
+* **الحقوق المكتسبة**: يمنحك التسجيل الحق الحصري في استغلال العلامة، بيعها، أو منح تراخيص استغلال تجارية، مع الحماية القانونية التامة ضد المقلدين والمنافسين غير الشرعيين.
+* **مدة الحماية**: يوفر الإيداع حماية قانونية نافذة لمدة **10 سنوات كاملة**، وهي قابلة للتجديد بصفة غير محدودة عبر إيداع جديد.
+
+---
+
+### 2. الوثائق المطلوبة لملف إيداع العلامة التجارية
+
+لإيداع ملف تسجيل علامتك التجارية الخاصة بزيت الزيتون، يتوجب تقديم الوثائق التالية:
+
+1. **3 نظائر مطابقة للأصل من شعار / لوغو العلامة التجارية** (Design / Logo)، على ألا تتجاوز أبعاد التصميم **10 صم في الطول على 6 صم في العرض**.
+2. **وصل خلاص معاليم الإيداع** لدى المعهد الوطني للمواصفات والملكية الصناعية (يتم الدفع نقداً أو ببطاقة بنكية على عين المكان بالقباضة).
+3. **قائمة المنتجات و/أو الخدمات** المطلوب حمايتها وتغطيتها بالعلامة التجارية، محررة بدقة وفق التصنيف الدولي (تصنيف نيس - Classification de Nice).
+4. **توكيل رسمي قانوني** في صورة تكليف وكيل أو محامٍ مفوض، أو **نسخة حديثة من السجل الوطني للمؤسسات (RNE)** بالنسبة للمسير والوكيل القانوني للشركة.
+
+---
+
+### 3. جدول المعاليم والرسوم الرسمية المحينة (INNORPI 2026)
+
+| نوع الإجراء والخدمة | معلوم الإيداع الأول (TND TTC) | معلوم التجديد الدوري (TND TTC) |
+|---|:---:|:---:|
+| **البحث المسبق عن الأسبقية (Recherche d'antériorité)** *(اختياري وموصى به)* | **36,700 د.ت** | — |
+| **إيداع ملف علامة تجارية (يغطي صنفاً واحداً)** | **596,000 د.ت** | **774,500 د.ت** |
+| **تسجيل كل صنف إضافي للمنتجات أو الخدمات (Par classe supplémentaire)** | **119,000 د.ت** | **178,500 د.ت** |
+| **تسليم الشهادة الرسمية لتسجيل العلامة (عند استكمال الإجراءات)** | **96,200 د.ت** | — |
+
+> 💡 **ملاحظة هامة حول فحص الأسبقية**: المعهد الوطني للمواصفات والملكية الصناعية يسجل العلامات دون إجراء فحص تلقائي للجدة (Examen de nouveauté). لذلك، يُنصح دائماً بطلب \"البحث عن الأسبقية\" بمعلوم 36.700 د.ت للتأكد مسبقاً من عدم وجود علامة مسجلة مطابقة أو مشابهة تجنباً لأي نزاع قضائي.
+
+---
+
+### 4. دليل أصناف تصنيف «نيس» الدولي الخاص بزيت الزيتون (Classification de Nice)
+
+يتضمن التصنيف الدولي 45 صنفاً، وتعتبر الأصناف التالية هي الأكثر حيوية واستراتيجية لمشروع زيت الزيتون في تونس:
+
+* **الصنف 29 (Classe 29 - الصنف الإجباري والرئيسي)**:
+  * يشمل **الزيوت والشحوم الغذائية (بما فيها زيت الزيتون البكر والبكر الممتاز بجميع أنواعه)**، المصبرات، ثمار الزيتون المصبرة والمخللة، والخضروات المحفوظة.
+* **الصنف 31 (Classe 31)**:
+  * يشمل المنتجات الفلاحية الخام غير المحولة، حبات الزيتون الطازجة، والبذور والنباتات الطبيعية.
+* **الصنف 35 (Classe 35 - صنف التجارة والتوزيع)**:
+  * يشمل الدعاية والإشهار، إدارة الأعمال التجارية، التسويق، التجارة الإلكترونية، وخدمات بيع وتوزيع زيت الزيتون بالجملة والتفصيل.
+* **الصنف 39 (Classe 39 - اللوجستيك والشحن)**:
+  * يشمل خدمات النقل، الشحن البحري، التعبئة، وتخزين الزيوت والمواد الغذائية.
+* **الصنف 40 (Classe 40 - خدمات المعاصر والتحويل)**:
+  * يشمل معالجة المواد، خدمات العصر الصناعي، التكسير، واستخراج الزيت لفائدة الغير.
+
+---
+
+### 5. عناوين ومقرات إيداع الملفات لدى INNORPI
+
+يمكن إيداع الملفات ومتابعة التسجيل مباشرة في المراكز التالية:
+
+* **المقر المركزي بتونس العاصمة**:
+  * **العنوان**: نهج المعهد الوطني للمواصفات والملكية الصناعية، حي الخضراء، 1003 تونس.
+  * **الهاتف**: 71806758 | **الفاكس**: 71807071
+  * **الموقع الإلكتروني الرسمي**: www.innorpi.tn
+* **المركز الجهوي بصفاقس**:
+  * **العنوان**: 01 نهج بجاية، 3000 صفاقس.
+  * **الهاتف**: 74298223 | **الفاكس**: 74211356
+* **المركز الجهوي بسوسة**:
+  * **العنوان**: نهج المنجي بالي، عمارة الهاجري، الطابق الثاني، شقة B24، سوسة.
+  * **الهاتف**: 73226566 | **الفاكس**: 73214518
+
+---
+
+### 6. كيف ترافقك منصة زين توب في إطلاق وتصدير علامتك التجارية؟
+
+بعد تسجيل علامتك التجارية لدى INNORPI، تفتح لك منصة **ZinToop** أبواب الأسواق العالمية من خلال:
+* ربطك بأفضل وحدات التعبئة والتعليب المعتمدة في تونس المطابقة لمعايير ISO 22000 و IFS و BRC.
+* المساعدة في استخراج الترقيم الدولي للباركود (GS1 / EAN-13) وتصميم الملصقات المطابقة للمواصفات الأوروبية والأمريكية.
+* عرض علامتك التجارية أمام شبكة دولية من الموردين والمشترين وسلاسل المتاجر الكبرى.
+
+ابدأ مشروع تعليب علامتك التجارية الخاصة اليوم:
+https://zintoop.com/ar/علامة-خاصة-زيت-زيتون-تونس",
+                    "en" => "Tunisia is one of the world's leading producers of extra virgin olive oil. However, the true economic breakthrough lies in shifting from bulk commodity exports (vrac) to **bottling and building proprietary registered trademarks (Marque Déposée / Private Label)** that command premium margins on global supermarket shelves.
+
+\"Your brand is your signature in the marketplace. Protect it by registering it officially!\"
+
+---
+
+### 1. Legal Framework & Protection Principle in Tunisia
+
+Trademark registration and industrial property protection in the Republic of Tunisia are governed by **Law No. 2001-36 of April 17, 2001 on Trademarks, Trade Names and Service Marks**, administered by the **National Institute of Standardization and Industrial Property (INNORPI)** under the Ministry of Industry:
+
+* **The Golden Legal Rule**: In Tunisia, trademark ownership is **acquired through official filing and registration with INNORPI, not through commercial use alone** (*La propriété s'acquiert par le dépôt, non par l'usage*).
+* **Exclusive Rights**: Official registration grants exclusive commercial exploitation rights, licensing authority, and comprehensive judicial protection against counterfeiters and unfair imitators.
+* **Duration of Protection**: A registered trademark provides **10 years of legal protection**, renewable indefinitely upon subsequent filings.
+
+---
+
+### 2. Mandatory Filing Requirements & Documents
+
+To file a trademark application for your olive oil brand at INNORPI, you must submit:
+
+1. **Three (03) identical prints of the trademark logo/design**, not exceeding **10 cm in length by 6 cm in width**.
+2. **Official receipt of payment** for filing fees paid directly at the INNORPI cashier desk.
+3. **List of goods and/or services** to be protected, drafted according to the international **Nice Classification**.
+4. **Power of Attorney (Pouvoir)** if filing through a legal representative/mandatary, or a recent copy of the **National Business Registry (RNE)** for company managers.
+
+---
+
+### 3. Official Fee Structure (INNORPI Rates in TND TTC)
+
+| Procedure / Service | Initial Filing Fee (TND TTC) | Renewal Fee (TND TTC) |
+|---|:---:|:---:|
+| **Prior Art Search (Recherche d'antériorité)** *(Recommended)* | **36.700 TND** | — |
+| **Trademark Application Filing (Single Class)** | **596.000 TND** | **774.500 TND** |
+| **Additional Product / Service Class (Par classe supplémentaire)** | **119.000 TND** | **178.500 TND** |
+| **Issuance of Trademark Registration Certificate (Délivrance)** | **96.200 TND** | — |
+
+> 💡 **Important Note on Novelty Examination**: INNORPI registers trademarks without performing an automatic novelty examination. Applicants are strongly advised to conduct a prior art search (**36.700 TND**) prior to filing to verify that no identical or confusingly similar mark already exists.
+
+---
+
+### 4. Nice Classification Guide for the Olive Oil Industry
+
+The international Nice Classification system comprises 45 classes. For olive oil producers, mills, and brand owners, the essential classes are:
+
+* **Class 29 (Primary & Mandatory)**:
+  * Includes **Edible oils and fats (including all extra virgin, virgin, and organic olive oils)**, preserved olives, table olives, and preserved vegetables.
+* **Class 31**:
+  * Raw and unprocessed agricultural products, fresh whole olives, seeds, and live plants.
+* **Class 35 (Commercial & Retail)**:
+  * Advertising, business management, commercial administration, wholesale, retail, and e-commerce distribution of olive oil.
+* **Class 39 (Logistics & Transport)**:
+  * Transport, marine freight, packaging, and warehousing of goods.
+* **Class 40 (Milling & Processing Services)**:
+  * Material treatment, custom olive milling, extraction, and pressing services for third parties.
+
+---
+
+### 5. INNORPI Submission Offices & Regional Centers
+
+Applications can be submitted directly at the following official locations:
+
+* **Tunis Headquarters**:
+  * **Address**: INNORPI, Rue de l'INNORPI, Cité El Khadhra, 1003 Tunis.
+  * **Phone**: (+216) 71 806 758 | **Fax**: (+216) 71 807 071
+  * **Website**: www.innorpi.tn
+* **Sfax Regional Center**:
+  * **Address**: 01 Rue Béjaïa, 3000 Sfax.
+  * **Phone**: (+216) 74 298 223 | **Fax**: (+216) 74 211 356
+* **Sousse Regional Center**:
+  * **Address**: Rue Mongi Bali, Immeuble Hajri, 2nd Floor, Apt B24, Sousse.
+  * **Phone**: (+216) 73 226 566 | **Fax**: (+216) 73 214 518
+
+---
+
+### 6. How ZinToop Accelerates Your Brand Launch & Export Growth
+
+Once your trademark is registered, **ZinToop** connects your private label with international buyers:
+* Seamless matching with ISO 22000, IFS, and BRC certified contract packaging units in Tunisia.
+* Guidance for international GS1 / EAN-13 barcodes and export-compliant labeling.
+* Direct showcase to global retail chains, gourmet distributors, and overseas importers.
+
+Start your private label olive oil project today:
+https://zintoop.com/en/private-label-olive-oil-tunisia",
+                    "fr" => "La Tunisie s'affirme comme l'un des leaders mondiaux de la production d'huile d'olive extra vierge. Cependant, la véritable valeur ajoutée réside aujourd'hui dans l'abandon progressif des exportations brutes en vrac au profit du **conditionnement et de la création de marques déposées tunisiennes propres**, capables de conquérir les rayons de la grande distribution internationale.
+
+« Votre marque, c'est votre signature. Protégez-la en la déposant ! »
+
+---
+
+### 1. Cadre Réglementaire et Principe de Protection en Tunisie
+
+Le dépôt et la protection des marques en République Tunisienne sont régis par la **Loi N° 2001-36 du 17 avril 2001 relative aux marques de fabrique, de commerce ou de services**, sous l'égide du Ministère de l'Industrie via l'**Institut National de la Normalisation et de la Propriété Industrielle (INNORPI)** :
+
+* **Règle Juridique Fondamentale** : La propriété d'une marque commerciale en Tunisie **s'acquiert exclusivement par le dépôt auprès de l'INNORPI, et non par le simple usage commercial** (*La propriété s'acquiert par le dépôt, non par l'usage*).
+* **Droits Exclusifs** : Le dépôt confère un droit exclusif d'exploitation commerciale (vente, concession de licences d'exploitation) et une protection judiciaire totale contre les contrefacteurs et imitateurs.
+* **Durée de Protection** : Le dépôt d'une marque assure une protection juridique de **10 ans**, renouvelable indéfiniment par nouveau dépôt.
+
+---
+
+### 2. Pièces et Documents Requis pour le Dépôt
+
+Pour constituer et déposer votre dossier de marque auprès de l'INNORPI, les pièces suivantes sont exigées :
+
+1. **Trois (03) exemplaires identiques du logo / emblème de la marque**, ne dépassant pas **10 cm de longueur sur 6 cm de largeur**.
+2. **Une quittance de paiement des redevances de dépôt** effectuée auprès de la régie de recettes de l'INNORPI (paiement sur place).
+3. **La liste des produits et/ou services** pour lesquels la marque est ou sera utilisée, libellée conformément à la **Classification de Nice**.
+4. **Un pouvoir régulier** en cas de recours à un mandataire, ou une copie récente du **Registre National des Entreprises (RNE)** pour le gérant de société.
+
+---
+
+### 3. Grille Tarifaire Officielle (Taxes INNORPI 2026 en Dinars Tunisiens TTC)
+
+| Nature de l'Acte / Service | Tarif au Dépôt Initial (TND TTC) | Tarif au Renouvellement (TND TTC) |
+|---|:---:|:---:|
+| **Recherche d'antériorité** *(sur demande, recommandée)* | **36,700 DT** | — |
+| **Dépôt d'une marque (avec une seule classe)** | **596,000 DT** | **774,500 DT** |
+| **Enregistrement par classe supplémentaire** | **119,000 DT** | **178,500 DT** |
+| **Délivrance du certificat d'enregistrement de marque** | **96,200 DT** | — |
+
+> 💡 **Avertissement sur la Recherche d'Antériorité** : L'INNORPI enregistre les marques sans procéder à un examen de nouveauté. Il appartient au déposant de s'assurer de l'absence de dépôts antérieurs identiques ou similaires via une recherche préalable (**36,700 DT**).
+
+---
+
+### 4. Guide des Classes de la Classification de Nice pour la Filière Oléicole
+
+La Classification de Nice comporte 45 classes. Pour les producteurs, moulins et conditionneurs d'huile d'olive, les classes stratégiques sont :
+
+* **Classe 29 (Classe Principale et Obligatoire)** :
+  * Comprend les **huiles et graisses comestibles (dont l'huile d'olive extra vierge, vierge et biologique)**, les olives de table conservées et les produits dérivés.
+* **Classe 31** :
+  * Produits agricoles bruts non transformés, olives fraîches, semences et plants d'oliviers.
+* **Classe 35 (Commerce et Distribution)** :
+  * Publicité, gestion des affaires commerciales, distribution commerciale, vente en gros/détail et e-commerce d'huile d'olive.
+* **Classe 39 (Logistique et Transport)** :
+  * Transport maritime, emballage, mise en bouteille et entreposage de marchandises.
+* **Classe 40 (Trituration et Transformation)** :
+  * Traitement de matériaux, services de trituration, extraction et pressage d'olives au moulin pour le compte de tiers.
+
+---
+
+### 5. Adresses et Centres Régionaux de Dépôt de l'INNORPI
+
+Vous pouvez déposer votre dossier dans les centres officiels suivants :
+
+* **Siège Central de Tunis** :
+  * **Adresse** : Rue de l'INNORPI, Cité El Khadhra, 1003 Tunis.
+  * **Téléphone** : (+216) 71 806 758 | **Fax** : (+216) 71 807 071
+  * **Site Web Officiel** : www.innorpi.tn
+* **Centre Régional de Sfax** :
+  * **Adresse** : 01 Rue Béjaïa, 3000 Sfax.
+  * **Téléphone** : (+216) 74 298 223 | **Fax** : (+216) 74 211 356
+* **Centre Régional de Sousse** :
+  * **Adresse** : Rue Mongi BALI, Immeuble Hajri, 2ème étage, B24, Sousse.
+  * **Téléphone** : (+216) 73 226 566 | **Fax** : (+216) 73 214 518
+
+---
+
+### 6. Comment ZinToop Accompagne le Lancement de Votre Marque
+
+Une fois votre marque déposée auprès de l'INNORPI, **ZinToop** vous met en relation avec des unités d'embouteillage certifiées (ISO 22000, IFS, BRC) et facilite l'exportation vers les acheteurs internationaux.
+
+Découvrez nos solutions de marque privée :
+https://zintoop.com/fr/marque-privee-huile-olive-tunisie",
                 ],
             ],
-            [
+[
                 "id" => 12,
                 "title" => [
                     "ar" => "توقعات أسعار زيت الزيتون في تونس 2026: تحليل السوق والإنتاج والأسعار",
