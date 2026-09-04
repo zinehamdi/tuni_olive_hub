@@ -75,14 +75,26 @@ class ProcessBotEventJob implements ShouldQueue
         $delaySeconds = rand($minDelay, $maxDelay);
 
         if ($this->channel === 'facebook_comment') {
+            // Like the comment first
+            $fbService->likeComment($this->externalId);
+
             // Sleep for human delay before posting comment reply
-            sleep($delaySeconds);
-            $fbService->replyToComment($this->externalId, $reply);
+            if ($delaySeconds > 0) {
+                sleep($delaySeconds);
+            }
+
+            // 1. Post public comment reply
+            $replyRes = $fbService->replyToComment($this->externalId, $reply);
+            Log::info("Facebook comment reply result", ['res' => $replyRes]);
+
+            // 2. Also send private Messenger message
+            $privateRes = $fbService->sendPrivateReply($this->externalId, $reply);
+            Log::info("Facebook private reply result", ['res' => $privateRes]);
         } elseif ($this->channel === 'facebook_dm') {
-            sleep(rand(3, 8)); // Short typing delay for Messenger
+            sleep(rand(2, 5)); // Short typing delay for Messenger
             $fbService->sendMessengerText($this->externalId, $reply);
         } elseif ($this->channel === 'whatsapp') {
-            sleep(rand(3, 8)); // Short typing delay for WhatsApp
+            sleep(rand(2, 5)); // Short typing delay for WhatsApp
             $waService->sendTextMessage($this->externalId, $reply);
         }
     }

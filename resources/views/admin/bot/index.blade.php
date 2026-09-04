@@ -110,9 +110,18 @@
                             <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'أقصى تأخير للتعليقات (ثواني):' : 'Max Comment Delay (sec):' }}</label>
                             <input type="number" name="comment_delay_max" value="{{ $settings['comment_delay_max'] ?? 45 }}" min="1" max="300" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]">
                         </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">{{ app()->getLocale() === 'ar' ? 'رقم واتساب تنبيهات الإدارة:' : 'Admin WhatsApp Alert Number:' }}</label>
-                            <input type="text" name="admin_phone_alert" value="{{ $settings['admin_phone_alert'] ?? '+21625777926' }}" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]" dir="ltr">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                {{ app()->getLocale() === 'ar' ? 'معرف الصفحة على فيسبوك (Page ID):' : 'Facebook Page ID:' }}
+                            </label>
+                            <input type="text" name="meta_page_id" value="{{ $settings['meta_page_id'] ?? '828942590302317' }}" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                {{ app()->getLocale() === 'ar' ? 'رمز وصول الصفحة (Page Access Token):' : 'Facebook Page Access Token:' }}
+                            </label>
+                            <input type="password" name="meta_page_access_token" value="{{ $settings['meta_page_access_token'] ?? '' }}" placeholder="EAAVQsbT0n7oBS..." class="w-full p-3 border border-gray-200 rounded-xl focus:ring-[#6A8F3B]" dir="ltr">
                         </div>
                     </div>
 

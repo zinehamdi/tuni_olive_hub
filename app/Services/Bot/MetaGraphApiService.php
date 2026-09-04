@@ -12,7 +12,7 @@ class MetaGraphApiService
 
     public function __construct(?string $token = null)
     {
-        $this->pageAccessToken = $token ?? (string) config('services.meta.page_access_token', env('META_PAGE_ACCESS_TOKEN', ''));
+        $this->pageAccessToken = $token ?? (string) (\App\Models\BotSetting::get('meta_page_access_token') ?: config('services.meta.page_access_token', env('META_PAGE_ACCESS_TOKEN', '')));
     }
 
     /**
@@ -22,7 +22,8 @@ class MetaGraphApiService
     public function replyToComment(string $commentId, string $message): array
     {
         try {
-            $response = Http::post("{$this->graphApiUrl}/{$commentId}/comments", [
+            // Meta comments endpoint requires form params or query string
+            $response = Http::asForm()->post("{$this->graphApiUrl}/{$commentId}/comments", [
                 'access_token' => $this->pageAccessToken,
                 'message' => $message,
             ]);
@@ -45,15 +46,32 @@ class MetaGraphApiService
     }
 
     /**
+     * Like a Facebook comment to increase engagement.
+     * Endpoint: POST /{comment_id}/likes
+     */
+    public function likeComment(string $commentId): array
+    {
+        try {
+            $response = Http::asForm()->post("{$this->graphApiUrl}/{$commentId}/likes", [
+                'access_token' => $this->pageAccessToken,
+            ]);
+
+            return ['success' => $response->successful()];
+        } catch (\Throwable $e) {
+            Log::warning("Could not like comment {$commentId}: {$e->getMessage()}");
+            return ['success' => false];
+        }
+    }
+
+    /**
      * Send a private reply to a user who commented on a post.
      * Endpoint: POST /{page_id}/messages with recipient = {comment_id: ...}
      */
     public function sendPrivateReply(string $commentId, string $message): array
     {
         try {
-            $pageId = config('services.meta.page_id', env('META_PAGE_ID', '828942590302317'));
-            $response = Http::post("{$this->graphApiUrl}/{$pageId}/messages", [
-                'access_token' => $this->pageAccessToken,
+            $pageId = (string) (\App\Models\BotSetting::get('meta_page_id') ?: config('services.meta.page_id', env('META_PAGE_ID', '828942590302317')));
+            $response = Http::withToken($this->pageAccessToken)->post("{$this->graphApiUrl}/{$pageId}/messages", [
                 'recipient' => ['comment_id' => $commentId],
                 'message' => ['text' => $message],
             ]);
@@ -82,9 +100,8 @@ class MetaGraphApiService
     public function sendMessengerText(string $recipientPsid, string $message): array
     {
         try {
-            $pageId = config('services.meta.page_id', env('META_PAGE_ID', '828942590302317'));
-            $response = Http::post("{$this->graphApiUrl}/{$pageId}/messages", [
-                'access_token' => $this->pageAccessToken,
+            $pageId = (string) (\App\Models\BotSetting::get('meta_page_id') ?: config('services.meta.page_id', env('META_PAGE_ID', '828942590302317')));
+            $response = Http::withToken($this->pageAccessToken)->post("{$this->graphApiUrl}/{$pageId}/messages", [
                 'recipient' => ['id' => $recipientPsid],
                 'message' => ['text' => $message],
             ]);

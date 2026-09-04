@@ -46,6 +46,8 @@ class BotManagerController extends Controller
             'comment_delay_min' => 'required|integer|min:0|max:120',
             'comment_delay_max' => 'required|integer|min:1|max:300',
             'admin_phone_alert' => 'required|string',
+            'meta_page_access_token' => 'nullable|string',
+            'meta_page_id' => 'nullable|string',
         ]);
 
         BotSetting::set('bot_enabled', $request->has('bot_enabled') ? '1' : '0', 'حالة تشغيل البوت العامة');
@@ -53,6 +55,13 @@ class BotManagerController extends Controller
         BotSetting::set('comment_delay_min', (string) $validated['comment_delay_min'], 'الحد الأدنى للتأخير البشري');
         BotSetting::set('comment_delay_max', (string) $validated['comment_delay_max'], 'الحد الأقصى للتأخير البشري');
         BotSetting::set('admin_phone_alert', $validated['admin_phone_alert'], 'رقم واتساب المدير لاستقبال التنبيهات');
+        
+        if (!empty($validated['meta_page_access_token'])) {
+            BotSetting::set('meta_page_access_token', trim($validated['meta_page_access_token']), 'توكن الوصول لصفحة فيسبوك');
+        }
+        if (!empty($validated['meta_page_id'])) {
+            BotSetting::set('meta_page_id', trim($validated['meta_page_id']), 'معرف صفحة فيسبوك الرسمية');
+        }
 
         return redirect()->back()->with('success', 'تم حفظ إعدادات وتوجيهات الزيتوني بنجاح!');
     }
