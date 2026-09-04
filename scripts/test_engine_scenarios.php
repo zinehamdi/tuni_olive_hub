@@ -7,14 +7,22 @@ $kernel->bootstrap();
 
 $engine = app(App\Services\Bot\EzzitouniSocialEngine::class);
 
-echo "=== TEST 1: General Greeting ===\n";
-$res1 = $engine->generateResponse("عسلامة، يعطيك الصحة", "facebook_comment", "test_1_" . time(), "كريم");
-echo "Reply 1:\n" . $res1['reply'] . "\n\n";
+echo "=== SCENARIO 1: First Contact on Price Post ===\n";
+$firstMsgPrice = $engine->getInitialGreeting("prix", "تحيين أسعار زيت الزيتون في أسواق تونس اليوم");
+echo "Reply 1:\n" . $firstMsgPrice . "\n\n";
 
-echo "=== TEST 2: Price Question ===\n";
-$res2 = $engine->generateResponse("سلام، بقداش سوم الزيت والزيتون توة في صفاقس وسيدي بوزيد؟", "facebook_comment", "test_2_" . time(), "صالح");
-echo "Reply 2:\n" . $res2['reply'] . "\n\n";
+echo "=== SCENARIO 2: First Contact on Trademark / INNORPI Post ===\n";
+$firstMsgInnorpi = $engine->getInitialGreeting("مهتم", "دليل تسجيل وحماية علامتك التجارية لزيت الزيتون لدى INNORPI");
+echo "Reply 2:\n" . $firstMsgInnorpi . "\n\n";
 
-echo "=== TEST 3: Trademark / INNORPI Question ===\n";
-$res3 = $engine->generateResponse("سلام، نحب نعمل مارك ديبوزي للزيت متاعي، قداش تتكلف؟", "facebook_comment", "test_3_" . time(), "منير");
-echo "Reply 3:\n" . $res3['reply'] . "\n\n";
+echo "=== SCENARIO 3: First Contact from Farmer Selling Harvest ===\n";
+$firstMsgFarmer = $engine->getInitialGreeting("عندي صابة زيتون وزيت للبيع", null);
+echo "Reply 3:\n" . $firstMsgFarmer . "\n\n";
+
+echo "=== SCENARIO 4: First Contact from Buyer / Exporter ===\n";
+$firstMsgBuyer = $engine->getInitialGreeting("نحب نشري شحنة للتصدير", null);
+echo "Reply 4:\n" . $firstMsgBuyer . "\n\n";
+
+echo "=== SCENARIO 5: General Greeting ===\n";
+$firstMsgGeneral = $engine->getInitialGreeting("سلام عليكم", null);
+echo "Reply 5:\n" . $firstMsgGeneral . "\n\n";

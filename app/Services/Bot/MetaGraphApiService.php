@@ -124,26 +124,37 @@ class MetaGraphApiService
     }
 
     /**
-     * Fetch original post content to understand context.
-     * Endpoint: GET /{post_id}?fields=message,created_time,story
+     * Fetch original post content (text, photo caption, video description, reel) to understand context.
+     * Endpoint: GET /{post_id}?fields=message,description,title,name,story,caption
      */
     public function fetchPostContent(string $postId): ?string
     {
-        try {
-            $response = Http::get("{$this->graphApiUrl}/{$postId}", [
-                'access_token' => $this->pageAccessToken,
-                'fields' => 'message,story',
-            ]);
+        if (empty($postId)) return null;
 
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data['message'] ?? $data['story'] ?? null;
+        $cacheKey = "fb_post_content_" . md5($postId);
+
+        return \Illuminate\Support\Facades\Cache::remember($cacheKey, 86400, function () use ($postId) {
+            try {
+                $response = Http::get("{$this->graphApiUrl}/{$postId}", [
+                    'access_token' => $this->pageAccessToken,
+                    'fields' => 'message,description,title,name,story,caption',
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    return $data['message'] ?? $data['description'] ?? $data['title'] ?? $data['name'] ?? $data['caption'] ?? $data['story'] ?? null;
+                }
+
+                Log::warning("Could not fetch post content from Graph API for {$postId}", [
+                    'status' => $response->status(),
+                    'body' => $response->json(),
+                ]);
+
+                return null;
+            } catch (\Throwable $e) {
+                Log::warning("Could not fetch post content for {$postId}: {$e->getMessage()}");
+                return null;
             }
-
-            return null;
-        } catch (\Throwable $e) {
-            Log::warning("Could not fetch post content for {$postId}: {$e->getMessage()}");
-            return null;
-        }
+        });
     }
 }

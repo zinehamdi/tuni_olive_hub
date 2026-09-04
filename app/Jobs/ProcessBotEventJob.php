@@ -82,14 +82,17 @@ class ProcessBotEventJob implements ShouldQueue
                 // Like the comment first
                 $fbService->likeComment($this->externalId);
 
-                // Fetch post text if not provided and postId exists
+                // Fetch post text from Meta Graph API or Post Directive if postId exists
                 $postContent = $this->postText;
                 if (empty($postContent) && !empty($this->postId)) {
-                    $directive = \App\Models\FacebookPostDirective::where('post_id', $this->postId)
-                        ->orWhere('post_url', 'like', "%{$this->postId}%")
-                        ->first();
-                    if ($directive) {
-                        $postContent = $directive->hook_goal;
+                    $postContent = $fbService->fetchPostContent($this->postId);
+                    if (empty($postContent)) {
+                        $directive = \App\Models\FacebookPostDirective::where('post_id', $this->postId)
+                            ->orWhere('post_url', 'like', "%{$this->postId}%")
+                            ->first();
+                        if ($directive) {
+                            $postContent = $directive->hook_goal;
+                        }
                     }
                 }
 

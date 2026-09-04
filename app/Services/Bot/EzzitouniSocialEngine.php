@@ -77,7 +77,7 @@ class EzzitouniSocialEngine
 
         // 4. First-time Greeting Micro-Discovery logic for 1-on-1 chats (WhatsApp / Messenger DM)
         if ($channel !== 'facebook_comment' && $conversation && $conversation->messages()->count() === 0) {
-            $initialGreeting = $this->getInitialGreeting($userMessage);
+            $initialGreeting = $this->getInitialGreeting($userMessage, $postText);
             $this->logMessage($conversation, $userMessage, $initialGreeting, $channel);
             return [
                 'reply' => $initialGreeting,
@@ -136,56 +136,70 @@ class EzzitouniSocialEngine
     /**
      * Generate dynamic, highly-contextual 1-line public comment reply
      */
-    public function generatePublicCommentReply(string $userComment): string
+    public function generatePublicCommentReply(string $userComment, ?string $postText = null): string
     {
         $lower = mb_strtolower($userComment);
 
-        // 1. If mentioning specific regions (North / South / Center)
-        if (preg_match('/(شمال|باجة|جندوبة|الكاف|بنزرت|سليانة|زغوان)/u', $lower)) {
-            return "عسلامة ومرحباً بيك وبأهل الشمال الغاليين 🫒! تواصلنا معاك في رسالة خاصة بالماسنجر بخصوص تفاصيل طلبك.";
+        if (preg_match('/(مارك|علامة|innorpi)/u', $lower)) {
+            return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! جاوبناك في رسالة خاصة على الماسنجر بخصوص تفاصيل تسجيل العلامة.";
         }
-        if (preg_match('/(جنوب|صفاقس|سيدي بوزيد|القيروان|الساحل|سوسة|المنستير|المهدية|قابس|مدنين|تطاوين|قفصة|جرجيس|الجم)/u', $lower)) {
-            return "عسلامة ومرحباً بيك وبأهلنا الكرام 🫒! بعثنالك التفاصيل الدقيقة في رسالة خاصة على الماسنجر.";
-        }
-
-        // 2. If selling olive or oil (Farmer / Mill harvest)
-        if (preg_match('/(نبيع|عندي|طن|ترانط|محصول|صابة|معصرة)/u', $lower)) {
-            return "ربي يباركلك في الصابة والمحصول 🫒! تواصلنا معاك في الخاص باش نعاونوك تحط عرضك في سوق زين توب.";
-        }
-
-        // 3. If buying / export / Europe diaspora
-        if (preg_match('/(نشري|شراء|تصدير|ألمانيا|فرنسا|إيطاليا|اوروبا|أوروبا|سويسرا|eu|germany|france)/ui', $lower)) {
-            return "مرحباً بيك وبأولاد بلادنا في كل مكان 🫒! تواصلنا معاك في رسالة خاصة على الماسنجر بخصوص الأسعار وطريقة التوصيل.";
-        }
-
-        // 4. If asking about prices
         if (preg_match('/(سوم|أسعار|اسعار|prix|price|بقداش|قداش)/u', $lower)) {
-            return "على عيني وراسي ومرحباً بيك 🫒! بعثنالك آخر تحيين للأسعار وروابط المتابعة في رسالة خاصة على الماسنجر.";
+            return "على عيني وراسي ومرحباً بيك 🫒! بعثنالك التفاصيل في رسالة خاصة على الماسنجر.";
+        }
+        if (preg_match('/(نبيع|عندي|طن|محصول|صابة)/u', $lower)) {
+            return "ربي يباركلك في الصابة 🫒! تواصلنا معاك في رسالة خاصة بالماسنجر.";
+        }
+        if (preg_match('/(نشري|شراء|تصدير)/u', $lower)) {
+            return "مرحباً بيك 🫒! تواصلنا معاك في رسالة خاصة على الماسنجر بخصوص طلبك.";
         }
 
-        // 5. Default natural contextual greeting
-        return "عسلامة ومرحباً بك في زين توب 🫒! جاوبناك في رسالة خاصة على الماسنجر باش نسهلولك طلبك بالتفصيل.";
+        return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! تفضل جاوبناك في رسالة خاصة على الماسنجر.";
     }
 
     /**
-     * Initial short, friendly discovery greeting
+     * Initial short, friendly discovery greeting tailored with ONE single relevant question
      */
-    protected function getInitialGreeting(string $message): string
+    public function getInitialGreeting(string $message, ?string $postText = null): string
     {
-        $trimmed = trim(strtolower($message));
+        $lowerMsg = mb_strtolower($message);
+        $lowerPost = mb_strtolower($postText ?? '');
 
-        // If English
-        if (preg_match('/^(hi|hello|hey|good morning|good evening|dear)/i', $trimmed)) {
-            return "Hello and welcome to ZinToop 🫒! How can I help you today?";
+        // 1. If English
+        if (preg_match('/^(hi|hello|hey|good morning|dear)/i', trim($message))) {
+            return "Hello and welcome to ZinToop 🫒! How can I assist you today?";
         }
 
-        // If French
-        if (preg_match('/^(bonjour|bonsoir|salut|coucou)/i', $trimmed)) {
+        // 2. If French
+        if (preg_match('/^(bonjour|bonsoir|salut|coucou)/i', trim($message))) {
             return "Bonjour et bienvenue sur ZinToop 🫒 ! Comment puis-je vous aider aujourd'hui ?";
         }
 
-        // Default Tunisian Darja
-        return "عسلامة ومرحباً بك في زين توب 🫒! كيفاش نجم نعاونك؟";
+        // 3. Scenario: Trademark / INNORPI / Private Label
+        if (preg_match('/(مارك|علامة|innorpi|brevet|depose|dépôt|تعبئة|قوارير|تعليب|خاصة)/u', $lowerMsg) || 
+            preg_match('/(مارك|علامة|innorpi|brevet|depose|dépôt|تعبئة|قوارير|تعليب|خاصة)/u', $lowerPost)) {
+            return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! تواصلنا معاك بخصوص حماية وتسجيل علامتك الخاصة لزيت الزيتون.. تحب نفسرلك الوثائق المطلوبة ولا معاليم التسجيل لدى معهد المواصفات؟";
+        }
+
+        // 4. Scenario: Prices / Market
+        if (preg_match('/(سوم|أسعار|اسعار|prix|price|بقداش|قداش|بورصة)/u', $lowerMsg) || 
+            preg_match('/(أسعار|اسعار|سعر|سوق|بورصة)/u', $lowerPost)) {
+            return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! تواصلنا معاك بخصوص الأسعار.. شنية الولاية أو السوق اللي تحب تعرف سومها اليوم؟";
+        }
+
+        // 5. Scenario: Selling harvest / Farmer / Mill
+        if (preg_match('/(نبيع|عندي|طن|ترانط|محصول|صابة|معصرة|فلاح|حب)/u', $lowerMsg) || 
+            preg_match('/(بيع|عروض|فلاحين|صابة)/u', $lowerPost)) {
+            return "ربي يباركلك في الصابة والمحصول 🫒! قداش تقريباً الكمية اللي عندك ومن أي ولاية؟";
+        }
+
+        // 6. Scenario: Buying / Sourcing / Export
+        if (preg_match('/(نشري|شراء|تصدير|شحن|فليكسي|تصدير|export|achat)/u', $lowerMsg) || 
+            preg_match('/(تصدير|توزيع|شراء|استيراد)/u', $lowerPost)) {
+            return "مرحباً بيك في منصة زيت الزيتون التونسي 🫒! قداش الكمية ونوعية الزيت (بكر ممتاز، معلب، أو صب) اللي تلوج عليها؟";
+        }
+
+        // 7. Default friendly single open question
+        return "عسلامة ومرحباً بيك في منصة زيت الزيتون التونسي 🫒! تفضل، كيفاش نجم نعاونك اليوم؟";
     }
 
     /**
