@@ -52,14 +52,19 @@
         <meta name="twitter:description" content="@yield('twitter_description', $defaultGuestDesc)">
         <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
         
-        <!-- Alternate Language Links -->
-        <link rel="alternate" hreflang="ar" href="{{ url()->current() }}?lang=ar">
-        <link rel="alternate" hreflang="fr" href="{{ url()->current() }}?lang=fr">
-        <link rel="alternate" hreflang="en" href="{{ url()->current() }}?lang=en">
-        <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
-        
-        <!-- Canonical URL — always the clean base URL (hreflang handles language variants) -->
-        <link rel="canonical" href="{{ url()->current() }}">
+        <!-- Alternate Language Links (locale-prefixed — NOT query params) -->
+        @php
+            $guestPath = preg_replace('#^/(ar|fr|en)#', '', parse_url(url()->current(), PHP_URL_PATH)) ?: '/';
+            $guestLocale = app()->getLocale() ?: 'ar';
+        @endphp
+        <link rel="alternate" hreflang="ar" href="{{ url('ar' . $guestPath) }}">
+        <link rel="alternate" hreflang="fr" href="{{ url('fr' . $guestPath) }}">
+        <link rel="alternate" hreflang="en" href="{{ url('en' . $guestPath) }}">
+        <!-- x-default → /en for international visitors -->
+        <link rel="alternate" hreflang="x-default" href="{{ url('en' . $guestPath) }}">
+
+        <!-- Canonical URL — current locale version of this page -->
+        <link rel="canonical" href="{{ url($guestLocale . $guestPath) }}">
         
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/zintoop-logo.png') }}">

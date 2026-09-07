@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Obfuscator;
 
 /**
  * Listing Model - نموذج العرض
@@ -144,5 +145,61 @@ class Listing extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // URL Obfuscation (Hashids)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Return the obfuscated Hashid as the route key.
+     * route('listings.show', $listing) → /ar/listings/k9XqL
+     */
+    public function getRouteKey(): mixed
+    {
+        return Obfuscator::encode($this->id, 'listing');
+    }
+
+    /**
+     * Resolve listing from route binding.
+     * Supports both legacy numeric URLs (/ar/listings/42) and new Hashids (/ar/listings/k9XqL).
+     */
+    public function resolveRouteBinding($value, $field = null): ?static
+    {
+        $locale = app()->getLocale() ?: 'ar';
+
+        if (is_numeric($value)) {
+            // Legacy numeric ID — backward compatible
+            $listing = $this->where('id', (int) $value)->first();
+            if (!$listing) {
+                // Deleted legacy listing -> 301 redirect to products section (eliminates soft 404 in GSC)
+                throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                    redirect(url($locale . '/#products'), 301)
+                );
+            }
+            return $listing;
+        }
+
+        $id = Obfuscator::decode((string) $value, 'listing');
+        if ($id === null) {
+            abort(404);
+        }
+
+        $listing = $this->where('id', $id)->first();
+        if (!$listing) {
+            throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                redirect(url($locale . '/#products'), 301)
+            );
+        }
+
+        return $listing;
+    }
+
+    /**
+     * Convenience accessor: $listing->hashid
+     */
+    public function getHashidAttribute(): string
+    {
+        return Obfuscator::encode($this->id, 'listing');
     }
 }

@@ -100,12 +100,12 @@
     <link rel="alternate" hreflang="ar" href="{{ $customHreflang['ar'] ?? url('ar' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="fr" href="{{ $customHreflang['fr'] ?? url('fr' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="en" href="{{ $customHreflang['en'] ?? url('en' . $pathWithoutLocale) }}">
-    <link rel="alternate" hreflang="x-default" href="{{ $customHreflang['x-default'] ?? $customHreflang['ar'] ?? url('ar' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $customHreflang['x-default'] ?? $customHreflang['en'] ?? url('en' . $pathWithoutLocale) }}">
     @else
     <link rel="alternate" hreflang="ar" href="{{ url('ar' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="fr" href="{{ url('fr' . $pathWithoutLocale) }}">
     <link rel="alternate" hreflang="en" href="{{ url('en' . $pathWithoutLocale) }}">
-    <link rel="alternate" hreflang="x-default" href="{{ url('ar' . $pathWithoutLocale) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('en' . $pathWithoutLocale) }}">
     @endif
 
     <!-- Canonical URL — the current locale version of this page -->

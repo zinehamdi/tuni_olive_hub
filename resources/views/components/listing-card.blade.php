@@ -55,7 +55,7 @@
             <span class="text-[10px] text-gray-400 block font-bold">{{ __('Price') }}</span>
             <span class="text-sm font-black text-gray-900">{{ $priceText }}</span>
         </div>
-        <a href="{{ route('listings.show', $listing->id) }}" class="px-3.5 py-2 bg-[#183b1c] hover:bg-[#6A8F3B] text-white text-xs font-bold rounded-xl shadow-xs transition">
+        <a href="{{ route('listings.show', $listing) }}" class="px-3.5 py-2 bg-[#183b1c] hover:bg-[#6A8F3B] text-white text-xs font-bold rounded-xl shadow-xs transition">
             {{ __('View Lot') }} →
         </a>
     </div>

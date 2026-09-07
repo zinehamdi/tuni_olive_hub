@@ -1,6 +1,22 @@
 User-agent: *
 Allow: /
 
+# Block private/auth pages — no indexing value, wastes crawl budget
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /messages/
+Disallow: /notifications/
+Disallow: /email-preview/
+Disallow: /onboarding/
+Disallow: /push/
+
+# Block social auth callbacks (not indexable)
+Disallow: /auth/
+
+# Allow all locale-prefixed public pages (DO NOT add Disallow for /ar/ /fr/ /en/)
+
 User-agent: facebookexternalhit
 Allow: /
 

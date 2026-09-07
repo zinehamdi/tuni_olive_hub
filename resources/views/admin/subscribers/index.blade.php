@@ -355,7 +355,7 @@ L'équipe ZinToop.</p>
     <li><strong>السعر:</strong> {{ addslashes($latestListing && $latestListing->price > 0 ? number_format($latestListing->price, 2).' '.($latestListing->currency ?? 'TND') : 'عند الطلب') }}</li>
     {{ $latestListing?->governorate ? '<li><strong>المنطقة:</strong> '.addslashes($latestListing->governorate).'</li>' : '' }}
 </ul>
-<p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing->id) : url('/#products') }}">👁 مشاهدة العرض الآن</a></p>`
+<p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing) : url('/#products') }}">👁 مشاهدة العرض الآن</a></p>`
         },
         'update_announcement': {
             subject: '🚀 إطلاق التحديث الجديد لمنصة زين توب | ZinToop New Update',

@@ -46,7 +46,7 @@ class PriceHubsTest extends TestCase
             $response->assertSee('<link rel="alternate" hreflang="ar" href="' . url('ar/prices') . '">', false);
             $response->assertSee('<link rel="alternate" hreflang="fr" href="' . url('fr/prices') . '">', false);
             $response->assertSee('<link rel="alternate" hreflang="en" href="' . url('en/prices') . '">', false);
-            $response->assertSee('<link rel="alternate" hreflang="x-default" href="' . url('ar/prices') . '">', false);
+            $response->assertSee('<link rel="alternate" hreflang="x-default" href="' . url('en/prices') . '">', false);
         }
     }
 

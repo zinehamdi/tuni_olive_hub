@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use NotificationChannels\WebPush\HasPushSubscriptions;
+use App\Helpers\Obfuscator;
 
 
 class User extends Authenticatable
@@ -197,5 +198,47 @@ class User extends Authenticatable
         }
         
         return $array;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // URL Obfuscation (Hashids)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Return the obfuscated Hashid as the route key instead of the raw numeric ID.
+     * This means route('user.profile', $user) generates /ar/user/k9XqL instead of /ar/user/42.
+     */
+    public function getRouteKey(): mixed
+    {
+        return Obfuscator::encode($this->id, 'user');
+    }
+
+    /**
+     * Resolve the model from the route binding value.
+     * Supports both:
+     *   - New Hashid URLs: /ar/user/k9XqL
+     *   - Legacy numeric URLs: /ar/user/42  (backward compat — returns HTTP 200)
+     */
+    public function resolveRouteBinding($value, $field = null): ?static
+    {
+        if (is_numeric($value)) {
+            // Legacy numeric ID — backward compatible
+            return $this->where('id', (int) $value)->firstOrFail();
+        }
+
+        $id = Obfuscator::decode((string) $value, 'user');
+        if ($id === null) {
+            abort(404);
+        }
+
+        return $this->where('id', $id)->firstOrFail();
+    }
+
+    /**
+     * Convenience accessor: $user->hashid returns the encoded URL segment.
+     */
+    public function getHashidAttribute(): string
+    {
+        return Obfuscator::encode($this->id, 'user');
     }
 }

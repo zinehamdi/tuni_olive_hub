@@ -111,6 +111,10 @@ return [
 
     'key' => env('APP_KEY'),
 
+    // URL obfuscation salt — NEVER use APP_KEY here. Changing APP_KEY would break all shared links.
+    // Generate a random salt once: php artisan tinker → echo Str::random(40)
+    'obfuscator_salt' => env('OBFUSCATOR_SALT', 'zintoop_olive_default_salt_change_in_production'),
+
     'previous_keys' => [
         ...array_filter(
             explode(',', (string) env('APP_PREVIOUS_KEYS', ''))

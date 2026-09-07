@@ -162,7 +162,10 @@ Route::middleware(['web', 'set.locale'])->group(function () {
     
     // Articles
     Route::get('/articles/{id}', function($id) {
-        $article = \App\Models\Article::where('is_active', true)->findOrFail($id);
+        $article = \App\Models\Article::where('is_active', true)->find($id);
+        if (!$article) {
+            return redirect(url(app()->getLocale() . '/articles'), 301);
+        }
         $relatedArticles = \App\Models\Article::where('is_active', true)->where('id', '!=', $id)->latest()->get();
         return view('public.article', compact('article', 'relatedArticles'));
     })->name('articles.show');
@@ -510,38 +513,81 @@ Route::get('/email-preview/new-listing', function(){
 // ROOT URL + CATCH-ALL REDIRECTS (old non-prefixed & ?lang= URLs)
 // ═══════════════════════════════════════════════════════════════
 
-// Root URL → redirect to target locale (handles ?lang=en → /en)
+// Legacy paths without locale prefix — explicit 301 redirects
+// /gulf/catalog (with or without trailing segments) → /#products
+Route::get('/gulf/catalog', fn(Request $request) =>
+    redirect(url((session('locale', 'ar')) . '/#products'), 301)
+);
+Route::get('/gulf/catalog/{any}', fn(Request $request) =>
+    redirect(url((session('locale', 'ar')) . '/#products'), 301)
+)->where('any', '.*');
+
+// Double-locale URLs e.g. /fr/zh/... → /fr/...
+Route::get('/{locale1}/{locale2}/{any?}', function (string $locale1, string $locale2, string $any = '') {
+    return redirect('/' . $locale1 . ($any ? '/' . $any : ''), 301);
+})->where(['locale1' => 'ar|fr|en', 'locale2' => 'ar|fr|en|es|zh|ja', 'any' => '.*']);
+
+// Root URL → Smart Accept-Language detection (302 — browser-dependent, not permanent)
 Route::get('/', function (Request $request) {
     $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
+
+    // 1. Explicit ?lang= param takes priority (backward compat for old links)
     $reqLang = $request->query('lang');
-    $locale = ($reqLang && in_array($reqLang, $supported, true))
-        ? $reqLang
-        : session('locale', config('app.fallback_locale', 'ar'));
+    if ($reqLang && in_array($reqLang, $supported, true)) {
+        $query = $request->except('lang');
+        $queryString = !empty($query) ? '?' . http_build_query($query) : '';
+        return redirect('/' . $reqLang . $queryString, 302);
+    }
 
-    $query = $request->except('lang');
-    $queryString = !empty($query) ? '?' . http_build_query($query) : '';
+    // 2. Existing session (returning user already chose a language)
+    $sessionLocale = session('locale');
+    if ($sessionLocale && in_array($sessionLocale, ['ar', 'fr', 'en'], true)) {
+        return redirect('/' . $sessionLocale, 302);
+    }
 
-    return redirect('/' . $locale . $queryString, 301);
+    // 3. Accept-Language header detection for new visitors
+    $preferred = $request->getPreferredLanguage(['ar', 'fr', 'en']);
+    if ($preferred === 'ar') {
+        return redirect('/ar', 302);
+    }
+    if ($preferred === 'fr') {
+        return redirect('/fr', 302);
+    }
+    // Default: international visitors → English
+    return redirect('/en', 302);
 });
 
-// Fallback route: 301 single-hop redirect for old non-prefixed & query-parameter URLs, or 404 for real missing pages
+// Fallback: smart 301 redirects for old non-prefixed URLs; soft-404 handling for deleted content
 Route::fallback(function (Request $request) {
     $path = trim($request->path(), '/');
-    $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
-    
-    // If URL already starts with a supported locale and reached fallback, it is a genuine 404
     $segments = explode('/', $path);
     $firstSegment = $segments[0] ?? '';
+    $supported = ['ar', 'fr', 'en', 'es', 'zh', 'ja'];
+
     if (in_array($firstSegment, $supported, true)) {
+        $locale = $firstSegment;
+        $subPath = implode('/', array_slice($segments, 1));
+
+        // Deleted listing (e.g. /ar/listings/9999) → redirect to /#products instead of raw 404
+        if (preg_match('#^listings/\d+$#', $subPath)) {
+            return redirect('/' . $locale . '/#products', 301);
+        }
+
+        // Deleted article (e.g. /ar/articles/99) → redirect to /articles list
+        if (preg_match('#^articles/\d+$#', $subPath)) {
+            return redirect('/' . $locale . '/articles', 301);
+        }
+
+        // Genuine 404 — locale is valid but page doesn't exist
         abort(404);
     }
 
+    // Non-prefixed URL → add locale prefix via 301 (preserves SEO authority)
     $reqLang = $request->query('lang');
     $locale = ($reqLang && in_array($reqLang, $supported, true))
         ? $reqLang
         : session('locale', config('app.fallback_locale', 'ar'));
 
-    // Preserve all query parameters except 'lang'
     $query = $request->except('lang');
     $queryString = !empty($query) ? '?' . http_build_query($query) : '';
 

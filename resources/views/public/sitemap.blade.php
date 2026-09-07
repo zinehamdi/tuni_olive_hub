@@ -11,25 +11,27 @@
         foreach ($locales as $lang) {
             $links .= '    <xhtml:link rel="alternate" hreflang="' . $lang . '" href="' . url($lang . $path) . '"/>' . "\n";
         }
-        $links .= '    <xhtml:link rel="alternate" hreflang="x-default" href="' . url('ar' . $path) . '"/>' . "\n";
+        // x-default → /en for international Google searchers (NOT /ar)
+        $links .= '    <xhtml:link rel="alternate" hreflang="x-default" href="' . url('en' . $path) . '"/>' . "\n";
         return $links;
     };
 
     $staticPaths = [
-        '/' => ['priority' => '1.0', 'freq' => 'daily'],
-        '/catalog' => ['priority' => '0.9', 'freq' => 'daily'],
-        '/prices' => ['priority' => '0.95', 'freq' => 'daily'],
-        '/bulk-tunisian-olive-oil' => ['priority' => '0.9', 'freq' => 'daily'],
-        '/tunisian-olive-oil-suppliers' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/olive-oil-mills-tunisia' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/olive-oil-packers-tunisia' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/private-label-olive-oil-tunisia' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/servicehub' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/services/pricing' => ['priority' => '0.8', 'freq' => 'weekly'],
-        '/about' => ['priority' => '0.6', 'freq' => 'monthly'],
-        '/how-it-works' => ['priority' => '0.6', 'freq' => 'monthly'],
-        '/olive-varieties' => ['priority' => '0.8', 'freq' => 'monthly'],
-        '/register' => ['priority' => '0.7', 'freq' => 'monthly'],
+        '/'                                  => ['priority' => '1.0', 'freq' => 'daily'],
+        '/prices'                            => ['priority' => '0.95', 'freq' => 'daily'],
+        '/bulk-tunisian-olive-oil'           => ['priority' => '0.9', 'freq' => 'daily'],
+        '/tunisian-olive-oil-suppliers'      => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/olive-oil-mills-tunisia'           => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/olive-oil-packers-tunisia'         => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/private-label-olive-oil-tunisia'   => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/servicehub'                        => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/services/pricing'                  => ['priority' => '0.8', 'freq' => 'weekly'],
+        '/about'                             => ['priority' => '0.6', 'freq' => 'monthly'],
+        '/how-it-works'                      => ['priority' => '0.6', 'freq' => 'monthly'],
+        '/olive-varieties'                   => ['priority' => '0.8', 'freq' => 'monthly'],
+        '/register'                          => ['priority' => '0.7', 'freq' => 'monthly'],
+        // NOTE: /catalog and /gulf/catalog are intentionally excluded — they are legacy paths
+        // that 301-redirect to /#products and must NOT appear in the sitemap.
     ];
 
     $internationalHubUrls = [
@@ -57,7 +59,8 @@
     <xhtml:link rel="alternate" hreflang="ar" href="{{ $internationalHubUrls['ar'] }}"/>
     <xhtml:link rel="alternate" hreflang="fr" href="{{ $internationalHubUrls['fr'] }}"/>
     <xhtml:link rel="alternate" hreflang="en" href="{{ $internationalHubUrls['en'] }}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{ $internationalHubUrls['ar'] }}"/>
+    {{-- x-default → /en for international Google searchers --}}
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ $internationalHubUrls['en'] }}"/>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -79,10 +82,11 @@
 
   {{-- Dynamic Active Listings --}}
   @foreach($listings as $listing)
+    @php $listingKey = $listing->getRouteKey(); @endphp
     @foreach($locales as $lang)
     <url>
-      <loc>{{ url($lang . '/listings/' . $listing->id) }}</loc>
-{!! $hreflangFor('/listings/' . $listing->id) !!}      <lastmod>{{ optional($listing->updated_at)->toAtomString() }}</lastmod>
+      <loc>{{ url($lang . '/listings/' . $listingKey) }}</loc>
+{!! $hreflangFor('/listings/' . $listingKey) !!}      <lastmod>{{ optional($listing->updated_at)->toAtomString() }}</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.8</priority>
     </url>

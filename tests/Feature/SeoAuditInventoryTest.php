@@ -20,8 +20,9 @@ class SeoAuditInventoryTest extends TestCase
         $urls = [
             // Legacy Locked Redirects
             ['/prices', 301, '/ar/prices'],
-            ['/?lang=en', 301, '/en'],
-            ['/?lang=fr', 301, '/fr'],
+            // Dynamic Root Accept-Language / Query Redirects (302)
+            ['/?lang=en', 302, '/en'],
+            ['/?lang=fr', 302, '/fr'],
 
             // National Tunisian Price Hub
             ['/ar/prices', 200, null],
