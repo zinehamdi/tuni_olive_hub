@@ -1426,11 +1426,11 @@
                                     <span class="text-sm font-black text-[#C8A356]">{{ $listing->price > 0 ? number_format($listing->price, 0).' TND' : __('Upon Request') }}</span>
                                 </div>
                                 <div class="flex gap-2 mt-auto">
-                                    <a href="{{ url('/listings/'.$listing->id) }}" class="flex-1 text-center bg-[#6A8F3B] text-white px-3 py-2 rounded-xl hover:bg-[#5a7a2f] transition font-bold text-xs">👁 {{ __('View') }}</a>
-                                    <a href="{{ url('/listings/'.$listing->id.'/edit') }}" class="flex-1 text-center bg-blue-50 text-blue-600 border border-blue-100 px-3 py-2 rounded-xl hover:bg-blue-100 transition font-bold text-xs">✏️ {{ __('Edit') }}</a>
-                                    <form action="{{ url('/listings/'.$listing->id) }}" method="POST" onsubmit="return confirm('{{ __('Delete this listing?') }}')">
+                                    <a href="{{ route('listings.show', $listing) }}" class="flex-1 text-center bg-[#6A8F3B] text-white px-3 py-2 rounded-xl hover:bg-[#5a7a2f] transition font-bold text-xs">👁 {{ __('View') }}</a>
+                                    <a href="{{ route('listings.edit', $listing) }}" class="flex-1 text-center bg-blue-50 text-blue-600 border border-blue-100 px-3 py-2 rounded-xl hover:bg-blue-100 transition font-bold text-xs">✏️ {{ __('Edit') }}</a>
+                                    <form action="{{ route('listings.destroy', $listing) }}" method="POST" onsubmit="return confirm('{{ __('Delete this listing?') }}')">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="px-3 py-2 bg-red-50 text-red-600 border border-red-100 rounded-xl hover:bg-red-100 transition font-bold text-xs">🗑</button>
+                                        <button type="submit" class="px-3 py-2 bg-red-50 text-red-600 border border-red-100 rounded-xl hover:bg-red-100 transition font-bold text-xs" title="{{ __('Delete') }}">🗑</button>
                                     </form>
                                 </div>
                             </div>

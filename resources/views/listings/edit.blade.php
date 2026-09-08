@@ -19,7 +19,7 @@
         <h2 class="text-2xl font-extrabold text-[#1B2A1B]">تعديل العرض الحالي</h2>
         <p class="text-sm text-gray-600">عدل تفاصيل عرضك للحفاظ على دقة معلومات البيع والشحن.</p>
         
-        <form id="listingForm" method="POST" action="{{ route('listings.update', $listing->id) }}" class="space-y-6" enctype="multipart/form-data">
+        <form id="listingForm" method="POST" action="{{ route('listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data">
           @csrf
           @method('PUT')
           <input type="hidden" name="seller_id" value="{{ auth()->id() }}" />
@@ -253,6 +253,7 @@ function editMediaManager(initialImages) {
     },
     removeNewPreview(index) {
       this.newPreviews.splice(index, 1);
+      this.syncFileInput();
     },
     handleFileSelect(event) {
       const files = event.target.files;
@@ -261,6 +262,18 @@ function editMediaManager(initialImages) {
         const file = files[i];
         const url = URL.createObjectURL(file);
         this.newPreviews.push({ file, url });
+      }
+      this.syncFileInput();
+    },
+    syncFileInput() {
+      const input = document.querySelector('input[name="images[]"]');
+      if (!input) return;
+      try {
+        const dt = new DataTransfer();
+        this.newPreviews.forEach(p => dt.items.add(p.file));
+        input.files = dt.files;
+      } catch (e) {
+        console.warn('DataTransfer not supported:', e);
       }
     }
   }
@@ -384,18 +397,23 @@ function locationPicker() {
   };
 }
 
-// Watch file input changes to show selected count
-document.getElementById('newImages').addEventListener('change', function(e) {
-  const count = e.target.files.length;
-  const label = document.getElementById('uploadLabel');
-  if (count > 0) {
-    label.textContent = `تم اختيار ${count} صور جديدة للرفع`;
-    label.classList.add('text-[#6A8F3B]');
-  } else {
-    label.textContent = 'اختر صورًا جديدة لتحميلها';
-    label.classList.remove('text-[#6A8F3B]');
-  }
-});
+// Watch file input changes to show selected count if element exists
+const newImagesElem = document.getElementById('newImages');
+if (newImagesElem) {
+  newImagesElem.addEventListener('change', function(e) {
+    const count = e.target.files.length;
+    const label = document.getElementById('uploadLabel');
+    if (label) {
+      if (count > 0) {
+        label.textContent = `تم اختيار ${count} صور جديدة للرفع`;
+        label.classList.add('text-[#6A8F3B]');
+      } else {
+        label.textContent = 'اختر صورًا جديدة لتحميلها';
+        label.classList.remove('text-[#6A8F3B]');
+      }
+    }
+  });
+}
 
 document.getElementById('listingForm').addEventListener('submit', function(e) {
   const btn = this.querySelector('button[type="submit"]');

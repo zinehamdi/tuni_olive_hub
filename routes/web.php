@@ -235,6 +235,7 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
     // Inline profile field updates (AJAX)
     Route::patch('/profile/field', [ProfileController::class, 'updateField'])->name('profile.update.field');
     Route::post('/profile/photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload.photo');
+    Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.delete.photo');
     Route::post('/profile/service-card', [ProfileController::class, 'addServiceCard'])->name('profile.add.service-card');
     Route::post('/profile/service-card/update', [ProfileController::class, 'updateServiceCard'])->name('profile.update.service-card');
     

@@ -694,7 +694,7 @@
                                         </div>
                                         <p class="text-xs text-gray-400 mb-3">{{ $listing->created_at->diffForHumans() }}</p>
                                         <div class="mt-auto pt-2">
-                                            <a href="{{ url('/listings/'.$listing->id) }}" class="block w-full text-center bg-gray-50 text-gray-700 border border-gray-200 px-3 py-2 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition font-bold text-xs">{{ __('View Details') }}</a>
+                                            <a href="{{ route('listings.show', $listing) }}" class="block w-full text-center bg-gray-50 text-gray-700 border border-gray-200 px-3 py-2 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition font-bold text-xs">{{ __('View Details') }}</a>
                                         </div>
                                     </div>
                                 </div>

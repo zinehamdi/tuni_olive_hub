@@ -368,6 +368,55 @@ class ProfileController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * DELETE /profile/photo
+     */
+    public function deletePhoto(Request $request)
+    {
+        $request->validate([
+            'type' => ['required', 'string', 'in:profile,cover'],
+            'index' => ['nullable', 'integer'],
+        ]);
+
+        $user = $request->user();
+        $type = $request->input('type');
+
+        try {
+            if ($type === 'profile') {
+                if ($user->profile_picture) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_picture);
+                    $user->profile_picture = null;
+                    $user->save();
+                }
+            } elseif ($type === 'cover') {
+                $covers = $user->cover_photos ?? [];
+                if (!is_array($covers)) {
+                    $covers = [];
+                }
+                $index = (int) $request->input('index', 0);
+                if (isset($covers[$index])) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($covers[$index]);
+                    unset($covers[$index]);
+                    $user->cover_photos = array_values($covers);
+                    $user->save();
+                }
+            }
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['success' => true, 'message' => __('Photo deleted successfully!')]);
+            }
+
+            return back()->with('success', __('Photo deleted successfully!'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Photo delete failed: ' . $e->getMessage());
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => __('Failed to delete photo.')], 500);
+            }
+            return back()->with('error', __('Failed to delete photo.'));
+        }
+    }
+
     /**
      * POST /profile/service-card
      */
