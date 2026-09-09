@@ -409,11 +409,23 @@ class OgImageService
         $white = imagecolorallocate($canvas, 255, 255, 255);
         $gray = imagecolorallocate($canvas, 165, 185, 165);
 
-        // ── 2. Platform Branding Text ──
+        // ── 2. Platform Branding Text (Localized) ──
+        $subtitles = [
+            'ar' => $this->shapeArabic('• منصة زيت الزيتون التونسي'),
+            'fr' => '•  Plateforme de l\'Huile d\'Olive Tunisienne',
+            'en' => '•  Tunisian Olive Oil Platform',
+            'it' => '•  Piattaforma dell\'Olio d\'Oliva Tunisino',
+            'es' => '•  Plataforma del Aceite de Oliva Tunecino',
+            'de' => '•  Tunesische Olivenöl-Plattform',
+        ];
+        $subtitleText = $subtitles[$locale] ?? '•  Tunisian Olive Oil Platform';
+
         if ($font) {
             try {
                 imagettftext($canvas, 22, 0, 78, 600, $gold, $font, 'ZinToop');
-                imagettftext($canvas, 12, 0, 188, 598, $gray, $font, '•  Tunisian Olive Oil Platform');
+                $subX = ($locale === 'ar') ? 180 : 188;
+                $subSize = ($locale === 'ar') ? 14 : 12;
+                imagettftext($canvas, $subSize, 0, $subX, 598, $gray, $font, $subtitleText);
             } catch (\Throwable $e) {
                 imagestring($canvas, 5, 78, 582, 'ZinToop Platform', $gold);
             }
@@ -479,26 +491,27 @@ class OgImageService
 
         // CTA Button Text (Localized based on share URL locale)
         $btnTexts = [
+            'ar' => $this->shapeArabic('تواصل مع البائع'),
             'fr' => 'Contacter le Vendeur',
             'en' => 'Contact Seller',
             'it' => 'Contatta il Venditore',
             'es' => 'Contactar al Vendedor',
             'de' => 'Verkäufer Kontaktieren',
-            'ar' => 'Contact Seller',
         ];
         $btnText = $btnTexts[$locale] ?? 'Contact Seller';
 
         if ($font) {
             try {
-                $bbox = imagettfbbox(14, 0, $font, $btnText);
+                $fontSize = ($locale === 'ar') ? 15 : 14;
+                $bbox = imagettfbbox($fontSize, 0, $font, $btnText);
                 $txtW = abs($bbox[4] - $bbox[0]);
                 $txtH = abs($bbox[5] - $bbox[1]);
                 $tx = $btnX + (int) round(($btnW - $txtW) / 2);
                 $ty = $btnY + (int) round(($btnH + $txtH) / 2) - 2;
 
                 $shadow = imagecolorallocate($canvas, 15, 30, 15);
-                imagettftext($canvas, 14, 0, $tx + 1, $ty + 1, $shadow, $font, $btnText);
-                imagettftext($canvas, 14, 0, $tx, $ty, $white, $font, $btnText);
+                imagettftext($canvas, $fontSize, 0, $tx + 1, $ty + 1, $shadow, $font, $btnText);
+                imagettftext($canvas, $fontSize, 0, $tx, $ty, $white, $font, $btnText);
                 return;
             } catch (\Throwable $e) {
                 // fallback
@@ -654,5 +667,122 @@ class OgImageService
         }
 
         return null;
+    }
+
+    /**
+     * Reshape Arabic UTF-8 string (connected glyphs + visual RTL reversing for GD)
+     */
+    protected function shapeArabic(string $utf8Str): string
+    {
+        static $glyphs = [
+            0x0621 => [0xFE80, 0xFE80, 0xFE80, 0xFE80], // ء
+            0x0622 => [0xFE81, 0xFE82, 0xFE81, 0xFE82], // آ
+            0x0623 => [0xFE83, 0xFE84, 0xFE83, 0xFE84], // أ
+            0x0624 => [0xFE85, 0xFE86, 0xFE85, 0xFE86], // ؤ
+            0x0625 => [0xFE87, 0xFE88, 0xFE87, 0xFE88], // إ
+            0x0626 => [0xFE89, 0xFE8A, 0xFE8B, 0xFE8C], // ئ
+            0x0627 => [0xFE8D, 0xFE8E, 0xFE8D, 0xFE8E], // ا
+            0x0628 => [0xFE8F, 0xFE90, 0xFE91, 0xFE92], // ب
+            0x0629 => [0xFE93, 0xFE94, 0xFE93, 0xFE94], // ة
+            0x062A => [0xFE95, 0xFE96, 0xFE97, 0xFE98], // ت
+            0x062B => [0xFE99, 0xFE9A, 0xFE9B, 0xFE9C], // ث
+            0x062C => [0xFE9D, 0xFE9E, 0xFE9F, 0xFEA0], // ج
+            0x062D => [0xFEA1, 0xFEA2, 0xFEA3, 0xFEA4], // ح
+            0x062E => [0xFEA5, 0xFEA6, 0xFEA7, 0xFEA8], // خ
+            0x062F => [0xFEA9, 0xFEAA, 0xFEA9, 0xFEAA], // د
+            0x0630 => [0xFEAB, 0xFEAC, 0xFEAB, 0xFEAC], // ذ
+            0x0631 => [0xFEAD, 0xFEAE, 0xFEAD, 0xFEAE], // ر
+            0x0632 => [0xFEAF, 0xFEB0, 0xFEAF, 0xFEB0], // ز
+            0x0633 => [0xFEB1, 0xFEB2, 0xFEB3, 0xFEB4], // س
+            0x0634 => [0xFEB5, 0xFEB6, 0xFEB7, 0xFEB8], // ش
+            0x0635 => [0xFEB9, 0xFEBA, 0xFEBB, 0xFEBC], // ص
+            0x0636 => [0xFEBD, 0xFEBE, 0xFEBF, 0xFEC0], // ض
+            0x0637 => [0xFEC1, 0xFEC2, 0xFEC3, 0xFEC4], // ط
+            0x0638 => [0xFEC5, 0xFEC6, 0xFEC7, 0xFEC8], // ظ
+            0x0639 => [0xFEC9, 0xFECA, 0xFECB, 0xFECC], // ع
+            0x063A => [0xFECD, 0xFECE, 0xFECF, 0xFED0], // غ
+            0x0641 => [0xFED1, 0xFED2, 0xFED3, 0xFED4], // ف
+            0x0642 => [0xFED5, 0xFED6, 0xFED7, 0xFED8], // ق
+            0x0643 => [0xFED9, 0xFEDA, 0xFEDB, 0xFEDC], // ك
+            0x0644 => [0xFEDD, 0xFEDE, 0xFEDF, 0xFEE0], // ل
+            0x0645 => [0xFEE1, 0xFEE2, 0xFEE3, 0xFEE4], // م
+            0x0646 => [0xFEE5, 0xFEE6, 0xFEE7, 0xFEE8], // ن
+            0x0647 => [0xFEE9, 0xFEEA, 0xFEEB, 0xFEEC], // ه
+            0x0648 => [0xFEED, 0xFEEE, 0xFEED, 0xFEEE], // و
+            0x0649 => [0xFEEF, 0xFEF0, 0xFEEF, 0xFEF0], // ى
+            0x064A => [0xFEF1, 0xFEF2, 0xFEF3, 0xFEF4], // ي
+        ];
+
+        static $nonConnecting = [
+            0x0621, 0x0622, 0x0623, 0x0624, 0x0625, 0x0627, 0x0629, 0x062F, 0x0630, 0x0631, 0x0632, 0x0648, 0x0649
+        ];
+
+        $codes = [];
+        $len = mb_strlen($utf8Str, 'UTF-8');
+        for ($i = 0; $i < $len; $i++) {
+            $char = mb_substr($utf8Str, $i, 1, 'UTF-8');
+            $codes[] = $this->uniOrd($char);
+        }
+
+        $shaped = [];
+        $count = count($codes);
+
+        for ($i = 0; $i < $count; $i++) {
+            $current = $codes[$i];
+            if (!isset($glyphs[$current])) {
+                $shaped[] = mb_chr($current, 'UTF-8');
+                continue;
+            }
+
+            // Lam-Alef ligatures (لا, لأ, لإ, لآ)
+            if ($current === 0x0644 && $i + 1 < $count) {
+                $next = $codes[$i + 1];
+                $prev = ($i > 0) ? $codes[$i - 1] : 0;
+                $prevConnects = isset($glyphs[$prev]) && !in_array($prev, $nonConnecting, true);
+
+                $ligature = null;
+                if ($next === 0x0622) $ligature = $prevConnects ? 0xFEF6 : 0xFEF5; // لآ
+                elseif ($next === 0x0623) $ligature = $prevConnects ? 0xFEF8 : 0xFEF7; // لأ
+                elseif ($next === 0x0625) $ligature = $prevConnects ? 0xFEFA : 0xFEF9; // لإ
+                elseif ($next === 0x0627) $ligature = $prevConnects ? 0xFEFC : 0xFEFB; // لا
+
+                if ($ligature !== null) {
+                    $shaped[] = mb_chr($ligature, 'UTF-8');
+                    $i++; // skip alef
+                    continue;
+                }
+            }
+
+            $prev = ($i > 0) ? $codes[$i - 1] : 0;
+            $next = ($i + 1 < $count) ? $codes[$i + 1] : 0;
+
+            $prevConnects = isset($glyphs[$prev]) && !in_array($prev, $nonConnecting, true);
+            $nextConnects = isset($glyphs[$next]);
+
+            if ($prevConnects && $nextConnects && !in_array($current, $nonConnecting, true)) {
+                $form = 3; // Medial
+            } elseif ($prevConnects) {
+                $form = 1; // Final
+            } elseif ($nextConnects && !in_array($current, $nonConnecting, true)) {
+                $form = 2; // Initial
+            } else {
+                $form = 0; // Isolated
+            }
+
+            $glyphCode = $glyphs[$current][$form];
+            $shaped[] = mb_chr($glyphCode, 'UTF-8');
+        }
+
+        return implode('', array_reverse($shaped));
+    }
+
+    private function uniOrd(string $c): int
+    {
+        $h = ord($c[0]);
+        if ($h <= 0x7F) return $h;
+        if ($h <= 0xDF) return ($h & 0x1F) << 6 | (ord($c[1]) & 0x3F);
+        if ($h <= 0xEF) return ($h & 0x0F) << 12 | (ord($c[1]) & 0x3F) << 6 | (ord($c[2]) & 0x3F);
+        if ($h <= 0xF4) return ($h & 0x0F) << 18 | (ord($c[1]) & 0x3F) << 12 | (ord($c[2]) & 0x3F) << 6 | (ord($c[3]) & 0x3F);
+        return 0;
     }
 }
