@@ -51,6 +51,9 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect('/' . $locale . $previousPath);
 })->name('lang.switch');
 
+// Un-prefixed OG image asset route
+Route::get('/listings/{listing}/og-image.jpg', [\App\Http\Controllers\ListingOgImageController::class, 'show']);
+
 // ═══════════════════════════════════════════════════════════════
 // LOCALE-PREFIXED ROUTES — /ar/, /fr/, /en/ (SEO multilingual)
 // ═══════════════════════════════════════════════════════════════
@@ -434,6 +437,7 @@ Route::middleware('set.locale')->group(function(){
 
     // Add route for viewing single listing
     Route::get('listings/{listing}', [\App\Http\Controllers\ListingController::class, 'show'])->name('listings.show');
+    Route::get('listings/{listing}/og-image.jpg', [\App\Http\Controllers\ListingOgImageController::class, 'show'])->name('listings.og_image');
 
     // Aoula order request form (requires auth)
     Route::get('orders/request-aoula', function(){

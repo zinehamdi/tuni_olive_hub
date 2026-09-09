@@ -59,10 +59,12 @@ class Listing extends Model
     {
         static::saved(function ($listing) {
             \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+            \App\Services\OgImageService::clearCache($listing);
         });
 
         static::deleted(function ($listing) {
             \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+            \App\Services\OgImageService::clearCache($listing);
         });
     }
     

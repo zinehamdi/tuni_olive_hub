@@ -22,7 +22,7 @@
             $realImages[] = url('storage/' . ltrim($m, '/'));
         }
     }
-    $shareImage = !empty($realImages) ? $realImages[0] : url('images/zintoop-logo.png');
+    $shareImage = route('listings.og_image', $listing);
     if (str_starts_with($shareImage, 'http://')) {
         $shareImage = str_replace('http://', 'https://', $shareImage);
     }
@@ -58,13 +58,10 @@
 @section('og_product_tags')
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    @if(str_ends_with($shareImage, '.webp'))
-        <meta property="og:image:type" content="image/webp">
-    @elseif(str_ends_with($shareImage, '.png'))
-        <meta property="og:image:type" content="image/png">
-    @else
-        <meta property="og:image:type" content="image/jpeg">
-    @endif
+    <meta property="og:image:type" content="image/jpeg">
+    @foreach($realImages as $extraImg)
+        <meta property="og:image" content="{{ $extraImg }}">
+    @endforeach
 @endsection
 
 @push('head')
