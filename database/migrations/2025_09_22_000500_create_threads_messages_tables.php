@@ -11,7 +11,7 @@ return new class extends Migration {
     {
     Schema::create('threads', function (Blueprint $table) {
             $table->id();
-        $table->enum('object_type', ['order','listing','trip','load','export_offer','support','financing','contract'])->index();
+            $table->enum('object_type', ['order','listing','trip','load','export_offer','support','financing','contract','direct_message'])->index();
             $table->unsignedBigInteger('object_id')->index();
             $table->json('participants')->nullable();
             $table->timestamps();

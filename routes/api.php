@@ -165,6 +165,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::get('messages/unread-count', [\App\Http\Controllers\MessageController::class, 'unreadCount']);
         Route::get('messages/{user}/get', [\App\Http\Controllers\MessageController::class, 'getMessages']);
         Route::post('messages/{user}/send', [\App\Http\Controllers\MessageController::class, 'send']);
+        Route::post('messages/translate', [\App\Http\Controllers\MessageController::class, 'translateMessage']);
 
         // Export Shipments
         Route::get('export/shipments', [\App\Http\Controllers\Api\V1\ExportShipmentsController::class, 'index']);

@@ -213,8 +213,30 @@
                                     : 'bg-white border border-gray-200 text-gray-900 shadow-sm ' . ($isRTL ? 'rounded-t-2xl rounded-bl-2xl rounded-br-md' : 'rounded-t-2xl rounded-br-2xl rounded-bl-md') }} px-4 py-2.5">
                                     <p class="text-sm leading-relaxed whitespace-pre-wrap break-words">{{ $message->body }}</p>
                                 </div>
-                                <div class="flex items-center gap-1 mt-0.5 px-1 {{ $isMine ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }}">
+
+                                {{-- Inline Translation Display --}}
+                                <template x-if="translations[{{ $message->id }}]">
+                                    <div class="mt-1.5 p-2.5 bg-amber-50/90 border border-amber-200 rounded-xl text-xs text-gray-800 leading-relaxed shadow-sm">
+                                        <div class="flex items-center gap-1.5 font-bold text-[10px] text-[#6A8F3B] mb-1">
+                                            <span>🌐 {{ __('Translated by Ezzitouni AI') }}</span>
+                                        </div>
+                                        <p x-text="translations[{{ $message->id }}]"></p>
+                                    </div>
+                                </template>
+
+                                <div class="flex items-center gap-2 mt-0.5 px-1 {{ $isMine ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }}">
                                     <span class="text-[10px] text-gray-400">{{ $message->created_at->translatedFormat('H:i') }}</span>
+                                    
+                                    @if(!$isMine)
+                                        <button type="button" 
+                                                @click="translateMessage({{ $message->id }}, @js($message->body))" 
+                                                class="text-[10px] text-[#6A8F3B] hover:text-[#5a7a2f] font-bold flex items-center gap-1 opacity-75 hover:opacity-100 transition"
+                                                :disabled="translatingId === {{ $message->id }}">
+                                            <span x-show="translatingId !== {{ $message->id }}">🌐 {{ __('Translate') }}</span>
+                                            <span x-show="translatingId === {{ $message->id }}" class="animate-pulse">⏳ {{ __('Translating...') }}</span>
+                                        </button>
+                                    @endif
+
                                     @if($isMine)
                                         @if($message->read_at)
                                             <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 6.5l1-1 4 4L13.5 2l1 1-9 9z"/><path d="M3.5 6.5l1-1 4 4" opacity=".4"/></svg>
@@ -237,7 +259,28 @@
                                 : 'bg-white border border-gray-200 text-gray-900 shadow-sm {{ $isRTL ? 'rounded-t-2xl rounded-bl-2xl rounded-br-md' : 'rounded-t-2xl rounded-br-2xl rounded-bl-md' }}'" class="px-4 py-2.5">
                                 <p class="text-sm leading-relaxed whitespace-pre-wrap break-words" x-text="msg.body"></p>
                             </div>
-                            <span :class="msg.is_mine ? '{{ $isRTL ? 'text-left' : 'text-right' }}' : '{{ $isRTL ? 'text-right' : 'text-left' }}'" class="block mt-0.5 text-[10px] text-gray-400 px-1" x-text="msg.created_at"></span>
+
+                            <template x-if="translations[msg.id]">
+                                <div class="mt-1.5 p-2.5 bg-amber-50/90 border border-amber-200 rounded-xl text-xs text-gray-800 leading-relaxed shadow-sm">
+                                    <div class="flex items-center gap-1.5 font-bold text-[10px] text-[#6A8F3B] mb-1">
+                                        <span>🌐 {{ __('Translated by Ezzitouni AI') }}</span>
+                                    </div>
+                                    <p x-text="translations[msg.id]"></p>
+                                </div>
+                            </template>
+
+                            <div class="flex items-center gap-2 mt-0.5 px-1" :class="msg.is_mine ? '{{ $isRTL ? 'justify-start' : 'justify-end' }}' : '{{ $isRTL ? 'justify-end' : 'justify-start' }}'">
+                                <span class="text-[10px] text-gray-400" x-text="msg.created_at"></span>
+                                <template x-if="!msg.is_mine">
+                                    <button type="button" 
+                                            @click="translateMessage(msg.id, msg.body)" 
+                                            class="text-[10px] text-[#6A8F3B] hover:text-[#5a7a2f] font-bold flex items-center gap-1 opacity-75 hover:opacity-100 transition"
+                                            :disabled="translatingId === msg.id">
+                                        <span x-show="translatingId !== msg.id">🌐 {{ __('Translate') }}</span>
+                                        <span x-show="translatingId === msg.id" class="animate-pulse">⏳ {{ __('Translating...') }}</span>
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -544,6 +587,40 @@
                 counterQty: 1,
                 counterUnit: 'L',
                 submittingCounter: false,
+                translations: {},
+                translatingId: null,
+
+                async translateMessage(msgId, text) {
+                    if (this.translations[msgId]) {
+                        return;
+                    }
+                    this.translatingId = msgId;
+                    try {
+                        const res = await fetch(`{{ route('messages.translate') }}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                message_id: msgId,
+                                text: text,
+                                target_locale: '{{ app()->getLocale() }}'
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.success && data.translated_text) {
+                            this.translations[msgId] = data.translated_text;
+                        } else {
+                            window.Alpine.store('toast').showToast(data.message || '{{ __("Translation failed.") }}', 'error');
+                        }
+                    } catch (err) {
+                        window.Alpine.store('toast').showToast('{{ __("Translation error.") }}', 'error');
+                    } finally {
+                        this.translatingId = null;
+                    }
+                },
 
                 openTransporters(orderId) {
                     this.selectedOrderId = orderId;

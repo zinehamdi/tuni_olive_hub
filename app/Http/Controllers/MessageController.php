@@ -327,4 +327,41 @@ class MessageController extends Controller
         
         return $thread;
     }
+
+    /**
+     * Translate message content using Ezzitouni AI translation brain.
+     */
+    public function translateMessage(Request $request, \App\Services\Bot\EzzitouniBrainService $brain): JsonResponse
+    {
+        $validated = $request->validate([
+            'message_id' => 'nullable|integer|exists:messages,id',
+            'text' => 'nullable|string|max:5000',
+            'target_locale' => 'nullable|string|max:10',
+        ]);
+
+        $text = $validated['text'] ?? null;
+        if (!empty($validated['message_id'])) {
+            $msg = Message::find($validated['message_id']);
+            if ($msg) {
+                $text = $msg->body;
+            }
+        }
+
+        if (empty(trim((string) $text))) {
+            return response()->json([
+                'success' => false,
+                'message' => __('No message content to translate.'),
+            ], 422);
+        }
+
+        $targetLocale = $validated['target_locale'] ?? app()->getLocale();
+        $res = $brain->translate((string) $text, $targetLocale);
+
+        return response()->json([
+            'success' => true,
+            'translated_text' => $res['translated_text'],
+            'target_locale' => $res['target_locale'],
+            'source_locale' => $res['source_locale'],
+        ]);
+    }
 }

@@ -252,6 +252,7 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
     Route::get('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
     Route::post('/messages/{user}/send', [\App\Http\Controllers\MessageController::class, 'send'])->name('messages.send');
     Route::get('/messages/{user}/get', [\App\Http\Controllers\MessageController::class, 'getMessages'])->name('messages.get');
+    Route::post('/messages/translate', [\App\Http\Controllers\MessageController::class, 'translateMessage'])->name('messages.translate');
 });
 
 // ═══════════════════════════════════════════════════════════════
