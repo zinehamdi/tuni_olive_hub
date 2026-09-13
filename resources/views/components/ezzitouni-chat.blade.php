@@ -7,25 +7,56 @@
 
     if ($isLoggedIn) {
         $welcomeContent = match($currentLocale) {
-            'en' => "Welcome back, **{$userName}**! 🫒 I am **Ezzitouni**, your dedicated advisor on ZinToop. How can I assist you with your offers, live souk prices, or export regulations today?",
-            'fr' => "Bienvenue, **{$userName}** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller dédié sur ZinToop. Comment puis-je vous aider aujourd'hui concernant vos offres, les prix des marchés ou l'exportation ?",
-            default => "مرحباً بك يا **{$userName}**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك التجاري في منصة ZinToop. كيفاش نجم نعاونك اليوم بخصوص عروضك، أسعار أسواق اليوم، أو إجراءات التصدير والتثمين؟",
+            'en' => "Welcome back, **{$userName}**! 🫒 I am **Ezzitouni**, your dedicated advisor on ZinToop. How can I assist you with your offers, live souk prices, buyer deals, or export regulations today?",
+            'fr' => "Bienvenue, **{$userName}** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller dédié sur ZinToop. Comment puis-je vous aider aujourd'hui concernant vos offres, les prix des marchés, l'achat/vente ou l'exportation ?",
+            default => "مرحباً بك يا **{$userName}**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك التجاري في منصة ZinToop. كيفاش نجم نعاونك اليوم بخصوص عروضك، أسعار أسواق اليوم، صفقات الشراء والبيع، أو إجراءات التصدير والتثمين؟",
         };
-        $welcomeButtons = [
-            ['label' => '📈 ' . __('Prices'), 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-            ['label' => '🛢️ ' . __('Sell'), 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
-        ];
+        $welcomeButtons = match($currentLocale) {
+            'en' => [
+                ['label' => '📈 Market Prices', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛢️ Sell Olive Oil', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
+                ['label' => '🛒 Buy / Explore Deals', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
+                ['label' => '📄 Export Specs (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
+            ],
+            'fr' => [
+                ['label' => '📈 Prix des marchés', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛢️ Vendre de l\'huile', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
+                ['label' => '🛒 Acheter / Offres', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
+                ['label' => '📄 Cahier des charges (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
+            ],
+            default => [
+                ['label' => '📈 أسعار الأسواق', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛢️ بيع زيت الزيتون', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
+                ['label' => '🛒 شراء زيت / صفقات', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
+                ['label' => '📄 كراس التصدير (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
+            ],
+        };
     } else {
         $welcomeContent = match($currentLocale) {
-            'en' => "Hello and welcome to **ZinToop**! 🫒 I am **Ezzitouni**, your AI Agricultural and Trade Consultant. You can ask me anything about Tunisian olive oil varieties, daily market prices, bulk export contracts, or buying directly from certified producers.",
-            'fr' => "Bonjour et bienvenue sur **ZinToop** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller agricole et commercial IA. Vous pouvez me poser toutes vos questions sur les variétés d'huile tunisienne, les prix du jour, les contrats d'exportation ou l'achat direct auprès des producteurs.",
-            default => "أهلاً ومرحباً بك في **ZinToop**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك الزراعي والتجاري الذكي. تنجم تسألني على أي حاجة تخص أصناف الزيتون التونسي، أسعار الأسواق اليومية، إجراءات التصدير وعقود الشحن، أو كيفية البيع والشراء مباشرة من الفلاحين والمعاصر بدون وسيط.",
+            'en' => "Hello and welcome to **ZinToop**! 🫒 I am **Ezzitouni**, your AI Agricultural and Trade Consultant. You can ask me anything about Tunisian olive oil varieties, daily market prices, bulk export contracts, or buying directly from certified producers with 0% commission.",
+            'fr' => "Bonjour et bienvenue sur **ZinToop** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller agricole et commercial IA. Vous pouvez me poser toutes vos questions sur les variétés d'huile tunisienne, les prix du jour, les contrats d'exportation ou l'achat/vente direct auprès des producteurs sans commission.",
+            default => "أهلاً ومرحباً بك في **ZinToop**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك الزراعي والتجاري الذكي. تنجم تسألني على أي حاجة تخص أصناف الزيتون التونسي، أسعار الأسواق اليومية، إجراءات التصدير وعقود الشحن، أو كيفية البيع والشراء مباشرة من الفلاحين والمعاصر بدون وسيط وبدون عمولة.",
         };
-        $welcomeButtons = [
-            ['label' => '🛢️ ' . __('Browse'), 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
-            ['label' => '📈 ' . __('Prices'), 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-            ['label' => '👨‍🌾 ' . __('Register'), 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
-        ];
+        $welcomeButtons = match($currentLocale) {
+            'en' => [
+                ['label' => '🛢️ Browse Marketplace', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
+                ['label' => '📈 Daily Souk Prices', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛒 Buy Olive Oil / Deals', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
+                ['label' => '👨‍🌾 Create Free Account', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
+            ],
+            'fr' => [
+                ['label' => '🛢️ Explorer le marché', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
+                ['label' => '📈 Prix des marchés', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛒 Acheter / Deals', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
+                ['label' => '👨‍🌾 Créer un compte', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
+            ],
+            default => [
+                ['label' => '🛢️ تصفح عروض السوق', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
+                ['label' => '📈 جدول أسعار اليوم', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
+                ['label' => '🛒 شراء زيت / صفقات', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
+                ['label' => '👨‍🌾 إنشاء حساب جديد', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
+            ],
+        };
     }
 @endphp
 
@@ -123,21 +154,35 @@
             </button>
         </div>
 
-        <!-- Suggestion Chips (Quick Prompts) -->
+        <!-- Suggestion Chips (Quick Prompts Bar) -->
         <div class="px-3 py-2 bg-gradient-to-b from-gray-50 to-white border-b border-gray-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap text-[11px]">
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'Today olive market prices' : ($currentLocale === 'fr' ? 'Prix du marché de l\'huile d\'olive' : 'أسعار سوق الزيتون اليوم') }}')" 
+            <!-- 1. Prices -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'Today olive oil souk and market prices' : ($currentLocale === 'fr' ? 'Prix du marché de l\'huile d\'olive aujourd\'hui' : 'أسعار سوق الزيتون والزيت اليوم في تونس') }}')" 
                     class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                📈 {{ $currentLocale === 'en' ? 'Prices' : ($currentLocale === 'fr' ? 'Prix' : 'أسعار اليوم') }}
+                📈 {{ $currentLocale === 'en' ? 'Prices' : ($currentLocale === 'fr' ? 'Prix' : 'الأسعار') }}
             </button>
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'I want to sell my olive oil' : ($currentLocale === 'fr' ? 'Je veux vendre mon huile d\'olive' : 'نحب نبيع زيت زيتون') }}')" 
+            <!-- 2. Buy Oil (Achat) -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'I want to buy olive oil, what are the best available offers?' : ($currentLocale === 'fr' ? 'Je souhaite acheter de l\'huile d\'olive, quelles sont les offres disponibles ?' : 'نحب نشري كمية زيت زيتون، شنوة العروض المتوفرة وأحسن الأسعار؟') }}')" 
+                    class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
+                🛒 {{ $currentLocale === 'en' ? 'Buy Oil' : ($currentLocale === 'fr' ? 'Acheter' : 'شراء زيت') }}
+            </button>
+            <!-- 3. Sell Oil (Vendre) -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'I have olive oil and I want to sell it on the platform' : ($currentLocale === 'fr' ? 'J\'ai de l\'huile d\'olive et je souhaite la vendre sur la plateforme' : 'عندي زيت زيتون نحب نبيعه في المنصة') }}')" 
                     class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
                 🛢️ {{ $currentLocale === 'en' ? 'Sell Oil' : ($currentLocale === 'fr' ? 'Vendre' : 'بيع الزيت') }}
             </button>
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'Export specifications and cahier des charges' : ($currentLocale === 'fr' ? 'Cahier des charges export huile d\'olive' : 'كراس شروط التصدير') }}')" 
-                    class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
+            <!-- 4. Export Specifications -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What are the export regulations and cahier des charges?' : ($currentLocale === 'fr' ? 'Quel est le cahier des charges et la réglementation export ?' : 'شنوة كراس شروط التصدير وإجراءات الشحن للخارج؟') }}')" 
+                    class="px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
                 📄 {{ $currentLocale === 'en' ? 'Export Specs' : ($currentLocale === 'fr' ? 'Export' : 'كراس التصدير') }}
             </button>
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'Chemlali vs Chetoui varieties' : ($currentLocale === 'fr' ? 'Différence Chemlali et Chetoui' : 'الفرق بين الشملالي والشتوي') }}')" 
+            <!-- 5. Direct Deals -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What are the direct buy/sell deals currently available?' : ($currentLocale === 'fr' ? 'Quelles sont les opportunités et deals directs en cours ?' : 'شنوة صفقات البيع والشراء المباشرة المتوفرة؟') }}')" 
+                    class="px-2.5 py-1 bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
+                🤝 {{ $currentLocale === 'en' ? 'Deals' : ($currentLocale === 'fr' ? 'Deals' : 'الصفقات') }}
+            </button>
+            <!-- 6. Varieties -->
+            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What is the difference between Chemlali and Chetoui varieties?' : ($currentLocale === 'fr' ? 'Quelle est la différence entre Chemlali et Chetoui ?' : 'شنوة الفرق بين الشملالي والشتوي ومواصفات كل صنف؟') }}')" 
                     class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
                 🌿 {{ $currentLocale === 'en' ? 'Varieties' : ($currentLocale === 'fr' ? 'Variétés' : 'الأصناف') }}
             </button>
@@ -162,8 +207,9 @@
                         <div class="w-full max-w-[90%] flex flex-wrap gap-1.5 mt-2">
                             <template x-for="(btn, bIndex) in msg.buttons" :key="bIndex">
                                 <a :href="btn.url" 
+                                   @click="handleButtonClick(btn, $event)"
                                    :target="btn.url.endsWith('.pdf') ? '_blank' : '_self'"
-                                   class="px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 text-center flex-1 min-w-[130px] active:scale-95 transform"
+                                   class="px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 text-center flex-1 min-w-[130px] active:scale-95 transform cursor-pointer"
                                    :class="{
                                         'bg-[#6A8F3B] text-white hover:bg-[#5a7a2f] shadow-green-100': btn.type === 'primary',
                                         'bg-amber-600 text-white hover:bg-amber-700 shadow-amber-100': btn.type === 'secondary',
@@ -265,6 +311,40 @@ document.addEventListener('alpine:init', () => {
         sendSuggestion(text) {
             this.newMessage = text;
             this.sendMessage();
+        },
+
+        handleButtonClick(btn, event) {
+            if (!btn || !btn.url) return;
+
+            // 1. PDF downloads or external absolute links -> open in new tab
+            if (btn.url.endsWith('.pdf') || btn.url.startsWith('http://') || btn.url.startsWith('https://')) {
+                window.open(btn.url, '_blank');
+                return;
+            }
+
+            // 2. Hash navigation (e.g. /ar/#products, /ar/#deals, or #products)
+            const currentPath = window.location.pathname.replace(/\/+$/, '');
+            const [urlPath, hash] = btn.url.split('#');
+            const cleanUrlPath = (urlPath || '').replace(/\/+$/, '');
+
+            if (hash && (cleanUrlPath === '' || cleanUrlPath === currentPath)) {
+                if (event) event.preventDefault();
+                const targetEl = document.getElementById(hash);
+                if (targetEl) {
+                    if (window.innerWidth < 768) {
+                        this.isOpen = false;
+                    }
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    try {
+                        window.history.pushState(null, '', '#' + hash);
+                    } catch (e) {}
+                    return;
+                }
+            }
+
+            // 3. Direct navigation for internal routes (e.g. /ar/prices, /ar/listings/create, /ar/register)
+            if (event) event.preventDefault();
+            window.location.href = btn.url;
         },
 
         async sendMessage() {

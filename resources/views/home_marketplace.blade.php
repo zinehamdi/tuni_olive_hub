@@ -267,7 +267,7 @@
 
     <!-- Live Deals & Opportunities Section -->
     @if(isset($deals) && $deals->count() > 0)
-    <section class="max-w-7xl mx-auto px-4 pt-10 pb-2 overflow-hidden">
+    <section id="deals" class="max-w-7xl mx-auto px-4 pt-10 pb-2 overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
             <div class="relative">
                 <div class="absolute -top-4 {{ __('left-0') }} w-10 h-1 bg-[#6A8F3B] rounded-full"></div>

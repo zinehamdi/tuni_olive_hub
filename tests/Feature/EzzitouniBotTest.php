@@ -173,4 +173,23 @@ class EzzitouniBotTest extends TestCase
         $this->assertNotContains('https://hacker-site.com/steal', $urls);
         $this->assertContains('/ar/#products', $urls);
     }
+
+    public function test_buying_intent_augmentation()
+    {
+        $service = new EzzitouniBrainService();
+        $rawText = "نوفر لك عروض بيع زيت زيتون مباشرة من المعاصر والفلاحين بـ 0% عمولة.";
+        
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('parseResponse');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($service, $rawText, 'نحب نشري كمية زيت زيتون شنوة العروض المتوفرة؟', null, 'ar');
+
+        $this->assertEquals('buy', $result['intent']);
+        $urls = array_column($result['buttons'], 'url');
+        $this->assertContains('/ar/#products', $urls);
+        $this->assertContains('/ar/#deals', $urls);
+        $this->assertContains('/ar/prices', $urls);
+    }
 }
+
