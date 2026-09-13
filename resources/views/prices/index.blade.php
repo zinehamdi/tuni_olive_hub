@@ -1,5 +1,21 @@
 @extends('layouts.app')
-@section('title', __('Today\'s Prices') . ' | ' . __('ZinToop Exchange'))
+
+@php
+    $locale = app()->getLocale();
+    $pageTitle = match($locale) {
+        'ar' => 'بورصة أسعار زيت الزيتون اليوم في تونس والعالم | أسعار مباشرة',
+        'fr' => 'Prix de l\'Huile d\'Olive Aujourd\'hui en Tunisie & Monde | Cours Directs',
+        default => 'Tunisian & International Olive Oil Prices Today | Live Market Rates',
+    };
+    $pageDesc = match($locale) {
+        'ar' => 'تابع أسعار زيت الزيتون اليوم في تونس والأسواق العالمية (إسبانيا، إيطاليا، اليونان). تحديث يومي لأسعار الزيت البكر الممتاز والشملالي والشتوي.',
+        'fr' => 'Consultez les prix de l\'huile d\'olive aujourd\'hui en Tunisie et dans le monde (Espagne, Italie, Grèce). Cours de l\'Extra Vierge, Chemlali et Chétoui.',
+        default => 'Live daily olive oil price benchmark in Tunisia and worldwide (Spain, Italy, Greece). Real-time rates for Extra Virgin, Chemlali, and Chetoui oils.',
+    };
+@endphp
+
+@section('title', $pageTitle)
+@section('description', $pageDesc)
 
 @section('content')
 @php

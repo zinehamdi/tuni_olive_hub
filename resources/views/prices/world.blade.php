@@ -1,5 +1,21 @@
 @extends('layouts.app')
-@section('title', __('أسعار عالمية') . ' | ' . __('ZinToop Exchange'))
+
+@php
+    $locale = app()->getLocale();
+    $pageTitle = match($locale) {
+        'ar' => 'أسعار زيت الزيتون العالمية | بورصة إسبانيا، إيطاليا واليونان',
+        'fr' => 'Prix Mondiaux de l\'Huile d\'Olive | Espagne, Italie, Grèce & Tunisie',
+        default => 'Global Olive Oil Prices | Spain, Italy, Greece & Tunisia Benchmarks',
+    };
+    $pageDesc = match($locale) {
+        'ar' => 'متابعة حية لأسعار زيت الزيتون العالمية في كبرى البورصات: إسبانيا، إيطاليا، اليونان وتونس باليورو والدينار.',
+        'fr' => 'Suivi en direct des prix mondiaux de l\'huile d\'olive extra vierge en Espagne, Italie, Grèce et Tunisie en EUR/kg.',
+        default => 'Live international extra virgin olive oil benchmark prices across Spain, Italy, Greece, and Tunisia in EUR/kg.',
+    };
+@endphp
+
+@section('title', $pageTitle)
+@section('description', $pageDesc)
 @section('content')
 <div class="max-w-6xl mx-auto p-6 space-y-4">
   <h1 class="text-2xl font-bold mb-4">🌍 {{ __('أسعار عالمية (World Market)') }}</h1>

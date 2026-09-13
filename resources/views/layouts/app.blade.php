@@ -25,7 +25,7 @@
             default => 'chemlali, chetoui, tunisian olive varieties, varieties of olives in tunisia, best olive oil varieties in the world, best olive tree varieties, largest olive oil marketplace, olive oil prices in tunisia, global olive oil prices, easiest way to buy and sell olive oil, tunisian olive oil, extra virgin olive oil, zintoop, tunisian olive oil market, import olive oil, fastest olive oil export, best olive oil producers, best olive oil prices',
         };
     @endphp
-    <title>{{ config('app.name') }} - @yield('title', $defaultTitle)</title>
+    <title>{{ $defaultBrandName }} - @yield('title', $defaultTitle)</title>
     <meta name="description" content="@yield('description', $defaultDesc)">
     <meta name="keywords" content="@yield('keywords', $defaultKeywords)">
     <meta name="facebook-domain-verification" content="8b9o5r7q1jz9762hqdi15atqy5iwae" />

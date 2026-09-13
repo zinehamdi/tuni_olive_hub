@@ -1,9 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'سوق زيت الزيتون التونسي | Tunisian Olive Oil Marketplace')
-@section('description', 'اكتشف أفضل منتجات زيت الزيتون التونسي من المزارعين والمعاصر والمعبئين. جودة عالية، أسعار تنافسية، توصيل سريع. Discover premium Tunisian olive oil products from farmers, mills and packers.')
-@section('og_title', 'سوق زيت الزيتون التونسي - جودة أصلية من المزارع إلى منزلك')
-@section('og_description', 'تسوق زيت الزيتون التونسي الأصلي بجودة عالية من المزارعين والمعاصر مباشرة')
+@php
+    $curLocale = app()->getLocale();
+    $homeTitle = match($curLocale) {
+        'ar' => 'السوق التونسي الأول لزيت الزيتون والخدمات الفلاحية',
+        'fr' => '1ère Marketplace d\'Huile d\'Olive en Tunisie - B2B & Vrac',
+        default => 'Leading Tunisian Olive Oil Marketplace & B2B Directory',
+    };
+    $homeDesc = match($curLocale) {
+        'ar' => 'زين توب - المنصة الأولى لزيت الزيتون والدليل التجاري في تونس. تواصل مباشرة مع الفلاحين والمعاصر بدون عمولات.',
+        'fr' => 'ZinToop - Première plateforme B2B et annuaire d\'huile d\'olive en Tunisie. Connectez-vous directement avec les producteurs et moulins sans commission.',
+        default => 'ZinToop - Premier Tunisian Olive Oil Marketplace & B2B Directory. Source extra virgin and bulk olive oil directly from verified producers and mills without commissions.',
+    };
+@endphp
+
+@section('title', $homeTitle)
+@section('description', $homeDesc)
+@section('og_title', $homeTitle)
+@section('og_description', $homeDesc)
 
 @section('content')
 <div dir="{{ __('ltr') }}" class="min-h-screen" 

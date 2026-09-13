@@ -1,13 +1,87 @@
 @extends('layouts.app')
 
 @php
-    $variety = $listing->product->variety ?? 'زيت زيتون تونسي';
-    $city = optional($listing->seller->addresses->first())->governorate ?? 'تونس';
-    $unit = $listing->unit ? ($listing->unit == 'liter' ? 'لتر' : ($listing->unit == 'kg' ? 'كغ' : $listing->unit)) : 'كغ';
-    $priceText = $listing->price == 0 ? 'السعر عند الطلب' : (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . '/' . $unit);
+    $curLocale = app()->getLocale();
     
-    $shareTitle = trim($variety . ' - ' . $priceText . ' (' . $city . ') | ZinToop');
-    $shareDesc = trim('عرض ' . $variety . ' في ' . $city . ' على منصة الزين لزيت الزيتون التونسي. تواصل مباشرة مع المنتج بدون وسطاء.');
+    // Governorate translations map
+    $govMap = [
+        'تونس' => ['en' => 'Tunis', 'fr' => 'Tunis', 'ar' => 'تونس'],
+        'أريانة' => ['en' => 'Ariana', 'fr' => 'Ariana', 'ar' => 'أريانة'],
+        'بن عروس' => ['en' => 'Ben Arous', 'fr' => 'Ben Arous', 'ar' => 'بن عروس'],
+        'منوبة' => ['en' => 'Manouba', 'fr' => 'Manouba', 'ar' => 'منوبة'],
+        'نابل' => ['en' => 'Nabeul', 'fr' => 'Nabeul', 'ar' => 'نابل'],
+        'زغوان' => ['en' => 'Zaghouan', 'fr' => 'Zaghouan', 'ar' => 'زغوان'],
+        'بنزرت' => ['en' => 'Bizerte', 'fr' => 'Bizerte', 'ar' => 'بنزرت'],
+        'باجة' => ['en' => 'Beja', 'fr' => 'Béja', 'ar' => 'باجة'],
+        'جندوبة' => ['en' => 'Jendouba', 'fr' => 'Jendouba', 'ar' => 'جندوبة'],
+        'الكاف' => ['en' => 'El Kef', 'fr' => 'Le Kef', 'ar' => 'الكاف'],
+        'سليانة' => ['en' => 'Siliana', 'fr' => 'Siliana', 'ar' => 'سليانة'],
+        'سوسة' => ['en' => 'Sousse', 'fr' => 'Sousse', 'ar' => 'سوسة'],
+        'المنستير' => ['en' => 'Monastir', 'fr' => 'Monastir', 'ar' => 'المنستير'],
+        'المهدية' => ['en' => 'Mahdia', 'fr' => 'Mahdia', 'ar' => 'المهدية'],
+        'صفاقس' => ['en' => 'Sfax', 'fr' => 'Sfax', 'ar' => 'صفاقس'],
+        'القيروان' => ['en' => 'Kairouan', 'fr' => 'Kairouan', 'ar' => 'القيروان'],
+        'القصرين' => ['en' => 'Kasserine', 'fr' => 'Kasserine', 'ar' => 'القصرين'],
+        'سيدي بوزيد' => ['en' => 'Sidi Bouzid', 'fr' => 'Sidi Bouzid', 'ar' => 'سيدي بوزيد'],
+        'قابس' => ['en' => 'Gabes', 'fr' => 'Gabès', 'ar' => 'قابس'],
+        'مدنين' => ['en' => 'Medenine', 'fr' => 'Médenine', 'ar' => 'مدنين'],
+        'تطاوين' => ['en' => 'Tataouine', 'fr' => 'Tataouine', 'ar' => 'تطاوين'],
+        'قفصة' => ['en' => 'Gafsa', 'fr' => 'Gafsa', 'ar' => 'قفصة'],
+        'توزر' => ['en' => 'Tozeur', 'fr' => 'Tozeur', 'ar' => 'توزر'],
+        'قبلي' => ['en' => 'Kebili', 'fr' => 'Kébili', 'ar' => 'قبلي'],
+    ];
+    
+    $rawGov = optional($listing->seller->addresses->first())->governorate ?? 'تونس';
+    $city = $govMap[$rawGov][$curLocale] ?? ($curLocale === 'ar' ? $rawGov : ($govMap[$rawGov]['en'] ?? 'Tunisia'));
+    
+    // Quality label
+    $qualityRaw = $listing->product?->quality ?? '';
+    $qLow = strtolower($qualityRaw);
+    if (str_contains($qLow,'evoo')||str_contains($qLow,'ممتاز')||str_contains($qLow,'extra')) {
+        $qualityLabel = match($curLocale) { 'fr' => 'Huile d\'Olive Vierge Extra', 'ar' => 'زيت زيتون بكر ممتاز', default => 'Extra Virgin Olive Oil (EVOO)' };
+        $qualityEn = 'Extra Virgin Olive Oil (EVOO)';
+    } elseif (str_contains($qLow,'virgin')||str_contains($qLow,'بكر')||str_contains($qLow,'vierge')) {
+        $qualityLabel = match($curLocale) { 'fr' => 'Huile d\'Olive Vierge', 'ar' => 'زيت زيتون بكر', default => 'Virgin Olive Oil' };
+        $qualityEn = 'Virgin Olive Oil';
+    } elseif (str_contains($qLow,'bio')||str_contains($qLow,'organic')||str_contains($qLow,'بيولوجي')) {
+        $qualityLabel = match($curLocale) { 'fr' => 'Huile d\'Olive Biologique', 'ar' => 'زيت زيتون بيولوجي', default => 'Organic Olive Oil' };
+        $qualityEn = 'Organic Olive Oil';
+    } elseif (str_contains($qLow,'pomace')||str_contains($qLow,'فيتورة')) {
+        $qualityLabel = match($curLocale) { 'fr' => 'Huile de Grignons d\'Olive', 'ar' => 'زيت فيتورة', default => 'Pomace Olive Oil' };
+        $qualityEn = 'Pomace Olive Oil';
+    } else {
+        $qualityLabel = match($curLocale) { 'fr' => 'Huile d\'Olive Tunisienne', 'ar' => 'زيت زيتون تونسي ممتاز', default => 'Premium Tunisian Olive Oil' };
+        $qualityEn = 'Premium Tunisian Olive Oil';
+    }
+    
+    $rawVariety = $listing->product?->variety;
+    $variety = $rawVariety ?: match($curLocale) { 'fr' => 'Huile d\'Olive Tunisienne', 'ar' => 'زيت زيتون تونسي', default => 'Tunisian Olive Oil' };
+    
+    $unit = match($listing->unit) {
+        'liter' => match($curLocale) { 'fr' => 'litre', 'ar' => 'لتر', default => 'liter' },
+        'kg' => match($curLocale) { 'fr' => 'kg', 'ar' => 'كغ', default => 'kg' },
+        default => ($listing->unit ?: match($curLocale) { 'fr' => 'kg', 'ar' => 'كغ', default => 'kg' })
+    };
+    
+    $priceFormatted = number_format($listing->price, 2);
+    $curr = $listing->currency ?? 'TND';
+    $priceText = $listing->price == 0 
+        ? match($curLocale) { 'fr' => 'Prix sur demande', 'ar' => 'السعر عند الطلب', default => 'Price upon request' }
+        : "$priceFormatted $curr / $unit";
+    
+    $sellerName = $listing->seller?->name ?: match($curLocale) { 'fr' => 'Producteur vérifié', 'ar' => 'منتج موثق', default => 'Verified Producer' };
+    
+    $shareTitle = match($curLocale) {
+        'ar' => trim("$variety - $priceText ($city) | زين توب"),
+        'fr' => trim("$variety - $priceText ($city) | ZinToop"),
+        default => trim("$variety - $priceText ($city) | ZinToop"),
+    };
+    
+    $shareDesc = match($curLocale) {
+        'ar' => trim("عرض $variety في $city على منصة زين توب لزيت الزيتون التونسي. تواصل مباشرة مع $sellerName بدون وسطاء."),
+        'fr' => trim("Offre de $variety à $city sur ZinToop. Achetez directement auprès de $sellerName sans intermédiaire."),
+        default => trim("Buy $variety directly from $sellerName in $city, Tunisia. High quality $qualityEn on ZinToop platform."),
+    };
     
     // ── Real product image (for OG + JSON-LD + Google Merchant) ───────────────
     // Priority: listing media → product media → logo fallback
@@ -27,22 +101,8 @@
         $shareImage = str_replace('http://', 'https://', $shareImage);
     }
 
-    // ── Quality label (English) for schema ────────────────────────────────────
-    $qualityRaw = $listing->product?->quality ?? '';
-    $qLow = strtolower($qualityRaw);
-    if (str_contains($qLow,'evoo')||str_contains($qLow,'ممتاز')||str_contains($qLow,'extra')) {
-        $qualityEn = 'Extra Virgin Olive Oil (EVOO)';
-    } elseif (str_contains($qLow,'virgin')||str_contains($qLow,'بكر')||str_contains($qLow,'vierge')) {
-        $qualityEn = 'Virgin Olive Oil';
-    } elseif (str_contains($qLow,'bio')||str_contains($qLow,'organic')||str_contains($qLow,'بيولوجي')) {
-        $qualityEn = 'Organic Olive Oil';
-    } elseif (str_contains($qLow,'pomace')||str_contains($qLow,'فيتورة')) {
-        $qualityEn = 'Pomace Olive Oil';
-    } else {
-        $qualityEn = 'Premium Tunisian Olive Oil';
-    }
     $schemaName = trim(($listing->product?->variety ?? 'Tunisian') . ' ' . $qualityEn);
-    $schemaDesc = 'Buy ' . $qualityEn . ' directly from ' . ($listing->seller?->name ?? 'Tunisian producer') . ' in ' . $city . ', Tunisia. Best olive oil prices. Bulk olive oil direct from producers. ZinToop marketplace.';
+    $schemaDesc = 'Buy ' . $qualityEn . ' directly from ' . ($listing->seller?->name ?? 'Tunisian producer') . ' in ' . ($govMap[$rawGov]['en'] ?? 'Tunisia') . ', Tunisia. Best olive oil prices. Bulk olive oil direct from producers. ZinToop marketplace.';
 @endphp
 
 @section('title', $shareTitle)

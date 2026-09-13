@@ -1,10 +1,24 @@
 @extends('layouts.app')
 
-@section('title', __('أسعار الأسواق التونسية') . ' | ' . __('ZinToop Exchange'))
+@php
+    $locale = app()->getLocale();
+    $pageTitle = match($locale) {
+        'ar' => 'أسعار زيت الزيتون في الأسواق التونسية اليوم | بورصة الأسواق المحلية',
+        'fr' => 'Prix de l\'Huile d\'Olive dans les Souks Tunisiens | Marchés Locaux',
+        default => 'Tunisian Olive Oil Souk Prices Today | Local Market Rates',
+    };
+    $pageDesc = match($locale) {
+        'ar' => 'متابعة يومية لأسعار زيت الزيتون والزيتون في مختلف الأسواق التونسية: صفاقس، تونس، سوسة، المنستير، المهدية، القيروان، ومدنين.',
+        'fr' => 'Suivi quotidien des prix de l\'huile d\'olive et des olives sur les principaux marchés tunisiens : Sfax, Tunis, Sousse, Monastir, Mahdia, Kairouan.',
+        default => 'Daily benchmark prices of olive oil and olives across Tunisian local markets: Sfax, Tunis, Sousse, Monastir, Mahdia, Kairouan, and Medenine.',
+    };
+@endphp
+
+@section('title', $pageTitle)
+@section('description', $pageDesc)
 
 @section('content')
 @php
-    $locale = app()->getLocale();
     $items = isset($souks) ? $souks : collect();
 
     $soukNames = [

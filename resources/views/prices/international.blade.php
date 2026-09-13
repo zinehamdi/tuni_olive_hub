@@ -32,7 +32,7 @@
         'ar' => url('ar/' . rawurlencode('أسعار-زيت-الزيتون-العالمية')),
         'fr' => url('fr/prix-huile-olive-international'),
         'en' => url('en/international-olive-oil-prices'),
-        'x-default' => url('ar/' . rawurlencode('أسعار-زيت-الزيتون-العالمية')),
+        'x-default' => url('en/international-olive-oil-prices'),
     ];
     $customCanonical = $customHreflang[$locale] ?? url('en/international-olive-oil-prices');
 @endphp

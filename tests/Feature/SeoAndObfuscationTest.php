@@ -203,4 +203,113 @@ class SeoAndObfuscationTest extends TestCase
         $this->assertStringContainsString('/listings/' . $hashid, $content);
         $this->assertStringNotContainsString('/listings/' . $listing->id . '<', $content);
     }
+
+    /**
+     * 9. Senior SEO Audit: Ensure NO Arabic characters leak into <title>, <meta description>, og:title, og:description for /en and /fr.
+     */
+    public function test_multilingual_metadata_isolation_and_seo_integrity(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'John Doe',
+            'role' => 'mill',
+            'farm_location' => 'Kairouan',
+        ]);
+        $listing = Listing::factory()->create([
+            'seller_id' => $user->id,
+            'status' => 'active',
+        ]);
+        $hashid = $listing->getRouteKey();
+
+        $routesToTest = [
+            'en' => [
+                '/en',
+                '/en/about',
+                '/en/how-it-works',
+                '/en/pricing',
+                '/en/contact',
+                '/en/olive-varieties',
+                '/en/prices',
+                '/en/souks',
+                '/en/prices/world',
+                '/en/international-olive-oil-prices',
+                '/en/bulk-tunisian-olive-oil',
+                '/en/tunisian-olive-oil-suppliers',
+                '/en/olive-oil-mills-tunisia',
+                '/en/olive-oil-packers-tunisia',
+                '/en/private-label-olive-oil-tunisia',
+                "/en/listings/{$hashid}",
+                "/en/user/{$user->id}",
+            ],
+            'fr' => [
+                '/fr',
+                '/fr/about',
+                '/fr/how-it-works',
+                '/fr/pricing',
+                '/fr/contact',
+                '/fr/olive-varieties',
+                '/fr/prices',
+                '/fr/souks',
+                '/fr/prices/world',
+                '/fr/prix-huile-olive-international',
+                '/fr/huile-olive-tunisienne-en-vrac',
+                '/fr/fournisseurs-huile-olive-tunisienne',
+                '/fr/moulins-huile-olive-tunisie',
+                '/fr/conditionneurs-huile-olive-tunisie',
+                '/fr/marque-privee-huile-olive-tunisie',
+                "/fr/listings/{$hashid}",
+                "/fr/user/{$user->id}",
+            ],
+        ];
+
+        foreach ($routesToTest as $locale => $urls) {
+            foreach ($urls as $url) {
+                $response = $this->get($url);
+                $this->assertEquals(200, $response->getStatusCode(), "Route {$url} failed with status {$response->getStatusCode()}");
+
+                $content = $response->getContent();
+
+                // Extract <title>
+                preg_match('/<title[^>]*>(.*?)<\/title>/is', $content, $titleMatch);
+                $title = $titleMatch[1] ?? '';
+
+                // Extract <meta name="description" content="...">
+                preg_match('/<meta\s+name=["\']description["\']\s+content=["\'](.*?)["\']/is', $content, $descMatch);
+                $description = $descMatch[1] ?? '';
+
+                // Extract <meta property="og:title" content="...">
+                preg_match('/<meta\s+property=["\']og:title["\']\s+content=["\'](.*?)["\']/is', $content, $ogTitleMatch);
+                $ogTitle = $ogTitleMatch[1] ?? '';
+
+                // Extract <meta property="og:description" content="...">
+                preg_match('/<meta\s+property=["\']og:description["\']\s+content=["\'](.*?)["\']/is', $content, $ogDescMatch);
+                $ogDesc = $ogDescMatch[1] ?? '';
+
+                // Assert zero Arabic characters in metadata for /en and /fr
+                $arabicPattern = '/[\x{0600}-\x{06FF}]/u';
+                $this->assertDoesNotMatchRegularExpression(
+                    $arabicPattern,
+                    $title,
+                    "Arabic leaked in <title> on {$url}: {$title}"
+                );
+                $this->assertDoesNotMatchRegularExpression(
+                    $arabicPattern,
+                    $description,
+                    "Arabic leaked in <meta name=\"description\"> on {$url}: {$description}"
+                );
+                $this->assertDoesNotMatchRegularExpression(
+                    $arabicPattern,
+                    $ogTitle,
+                    "Arabic leaked in <meta property=\"og:title\"> on {$url}: {$ogTitle}"
+                );
+                $this->assertDoesNotMatchRegularExpression(
+                    $arabicPattern,
+                    $ogDesc,
+                    "Arabic leaked in <meta property=\"og:description\"> on {$url}: {$ogDesc}"
+                );
+
+                // Assert canonical link is present
+                $this->assertStringContainsString('<link rel="canonical"', $content, "Canonical missing on {$url}");
+            }
+        }
+    }
 }

@@ -13,24 +13,62 @@
         'email' => $emailAddr,
     ];
 
+    // Governorates Localization Map
+    $govMap = [
+        'أريانة' => ['ar' => 'أريانة', 'fr' => 'Ariana', 'en' => 'Ariana'],
+        'باجة' => ['ar' => 'باجة', 'fr' => 'Béja', 'en' => 'Beja'],
+        'بن عروس' => ['ar' => 'بن عروس', 'fr' => 'Ben Arous', 'en' => 'Ben Arous'],
+        'بنزرت' => ['ar' => 'بنزرت', 'fr' => 'Bizerte', 'en' => 'Bizerte'],
+        'قابس' => ['ar' => 'قابس', 'fr' => 'Gabès', 'en' => 'Gabes'],
+        'قفصة' => ['ar' => 'قفصة', 'fr' => 'Gafsa', 'en' => 'Gafsa'],
+        'جندوبة' => ['ar' => 'جندوبة', 'fr' => 'Jendouba', 'en' => 'Jendouba'],
+        'القيروان' => ['ar' => 'القيروان', 'fr' => 'Kairouan', 'en' => 'Kairouan'],
+        'القصرين' => ['ar' => 'القصرين', 'fr' => 'Kasserine', 'en' => 'Kasserine'],
+        'قبلي' => ['ar' => 'قبلي', 'fr' => 'Kébili', 'en' => 'Kebili'],
+        'الكاف' => ['ar' => 'الكاف', 'fr' => 'Le Kef', 'en' => 'El Kef'],
+        'المهدية' => ['ar' => 'المهدية', 'fr' => 'Mahdia', 'en' => 'Mahdia'],
+        'منوبة' => ['ar' => 'منوبة', 'fr' => 'La Manouba', 'en' => 'Manouba'],
+        'مدنين' => ['ar' => 'مدنين', 'fr' => 'Médenine', 'en' => 'Medenine'],
+        'المنستير' => ['ar' => 'المنستير', 'fr' => 'Monastir', 'en' => 'Monastir'],
+        'نابل' => ['ar' => 'نابل', 'fr' => 'Nabeul', 'en' => 'Nabeul'],
+        'صفاقس' => ['ar' => 'صفاقس', 'fr' => 'Sfax', 'en' => 'Sfax'],
+        'سيدي بوزيد' => ['ar' => 'سيدي بوزيد', 'fr' => 'Sidi Bouzid', 'en' => 'Sidi Bouzid'],
+        'سليانة' => ['ar' => 'سليانة', 'fr' => 'Siliana', 'en' => 'Siliana'],
+        'سوسة' => ['ar' => 'سوسة', 'fr' => 'Sousse', 'en' => 'Sousse'],
+        'تطاوين' => ['ar' => 'تطاوين', 'fr' => 'Tataouine', 'en' => 'Tataouine'],
+        'توزر' => ['ar' => 'توزر', 'fr' => 'Tozeur', 'en' => 'Tozeur'],
+        'تونس' => ['ar' => 'تونس', 'fr' => 'Tunis', 'en' => 'Tunis'],
+        'زغوان' => ['ar' => 'زغوان', 'fr' => 'Zaghouan', 'en' => 'Zaghouan'],
+    ];
+
+    $rawGov = $user->addresses()->first()?->governorate ?? ($user->farm_location ?? ($locale === 'ar' ? 'تونس' : 'Tunisia'));
+    $gov = $govMap[$rawGov][$locale] ?? $rawGov;
+    if ($locale !== 'ar' && preg_match('/[\x{0600}-\x{06FF}]/u', $gov)) {
+        $gov = 'Tunisia';
+    }
+
     // Compute User Title & Role Name for Social Cards
     $roleMap = [
-        'farmer' => $locale === 'ar' ? 'مزارع زيتون' : 'Olive Grower',
-        'carrier' => $locale === 'ar' ? 'ناقل بري وبحري' : 'Transporter',
-        'mill' => $locale === 'ar' ? 'معصرة زيتون' : 'Oil Mill',
-        'packer' => $locale === 'ar' ? 'وحدة تعبئة وتغليف' : 'Packaging Facility',
-        'transiteur' => $locale === 'ar' ? 'مخلص جمركي' : 'Customs Broker',
-        'comptable' => $locale === 'ar' ? 'محاسب خبير' : 'Accountant',
-        'service_bureau' => $locale === 'ar' ? 'مكتب خدمات إدارية' : 'Service Bureau',
-        'agri_equipment' => $locale === 'ar' ? 'معدات وآليات فلاحية' : 'Agri-Equipment',
-        'agri_materials' => $locale === 'ar' ? 'مواد فلاحية وأسمدة' : 'Agri-Materials',
-        'agri_study_office' => $locale === 'ar' ? 'مكتب دراسات فلاحية' : 'Agri-Study Office',
+        'farmer' => ['ar' => 'مزارع زيتون', 'fr' => 'Producteur d\'Olives', 'en' => 'Olive Grower'],
+        'carrier' => ['ar' => 'ناقل بري وبحري', 'fr' => 'Transporteur & Logistique', 'en' => 'Transporter & Logistics'],
+        'mill' => ['ar' => 'معصرة زيتون', 'fr' => 'Moulin à Huile d\'Olive', 'en' => 'Olive Oil Mill'],
+        'packer' => ['ar' => 'وحدة تعبئة وتغليف', 'fr' => 'Unité d\'Embouteillage', 'en' => 'Packaging Facility'],
+        'transiteur' => ['ar' => 'مخلص جمركي', 'fr' => 'Transitaire & Dédouanement', 'en' => 'Customs Broker'],
+        'comptable' => ['ar' => 'محاسب خبير', 'fr' => 'Expert-Comptable', 'en' => 'Accountant'],
+        'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'fr' => 'Bureau de Services', 'en' => 'Service Bureau'],
+        'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Équipements Agricoles', 'en' => 'Agri-Equipment'],
+        'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Intrants & Engrais', 'en' => 'Agri-Materials'],
+        'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'Études Agricoles', 'en' => 'Agri-Study Office'],
     ];
-    $displayRole = $roleMap[$user->role] ?? ($user->farm_name ?? $user->company_name ?? ($locale === 'ar' ? 'عضو منصة الزين' : 'Member'));
-    $gov = $user->addresses()->first()?->governorate ?? ($user->farm_location ?? 'تونس');
+    $displayRole = $roleMap[$user->role][$locale] ?? ($user->farm_name ?? $user->company_name ?? ($locale === 'ar' ? 'عضو منصة زين توب' : ($locale === 'fr' ? 'Membre ZinToop' : 'ZinToop Member')));
 
-    $shareTitle = trim($user->name . ' - ' . $displayRole . ' (' . $gov . ') | ZinToop');
-    $shareDesc = trim('الملف التجاري لـ ' . $user->name . ' (' . $displayRole . ' في ' . $gov . ') على منصة زين توب لزيت الزيتون التونسي. تواصل مباشرة واطلع على العروض والخدمات.');
+    $brandName = $locale === 'ar' ? 'زين توب' : 'ZinToop';
+    $shareTitle = trim($user->name . ' - ' . $displayRole . ' (' . $gov . ') | ' . $brandName);
+    $shareDesc = match($locale) {
+        'ar' => trim("الملف التجاري لـ {$user->name} ({$displayRole} في {$gov}) على منصة زين توب لزيت الزيتون التونسي. تواصل مباشرة واطلع على العروض والخدمات."),
+        'fr' => trim("Profil professionnel de {$user->name} ({$displayRole} à {$gov}) sur ZinToop, la marketplace de l'huile d'olive tunisienne. Contact direct et offres."),
+        default => trim("Verified profile of {$user->name} ({$displayRole} in {$gov}) on ZinToop, the Tunisian Olive Oil Marketplace. Direct contact, offers and services."),
+    };
 
     // Social Sharing Image: User Profile Picture -> First Cover Photo -> Default ZinToop Logo
     $shareImage = null;
