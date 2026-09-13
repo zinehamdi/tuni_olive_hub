@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
-@section('title', __('Our Services & Pricing'))
+@php
+    $locale = app()->getLocale();
+    $pageTitle = match($locale) {
+        'ar' => 'خدمات وباقات نمو قطاع زيت الزيتون | منصة زين توب',
+        'fr' => 'Services & Solutions de Croissance Oléicole | ZinToop',
+        default => 'Olive Oil Growth Services & Solutions | ZinToop',
+    };
+    $pageDesc = match($locale) {
+        'ar' => 'حلول تسويقية وتقنية متكاملة لمنتجي ومصدري ومعاصر زيت الزيتون في تونس. باقات ترويجية، استشارات تصدير، وتوثيق ميداني.',
+        'fr' => 'Solutions technologiques et marketing complètes pour les producteurs, moulins et exportateurs d\'huile d\'olive en Tunisie.',
+        default => 'Comprehensive marketing, digital, and export solutions for olive oil producers, mills, and exporters across Tunisia.',
+    };
+@endphp
+
+@section('title', $pageTitle)
+@section('description', $pageDesc)
 
 @section('content')
 

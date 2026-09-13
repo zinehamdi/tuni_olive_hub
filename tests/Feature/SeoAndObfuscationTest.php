@@ -226,6 +226,12 @@ class SeoAndObfuscationTest extends TestCase
                 '/en/about',
                 '/en/how-it-works',
                 '/en/pricing',
+                '/en/services/pricing',
+                '/en/terms',
+                '/en/privacy',
+                '/en/seller-policy',
+                '/en/commission-policy',
+                '/en/licensing-policy',
                 '/en/contact',
                 '/en/olive-varieties',
                 '/en/prices',
@@ -245,6 +251,12 @@ class SeoAndObfuscationTest extends TestCase
                 '/fr/about',
                 '/fr/how-it-works',
                 '/fr/pricing',
+                '/fr/services/pricing',
+                '/fr/terms',
+                '/fr/privacy',
+                '/fr/seller-policy',
+                '/fr/commission-policy',
+                '/fr/licensing-policy',
                 '/fr/contact',
                 '/fr/olive-varieties',
                 '/fr/prices',
@@ -306,6 +318,12 @@ class SeoAndObfuscationTest extends TestCase
                     $ogDesc,
                     "Arabic leaked in <meta property=\"og:description\"> on {$url}: {$ogDesc}"
                 );
+
+                // Assert no raw untranslated keys leak into title or description
+                $this->assertStringNotContainsString('public.', $title, "Raw translation key leaked in <title> on {$url}: {$title}");
+                $this->assertStringNotContainsString('public.', $description, "Raw translation key leaked in <meta name=\"description\"> on {$url}: {$description}");
+                $this->assertStringNotContainsString('.title', $title, "Raw translation key leaked in <title> on {$url}: {$title}");
+                $this->assertStringNotContainsString('.description', $description, "Raw translation key leaked in <meta name=\"description\"> on {$url}: {$description}");
 
                 // Assert canonical link is present
                 $this->assertStringContainsString('<link rel="canonical"', $content, "Canonical missing on {$url}");
