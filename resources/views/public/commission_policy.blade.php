@@ -1,5 +1,5 @@
 @php
-$title = __('public.commission_policy.title') . ' | ' . config('app.name');
+$title = __('public.commission_policy.title');
 $description = __('public.commission_policy.description');
 $heading = __('public.commission_policy.heading');
 $body = __('public.commission_policy.body');

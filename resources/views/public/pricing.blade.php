@@ -1,5 +1,5 @@
 @php
-$title = __('public.pricing.title') . ' | ' . config('app.name');
+$title = __('public.pricing.title');
 $description = __('public.pricing.description');
 $heading = __('public.pricing.heading');
 $body = __('public.pricing.body');

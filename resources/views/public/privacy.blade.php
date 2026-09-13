@@ -1,5 +1,5 @@
 @php
-$title = __('public.privacy.title') . ' | ' . config('app.name');
+$title = __('public.privacy.title');
 $description = __('public.privacy.description');
 $heading = __('public.privacy.heading');
 $body = __('public.privacy.body');

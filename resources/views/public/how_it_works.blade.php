@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-$title = __('how_it_works_title') . ' | ' . config('app.name');
+$title = __('public.how_it_works.title');
 $description = __('how_it_works_description');
 $heading = __('how_it_works_heading');
 $body = __('how_it_works_body');

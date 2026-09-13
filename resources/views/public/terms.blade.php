@@ -1,5 +1,5 @@
 @php
-$title = __('public.terms.title') . ' | ' . config('app.name');
+$title = __('public.terms.title');
 $description = __('public.terms.description');
 $heading = __('public.terms.heading');
 $body = __('public.terms.body');

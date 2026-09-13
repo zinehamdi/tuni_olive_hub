@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-$title = __('public.contact.title') . ' | ' . config('app.name');
+$title = __('public.contact.title');
 $description = __('public.contact.description');
 $heading = __('public.contact.heading');
 $body = __('public.contact.body');

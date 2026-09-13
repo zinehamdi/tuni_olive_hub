@@ -1,5 +1,5 @@
 @php
-$title = __('public.seller_policy.title') . ' | ' . config('app.name');
+$title = __('public.seller_policy.title');
 $description = __('public.seller_policy.description');
 $heading = __('public.seller_policy.heading');
 $body = __('public.seller_policy.body');
