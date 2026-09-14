@@ -7,107 +7,68 @@
 
     if ($isLoggedIn) {
         $welcomeContent = match($currentLocale) {
-            'en' => "Welcome back, **{$userName}**! 🫒 I am **Ezzitouni**, your dedicated advisor on ZinToop. How can I assist you with your offers, live souk prices, buyer deals, or export regulations today?",
-            'fr' => "Bienvenue, **{$userName}** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller dédié sur ZinToop. Comment puis-je vous aider aujourd'hui concernant vos offres, les prix des marchés, l'achat/vente ou l'exportation ?",
-            default => "مرحباً بك يا **{$userName}**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك التجاري في منصة ZinToop. كيفاش نجم نعاونك اليوم بخصوص عروضك، أسعار أسواق اليوم، صفقات الشراء والبيع، أو إجراءات التصدير والتثمين؟",
-        };
-        $welcomeButtons = match($currentLocale) {
-            'en' => [
-                ['label' => '📈 Market Prices', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛢️ Sell Olive Oil', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
-                ['label' => '🛒 Buy / Explore Deals', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
-                ['label' => '📄 Export Specs (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
-            ],
-            'fr' => [
-                ['label' => '📈 Prix des marchés', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛢️ Vendre de l\'huile', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
-                ['label' => '🛒 Acheter / Offres', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
-                ['label' => '📄 Cahier des charges (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
-            ],
-            default => [
-                ['label' => '📈 أسعار الأسواق', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛢️ بيع زيت الزيتون', 'url' => "/{$currentLocale}/listings/create", 'type' => 'primary'],
-                ['label' => '🛒 شراء زيت / صفقات', 'url' => "/{$currentLocale}/#products", 'type' => 'outline'],
-                ['label' => '📄 كراس التصدير (PDF)', 'url' => '/downloads/cahier_des_charges_export.pdf', 'type' => 'outline'],
-            ],
+            'en' => "Welcome back, **{$userName}**! 🫒 I am **Ezzitouni**, your AI Agricultural and Trade Advisor on ZinToop. How can I assist you today with your offers, market prices, buyer deals, or export regulations?",
+            'fr' => "Bienvenue, **{$userName}** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller agricole et commercial sur ZinToop. Comment puis-je vous aider aujourd'hui concernant vos offres, les prix du marché, les opportunités d'achat/vente ou l'exportation ?",
+            default => "مرحباً بك يا **{$userName}**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك التجاري والزراعي في منصة ZinToop. تفضل بسؤالي عن أي موضوع: عروضك، أسعار أسواق اليوم، صفقات الشراء والبيع، أو إجراءات التصدير.",
         };
     } else {
         $welcomeContent = match($currentLocale) {
-            'en' => "Hello and welcome to **ZinToop**! 🫒 I am **Ezzitouni**, your AI Agricultural and Trade Consultant. You can ask me anything about Tunisian olive oil varieties, daily market prices, bulk export contracts, or buying directly from certified producers with 0% commission.",
-            'fr' => "Bonjour et bienvenue sur **ZinToop** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller agricole et commercial IA. Vous pouvez me poser toutes vos questions sur les variétés d'huile tunisienne, les prix du jour, les contrats d'exportation ou l'achat/vente direct auprès des producteurs sans commission.",
-            default => "أهلاً ومرحباً بك في **ZinToop**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك الزراعي والتجاري الذكي. تنجم تسألني على أي حاجة تخص أصناف الزيتون التونسي، أسعار الأسواق اليومية، إجراءات التصدير وعقود الشحن، أو كيفية البيع والشراء مباشرة من الفلاحين والمعاصر بدون وسيط وبدون عمولة.",
-        };
-        $welcomeButtons = match($currentLocale) {
-            'en' => [
-                ['label' => '🛢️ Browse Marketplace', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
-                ['label' => '📈 Daily Souk Prices', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛒 Buy Olive Oil / Deals', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
-                ['label' => '👨‍🌾 Create Free Account', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
-            ],
-            'fr' => [
-                ['label' => '🛢️ Explorer le marché', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
-                ['label' => '📈 Prix des marchés', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛒 Acheter / Deals', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
-                ['label' => '👨‍🌾 Créer un compte', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
-            ],
-            default => [
-                ['label' => '🛢️ تصفح عروض السوق', 'url' => "/{$currentLocale}/#products", 'type' => 'primary'],
-                ['label' => '📈 جدول أسعار اليوم', 'url' => "/{$currentLocale}/prices", 'type' => 'secondary'],
-                ['label' => '🛒 شراء زيت / صفقات', 'url' => "/{$currentLocale}/#deals", 'type' => 'outline'],
-                ['label' => '👨‍🌾 إنشاء حساب جديد', 'url' => "/{$currentLocale}/register", 'type' => 'auth'],
-            ],
+            'en' => "Hello and welcome to **ZinToop**! 🫒 I am **Ezzitouni**, your AI Agricultural and Trade Consultant. Feel free to ask me anything about Tunisian olive oil varieties, daily souk prices, buying directly with 0% commission, or export specifications.",
+            'fr' => "Bonjour et bienvenue sur **ZinToop** ! 🫒 Je suis **Ez-Zitouni**, votre conseiller agricole et commercial IA. Posez-moi vos questions sur les variétés d'huile tunisienne, les prix des marchés, l'achat direct sans commission ou le cahier des charges export.",
+            default => "أهلاً ومرحباً بك في **ZinToop**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك الزراعي والتجاري الذكي. تنجم تسألني على أي حاجة: أصناف الزيتون التونسي، أسعار الأسواق اليومية، الشراء والبيع مباشرة بدون وسيط وبدون عمولة، أو إجراءات التصدير.",
         };
     }
 @endphp
 
-<div x-data="ezzitouniChat()" class="fixed bottom-20 md:bottom-6 left-4 md:left-6 z-[9999]" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
+<div x-data="ezzitouniChat()" class="fixed bottom-20 md:bottom-6 left-3 sm:left-6 z-[9999]" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
     
-    <!-- Chat Toggle Button (Ezzitouni Avatar or Close Icon) -->
+    <!-- Chat Toggle Button (Avatar / Close Icon) -->
     <button @click="toggleChat()" 
-            class="relative w-16 h-16 rounded-full bg-white shadow-[0_10px_40px_-10px_rgba(106,143,59,0.5)] border-4 border-white hover:scale-105 active:scale-95 transition-transform flex items-center justify-center overflow-hidden z-20 group"
+            type="button"
+            class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-[0_8px_30px_rgba(106,143,59,0.4)] border-3 sm:border-4 border-white hover:scale-105 active:scale-95 transition-all flex items-center justify-center overflow-hidden z-20 group focus:outline-none touch-manipulation"
             aria-label="{{ __('Zitouni (Ezzitouni)') }}">
         <!-- Ezzitouni Avatar -->
         <img x-show="!isOpen" src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
         
         <!-- Close (X) Icon when chat is open -->
         <div x-show="isOpen" class="text-[#6A8F3B]" style="display: none;">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </div>
 
-        <!-- Online Indicator (Only show when closed) -->
-        <span x-show="!isOpen" class="absolute bottom-0 right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+        <!-- Online Indicator -->
+        <span x-show="!isOpen" class="absolute bottom-0 right-1 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
     </button>
 
-    <!-- Welcome Tooltip (Shows when chat is closed on desktop) -->
+    <!-- Welcome Tooltip (Desktop only) -->
     <div x-show="!isOpen && showTooltip" 
-         x-transition.opacity.duration.500ms
-         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 shadow-xl border-2 border-[#6A8F3B]/20 pointer-events-auto origin-bottom-left hidden md:block" style="display: none;">
+         x-transition.opacity.duration.300ms
+         class="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-3.5 shadow-xl border border-[#6A8F3B]/25 pointer-events-auto origin-bottom-left hidden md:block" 
+         style="display: none;">
         
-        <div class="flex items-center justify-between gap-2 mb-2">
-            <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+            <div class="flex items-center gap-1.5">
                 <h4 class="font-black text-[#6A8F3B] text-[10px] uppercase tracking-wider">{{ __('Zitouni (Ezzitouni)') }}</h4>
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
             </div>
-            <!-- Close Welcome Tooltip -->
-            <button @click.stop="closeTooltip()" class="text-gray-400 hover:text-gray-600 transition p-0.5 rounded-full hover:bg-gray-100 cursor-pointer relative z-30" aria-label="Close tooltip">
+            <button @click.stop="closeTooltip()" class="text-gray-400 hover:text-gray-600 p-0.5 rounded-full hover:bg-gray-100 transition" aria-label="Close tooltip">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
 
-        <div class="relative h-14">
+        <div class="relative h-12">
             <template x-for="(msg, index) in zitouniMessages" :key="index">
                 <p x-show="zitouniIndex === index" 
-                   x-transition:enter="transition ease-out duration-500 delay-200"
-                   x-transition:enter-start="opacity-0 translate-y-4"
+                   x-transition:enter="transition ease-out duration-300"
+                   x-transition:enter-start="opacity-0 translate-y-2"
                    x-transition:enter-end="opacity-100 translate-y-0"
-                   x-transition:leave="transition ease-in duration-300 absolute inset-0"
+                   x-transition:leave="transition ease-in duration-200 absolute inset-0"
                    x-transition:leave-start="opacity-100 translate-y-0"
-                   x-transition:leave-end="opacity-0 -translate-y-4"
-                   class="text-[11px] text-gray-700 font-bold leading-relaxed"
+                   x-transition:leave-end="opacity-0 -translate-y-2"
+                   class="text-[11px] text-gray-700 font-bold leading-snug"
                    x-text="msg">
                 </p>
             </template>
@@ -116,100 +77,66 @@
         <div class="mt-1 flex gap-1">
             <template x-for="(msg, index) in zitouniMessages" :key="index">
                 <div class="w-1 h-1 rounded-full transition-all duration-300"
-                     :class="zitouniIndex === index ? 'bg-[#6A8F3B] w-3' : 'bg-gray-200'"></div>
+                     :class="zitouniIndex === index ? 'bg-[#6A8F3B] w-2.5' : 'bg-gray-200'"></div>
             </template>
         </div>
 
         <!-- Decorative arrow -->
-        <div class="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6A8F3B]/20 transform rotate-45"></div>
+        <div class="absolute -bottom-1.5 left-6 w-3 h-3 bg-white border-b border-r border-[#6A8F3B]/25 transform rotate-45"></div>
     </div>
 
-    <!-- Chat Window -->
+    <!-- Chat Window Container (Optimized for Mobile & Desktop) -->
     <div x-show="isOpen" 
-         x-transition:enter="transition ease-out duration-300 transform"
-         x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+         x-transition:enter="transition ease-out duration-250 transform"
+         x-transition:enter-start="opacity-0 translate-y-6 scale-95"
          x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave="transition ease-in duration-150 transform"
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-         x-transition:leave-end="opacity-0 translate-y-10 scale-95"
-         class="absolute bottom-20 left-0 w-[380px] max-w-[calc(100vw-2rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col z-10"
-         style="height: 540px; max-height: calc(100vh - 8rem); display: none;">
+         x-transition:leave-end="opacity-0 translate-y-6 scale-95"
+         class="fixed sm:absolute bottom-20 left-3 right-3 sm:left-0 sm:right-auto w-auto sm:w-[380px] max-w-[calc(100vw-1.5rem)] bg-white rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.18)] overflow-hidden border border-gray-100 flex flex-col z-30 touch-manipulation"
+         style="height: 520px; max-height: calc(100dvh - 7rem); display: none;">
         
         <!-- Header -->
-        <div class="bg-gradient-to-r from-[#6A8F3B] via-[#5a7a2f] to-[#3B5998] p-4 flex items-center justify-between text-white shadow-md">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-white overflow-hidden p-0.5 shadow">
+        <div class="bg-gradient-to-r from-[#6A8F3B] via-[#5a7a2f] to-[#3B5998] px-4 py-3.5 flex items-center justify-between text-white shadow-sm shrink-0">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-full bg-white overflow-hidden p-0.5 shadow-sm shrink-0">
                     <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover rounded-full">
                 </div>
                 <div>
                     <div class="flex items-center gap-1.5">
-                        <h3 class="font-black text-sm leading-tight">{{ __('Zitouni (Ezzitouni)') }}</h3>
+                        <h3 class="font-black text-sm leading-none">{{ __('Zitouni (Ezzitouni)') }}</h3>
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     </div>
-                    <p class="text-[11px] text-white/85 font-medium">{{ __('AI Agricultural & Trade Consultant') }}</p>
+                    <p class="text-[10px] sm:text-[11px] text-white/90 font-medium mt-0.5">{{ __('AI Agricultural & Trade Consultant') }}</p>
                 </div>
             </div>
-            <button @click="toggleChat()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition text-white" aria-label="Close chat">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            <button @click="toggleChat()" type="button" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20 transition text-white" aria-label="Close chat">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
 
-        <!-- Suggestion Chips (Quick Prompts Bar) -->
-        <div class="px-3 py-2 bg-gradient-to-b from-gray-50 to-white border-b border-gray-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap text-[11px]">
-            <!-- 1. Prices -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'Today olive oil souk and market prices' : ($currentLocale === 'fr' ? 'Prix du marché de l\'huile d\'olive aujourd\'hui' : 'أسعار سوق الزيتون والزيت اليوم في تونس') }}')" 
-                    class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                📈 {{ $currentLocale === 'en' ? 'Prices' : ($currentLocale === 'fr' ? 'Prix' : 'الأسعار') }}
-            </button>
-            <!-- 2. Buy Oil (Achat) -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'I want to buy olive oil, what are the best available offers?' : ($currentLocale === 'fr' ? 'Je souhaite acheter de l\'huile d\'olive, quelles sont les offres disponibles ?' : 'نحب نشري كمية زيت زيتون، شنوة العروض المتوفرة وأحسن الأسعار؟') }}')" 
-                    class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                🛒 {{ $currentLocale === 'en' ? 'Buy Oil' : ($currentLocale === 'fr' ? 'Acheter' : 'شراء زيت') }}
-            </button>
-            <!-- 3. Sell Oil (Vendre) -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'I have olive oil and I want to sell it on the platform' : ($currentLocale === 'fr' ? 'J\'ai de l\'huile d\'olive et je souhaite la vendre sur la plateforme' : 'عندي زيت زيتون نحب نبيعه في المنصة') }}')" 
-                    class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                🛢️ {{ $currentLocale === 'en' ? 'Sell Oil' : ($currentLocale === 'fr' ? 'Vendre' : 'بيع الزيت') }}
-            </button>
-            <!-- 4. Export Specifications -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What are the export regulations and cahier des charges?' : ($currentLocale === 'fr' ? 'Quel est le cahier des charges et la réglementation export ?' : 'شنوة كراس شروط التصدير وإجراءات الشحن للخارج؟') }}')" 
-                    class="px-2.5 py-1 bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                📄 {{ $currentLocale === 'en' ? 'Export Specs' : ($currentLocale === 'fr' ? 'Export' : 'كراس التصدير') }}
-            </button>
-            <!-- 5. Direct Deals -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What are the direct buy/sell deals currently available?' : ($currentLocale === 'fr' ? 'Quelles sont les opportunités et deals directs en cours ?' : 'شنوة صفقات البيع والشراء المباشرة المتوفرة؟') }}')" 
-                    class="px-2.5 py-1 bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                🤝 {{ $currentLocale === 'en' ? 'Deals' : ($currentLocale === 'fr' ? 'Deals' : 'الصفقات') }}
-            </button>
-            <!-- 6. Varieties -->
-            <button type="button" @click="sendSuggestion('{{ $currentLocale === 'en' ? 'What is the difference between Chemlali and Chetoui varieties?' : ($currentLocale === 'fr' ? 'Quelle est la différence entre Chemlali et Chetoui ?' : 'شنوة الفرق بين الشملالي والشتوي ومواصفات كل صنف؟') }}')" 
-                    class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 rounded-full font-bold transition flex items-center gap-1 shrink-0">
-                🌿 {{ $currentLocale === 'en' ? 'Varieties' : ($currentLocale === 'fr' ? 'Variétés' : 'الأصناف') }}
-            </button>
-        </div>
-
-        <!-- Messages Area -->
-        <div id="ezzitouni-chat-box" class="flex-1 overflow-y-auto p-3.5 space-y-3.5 bg-gray-50/70 flex flex-col">
+        <!-- Messages Area (Smooth Native Scroll, Zero Clutter) -->
+        <div id="ezzitouni-chat-box" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-[#F9FAF7] flex flex-col overscroll-contain" style="-webkit-overflow-scrolling: touch;">
             <template x-for="(msg, index) in messages" :key="index">
                 <div class="flex flex-col w-full" :class="msg.role === 'user' ? 'items-end' : 'items-start'">
                     
                     <!-- Bubble Content -->
-                    <div class="max-w-[90%] rounded-2xl p-3 text-xs sm:text-[13px] leading-relaxed shadow-sm transition-all"
+                    <div class="max-w-[88%] rounded-2xl p-3 text-xs sm:text-[13px] leading-relaxed shadow-sm transition-all"
                          :class="msg.role === 'user' 
                             ? 'bg-[#6A8F3B] text-white {{ $isRTL ? 'rounded-bl-none' : 'rounded-br-none' }} font-medium' 
-                            : 'bg-white text-gray-800 border border-gray-100 {{ $isRTL ? 'rounded-br-none' : 'rounded-bl-none' }} shadow-[0_2px_8px_rgba(0,0,0,0.04)]'">
+                            : 'bg-white text-gray-800 border border-gray-100 {{ $isRTL ? 'rounded-br-none' : 'rounded-bl-none' }} shadow-[0_2px_8px_rgba(0,0,0,0.03)]'">
                         
                         <div x-html="formatMessage(msg.content)" class="space-y-1.5 break-words"></div>
                     </div>
 
-                    <!-- Action Buttons Attached to Model Message -->
+                    <!-- Dynamic Action Buttons (Only attached contextually under specific bot replies) -->
                     <template x-if="msg.buttons && msg.buttons.length > 0">
-                        <div class="w-full max-w-[90%] flex flex-wrap gap-1.5 mt-2">
+                        <div class="w-full max-w-[88%] flex flex-wrap gap-1.5 mt-2">
                             <template x-for="(btn, bIndex) in msg.buttons" :key="bIndex">
                                 <a :href="btn.url" 
                                    @click="handleButtonClick(btn, $event)"
                                    :target="btn.url.endsWith('.pdf') ? '_blank' : '_self'"
-                                   class="px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 text-center flex-1 min-w-[130px] active:scale-95 transform cursor-pointer"
+                                   class="px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 text-center flex-1 min-w-[125px] active:scale-95 transform cursor-pointer touch-manipulation"
                                    :class="{
                                         'bg-[#6A8F3B] text-white hover:bg-[#5a7a2f] shadow-green-100': btn.type === 'primary',
                                         'bg-amber-600 text-white hover:bg-amber-700 shadow-amber-100': btn.type === 'secondary',
@@ -228,7 +155,7 @@
             
             <!-- Typing Indicator -->
             <div x-show="isTyping" class="flex justify-start w-full">
-                <div class="bg-white border border-gray-100 rounded-2xl rounded-bl-none p-3.5 shadow-sm flex items-center gap-1.5">
+                <div class="bg-white border border-gray-100 rounded-2xl rounded-bl-none px-3.5 py-2.5 shadow-sm flex items-center gap-1.5">
                     <span class="text-[10px] text-gray-400 font-bold ml-1">{{ __('Ezzitouni is analyzing...') }}</span>
                     <div class="w-1.5 h-1.5 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0s"></div>
                     <div class="w-1.5 h-1.5 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
@@ -237,23 +164,27 @@
             </div>
         </div>
 
-        <!-- Input Area -->
-        <div class="p-3 bg-white border-t border-gray-100">
+        <!-- Input Area (Ultra Responsive & Fluid) -->
+        <div class="p-2.5 sm:p-3 bg-white border-t border-gray-100 shrink-0">
             <form @submit.prevent="sendMessage" class="flex gap-2 items-center">
                 <input x-model="newMessage" 
                        type="text" 
                        placeholder="{{ __('Ask Ezzitouni about prices, varieties, trade...') }}" 
-                       class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B] transition"
+                       class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B] transition"
                        :disabled="isTyping"
+                       autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="sentences"
+                       spellcheck="false"
                        dir="auto">
                 <button type="submit" 
-                        class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white flex items-center justify-center hover:opacity-95 transition disabled:opacity-50 shrink-0 shadow-md transform active:scale-95"
+                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white flex items-center justify-center hover:opacity-95 transition disabled:opacity-40 shrink-0 shadow-md transform active:scale-95 touch-manipulation"
                         :disabled="!newMessage.trim() || isTyping"
                         aria-label="Send message">
                     <svg class="w-4 h-4 {{ $isRTL ? '-rotate-90' : 'rotate-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                 </button>
             </form>
-            <div class="text-[10px] text-center text-gray-400 mt-1.5 font-medium">
+            <div class="text-[9px] sm:text-[10px] text-center text-gray-400 mt-1 font-medium">
                 {{ __('ZinToop AI Business Consultant • Instant live matching') }}
             </div>
         </div>
@@ -278,7 +209,7 @@ document.addEventListener('alpine:init', () => {
             {
                 role: 'model',
                 content: @json($welcomeContent),
-                buttons: @json($welcomeButtons)
+                buttons: []
             }
         ],
 
@@ -306,11 +237,6 @@ document.addEventListener('alpine:init', () => {
             if (this.isOpen) {
                 this.scrollToBottom();
             }
-        },
-
-        sendSuggestion(text) {
-            this.newMessage = text;
-            this.sendMessage();
         },
 
         handleButtonClick(btn, event) {
