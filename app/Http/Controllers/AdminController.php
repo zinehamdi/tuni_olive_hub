@@ -149,6 +149,7 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
             'phone' => ['nullable', 'string', 'max:20'],
+            'role' => ['required', 'string', Rule::in(['farmer', 'mill', 'carrier', 'packer', 'normal', 'admin'])],
             'show_contact_info' => ['sometimes', 'boolean'],
             'show_address' => ['sometimes', 'boolean'],
         ]);
@@ -156,6 +157,7 @@ class AdminController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
+        $user->role = $data['role'];
         $user->show_contact_info = $request->boolean('show_contact_info');
         $user->show_address = $request->boolean('show_address');
         $user->save();
@@ -224,6 +226,7 @@ class AdminController extends Controller
 
         $listing->load('product');
         $allowedStatuses = ['draft','active','paused','sold','out'];
+        $allowedUnits = ['kg', 'liter', 'ton', 'tonne', 'bottle', 'can', 'piece', 'barrel', 'سانية'];
 
         $data = $request->validate([
             'category' => ['required', 'string', 'in:oil,olive'],
@@ -234,7 +237,7 @@ class AdminController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'currency' => ['nullable', 'string', 'max:8'],
             'quantity' => ['nullable', 'numeric', 'min:0'],
-            'unit' => ['nullable', 'string', Rule::in(['kg','liter'])],
+            'unit' => ['nullable', 'string', Rule::in($allowedUnits)],
             'min_order' => ['nullable', 'numeric', 'min:0'],
             'status' => ['required', 'string', Rule::in($allowedStatuses)],
             'weight_kg' => ['nullable', 'numeric', 'min:0'],
@@ -283,13 +286,12 @@ class AdminController extends Controller
         $product->volume_liters = $data['volume_liters'] ?? null;
         $product->save();
 
-        $unit = $product->type === 'oil' ? 'liter' : 'kg';
+        $unit = $data['unit'] ?? ($listing->unit ?? ($product->type === 'oil' ? 'liter' : 'kg'));
 
         $listing->update([
             'price' => $data['price'],
             'currency' => $data['currency'] ?? $listing->currency,
             'quantity' => $data['quantity'] ?? $listing->quantity,
-            // Force unit based on product type to prevent mismatches
             'unit' => $unit,
             'packaging' => $data['packaging'] ?? $listing->packaging,
             'min_order' => $data['min_order'] ?? $listing->min_order,

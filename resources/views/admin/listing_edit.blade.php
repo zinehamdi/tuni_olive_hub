@@ -108,8 +108,19 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Unit') }}</label>
-                        <input id="unitDisplay" value="{{ $product->type === 'oil' ? 'لتر (Liter)' : 'كغ (Kilogram)' }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-700" readonly>
-                        <input id="unitHidden" type="hidden" name="unit" value="{{ $product->type === 'oil' ? 'liter' : 'kg' }}">
+                        @php
+                            $currentUnit = old('unit', $listing->unit ?? ($product->type === 'oil' ? 'liter' : 'kg'));
+                        @endphp
+                        <select id="unitSelect" name="unit" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white" required>
+                            <option value="liter" {{ ($currentUnit === 'liter' || $currentUnit === 'لتر') ? 'selected' : '' }}>لتر (Liter)</option>
+                            <option value="kg" {{ ($currentUnit === 'kg' || $currentUnit === 'كيلو' || $currentUnit === 'كغ') ? 'selected' : '' }}>كيلوغرام (Kilogram - kg)</option>
+                            <option value="ton" {{ ($currentUnit === 'ton' || $currentUnit === 'tonne' || $currentUnit === 'طن') ? 'selected' : '' }}>طن (Tonne / Ton)</option>
+                            <option value="bottle" {{ ($currentUnit === 'bottle' || $currentUnit === 'قارورة') ? 'selected' : '' }}>قارورة (Bottle)</option>
+                            <option value="can" {{ ($currentUnit === 'can' || $currentUnit === 'صفيحة' || $currentUnit === 'بيدون') ? 'selected' : '' }}>صفيحة / بيدون (Tin Can / Bidon)</option>
+                            <option value="piece" {{ ($currentUnit === 'piece' || $currentUnit === 'قطعة') ? 'selected' : '' }}>قطعة (Piece)</option>
+                            <option value="barrel" {{ ($currentUnit === 'barrel' || $currentUnit === 'برميل') ? 'selected' : '' }}>برميل (Barrel / Fût)</option>
+                            <option value="سانية" {{ ($currentUnit === 'سانية' || $currentUnit === 'saniya') ? 'selected' : '' }}>سانية (Saniya)</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Min order') }}</label>
@@ -236,25 +247,5 @@ function adminMediaManager(initialImages) {
         }
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const categorySelect = document.getElementById('categorySelect');
-    if (categorySelect) {
-        categorySelect.addEventListener('change', function() {
-            const val = this.value;
-            const display = document.getElementById('unitDisplay');
-            const hidden = document.getElementById('unitHidden');
-            if (display && hidden) {
-                if (val === 'oil') {
-                    display.value = 'لتر (Liter)';
-                    hidden.value = 'liter';
-                } else {
-                    display.value = 'كغ (Kilogram)';
-                    hidden.value = 'kg';
-                }
-            }
-        });
-    }
-});
 </script>
 @endsection

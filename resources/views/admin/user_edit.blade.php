@@ -33,10 +33,24 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Phone') }}</label>
-                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-lg border-2 border-gray-200 px-3 py-2 focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20">
-                    <x-input-error class="mt-1" :messages="$errors->get('phone')" />
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Phone') }}</label>
+                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-lg border-2 border-gray-200 px-3 py-2 focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20">
+                        <x-input-error class="mt-1" :messages="$errors->get('phone')" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('User Role') }} / {{ __('الصفة والرتبة') }}</label>
+                        <select name="role" required class="w-full rounded-lg border-2 border-gray-200 px-3 py-2 bg-white focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20">
+                            <option value="packer" {{ old('role', $user->role) === 'packer' ? 'selected' : '' }}>📦 {{ __('معبئ ومصدر زيت معلب (Packer / Bottler)') }}</option>
+                            <option value="mill" {{ old('role', $user->role) === 'mill' ? 'selected' : '' }}>🏭 {{ __('صاحب معصرة (Oil Mill Owner)') }}</option>
+                            <option value="farmer" {{ old('role', $user->role) === 'farmer' ? 'selected' : '' }}>👨‍🌾 {{ __('فلاح ومنتج (Farmer / Producer)') }}</option>
+                            <option value="carrier" {{ old('role', $user->role) === 'carrier' ? 'selected' : '' }}>🚛 {{ __('ناقل ومزود لوجستيك (Carrier / Transporter)') }}</option>
+                            <option value="normal" {{ old('role', $user->role) === 'normal' ? 'selected' : '' }}>🛒 {{ __('مشتري / مستخدم عادي (Buyer / Trader)') }}</option>
+                            <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>🛡️ {{ __('مدير المنصة (Administrator)') }}</option>
+                        </select>
+                        <x-input-error class="mt-1" :messages="$errors->get('role')" />
+                    </div>
                 </div>
 
                 <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 space-y-3">
