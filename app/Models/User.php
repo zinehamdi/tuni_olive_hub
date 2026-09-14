@@ -60,6 +60,48 @@ class User extends Authenticatable
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'display_name',
+    ];
+
+    /**
+     * Get the preferred display/business name for this user (mill name, packer unit name, company name, farm name, or personal name).
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        // Role-specific business name priority
+        if ($this->role === 'mill' && !empty(trim((string)$this->mill_name))) {
+            return trim((string)$this->mill_name);
+        }
+        if ($this->role === 'packer' && !empty(trim((string)$this->packer_name))) {
+            return trim((string)$this->packer_name);
+        }
+        if ($this->role === 'farmer' && !empty(trim((string)$this->farm_name))) {
+            return trim((string)$this->farm_name);
+        }
+
+        // Secondary fallback for any filled business/unit/mill/farm name
+        if (!empty(trim((string)$this->mill_name))) {
+            return trim((string)$this->mill_name);
+        }
+        if (!empty(trim((string)$this->packer_name))) {
+            return trim((string)$this->packer_name);
+        }
+        if (!empty(trim((string)$this->company_name))) {
+            return trim((string)$this->company_name);
+        }
+        if (!empty(trim((string)$this->farm_name))) {
+            return trim((string)$this->farm_name);
+        }
+
+        return (string)($this->name ?? '');
+    }
+
+    /**
      * Get the user's addresses.
      */
     public function addresses()
@@ -182,6 +224,21 @@ class User extends Authenticatable
         if (app()->getLocale() !== 'ar' && class_exists(\App\Helpers\TextHelper::class)) {
             if (!empty($array['name'])) {
                 $array['name'] = \App\Helpers\TextHelper::localizeArabicString($array['name']);
+            }
+            if (!empty($array['display_name'])) {
+                $array['display_name'] = \App\Helpers\TextHelper::localizeArabicString($array['display_name']);
+            }
+            if (!empty($array['mill_name'])) {
+                $array['mill_name'] = \App\Helpers\TextHelper::localizeArabicString($array['mill_name']);
+            }
+            if (!empty($array['packer_name'])) {
+                $array['packer_name'] = \App\Helpers\TextHelper::localizeArabicString($array['packer_name']);
+            }
+            if (!empty($array['farm_name'])) {
+                $array['farm_name'] = \App\Helpers\TextHelper::localizeArabicString($array['farm_name']);
+            }
+            if (!empty($array['company_name'])) {
+                $array['company_name'] = \App\Helpers\TextHelper::localizeArabicString($array['company_name']);
             }
             if (!empty($array['farm_location'])) {
                 $array['farm_location'] = \App\Helpers\TextHelper::localizeArabicString($array['farm_location']);

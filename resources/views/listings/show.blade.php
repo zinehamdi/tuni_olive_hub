@@ -69,7 +69,7 @@
         ? match($curLocale) { 'fr' => 'Prix sur demande', 'ar' => 'السعر عند الطلب', default => 'Price upon request' }
         : "$priceFormatted $curr / $unit";
     
-    $sellerName = $listing->seller?->name ?: match($curLocale) { 'fr' => 'Producteur vérifié', 'ar' => 'منتج موثق', default => 'Verified Producer' };
+    $sellerName = $listing->seller?->display_name ?: ($listing->seller?->name ?: match($curLocale) { 'fr' => 'Producteur vérifié', 'ar' => 'منتج موثق', default => 'Verified Producer' });
     
     $shareTitle = match($curLocale) {
         'ar' => trim("$variety - $priceText ($city) | زين توب"),
@@ -102,7 +102,7 @@
     }
 
     $schemaName = trim(($listing->product?->variety ?? 'Tunisian') . ' ' . $qualityEn);
-    $schemaDesc = 'Buy ' . $qualityEn . ' directly from ' . ($listing->seller?->name ?? 'Tunisian producer') . ' in ' . ($govMap[$rawGov]['en'] ?? 'Tunisia') . ', Tunisia. Best olive oil prices. Bulk olive oil direct from producers. ZinToop marketplace.';
+    $schemaDesc = 'Buy ' . $qualityEn . ' directly from ' . ($listing->seller?->display_name ?? $listing->seller?->name ?? 'Tunisian producer') . ' in ' . ($govMap[$rawGov]['en'] ?? 'Tunisia') . ', Tunisia. Best olive oil prices. Bulk olive oil direct from producers. ZinToop marketplace.';
 @endphp
 
 @section('title', $shareTitle)
@@ -149,7 +149,7 @@
                 'availability' => 'https://schema.org/InStock',
                 'seller' => [
                     '@'.'type' => 'Organization',
-                    'name' => $listing->seller?->name ?? 'ZinToop Verified Seller'
+                    'name' => $listing->seller?->display_name ?? $listing->seller?->name ?? 'ZinToop Verified Seller'
                 ],
                 'shippingDetails' => [
                     '@'.'type' => 'OfferShippingDetails',
@@ -417,11 +417,11 @@
                         </div>
                         <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="flex items-center gap-4 p-5 group transition-all hover:bg-white cursor-pointer relative">
                             <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] shadow-inner flex-shrink-0 flex items-center justify-center text-white font-bold text-2xl group-hover:scale-110 transition-transform">
-                                {{ substr($listing->seller->name, 0, 1) }}
+                                {{ mb_substr($listing->seller->display_name ?? $listing->seller->name, 0, 1) }}
                             </div>
                             <div class="flex-1">
                                 <div class="font-bold text-gray-900 text-lg group-hover:text-[#6A8F3B] transition-colors">
-                                    {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                    {{ $listing->seller->role === 'admin' ? __('Seller') : ($listing->seller->display_name ?? $listing->seller->name) }}
                                 </div>
                                 <div class="text-sm text-gray-600 font-medium">
                                       @if($listing->seller->role !== 'admin')
@@ -746,11 +746,11 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                         <!-- Seller Info -->
                                         <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl group hover:bg-white hover:shadow-md transition-all relative cursor-pointer border border-transparent hover:border-gray-200">
                                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white font-bold text-xl shadow-inner group-hover:scale-110 transition-transform flex-shrink-0">
-                                                {{ substr($listing->seller->name, 0, 1) }}
+                                                {{ mb_substr($listing->seller->display_name ?? $listing->seller->name, 0, 1) }}
                                             </div>
                                             <div class="flex-1">
                                                 <div class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition-colors">
-                                                    {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                                    {{ $listing->seller->role === 'admin' ? __('Seller') : ($listing->seller->display_name ?? $listing->seller->name) }}
                                                 </div>
                                                 <div class="text-sm text-gray-600">
                                                     @if($listing->seller->role !== 'admin')
@@ -840,11 +840,11 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                     <!-- Seller Info -->
                                     <a href="{{ $listing->seller->role !== 'admin' ? route('user.profile', $listing->seller) : '#' }}" class="mb-4 p-4 bg-gray-50 rounded-xl flex items-center gap-3 group hover:bg-white hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-gray-200">
                                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] flex items-center justify-center text-white font-bold text-xl shadow-inner group-hover:scale-110 transition-transform flex-shrink-0">
-                                            {{ substr($listing->seller->name, 0, 1) }}
+                                            {{ mb_substr($listing->seller->display_name ?? $listing->seller->name, 0, 1) }}
                                         </div>
                                         <div class="flex-1">
                                             <div class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition-colors">
-                                                {{ $listing->seller->role === 'admin' ? __('Seller') : $listing->seller->name }}
+                                                {{ $listing->seller->role === 'admin' ? __('Seller') : ($listing->seller->display_name ?? $listing->seller->name) }}
                                             </div>
                                             <div class="text-sm text-gray-600">
                                                 {{ $listing->seller->addresses->first()->governorate ?? '' }}

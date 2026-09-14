@@ -98,7 +98,7 @@
                       <div class="flex items-center gap-2 mb-3 flex-wrap">
                           <span class="px-2 py-1 rounded-full bg-[#6A8F3B] text-white text-xs font-semibold flex items-center gap-1">
                               <span>{{ $listing->seller?->role === 'farmer' ? '🌿' : ($listing->seller?->role === 'mill' ? '🏭' : ($listing->seller?->role === 'packer' ? '📦' : '👤')) }}</span>
-                              <span>{{ $listing->seller?->farm_name ?? $listing->seller?->mill_name ?? $listing->seller?->company_name ?? $listing->seller?->name ?? __('Seller') }}</span>
+                              <span>{{ $listing->seller?->display_name ?? $listing->seller?->farm_name ?? $listing->seller?->mill_name ?? $listing->seller?->company_name ?? $listing->seller?->packer_name ?? $listing->seller?->name ?? __('Seller') }}</span>
                           </span>
                           @if($listing->product->quality)
                               <span class="px-2 py-1 rounded-full bg-[#C8A356] text-white text-xs font-semibold">
@@ -130,7 +130,7 @@
                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                               </svg>
-                              <span>{{ $listing->seller->name ?? __('Seller') }}</span>
+                              <span>{{ $listing->seller?->display_name ?? $listing->seller?->name ?? __('Seller') }}</span>
                           </div>
                           <div class="flex items-center gap-2 mt-1">
                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

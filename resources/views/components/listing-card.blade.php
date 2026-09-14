@@ -45,7 +45,7 @@
             </h3>
 
             <p class="text-xs text-gray-500 line-clamp-2">
-                {{ $listing->description ?? ($listing->seller->name . ' - ' . __('Verified producer lot with direct mill sourcing.')) }}
+                {{ $listing->description ?? (($listing->seller->display_name ?? $listing->seller->name) . ' - ' . __('Verified producer lot with direct mill sourcing.')) }}
             </p>
         </div>
     </div>

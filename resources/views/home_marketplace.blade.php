@@ -752,7 +752,7 @@
                                                     <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
                                                 </template>
                                                 <template x-if="!listing.seller?.profile_picture">
-                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(getSellerDisplayName(listing.seller) || 'ZT')"></span>
                                                 </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
@@ -824,7 +824,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
-                                        <span x-text="listing.seller?.role === 'admin' ? '{{ __('Seller') }}' : listing.seller?.name || ''"></span>
+                                        <span x-text="getSellerDisplayName(listing.seller)"></span>
                                     </div>
                                     <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -889,7 +889,7 @@
                                                     <img :src="listing.seller.profile_picture.startsWith('http') ? listing.seller.profile_picture : '/storage/' + listing.seller.profile_picture" :alt="listing.seller.name" class="absolute inset-0 w-full h-full object-cover">
                                                 </template>
                                                 <template x-if="!listing.seller?.profile_picture">
-                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(listing.seller?.name || 'ZT')"></span>
+                                                    <span class="text-[#143618] text-2xl font-black tracking-widest uppercase drop-shadow-sm whitespace-nowrap" style="font-family: 'Playfair Display', Georgia, serif;" x-text="getInitials(getSellerDisplayName(listing.seller) || 'ZT')"></span>
                                                 </template>
                                             </div>
                                             <span class="text-white/90 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
@@ -945,7 +945,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
-                                            <span x-text="listing.seller?.role === 'admin' ? '{{ __('Seller') }}' : listing.seller?.name || ''"></span>
+                                            <span x-text="getSellerDisplayName(listing.seller)"></span>
                                         </div>
                                         <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1131,6 +1131,15 @@ document.addEventListener('alpine:init', () => {
         showFilters: window.innerWidth >= 1024,
         articleModalOpen: false,
         locale: '{{ app()->getLocale() }}',
+
+        /**
+         * Get the preferred display/business name for a seller on listing cards
+         */
+        getSellerDisplayName(seller) {
+            if (!seller) return '';
+            if (seller.role === 'admin') return '{{ __('Seller') }}';
+            return seller.display_name || seller.mill_name || seller.packer_name || seller.company_name || seller.farm_name || seller.name || '';
+        },
 
         // ── Live currency rates (injected from CurrencyConverter, cached 3h) ──
         // Rate: how many USD = 1 unit of source currency
@@ -1806,6 +1815,11 @@ document.addEventListener('alpine:init', () => {
                     listing.product?.variety?.toLowerCase().includes(query) ||
                     listing.product?.quality?.toLowerCase().includes(query) ||
                     listing.seller?.name?.toLowerCase().includes(query) ||
+                    listing.seller?.display_name?.toLowerCase().includes(query) ||
+                    listing.seller?.mill_name?.toLowerCase().includes(query) ||
+                    listing.seller?.packer_name?.toLowerCase().includes(query) ||
+                    listing.seller?.company_name?.toLowerCase().includes(query) ||
+                    listing.seller?.farm_name?.toLowerCase().includes(query) ||
                     listing.seller?.location?.toLowerCase().includes(query) ||
                     listing.seller?.farm_location?.toLowerCase().includes(query)
                 );
@@ -1969,7 +1983,7 @@ document.addEventListener('alpine:init', () => {
                     'validFrom' => $listing->created_at ? $listing->created_at->format('Y-m-d') : now()->format('Y-m-d'),
                     'seller' => [
                         '@'.'type' => 'Organization',
-                        'name' => $listing->seller->name ?? 'ZinToop Verified Seller'
+                        'name' => $listing->seller->display_name ?? $listing->seller->name ?? 'ZinToop Verified Seller'
                     ],
                     'shippingDetails' => [
                         '@'.'type' => 'OfferShippingDetails',

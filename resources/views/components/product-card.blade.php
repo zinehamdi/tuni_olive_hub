@@ -39,7 +39,7 @@
         @else
             @php
                 $type = $productType ?: ($listing->category ?? $listing->product?->type ?? 'oil');
-                $varietyText = $variety ?: ($seller->name ?? $title);
+                $varietyText = $variety ?: ($seller->display_name ?? $seller->name ?? $title);
                 $words = preg_split('/\s+/', trim($varietyText));
                 $initials = count($words) >= 2 ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1) : mb_substr($varietyText, 0, 2);
                 $initials = mb_strtoupper($initials);
