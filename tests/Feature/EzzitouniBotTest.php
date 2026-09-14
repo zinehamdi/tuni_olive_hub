@@ -191,5 +191,42 @@ class EzzitouniBotTest extends TestCase
         $this->assertContains('/ar/#deals', $urls);
         $this->assertContains('/ar/prices', $urls);
     }
+
+    public function test_system_prompt_includes_multi_currency_rules_and_converted_prices()
+    {
+        $seller = User::factory()->create([
+            'name' => 'Ezzine Farhani',
+            'role' => 'mill',
+            'mill_name' => 'معصرة الفرحاني',
+        ]);
+
+        $product = \App\Models\Product::factory()->create([
+            'seller_id' => $seller->id,
+            'type' => 'oil',
+            'variety' => 'chetoui',
+        ]);
+
+        \App\Models\Listing::factory()->create([
+            'seller_id' => $seller->id,
+            'product_id' => $product->id,
+            'price' => 15.0,
+            'currency' => 'TND',
+            'unit' => 'liter',
+            'status' => 'active',
+        ]);
+
+        $service = new EzzitouniBrainService();
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('buildSystemPrompt');
+        $method->setAccessible(true);
+
+        $prompt = $method->invoke($service, null, 'fr');
+
+        $this->assertStringContainsString('CURRENCY & MULTI-LANGUAGE PRICING RULES', $prompt);
+        $this->assertStringContainsString('15.00 TND/liter', $prompt);
+        $this->assertStringContainsString('USD/liter', $prompt);
+        $this->assertStringContainsString('معصرة الفرحاني', $prompt);
+    }
 }
+
 

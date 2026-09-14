@@ -232,7 +232,7 @@ class EzzitouniBrainService
             }
         } catch (\Throwable $e) {}
 
-        // Live Marketplace Active Listings Context
+        // Live Marketplace Active Listings Context with Multi-Currency Formatting
         $listingsContext = "";
         try {
             $sampleListings = Listing::with(['product', 'seller'])
@@ -242,14 +242,21 @@ class EzzitouniBrainService
                 ->get();
 
             if ($sampleListings->isNotEmpty()) {
+                $converter = app(\App\Services\CurrencyConverter::class);
                 $listingsContext .= "\n[LIVE MARKETPLACE ACTIVE SAMPLE LISTINGS]:\n";
                 foreach ($sampleListings as $l) {
                     $prodType = $l->product?->type ?? 'oil';
                     $variety = $l->product?->variety ?? 'chemlali';
                     $quality = $l->product?->quality ?? 'extra_virgin';
-                    $sellerName = $l->seller?->name ?? 'منتج تونسي';
+                    $sellerName = $l->seller?->display_name ?? ($l->seller?->name ?? 'منتج تونسي');
                     $hashid = $l->hashid;
-                    $listingsContext .= "- Listing ID: {$hashid} | Type: {$prodType} | Variety: {$variety} | Quality: {$quality} | Price: {$l->price} TND/{$l->unit} | Stock: {$l->quantity} {$l->unit} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
+                    $storedCur = $l->currency ?? 'TND';
+                    $rawPrice = (float) $l->price;
+                    $priceTnd = number_format($converter->convert($rawPrice, $storedCur, 'TND'), 2);
+                    $priceUsd = number_format($converter->convert($rawPrice, $storedCur, 'USD'), 2);
+                    $unitStr = $l->unit ?: ($prodType === 'oil' ? 'liter' : 'kg');
+
+                    $listingsContext .= "- Listing ID: {$hashid} | Type: {$prodType} | Variety: {$variety} | Quality: {$quality} | Price: {$priceTnd} TND/{$unitStr} (\${$priceUsd} USD/{$unitStr}) | Stock: {$l->quantity} {$unitStr} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
                 }
             }
         } catch (\Throwable $e) {}
@@ -266,6 +273,13 @@ You are "Ezzitouni" (الزيتوني), the premier AI Agricultural & Commercial
 {$authContext}
 {$pricesContext}
 {$listingsContext}
+
+[CURRENCY & MULTI-LANGUAGE PRICING RULES]
+1. Multi-Currency Alignment:
+   - For French (fr) and English (en) visitors / international buyers: ALWAYS quote prices primarily in US Dollars ($ USD) as displayed on the international storefront, with optional mention of the local TND equivalent (e.g. '$4.80 USD (~15.00 TND) per litre' or '$5.50 USD per bottle').
+   - For Arabic (ar) visitors / local Tunisian buyers: quote prices primarily in Tunisian Dinar (TND / دينار) (e.g. '15 دينار للتر' or '23 دينار للتر').
+   - NEVER confuse TND with USD or assume 15 TND means 15 USD.
+   - Always specify the currency symbol/code clearly ($ USD or TND / دينار) so there is zero ambiguity.
 
 [STRICT PLATFORM TAXONOMY & RULES]
 You MUST strictly adhere to the official taxonomies and categories of ZinToop in all consultations:
