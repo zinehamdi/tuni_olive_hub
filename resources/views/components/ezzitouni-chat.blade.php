@@ -18,6 +18,24 @@
             default => "أهلاً ومرحباً بك في **ZinToop**! 🫒 أنا «**الزيتوني**»، مستشارك وخبيرك الزراعي والتجاري الذكي. تنجم تسألني على أي حاجة: أصناف الزيتون التونسي، أسعار الأسواق اليومية، الشراء والبيع مباشرة بدون وسيط وبدون عمولة، أو إجراءات التصدير.",
         };
     }
+
+    $inputPlaceholder = match($currentLocale) {
+        'fr' => "Posez une question sur les prix, l'achat, la vente, l'export...",
+        'en' => "Ask Ezzitouni about prices, varieties, buying, export...",
+        default => "اسأل الزيتوني عن الأسعار، الشراء، البيع، التصدير...",
+    };
+
+    $analyzingText = match($currentLocale) {
+        'fr' => "Ez-Zitouni analyse votre demande...",
+        'en' => "Ezzitouni is analyzing...",
+        default => "الزيتوني يحلل استفسارك...",
+    };
+
+    $footerText = match($currentLocale) {
+        'fr' => "Conseiller IA ZinToop • Mise en relation directe 0% commission",
+        'en' => "ZinToop AI Consultant • Instant direct matching 0% commission",
+        default => "مستشار ZinToop الذكي • تواصل مباشر بدون وسيط وبـ 0% عمولة",
+    };
 @endphp
 
 <div x-data="ezzitouniChat()" class="fixed bottom-20 md:bottom-6 left-3 sm:left-6 z-[9999]" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
@@ -156,7 +174,7 @@
             <!-- Typing Indicator -->
             <div x-show="isTyping" class="flex justify-start w-full">
                 <div class="bg-white border border-gray-100 rounded-2xl rounded-bl-none px-3.5 py-2.5 shadow-sm flex items-center gap-1.5">
-                    <span class="text-[10px] text-gray-400 font-bold ml-1">{{ __('Ezzitouni is analyzing...') }}</span>
+                    <span class="text-[10px] text-gray-400 font-bold ml-1">{{ $analyzingText }}</span>
                     <div class="w-1.5 h-1.5 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0s"></div>
                     <div class="w-1.5 h-1.5 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                     <div class="w-1.5 h-1.5 bg-[#6A8F3B] rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
@@ -169,7 +187,7 @@
             <form @submit.prevent="sendMessage" class="flex gap-2 items-center">
                 <input x-model="newMessage" 
                        type="text" 
-                       placeholder="{{ __('Ask Ezzitouni about prices, varieties, trade...') }}" 
+                       placeholder="{{ $inputPlaceholder }}" 
                        class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B] transition"
                        :disabled="isTyping"
                        autocomplete="off"
@@ -185,7 +203,7 @@
                 </button>
             </form>
             <div class="text-[9px] sm:text-[10px] text-center text-gray-400 mt-1 font-medium">
-                {{ __('ZinToop AI Business Consultant • Instant live matching') }}
+                {{ $footerText }}
             </div>
         </div>
     </div>
