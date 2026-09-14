@@ -79,10 +79,10 @@ class EzzitouniBrainService
                     ],
                     'contents' => $contents,
                     'generationConfig' => [
-                        'temperature' => 0.6,
+                        'temperature' => 0.5,
                         'topK' => 40,
                         'topP' => 0.95,
-                        'maxOutputTokens' => 1200,
+                        'maxOutputTokens' => 3000,
                     ]
                 ];
 
@@ -232,31 +232,125 @@ class EzzitouniBrainService
             }
         } catch (\Throwable $e) {}
 
-        // Live Marketplace Active Listings Context with Multi-Currency Formatting
+        // Live Marketplace Active Listings Context with Multi-Currency & Comprehensive Sorting
         $listingsContext = "";
         try {
-            $sampleListings = Listing::with(['product', 'seller'])
+            $converter = app(\App\Services\CurrencyConverter::class);
+
+            // 1. Cheapest Oil Listings (Price > 0, sorted by price ascending)
+            $cheapestOil = Listing::with(['product', 'seller'])
                 ->where('status', 'active')
-                ->latest('id')
-                ->take(6)
+                ->whereHas('product', function ($q) {
+                    $q->where('type', 'oil');
+                })
+                ->where('price', '>', 0)
+                ->orderByRaw('CAST(price AS DECIMAL(10,2)) ASC')
+                ->take(15)
                 ->get();
 
-            if ($sampleListings->isNotEmpty()) {
-                $converter = app(\App\Services\CurrencyConverter::class);
-                $listingsContext .= "\n[LIVE MARKETPLACE ACTIVE SAMPLE LISTINGS]:\n";
-                foreach ($sampleListings as $l) {
-                    $prodType = $l->product?->type ?? 'oil';
+            // 2. Cheapest Olive Fruit Listings (Price > 0, sorted by price ascending)
+            $cheapestOlives = Listing::with(['product', 'seller'])
+                ->where('status', 'active')
+                ->whereHas('product', function ($q) {
+                    $q->where('type', 'olive');
+                })
+                ->where('price', '>', 0)
+                ->orderByRaw('CAST(price AS DECIMAL(10,2)) ASC')
+                ->take(8)
+                ->get();
+
+            // 3. Latest Newly Added Active Listings
+            $latestListings = Listing::with(['product', 'seller'])
+                ->where('status', 'active')
+                ->latest('id')
+                ->take(8)
+                ->get();
+
+            // 4. Negotiable / Price upon contact samples
+            $negotiableListings = Listing::with(['product', 'seller'])
+                ->where('status', 'active')
+                ->where(function ($q) {
+                    $q->where('price', '<=', 0)
+                      ->orWhereNull('price')
+                      ->orWhere('sale_mode', 'negotiable');
+                })
+                ->latest('id')
+                ->take(4)
+                ->get();
+
+            $totalActiveOilCount = Listing::where('status', 'active')->whereHas('product', function ($q) { $q->where('type', 'oil'); })->count();
+            $totalActiveOlivesCount = Listing::where('status', 'active')->whereHas('product', function ($q) { $q->where('type', 'olive'); })->count();
+
+            $listingsContext .= "\n[LIVE MARKETPLACE VERIFIED DATA & REAL-TIME INVENTORY (Total Active: {$totalActiveOilCount} Oil offers, {$totalActiveOlivesCount} Olive fruit offers)]:\n";
+
+            if ($cheapestOil->isNotEmpty()) {
+                $listingsContext .= "\n--- VERIFIED CHEAPEST OLIVE OIL OFFERS (Sorted from absolute lowest price) ---\n";
+                foreach ($cheapestOil as $l) {
                     $variety = $l->product?->variety ?? 'chemlali';
-                    $quality = $l->product?->quality ?? 'extra_virgin';
+                    $quality = $l->product?->quality ?: 'Extra Virgin / Virgin';
                     $sellerName = $l->seller?->display_name ?? ($l->seller?->name ?? 'منتج تونسي');
                     $hashid = $l->hashid;
                     $storedCur = $l->currency ?? 'TND';
                     $rawPrice = (float) $l->price;
                     $priceTnd = number_format($converter->convert($rawPrice, $storedCur, 'TND'), 2);
                     $priceUsd = number_format($converter->convert($rawPrice, $storedCur, 'USD'), 2);
+                    $unitStr = $l->unit ?: 'liter';
+                    $packaging = $l->packaging ?: 'صب (Bulk)';
+
+                    $listingsContext .= "- [OIL] ID: {$hashid} | Variety: {$variety} | Quality: {$quality} | Price: {$priceTnd} TND/{$unitStr} (\${$priceUsd} USD/{$unitStr}) | Stock: {$l->quantity} {$unitStr} | Format: {$packaging} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
+                }
+            }
+
+            if ($cheapestOlives->isNotEmpty()) {
+                $listingsContext .= "\n--- VERIFIED CHEAPEST RAW OLIVE FRUIT OFFERS (زيتون حب / ثمار / عراجين) ---\n";
+                foreach ($cheapestOlives as $l) {
+                    $variety = $l->product?->variety ?? 'chemlali';
+                    $sellerName = $l->seller?->display_name ?? ($l->seller?->name ?? 'فلاح تونسي');
+                    $hashid = $l->hashid;
+                    $storedCur = $l->currency ?? 'TND';
+                    $rawPrice = (float) $l->price;
+                    $priceTnd = number_format($converter->convert($rawPrice, $storedCur, 'TND'), 2);
+                    $priceUsd = number_format($converter->convert($rawPrice, $storedCur, 'USD'), 2);
+                    $unitStr = $l->unit ?: 'kg';
+
+                    $listingsContext .= "- [OLIVE FRUIT] ID: {$hashid} | Variety: {$variety} | Price: {$priceTnd} TND/{$unitStr} (\${$priceUsd} USD/{$unitStr}) | Stock: {$l->quantity} {$unitStr} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
+                }
+            }
+
+            if ($latestListings->isNotEmpty()) {
+                $listingsContext .= "\n--- RECENTLY ADDED ACTIVE LISTINGS ---\n";
+                foreach ($latestListings as $l) {
+                    $prodType = $l->product?->type ?? 'oil';
+                    $variety = $l->product?->variety ?? 'chemlali';
+                    $quality = $l->product?->quality ?? '';
+                    $sellerName = $l->seller?->display_name ?? ($l->seller?->name ?? 'منتج تونسي');
+                    $hashid = $l->hashid;
+                    $storedCur = $l->currency ?? 'TND';
+                    $rawPrice = (float) $l->price;
                     $unitStr = $l->unit ?: ($prodType === 'oil' ? 'liter' : 'kg');
 
-                    $listingsContext .= "- Listing ID: {$hashid} | Type: {$prodType} | Variety: {$variety} | Quality: {$quality} | Price: {$priceTnd} TND/{$unitStr} (\${$priceUsd} USD/{$unitStr}) | Stock: {$l->quantity} {$unitStr} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
+                    if ($rawPrice <= 0 || $l->sale_mode === 'negotiable') {
+                        $priceStr = "Price: [للتفاوض عند الاتصال / Negotiable Upon Contact]";
+                    } else {
+                        $priceTnd = number_format($converter->convert($rawPrice, $storedCur, 'TND'), 2);
+                        $priceUsd = number_format($converter->convert($rawPrice, $storedCur, 'USD'), 2);
+                        $priceStr = "Price: {$priceTnd} TND/{$unitStr} (\${$priceUsd} USD/{$unitStr})";
+                    }
+
+                    $listingsContext .= "- [RECENT {$prodType}] ID: {$hashid} | Variety: {$variety} | Quality: {$quality} | {$priceStr} | Stock: {$l->quantity} {$unitStr} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
+                }
+            }
+
+            if ($negotiableListings->isNotEmpty()) {
+                $listingsContext .= "\n--- NEGOTIABLE / DIRECT DEALS (Price Upon Contact) ---\n";
+                foreach ($negotiableListings as $l) {
+                    $prodType = $l->product?->type ?? 'oil';
+                    $variety = $l->product?->variety ?? 'chemlali';
+                    $sellerName = $l->seller?->display_name ?? ($l->seller?->name ?? 'منتج تونسي');
+                    $hashid = $l->hashid;
+                    $unitStr = $l->unit ?: ($prodType === 'oil' ? 'liter' : 'kg');
+
+                    $listingsContext .= "- [NEGOTIABLE {$prodType}] ID: {$hashid} | Variety: {$variety} | Price: [للتفاوض عند الاتصال / Negotiable upon direct contact] | Stock: {$l->quantity} {$unitStr} | Seller: {$sellerName} | URL: /{$locale}/listings/{$hashid}\n";
                 }
             }
         } catch (\Throwable $e) {}
@@ -280,6 +374,17 @@ You are "Ezzitouni" (الزيتوني), the premier AI Agricultural & Commercial
    - For Arabic (ar) visitors / local Tunisian buyers: quote prices primarily in Tunisian Dinar (TND / دينار) (e.g. '15 دينار للتر' or '23 دينار للتر').
    - NEVER confuse TND with USD or assume 15 TND means 15 USD.
    - Always specify the currency symbol/code clearly ($ USD or TND / دينار) so there is zero ambiguity.
+
+[MARKETPLACE PRICING & INVENTORY TRUTH RULES]
+1. Accurate Price Quoting:
+   - When asked about the cheapest offers (أرخص العروض), ALWAYS inspect the [VERIFIED CHEAPEST OLIVE OIL OFFERS] section:
+     * Check for true lowest prices (e.g. 8.00 TND / liter for Virgin Chemlali by ridha ben soltana, 10.00 TND / liter for EVOO Chemlali by Mohamed ROMDANE and Sami Sammoudi and BIJOUNA BILEL, 11.50 TND / kg by Société Santa d'Elkhirat, 12.00 TND by Tawfik Khabthani and Naoufel El Abed, 13.00 TND by Firstharvest / HEDI HADDED / Mokhtar ben ayed / HICHEM HADDAD).
+     * NEVER deny the existence of a price that exists in the verified lists above. If the user mentions 8 TND or 10 TND, confirm it immediately with exact details (seller name, variety, quality, quantity, listing URL).
+2. Distinguish Between Olive Fruit vs Olive Oil:
+   - Olive Fruit (زيتون حب / ثمار / عراجين): Typically 1.5 - 3.5 TND per kg.
+   - Olive Oil (زيت زيتون صب أو معلب): Typically 8.00 - 28.00 TND per liter/kg.
+3. Negotiable Offers (السعر للتفاوض):
+   - Any listing marked "[للتفاوض عند الاتصال / Negotiable]" or 0.00 price is a negotiable deal where the buyer contacts the seller to agree on a price based on volume. NEVER say "0.00 dinars" or "free".
 
 [STRICT PLATFORM TAXONOMY & RULES]
 You MUST strictly adhere to the official taxonomies and categories of ZinToop in all consultations:

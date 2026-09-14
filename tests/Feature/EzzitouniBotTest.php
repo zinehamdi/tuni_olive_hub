@@ -227,6 +227,42 @@ class EzzitouniBotTest extends TestCase
         $this->assertStringContainsString('USD/liter', $prompt);
         $this->assertStringContainsString('معصرة الفرحاني', $prompt);
     }
+
+    public function test_system_prompt_sorts_cheapest_listings_and_marks_negotiable()
+    {
+        $seller = User::factory()->create(['name' => 'Ridha Soltana']);
+        $productOil = \App\Models\Product::factory()->create(['seller_id' => $seller->id, 'type' => 'oil', 'variety' => 'chemlali']);
+        
+        \App\Models\Listing::factory()->create([
+            'seller_id' => $seller->id,
+            'product_id' => $productOil->id,
+            'price' => 8.0,
+            'currency' => 'TND',
+            'unit' => 'liter',
+            'status' => 'active',
+        ]);
+
+        \App\Models\Listing::factory()->create([
+            'seller_id' => $seller->id,
+            'product_id' => $productOil->id,
+            'price' => 0.0,
+            'currency' => 'TND',
+            'unit' => 'liter',
+            'status' => 'active',
+            'sale_mode' => 'negotiable',
+        ]);
+
+        $service = new EzzitouniBrainService();
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('buildSystemPrompt');
+        $method->setAccessible(true);
+
+        $prompt = $method->invoke($service, null, 'ar');
+
+        $this->assertStringContainsString('8.00 TND/liter', $prompt);
+        $this->assertStringContainsString('VERIFIED CHEAPEST OLIVE OIL OFFERS', $prompt);
+        $this->assertStringContainsString('للتفاوض عند الاتصال', $prompt);
+    }
 }
 
 
