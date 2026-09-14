@@ -48,7 +48,7 @@
         <!-- Ezzitouni Avatar -->
         <img x-show="!isOpen" src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover">
         
-        <!-- Close (X) Icon when chat is open -->
+        <!-- Close (X) Icon when chat is open on desktop -->
         <div x-show="isOpen" class="text-[#6A8F3B]" style="display: none;">
             <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
@@ -103,19 +103,20 @@
         <div class="absolute -bottom-1.5 left-6 w-3 h-3 bg-white border-b border-r border-[#6A8F3B]/25 transform rotate-45"></div>
     </div>
 
-    <!-- Chat Window Container (Optimized for Mobile & Desktop) -->
+    <!-- Chat Window Container (Native Fullscreen on Mobile, Floating Card on Desktop) -->
     <div x-show="isOpen" 
          x-transition:enter="transition ease-out duration-250 transform"
-         x-transition:enter-start="opacity-0 translate-y-6 scale-95"
-         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
          x-transition:leave="transition ease-in duration-150 transform"
-         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-         x-transition:leave-end="opacity-0 translate-y-6 scale-95"
-         class="fixed sm:absolute bottom-20 left-3 right-3 sm:left-0 sm:right-auto w-auto sm:w-[380px] max-w-[calc(100vw-1.5rem)] bg-white rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.18)] overflow-hidden border border-gray-100 flex flex-col z-30 touch-manipulation"
-         style="height: 520px; max-height: calc(100dvh - 7rem); display: none;">
+         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
+         class="fixed inset-0 sm:inset-auto sm:absolute sm:bottom-20 sm:left-0 sm:right-auto w-full sm:w-[390px] sm:max-w-[calc(100vw-2rem)] h-[100dvh] sm:h-[530px] sm:max-h-[calc(100dvh-6.5rem)] bg-white rounded-none sm:rounded-3xl shadow-2xl sm:shadow-[0_15px_50px_rgba(0,0,0,0.18)] overflow-hidden border-0 sm:border sm:border-gray-100 flex flex-col z-[100000] sm:z-30 touch-manipulation"
+         style="display: none;">
         
         <!-- Header -->
-        <div class="bg-gradient-to-r from-[#6A8F3B] via-[#5a7a2f] to-[#3B5998] px-4 py-3.5 flex items-center justify-between text-white shadow-sm shrink-0">
+        <div class="bg-gradient-to-r from-[#6A8F3B] via-[#5a7a2f] to-[#3B5998] px-4 py-3.5 flex items-center justify-between text-white shadow-sm shrink-0"
+             style="padding-top: max(0.875rem, env(safe-area-inset-top));">
             <div class="flex items-center gap-2.5">
                 <div class="w-9 h-9 rounded-full bg-white overflow-hidden p-0.5 shadow-sm shrink-0">
                     <img src="{{ asset('images/ezzitouni_bot.png') }}" alt="Zitouni" class="w-full h-full object-cover rounded-full">
@@ -128,18 +129,18 @@
                     <p class="text-[10px] sm:text-[11px] text-white/90 font-medium mt-0.5">{{ __('AI Agricultural & Trade Consultant') }}</p>
                 </div>
             </div>
-            <button @click="toggleChat()" type="button" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20 transition text-white" aria-label="Close chat">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+            <button @click="closeChat()" type="button" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-90 transition text-white" aria-label="Close chat">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
 
-        <!-- Messages Area (Smooth Native Scroll, Zero Clutter) -->
-        <div id="ezzitouni-chat-box" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-[#F9FAF7] flex flex-col overscroll-contain" style="-webkit-overflow-scrolling: touch;">
+        <!-- Messages Area (Smooth Native Touch Scroll) -->
+        <div id="ezzitouni-chat-box" class="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3.5 bg-[#F9FAF7] flex flex-col overscroll-contain" style="-webkit-overflow-scrolling: touch;">
             <template x-for="(msg, index) in messages" :key="index">
                 <div class="flex flex-col w-full" :class="msg.role === 'user' ? 'items-end' : 'items-start'">
                     
                     <!-- Bubble Content -->
-                    <div class="max-w-[88%] rounded-2xl p-3 text-xs sm:text-[13px] leading-relaxed shadow-sm transition-all"
+                    <div class="max-w-[88%] sm:max-w-[85%] rounded-2xl p-3 sm:p-3.5 text-xs sm:text-[13px] leading-relaxed shadow-sm transition-all"
                          :class="msg.role === 'user' 
                             ? 'bg-[#6A8F3B] text-white {{ $isRTL ? 'rounded-bl-none' : 'rounded-br-none' }} font-medium' 
                             : 'bg-white text-gray-800 border border-gray-100 {{ $isRTL ? 'rounded-br-none' : 'rounded-bl-none' }} shadow-[0_2px_8px_rgba(0,0,0,0.03)]'">
@@ -149,7 +150,7 @@
 
                     <!-- Dynamic Action Buttons (Only attached contextually under specific bot replies) -->
                     <template x-if="msg.buttons && msg.buttons.length > 0">
-                        <div class="w-full max-w-[88%] flex flex-wrap gap-1.5 mt-2">
+                        <div class="w-full max-w-[88%] sm:max-w-[85%] flex flex-wrap gap-1.5 mt-2">
                             <template x-for="(btn, bIndex) in msg.buttons" :key="bIndex">
                                 <a :href="btn.url" 
                                    @click="handleButtonClick(btn, $event)"
@@ -182,21 +183,26 @@
             </div>
         </div>
 
-        <!-- Input Area (Ultra Responsive & Fluid) -->
-        <div class="p-2.5 sm:p-3 bg-white border-t border-gray-100 shrink-0">
+        <!-- Input Area (Ultra Responsive, Fluid, Safe-Area Supported) -->
+        <div class="p-2.5 sm:p-3 bg-white border-t border-gray-100 shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]"
+             style="padding-bottom: max(0.625rem, env(safe-area-inset-bottom));">
             <form @submit.prevent="sendMessage" class="flex gap-2 items-center">
                 <input x-model="newMessage" 
+                       id="ezzitouni-chat-input"
                        type="text" 
                        placeholder="{{ $inputPlaceholder }}" 
-                       class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-1 focus:ring-[#6A8F3B] transition"
+                       class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2.5 sm:py-2 text-base sm:text-sm focus:outline-none focus:border-[#6A8F3B] focus:ring-2 focus:ring-[#6A8F3B]/20 transition"
+                       style="font-size: 16px;"
                        :disabled="isTyping"
                        autocomplete="off"
                        autocorrect="off"
                        autocapitalize="sentences"
                        spellcheck="false"
+                       enterkeyhint="send"
+                       @focus="if (window.innerWidth < 640) { setTimeout(() => scrollToBottom(), 300); }"
                        dir="auto">
                 <button type="submit" 
-                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white flex items-center justify-center hover:opacity-95 transition disabled:opacity-40 shrink-0 shadow-md transform active:scale-95 touch-manipulation"
+                        class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#6A8F3B] to-[#5a7a2f] text-white flex items-center justify-center hover:opacity-95 transition disabled:opacity-40 shrink-0 shadow-md transform active:scale-90 touch-manipulation"
                         :disabled="!newMessage.trim() || isTyping"
                         aria-label="Send message">
                     <svg class="w-4 h-4 {{ $isRTL ? '-rotate-90' : 'rotate-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
@@ -242,6 +248,24 @@ document.addEventListener('alpine:init', () => {
                     this.zitouniIndex = (this.zitouniIndex + 1) % this.zitouniMessages.length;
                 }
             }, 5000);
+
+            // Handle mobile visualViewport resize for virtual keyboard
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', () => {
+                    if (this.isOpen && window.innerWidth < 640) {
+                        this.scrollToBottom();
+                    }
+                });
+            }
+
+            // Handle window resize to release body scroll lock on desktop
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 640) {
+                    document.body.classList.remove('overflow-hidden');
+                } else if (this.isOpen) {
+                    document.body.classList.add('overflow-hidden');
+                }
+            });
         },
 
         closeTooltip() {
@@ -252,8 +276,22 @@ document.addEventListener('alpine:init', () => {
 
         toggleChat() {
             this.isOpen = !this.isOpen;
+            this.updateBodyLock();
             if (this.isOpen) {
                 this.scrollToBottom();
+            }
+        },
+
+        closeChat() {
+            this.isOpen = false;
+            this.updateBodyLock();
+        },
+
+        updateBodyLock() {
+            if (this.isOpen && window.innerWidth < 640) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
             }
         },
 
@@ -275,9 +313,7 @@ document.addEventListener('alpine:init', () => {
                 if (event) event.preventDefault();
                 const targetEl = document.getElementById(hash);
                 if (targetEl) {
-                    if (window.innerWidth < 768) {
-                        this.isOpen = false;
-                    }
+                    this.closeChat();
                     targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     try {
                         window.history.pushState(null, '', '#' + hash);
@@ -288,6 +324,7 @@ document.addEventListener('alpine:init', () => {
 
             // 3. Direct navigation for internal routes (e.g. /ar/prices, /ar/listings/create, /ar/register)
             if (event) event.preventDefault();
+            this.closeChat();
             window.location.href = btn.url;
         },
 
@@ -391,9 +428,13 @@ document.addEventListener('alpine:init', () => {
         const chatEl = document.querySelector('div[x-data*="ezzitouniChat"]');
         if (chatEl && window.Alpine) {
             const data = Alpine.$data(chatEl);
-            if (data && typeof data.sendMessage === 'function') {
-                data.newMessage = val;
-                data.sendMessage();
+            if (data) {
+                data.isOpen = true;
+                data.updateBodyLock();
+                if (typeof data.sendMessage === 'function') {
+                    data.newMessage = val;
+                    data.sendMessage();
+                }
             }
         }
     };
