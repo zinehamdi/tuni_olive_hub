@@ -93,7 +93,18 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         }
             
         $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(15), function () {
-            return \App\Models\Article::where('is_active', true)->orderBy('id', 'asc')->get();
+            $priorityIds = [18, 15, 11];
+            $priorityArticles = \App\Models\Article::where('is_active', true)
+                ->whereIn('id', $priorityIds)
+                ->get()
+                ->sortBy(fn($art) => array_search($art->id, $priorityIds));
+
+            $otherArticles = \App\Models\Article::where('is_active', true)
+                ->whereNotIn('id', $priorityIds)
+                ->orderBy('id', 'desc')
+                ->get();
+
+            return $priorityArticles->concat($otherArticles)->values();
         });
         
         $deals = \Illuminate\Support\Facades\Cache::remember('home_deals', now()->addMinutes(10), function () {
@@ -169,7 +180,20 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         if (!$article) {
             return redirect(url(app()->getLocale() . '/articles'), 301);
         }
-        $relatedArticles = \App\Models\Article::where('is_active', true)->where('id', '!=', $id)->latest()->get();
+        $priorityIds = [18, 15, 11];
+        $priorityArticles = \App\Models\Article::where('is_active', true)
+            ->where('id', '!=', $id)
+            ->whereIn('id', $priorityIds)
+            ->get()
+            ->sortBy(fn($art) => array_search($art->id, $priorityIds));
+
+        $otherArticles = \App\Models\Article::where('is_active', true)
+            ->where('id', '!=', $id)
+            ->whereNotIn('id', $priorityIds)
+            ->latest()
+            ->get();
+
+        $relatedArticles = $priorityArticles->concat($otherArticles)->values();
         return view('public.article', compact('article', 'relatedArticles'));
     })->name('articles.show');
     
