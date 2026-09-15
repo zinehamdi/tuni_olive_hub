@@ -563,6 +563,10 @@ Route::get('/', function (Request $request) {
     return redirect('/en', 302);
 });
 
+Route::get('/preview/proposal-uae', function () {
+    return view('emails.proposal_private_label_uae');
+})->name('preview.proposal_uae');
+
 // Fallback: smart 301 redirects for old non-prefixed URLs; soft-404 handling for deleted content
 Route::fallback(function (Request $request) {
     $path = trim($request->path(), '/');
