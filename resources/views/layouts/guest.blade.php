@@ -10,14 +10,14 @@
         @php
             $locale = app()->getLocale();
             $defaultGuestTitle = match($locale) {
-                'ar' => 'زين توب | الدخول والتسجيل',
-                'fr' => 'ZinToop | Connexion et Inscription',
-                default => 'ZinToop | Login & Registration',
+                'ar' => 'زين توب | التسجيل والدخول إلى المنظومة الوطنية لزيت الزيتون',
+                'fr' => 'ZinToop | Inscription et Connexion à la Plateforme',
+                default => 'ZinToop | Registration & Login to the Olive Oil Platform',
             };
             $defaultGuestDesc = match($locale) {
-                'ar' => 'سجل دخولك أو أنشئ حسابك المجاني في منصة زين توب للتواصل المباشر مع الفلاحين والمعاصر في تونس.',
-                'fr' => 'Connectez-vous ou créez votre compte gratuit sur ZinToop pour contacter directement les producteurs en Tunisie.',
-                default => 'Log in or create your free ZinToop account to connect directly with olive oil producers and mills in Tunisia.',
+                'ar' => 'أنشئ حسابك المجاني في منصة زين توب (ZinToop) للتواصل المباشر مع الفلاحين، أصحاب المعاصر، المعلبين، والمصدرين في تونس بـ 0% عمولة.',
+                'fr' => 'Créez votre compte gratuit sur ZinToop pour connecter directement producteurs, moulins, conditionneurs et exportateurs en Tunisie (0% commission).',
+                default => 'Create your free account on ZinToop to connect directly with olive farmers, mills, bottlers, and exporters in Tunisia (0% commission).',
             };
             $defaultGuestKeywords = match($locale) {
                 'ar' => 'الشملالي, الشتوي, أصناف الزيتون في تونس, أنواع الزيتون التونسي, أحسن أنواع زيت الزيتون في العالم, أحسن أصناف الزيتون في العالم, أكبر سوق زيت زيتون, أسعار زيت الزيتون في تونس, أسعار زيت الزيتون في العالم, أسهل طريقة لترويج وشراء زيت الزيتون, زيت الزيتون التونسي, سوق زيت الزيتون, زين توب',
@@ -40,17 +40,18 @@
         <meta property="og:title" content="@yield('og_title', $defaultGuestTitle)">
         <meta property="og:description" content="@yield('og_description', $defaultGuestDesc)">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image" content="@yield('og_image', asset('images/zintoop-logo.png'))">
-        <meta property="og:image:secure_url" content="@yield('og_image', asset('images/zintoop-logo.png'))">
-        <meta property="og:image:width" content="600">
-        <meta property="og:image:height" content="600">
+        <meta property="og:image" content="@yield('og_image', asset('images/zintoop-register-card.png'))">
+        <meta property="og:image:secure_url" content="@yield('og_image', asset('images/zintoop-register-card.png'))">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:type" content="image/png">
         <meta property="og:locale" content="{{ $locale === 'ar' ? 'ar_TN' : ($locale === 'fr' ? 'fr_FR' : 'en_US') }}">
         
         <!-- Twitter Card Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="@yield('twitter_title', $defaultGuestTitle)">
         <meta name="twitter:description" content="@yield('twitter_description', $defaultGuestDesc)">
-        <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-logo.png'))">
+        <meta name="twitter:image" content="@yield('twitter_image', asset('images/zintoop-register-card.png'))">
         
         <!-- Alternate Language Links (locale-prefixed — NOT query params) -->
         @php

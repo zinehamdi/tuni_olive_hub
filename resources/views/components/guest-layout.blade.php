@@ -13,14 +13,14 @@
 
             if ($isRegister) {
                 $defaultGuestTitle = match($locale) {
-                    'ar' => 'زين توب | التسجيل وإنشاء حساب مجاني',
-                    'fr' => 'ZinToop | Inscription Gratuite & Création de Compte',
-                    default => 'ZinToop | Free Registration & Account Creation',
+                    'ar' => '🫒 انضم إلى المنظومة الوطنية لزيت الزيتون التونسي | إنشاء حساب مجاني',
+                    'fr' => '🫒 Rejoignez la Plateforme Nationale de l\'Huile d\'Olive | Inscription Gratuite',
+                    default => '🫒 Join Tunisia\'s National Olive Oil Digital Platform | Free Registration',
                 };
                 $defaultGuestDesc = match($locale) {
-                    'ar' => 'سجل الآن مجاناً في منصة زين توب لتسويق وشراء زيت الزيتون التونسي والتواصل المباشر مع الفلاحين وأصحاب المعاصر والمشترين بدون وسيط.',
-                    'fr' => 'Inscrivez-vous gratuitement sur ZinToop pour acheter ou vendre de l\'huile d\'olive tunisienne et contacter directement les producteurs sans intermédiaire.',
-                    default => 'Join ZinToop for free to buy and sell Tunisian extra virgin olive oil directly with certified farmers and mills without broker fees.',
+                    'ar' => 'سجل مجاناً في منصة ZinToop (فلاح، صاحب معصرة، معلب، ناقل، أو مصدر). تواصل مباشر 0% عمولة وبورصة أسعار أسبوعية.',
+                    'fr' => 'Inscrivez-vous gratuitement sur ZinToop (Producteur, Moulinier, Conditionneur, Transporteur, Exportateur). 0% commission et mise en relation directe.',
+                    default => 'Register for free on ZinToop (Farmer, Mill Owner, Bottler, Carrier, or Exporter). 0% commission, weekly price indices, and direct B2B trading.',
                 };
             } elseif ($isLogin) {
                 $defaultGuestTitle = match($locale) {

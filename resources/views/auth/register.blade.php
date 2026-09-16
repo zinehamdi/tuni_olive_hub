@@ -1,3 +1,24 @@
+@section('title', match(app()->getLocale()) {
+    'ar' => 'إنشاء حساب مجاني | اختر صفتك وسجل في منصة زيت الزيتون التونسي',
+    'fr' => 'Créer un Compte Gratuit | Choisissez votre profil sur ZinToop',
+    default => 'Create Your Free Account | Join ZinToop Tunisian Olive Oil Platform',
+})
+
+@section('og_title', match(app()->getLocale()) {
+    'ar' => '🫒 انضم إلى المنظومة الوطنية لزيت الزيتون التونسي | إنشاء حساب مجاني',
+    'fr' => '🫒 Rejoignez la Plateforme Nationale de l\'Huile d\'Olive | Inscription Gratuite',
+    default => '🫒 Join Tunisia\'s National Olive Oil Digital Platform | Free Registration',
+})
+
+@section('og_description', match(app()->getLocale()) {
+    'ar' => 'سجل مجاناً في منصة ZinToop (فلاح، صاحب معصرة، معلب، ناقل، أو مصدر). تواصل مباشر 0% عمولة وبورصة أسعار أسبوعية.',
+    'fr' => 'Inscrivez-vous gratuitement sur ZinToop (Producteur, Moulinier, Conditionneur, Transporteur, Exportateur). 0% commission et mise en relation directe.',
+    default => 'Register for free on ZinToop (Farmer, Mill Owner, Bottler, Carrier, or Exporter). 0% commission, weekly price indices, and direct B2B trading.',
+})
+
+@section('og_image', asset('images/zintoop-register-card.png'))
+@section('twitter_image', asset('images/zintoop-register-card.png'))
+
 <x-guest-layout>
     <div class="mx-auto max-w-lg">
         @php
