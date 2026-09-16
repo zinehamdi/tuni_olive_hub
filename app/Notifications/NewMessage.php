@@ -25,15 +25,8 @@ class NewMessage extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = [WebPushChannel::class, 'database', 'broadcast'];
-
-        // Add mail channel — throttled: max 1 email per 5 min per sender-recipient pair
-        $throttleKey = "notif_mail_message_{$notifiable->id}_{$this->sender->id}";
-        if (Cache::add($throttleKey, 1, now()->addMinutes(5))) {
-            $channels[] = 'mail';
-        }
-
-        return $channels;
+        // Deliver immediately to in-app bell, WebSocket broadcast, and web push
+        return [WebPushChannel::class, 'database', 'broadcast'];
     }
 
     public function toMail(object $notifiable): MailMessage

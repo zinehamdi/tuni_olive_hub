@@ -215,11 +215,19 @@ class MessageController extends Controller
             \Log::warning('Broadcast failed (WebSocket unavailable): ' . $e->getMessage());
         }
 
-        // Send notification (queued — won't block even if broadcast channel fails)
+        // Send in-app notification & webpush immediately
         try {
             $user->notify(new \App\Notifications\NewMessage($message, $authUser));
         } catch (\Throwable $e) {
             \Log::warning('Notification dispatch failed: ' . $e->getMessage());
+        }
+
+        // Schedule smart delayed email (fires after 5 minutes only if message is still unread)
+        try {
+            \App\Jobs\SendUnreadMessageEmailJob::dispatch($message->id, $authUser->id, $user->id)
+                ->delay(now()->addMinutes(5));
+        } catch (\Throwable $e) {
+            \Log::warning('SendUnreadMessageEmailJob dispatch failed: ' . $e->getMessage());
         }
 
         // Update thread timestamp
