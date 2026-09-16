@@ -13,14 +13,14 @@
 
             if ($isRegister) {
                 $defaultGuestTitle = match($locale) {
-                    'ar' => '🫒 انضم إلى المنظومة الوطنية لزيت الزيتون التونسي | إنشاء حساب مجاني',
-                    'fr' => '🫒 Rejoignez la Plateforme Nationale de l\'Huile d\'Olive | Inscription Gratuite',
-                    default => '🫒 Join Tunisia\'s National Olive Oil Digital Platform | Free Registration',
+                    'ar' => '🫒 انضم إلى منصة الزين لزيت الزيتون التونسي | إنشاء حساب مجاني',
+                    'fr' => '🫒 Rejoignez la Plateforme de l\'Huile d\'Olive Tunisienne | Inscription Gratuite',
+                    default => '🫒 Join Tunisia\'s Olive Oil Platform | Free Registration',
                 };
                 $defaultGuestDesc = match($locale) {
-                    'ar' => 'سجل مجاناً في منصة ZinToop (فلاح، صاحب معصرة، معلب، ناقل، أو مصدر). تواصل مباشر 0% عمولة وبورصة أسعار أسبوعية.',
-                    'fr' => 'Inscrivez-vous gratuitement sur ZinToop (Producteur, Moulinier, Conditionneur, Transporteur, Exportateur). 0% commission et mise en relation directe.',
-                    default => 'Register for free on ZinToop (Farmer, Mill Owner, Bottler, Carrier, or Exporter). 0% commission, weekly price indices, and direct B2B trading.',
+                    'ar' => 'سجل مجاناً في منصة ZinToop (فلاح، صاحب معصرة، معلب، ناقل، أو مشتري ومستهلك). تواصل مباشر 0% عمولة وبورصة أسعار أسبوعية.',
+                    'fr' => 'Inscrivez-vous gratuitement sur ZinToop (Producteur, Moulinier, Conditionneur, Transporteur, Acheteur & Client). 0% commission et mise en relation directe.',
+                    default => 'Register for free on ZinToop (Farmer, Mill Owner, Bottler, Carrier, or Buyer & Consumer). 0% commission, weekly price indices, and direct B2B trading.',
                 };
             } elseif ($isLogin) {
                 $defaultGuestTitle = match($locale) {
@@ -48,7 +48,13 @@
 
             $pageTitle = $title ?? $defaultGuestTitle;
             $pageDesc = $description ?? $defaultGuestDesc;
-            $defaultOgImg = $isRegister ? (asset('images/zintoop-register-card-v5.jpg') . '?v=20260916') : asset('images/zintoop-logo.png');
+            $defaultOgImg = $isRegister 
+                ? (asset(match($locale) {
+                    'ar' => 'images/zintoop-register-card-ar.jpg',
+                    'fr' => 'images/zintoop-register-card-fr.jpg',
+                    default => 'images/zintoop-register-card-en.jpg',
+                }) . '?v=20260916b') 
+                : asset('images/zintoop-logo.png');
             $ogImg = $ogImage ?? $defaultOgImg;
         @endphp
 
