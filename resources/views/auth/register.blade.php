@@ -16,8 +16,8 @@
     default => 'Register for free on ZinToop (Farmer, Mill Owner, Bottler, Carrier, or Exporter). 0% commission, weekly price indices, and direct B2B trading.',
 })
 
-@section('og_image', asset('images/zintoop-register-card.png'))
-@section('twitter_image', asset('images/zintoop-register-card.png'))
+@section('og_image', asset('images/zintoop-register-card-v5.jpg') . '?v=20260916')
+@section('twitter_image', asset('images/zintoop-register-card-v5.jpg') . '?v=20260916')
 
 <x-guest-layout>
     <div class="mx-auto max-w-lg">
