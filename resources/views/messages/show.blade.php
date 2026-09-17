@@ -500,7 +500,7 @@
                                                                 <span>{{ $carrier->governorate_label ?? __('Tunisia') }}</span>
                                                                 @if($carrier->phone)
                                                                     <span>•</span>
-                                                                    <span class="font-mono text-gray-700">{{ $carrier->phone }}</span>
+                                                                    <span class="font-mono text-gray-700" dir="ltr">{{ $carrier->phone }}</span>
                                                                 @endif
                                                             </div>
                                                         </div>

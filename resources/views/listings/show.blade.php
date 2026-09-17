@@ -779,12 +779,14 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                         @if($listing->seller->phone)
                                             <div class="p-4 bg-[#6A8F3B]/10 rounded-xl">
                                                 <div class="text-sm text-gray-600 mb-2">{{ __('Phone Number') }}</div>
-                                                <a href="tel:{{ $listing->seller->phone }}" class="text-2xl font-bold text-[#6A8F3B] hover:text-[#5a7a2f] flex items-center gap-2">
-                                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                                    </svg>
-                                                    {{ $listing->seller->phone }}
-                                                </a>
+                                                <div class="flex items-center justify-start">
+                                                    <a href="tel:{{ $listing->seller->phone }}" class="text-2xl font-bold text-[#6A8F3B] hover:text-[#5a7a2f] inline-flex items-center gap-3 font-mono tracking-wider transition-colors" dir="ltr">
+                                                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                        </svg>
+                                                        <span style="unicode-bidi: isolate; direction: ltr;">{{ $listing->seller->phone }}</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                         @else
                                             <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
