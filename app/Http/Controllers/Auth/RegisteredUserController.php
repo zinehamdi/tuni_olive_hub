@@ -160,11 +160,6 @@ class RegisteredUserController extends Controller
         // Log the user in, and force remember me for non-admins to keep session open
         Auth::login($user, $user->role !== 'admin');
 
-        // Carriers must verify their WhatsApp before entering the dashboard
-        if ($user->role === 'carrier') {
-            return redirect()->route('carrier.verify.whatsapp');
-        }
-
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to your dashboard.'));
     }
 }

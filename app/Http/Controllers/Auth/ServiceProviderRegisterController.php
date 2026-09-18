@@ -118,10 +118,6 @@ class ServiceProviderRegisterController extends Controller
 
         Auth::login($user, true);
 
-        if ($user->role === 'carrier') {
-            return redirect()->route('carrier.verify.whatsapp');
-        }
-
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to Zintoop.'));
     }
 }
