@@ -72,7 +72,13 @@
                                 </svg>
                             </div>
                             <div>
-                                <div class="font-bold text-gray-900">{{ __('Carrier') }}</div>
+                                <div class="font-bold text-gray-900 flex items-center gap-2">
+                                    <span>{{ __('Carrier') }}</span>
+                                    <span class="inline-flex items-center gap-1 text-[10px] text-[#047857] bg-[#D1FAE5] px-1.5 py-0.5 rounded-full font-bold">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                                        {{ __('ربط WhatsApp فوري') }}
+                                    </span>
+                                </div>
                                 <div class="text-sm text-gray-500">{{ __('Transport and delivery services') }}</div>
                             </div>
                         </div>

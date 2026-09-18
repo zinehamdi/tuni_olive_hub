@@ -56,6 +56,11 @@ class SendWhatsAppWelcomeJob implements ShouldQueue
 
         Log::info("Sending delayed Welcome WhatsApp to user #{$user->id} ({$user->phone})");
 
+        if ($user->role === 'carrier') {
+            $waService->sendCarrierWelcomeHandshake($user->phone, $user);
+            return;
+        }
+
         // Send via WhatsApp Cloud API Template or Text fallback
         $waService->sendWelcomeTemplate(
             $user->phone,

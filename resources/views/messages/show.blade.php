@@ -506,19 +506,29 @@
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                                                    <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end flex-wrap">
                                                         {{-- Direct Phone Call Button --}}
                                                         @if($carrier->phone)
-                                                            <a href="tel:{{ $carrier->phone }}" class="px-3 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition border border-emerald-200" title="{{ __('Call Transporter') }}">
+                                                            <a href="tel:{{ $carrier->phone }}" class="px-2.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1 transition border border-emerald-200" title="{{ __('Call Transporter') }}">
                                                                 <span>📞</span>
                                                                 <span>{{ __('Call') }}</span>
+                                                            </a>
+                                                            
+                                                            @php
+                                                                $cPhoneClean = preg_replace('/[^0-9]/', '', (string)$carrier->phone);
+                                                                if (strlen($cPhoneClean) === 8) $cPhoneClean = '216' . $cPhoneClean;
+                                                                $cWaText = rawurlencode("سلام سي {$carrier->name}، عندي كورسة نقل زيت زيتون عبر منصة ZinToop. كلمني للتنسيق.");
+                                                            @endphp
+                                                            <a href="https://wa.me/{{ $cPhoneClean }}?text={{ $cWaText }}" target="_blank" class="px-2.5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold flex items-center gap-1 transition shadow-sm" title="WhatsApp">
+                                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.771.815 2.796.815 3.183 0 5.768-2.587 5.769-5.767.001-3.182-2.585-5.77-5.769-5.77zm3.377 8.219c-.144.405-.837.774-1.17.824-.312.045-.698.077-1.118-.057-.267-.085-.609-.204-1.053-.396-1.859-.806-3.076-2.695-3.169-2.819-.093-.124-.755-1.004-.755-1.916s.478-1.359.648-1.545c.17-.186.371-.233.494-.233.124 0 .248.001.356.006.114.005.267-.043.417.319.155.371.528 1.285.574 1.378.046.093.077.202.015.326-.062.124-.093.202-.186.31-.093.109-.196.243-.28.326-.093.093-.191.196-.082.382.109.186.483.797 1.036 1.29 1.135.708 1.488.928 1.7.99.144.041.289.02.392-.041.134-.082.573-.667.727-.895.155-.227.309-.191.52-.113.211.077 1.336.63 1.564.743.227.114.378.17.433.267.055.097.055.563-.089.968z"/></svg>
+                                                                <span>WhatsApp</span>
                                                             </a>
                                                         @endif
 
                                                         {{-- Assign & Summon Button --}}
                                                         <button @click="assignTransporter({{ $carrier->id }})"
                                                                 :disabled="assigningCarrier === {{ $carrier->id }}"
-                                                                class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                                                class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5 whitespace-nowrap">
                                                             <span x-show="assigningCarrier !== {{ $carrier->id }}">{{ __('Assign & Summon') }}</span>
                                                             <svg x-show="assigningCarrier === {{ $carrier->id }}" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                                         </button>

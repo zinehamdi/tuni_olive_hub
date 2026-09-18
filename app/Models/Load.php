@@ -73,13 +73,16 @@ class Load extends Model
 
     public function owner(){ return $this->belongsTo(User::class,'owner_id'); }
     public function pickup(){ return $this->belongsTo(Address::class,'pickup_addr_id'); }
+    public function pickupAddress(){ return $this->belongsTo(Address::class,'pickup_addr_id'); }
     public function dropoffAddress(){ return $this->belongsTo(Address::class,'dropoff_addr_id'); }
     public function offers(){ return $this->hasMany(CarrierOffer::class); }
     public function order(){ return $this->belongsTo(Order::class, 'order_id'); }
     public function carrier(){ return $this->belongsTo(User::class, 'carrier_id'); }
 
     public const ST_NEW = 'new';
+    public const ST_OPEN = 'new';
     public const ST_MATCHED = 'matched';
+    public const ST_CONFIRMED = 'in_transit';
     public const ST_IN_TRANSIT = 'in_transit';
     public const ST_DELIVERED = 'delivered';
     public const ST_SETTLED = 'settled';

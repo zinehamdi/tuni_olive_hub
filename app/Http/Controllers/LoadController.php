@@ -146,13 +146,32 @@ class LoadController extends Controller
         $thread = Chat::ensureThread('order', $order->id, [$order->buyer_id, $order->seller_id]);
         EzZitouniDealMediator::onTransporterSummoned($thread, $load, $carrier->name, $pinCode, $estimate['total_cost']);
 
+        // 5. Send automated WhatsApp Mission Dispatch to Carrier
+        if (!empty($carrier->phone)) {
+            try {
+                $waService = app(\App\Services\Bot\WhatsAppCloudApiService::class);
+                $waService->sendTransportMission($carrier->phone, $load, $carrier, $user, $estimate);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp mission to carrier #{$carrier->id}: " . $e->getMessage());
+            }
+        }
+
+        // Build WhatsApp Direct Fallback Link
+        $cleanPhone = preg_replace('/[^0-9]/', '', (string)$carrier->phone);
+        if (strlen($cleanPhone) === 8) {
+            $cleanPhone = '216' . $cleanPhone;
+        }
+        $waText = rawurlencode("سلام سي {$carrier->name}، تم اختيارك لكورسة نقل زيت زيتون من {$pickupGov} إلى {$dropoffGov} عبر منصة ZinToop. السعر التقديري: ~{$estimate['total_cost']} د.ت. كلمني للتنسيق.");
+        $waDirectUrl = !empty($cleanPhone) ? "https://wa.me/{$cleanPhone}?text={$waText}" : null;
+
         return response()->json([
             'success' => true,
             'message' => __('Transporter summoned successfully.'),
             'load_id' => $load->id,
             'pin_code' => $pinCode,
             'estimated_cost' => $estimate['total_cost'],
-            'distance_km' => $estimate['distance_km']
+            'distance_km' => $estimate['distance_km'],
+            'whatsapp_url' => $waDirectUrl,
         ]);
     }
 }

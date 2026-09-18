@@ -121,18 +121,30 @@ class MetaWebhookController extends Controller
 
                     foreach ($messages as $msg) {
                         $fromPhone = $msg['from'] ?? null;
-                        $type = $msg['type'] ?? null;
+                        $type = $msg['type'] ?? 'text';
 
-                        if ($fromPhone && $type === 'text') {
+                        if ($fromPhone && $type === 'interactive') {
+                            $buttonId = $msg['interactive']['button_reply']['id'] ?? ($msg['interactive']['list_reply']['id'] ?? null);
+                            if ($buttonId) {
+                                Log::info("Processing WhatsApp Interactive Button Event for {$fromPhone}: {$buttonId}");
+                                app(\App\Services\TransportWhatsAppHandler::class)->handleButtonReply((string) $fromPhone, (string) $buttonId);
+                            }
+                        } elseif ($fromPhone && $type === 'text') {
                             $textBody = $msg['text']['body'] ?? '';
                             if (!empty($textBody)) {
-                                Log::info("Dispatching WhatsApp Message Event for {$fromPhone}");
-                                ProcessBotEventJob::dispatch(
-                                    'whatsapp',
-                                    (string) $fromPhone,
-                                    (string) $textBody,
-                                    (string) $contactName
-                                );
+                                // 1. Check if this is a transport command (PIN code verification or quick approval)
+                                $isTransportAction = app(\App\Services\TransportWhatsAppHandler::class)->handleTextReply((string) $fromPhone, (string) $textBody);
+
+                                // 2. If not a transport command, route to general AI Assistant
+                                if (!$isTransportAction) {
+                                    Log::info("Dispatching WhatsApp Message Event to AI Bot for {$fromPhone}");
+                                    ProcessBotEventJob::dispatch(
+                                        'whatsapp',
+                                        (string) $fromPhone,
+                                        (string) $textBody,
+                                        (string) $contactName
+                                    );
+                                }
                             }
                         }
                     }

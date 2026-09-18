@@ -11,27 +11,27 @@ class TransportPricingService
      */
     public const TIERS = [
         'pickup' => [
-            'name_ar' => 'بيك آب / إيسوزو (حمولة خفيفة)',
-            'name_fr' => 'Pick-up / Isuzu (Charge légère)',
-            'name_en' => 'Pick-up / Isuzu (Light load)',
-            'max_qty' => 1500, // Liters or Kg
+            'name_ar' => 'بيك آب / إيسوزو (حتى 2.5 طن)',
+            'name_fr' => 'Pick-up / Isuzu (Jusqu\'à 2.5T)',
+            'name_en' => 'Pick-up / Isuzu (Up to 2.5T)',
+            'max_qty' => 2500, // Liters or Kg
             'base_fee' => 40.0, // Fixed loading & departure fee
             'rate_per_km' => 1.100, // TND per KM
             'icon' => '🛻'
         ],
         'light_truck' => [
-            'name_ar' => 'شاحنة متوسطة (3.5 إلى 5 طن)',
-            'name_fr' => 'Camionnette (3.5T - 5T)',
-            'name_en' => 'Light Truck (3.5T - 5T)',
-            'max_qty' => 4500,
+            'name_ar' => 'شاحنة متوسطة (2.5 إلى 5 طن)',
+            'name_fr' => 'Camionnette (2.5T - 5T)',
+            'name_en' => 'Light Truck (2.5T - 5T)',
+            'max_qty' => 5000,
             'base_fee' => 70.0,
             'rate_per_km' => 1.600,
             'icon' => '🚛'
         ],
         'heavy_truck' => [
-            'name_ar' => 'شاحنة ثقيلة (10 إلى 12 طن)',
-            'name_fr' => 'Poids Lourd (10T - 12T)',
-            'name_en' => 'Heavy Truck (10T - 12T)',
+            'name_ar' => 'شاحنة ثقيلة (5 إلى 12 طن)',
+            'name_fr' => 'Poids Lourd (5T - 12T)',
+            'name_en' => 'Heavy Truck (5T - 12T)',
             'max_qty' => 12000,
             'base_fee' => 120.0,
             'rate_per_km' => 2.200,
@@ -85,9 +85,9 @@ class TransportPricingService
             return array_merge(['tier_key' => 'tanker'], self::TIERS['tanker']);
         }
 
-        if ($qty <= 1500) {
+        if ($qty <= 2500) {
             return array_merge(['tier_key' => 'pickup'], self::TIERS['pickup']);
-        } elseif ($qty <= 4500) {
+        } elseif ($qty <= 5000) {
             return array_merge(['tier_key' => 'light_truck'], self::TIERS['light_truck']);
         } elseif ($qty <= 12000) {
             return array_merge(['tier_key' => 'heavy_truck'], self::TIERS['heavy_truck']);

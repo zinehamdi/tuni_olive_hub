@@ -74,11 +74,31 @@
                         </div>
 
                         <div>
-                            <label for="phone" class="block text-gray-900 font-bold mb-2">{{ __('Phone Number') }} <span class="text-red-600">*</span></label>
+                            <div class="flex items-center justify-between mb-2">
+                                <label for="phone" class="block text-gray-900 font-bold flex items-center gap-1.5">
+                                    <svg class="w-5 h-5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                                    </svg>
+                                    <span>{{ __('رقم الهاتف (المرتبط بـ WhatsApp)') }}</span>
+                                    <span class="text-red-600">*</span>
+                                </label>
+                                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#047857] bg-[#D1FAE5] px-2 py-0.5 rounded-full">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                                    {{ __('إلزامي لربط الكورسات') }}
+                                </span>
+                            </div>
                             <input id="phone" type="tel" name="phone" value="{{ old('phone', request('phone')) }}" required 
-                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
+                                class="w-full rounded-xl border-2 border-[#10B981]/40 px-4 py-3 bg-white text-gray-900 focus:border-[#10B981] focus:ring-4 focus:ring-[#10B981]/20 transition-all font-mono text-base" 
                                 placeholder="+216 XX XXX XXX"
                                 onfocus="if(this.value === '') this.value = '+216 '">
+                            <div class="mt-2 flex items-start gap-2 text-xs text-[#065F46] bg-[#ECFDF5] border border-[#A7F3D0] p-2.5 rounded-xl">
+                                <svg class="w-4 h-4 text-[#25D366] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                                </svg>
+                                <p class="leading-relaxed">
+                                    <strong>{{ __('تنبيه هام للناقلين:') }}</strong> {{ __('سيصلك إشعار فوري على تطبيق WhatsApp لتأكيد رقمك واستقبال كل مهمات وكورسات النقل القريبة منك مع أزرار القبول المباشرة.') }}
+                                </p>
+                            </div>
                             @error('phone')
                                 <p class="text-red-600 text-sm mt-2 flex items-center gap-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -119,17 +139,61 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
                         </svg>
-                        {{ __('Transport Information') }}
+                        {{ __('بيانات ومجال خدمات النقل') }}
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            <label for="camion_capacity" class="block text-gray-900 font-bold mb-2">{{ __('Truck Capacity (in tons)') }} <span class="text-red-600">*</span></label>
-                            <input id="camion_capacity" type="number" step="0.1" name="camion_capacity" value="{{ old('camion_capacity', request('camion_capacity')) }}" required 
-                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
-                                placeholder="{{ __('Example: 5, 10, 20') }}">
-                            @error('camion_capacity')
-                                <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
-                            @enderror
+                    
+                    <div class="space-y-6">
+                        <!-- Shipping Scope (Local vs International) -->
+                        <div>
+                            <label class="block text-gray-900 font-bold mb-2">{{ __('نطاق خدمات الشحن والنقل') }} <span class="text-red-600">*</span></label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <label class="flex items-center gap-3 p-3.5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#C8A356] bg-gray-50 transition-all has-[:checked]:border-[#C8A356] has-[:checked]:bg-[#C8A356]/10">
+                                    <input type="radio" name="shipping_scope" value="domestic" {{ old('shipping_scope', 'domestic') === 'domestic' ? 'checked' : '' }} class="text-[#C8A356] focus:ring-[#C8A356] w-4 h-4">
+                                    <div>
+                                        <div class="font-bold text-gray-900 text-sm">🇹🇳 {{ __('نقل محلي داخلي') }}</div>
+                                        <div class="text-xs text-gray-500">{{ __('بين المعاصر والولايات التونسية') }}</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-3.5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#C8A356] bg-gray-50 transition-all has-[:checked]:border-[#C8A356] has-[:checked]:bg-[#C8A356]/10">
+                                    <input type="radio" name="shipping_scope" value="international" {{ old('shipping_scope') === 'international' ? 'checked' : '' }} class="text-[#C8A356] focus:ring-[#C8A356] w-4 h-4">
+                                    <div>
+                                        <div class="font-bold text-gray-900 text-sm">🌍 {{ __('شحن وتصدير دولي') }}</div>
+                                        <div class="text-xs text-gray-500">{{ __('شحن بحري / جوي / بري دولي') }}</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-3.5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-[#C8A356] bg-gray-50 transition-all has-[:checked]:border-[#C8A356] has-[:checked]:bg-[#C8A356]/10">
+                                    <input type="radio" name="shipping_scope" value="both" {{ old('shipping_scope') === 'both' ? 'checked' : '' }} class="text-[#C8A356] focus:ring-[#C8A356] w-4 h-4">
+                                    <div>
+                                        <div class="font-bold text-gray-900 text-sm">🔄 {{ __('كلاهما (محلي ودولي)') }}</div>
+                                        <div class="text-xs text-gray-500">{{ __('تغطية شاملة داخل وخارج تونس') }}</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Type & Capacity Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="vehicle_type" class="block text-gray-900 font-bold mb-2">{{ __('نوع وسيلة النقل الرئيسية') }} <span class="text-red-600">*</span></label>
+                                <select id="vehicle_type" name="vehicle_type" required 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all">
+                                    <option value="pickup" {{ old('vehicle_type') === 'pickup' ? 'selected' : '' }}>🛻 {{ __('بيك آب / إيسوزو Isuzu D-Max (حتى 2.5 طن)') }}</option>
+                                    <option value="light_truck" {{ old('vehicle_type') === 'light_truck' ? 'selected' : '' }}>🚛 {{ __('شاحنة متوسطة (2.5 إلى 5 طن)') }}</option>
+                                    <option value="heavy_truck" {{ old('vehicle_type') === 'heavy_truck' ? 'selected' : '' }}>🚚 {{ __('شاحنة ثقيلة (5 إلى 12 طن)') }}</option>
+                                    <option value="tanker" {{ old('vehicle_type') === 'tanker' ? 'selected' : '' }}>🛢️ {{ __('صهريج غذائي إينوكس (Inox أكثر من 12 طن)') }}</option>
+                                    <option value="fleet" {{ old('vehicle_type') === 'fleet' ? 'selected' : '' }}>🏢 {{ __('شركة لوجستية / أسطول شاحنات متعدد (Flotte)') }}</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="camion_capacity" class="block text-gray-900 font-bold mb-2">{{ __('الحمولة الإجمالية (بالطن)') }} <span class="text-red-600">*</span></label>
+                                <input id="camion_capacity" type="number" step="0.1" name="camion_capacity" value="{{ old('camion_capacity', request('camion_capacity', 2.5)) }}" required 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 bg-gray-50 text-gray-900 focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition-all" 
+                                    placeholder="{{ __('مثال: 2.5 ، 5 ، 10 ، 25') }}">
+                                @error('camion_capacity')
+                                    <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>

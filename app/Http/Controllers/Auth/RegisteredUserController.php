@@ -82,7 +82,9 @@ class RegisteredUserController extends Controller
             $rules['farm_location'] = ['required', 'string', 'max:255'];
             $rules['tree_number'] = ['required', 'integer', 'min:1'];
         } elseif ($role === 'carrier') {
-            $rules['camion_capacity'] = ['required', 'integer', 'min:1'];
+            $rules['camion_capacity'] = ['required', 'numeric', 'min:0.1'];
+            $rules['shipping_scope'] = ['nullable', 'string', 'in:domestic,international,both'];
+            $rules['vehicle_type'] = ['nullable', 'string', 'in:pickup,light_truck,heavy_truck,tanker,fleet'];
         } elseif ($role === 'mill') {
             $rules['mill_name'] = ['required', 'string', 'max:255'];
         }
@@ -102,6 +104,10 @@ class RegisteredUserController extends Controller
             $user->tree_number = $validated['tree_number'];
         } elseif ($role === 'carrier') {
             $user->camion_capacity = $validated['camion_capacity'];
+            $metaData = $user->meta_data ?? [];
+            $metaData['shipping_scope'] = $request->input('shipping_scope', 'domestic');
+            $metaData['vehicle_type'] = $request->input('vehicle_type', 'pickup');
+            $user->meta_data = $metaData;
         } elseif ($role === 'mill') {
             $user->mill_name = $validated['mill_name'];
         }
