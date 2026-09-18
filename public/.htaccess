@@ -6,7 +6,7 @@
     RewriteEngine On
 
     # Disable LiteSpeed Cache for dynamic auth routes
-    RewriteCond %{REQUEST_URI} (user|servicehub|login|register) [NC]
+    RewriteCond %{REQUEST_URI} (user|servicehub|login|register|dashboard) [NC]
     RewriteRule .* - [E=Cache-Control:no-cache]
 
     # PHP Upload Configuration for Large Image Files
@@ -40,6 +40,26 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+
 <IfModule mod_headers.c>
     # Enable strong browser caching for static assets (images, CSS, JS)
     <FilesMatch "\.(css|js|webp|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot)$">
@@ -48,5 +68,5 @@
 </IfModule>
 
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml image/svg+xml
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml font/ttf application/font-woff application/font-woff2
 </IfModule>
