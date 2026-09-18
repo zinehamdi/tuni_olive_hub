@@ -1953,11 +1953,10 @@ document.addEventListener('alpine:init', () => {
 </script>
 
 <!-- Structured Data for Products (SEO) -->
-<!-- Structured Data for Products (SEO) -->
 @if(isset($featuredListings) && count($featuredListings) > 0)
 @php
     $itemListElements = [];
-    foreach($featuredListings as $index => $listing) {
+    foreach($featuredListings->take(10) as $index => $listing) {
         $productVariety = $listing->product->variety ?? 'زيت الزيتون';
         $productQuality = $listing->product->quality ?? 'جودة عالية';
         $productType = ($listing->product->type ?? 'oil') === 'oil' ? 'زيت زيتون' : 'زيتون';
