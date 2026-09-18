@@ -728,7 +728,7 @@
                 <!-- Products Grid View -->
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <template x-for="listing in filteredListings" :key="listing.id">
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 listing-card-item" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="h-48 flex items-center justify-center relative overflow-hidden">
                                 <template x-if="listing.media && listing.media.length > 0">
@@ -865,7 +865,7 @@
                 <!-- Products List View -->
                 <div x-show="viewMode === 'list'" class="space-y-4">
                     <template x-for="listing in filteredListings" :key="listing.id">
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row listing-card-item">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="w-full md:w-48 h-48 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                                 <template x-if="listing.media && listing.media.length > 0">

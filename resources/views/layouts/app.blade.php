@@ -118,6 +118,10 @@
     <meta name="theme-color" content="#6A8F3B">
     <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
 
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))
         @vite(['resources/css/app.css','resources/js/app.js'])
     @endif
@@ -130,6 +134,12 @@
         [x-cloak] { display: none !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Modern High Performance Rendering for 200+ cards */
+        .listing-card-item {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 420px;
+        }
 
         /* Modern Animated Logo Styles */
         .logo-animate { animation: float 4s ease-in-out infinite; }
