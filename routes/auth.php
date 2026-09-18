@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\CarrierVerificationController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -45,6 +46,16 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Carrier WhatsApp Verification Screen & Polling
+    Route::get('verify-carrier-whatsapp', [CarrierVerificationController::class, 'show'])
+        ->name('carrier.verify.whatsapp');
+
+    Route::get('carrier/check-whatsapp-status', [CarrierVerificationController::class, 'checkStatus'])
+        ->name('carrier.verify.check');
+
+    Route::post('carrier/resend-whatsapp', [CarrierVerificationController::class, 'resend'])
+        ->name('carrier.verify.resend');
+
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

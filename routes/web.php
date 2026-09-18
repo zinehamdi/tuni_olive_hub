@@ -504,6 +504,7 @@ Route::middleware('set.locale')->group(function(){
     })->name('register.role');
     Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create']);
     Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create']);
+    Route::get('verify-carrier-whatsapp', [\App\Http\Controllers\Auth\CarrierVerificationController::class, 'show'])->middleware('auth');
 
 });
 }); // end locale prefix group 2

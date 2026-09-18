@@ -106,7 +106,21 @@ class ServiceProviderRegisterController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send welcome email to service provider: ' . $e->getMessage());
         }
 
+        if (!empty($user->phone)) {
+            try {
+                if ($user->role === 'carrier') {
+                    \App\Jobs\SendWhatsAppWelcomeJob::dispatch($user->id);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to dispatch WhatsApp welcome job: ' . $e->getMessage());
+            }
+        }
+
         Auth::login($user, true);
+
+        if ($user->role === 'carrier') {
+            return redirect()->route('carrier.verify.whatsapp');
+        }
 
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to Zintoop.'));
     }

@@ -143,11 +143,15 @@ class RegisteredUserController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to queue welcome email: ' . $e->getMessage());
         }
 
-        // Queue personalized welcome WhatsApp message (delayed by 2-4 minutes)
+        // Send personalized welcome WhatsApp message (immediate for carriers)
         if (!empty($user->phone)) {
             try {
-                \App\Jobs\SendWhatsAppWelcomeJob::dispatch($user->id)
-                    ->delay(now()->addMinutes(rand(2, 4)));
+                if ($user->role === 'carrier') {
+                    \App\Jobs\SendWhatsAppWelcomeJob::dispatch($user->id);
+                } else {
+                    \App\Jobs\SendWhatsAppWelcomeJob::dispatch($user->id)
+                        ->delay(now()->addMinutes(rand(2, 4)));
+                }
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::error('Failed to queue WhatsApp welcome message: ' . $e->getMessage());
             }
@@ -155,6 +159,11 @@ class RegisteredUserController extends Controller
 
         // Log the user in, and force remember me for non-admins to keep session open
         Auth::login($user, $user->role !== 'admin');
+
+        // Carriers must verify their WhatsApp before entering the dashboard
+        if ($user->role === 'carrier') {
+            return redirect()->route('carrier.verify.whatsapp');
+        }
 
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to your dashboard.'));
     }
