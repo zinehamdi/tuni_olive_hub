@@ -73,12 +73,11 @@ Route::middleware(['web', 'set.locale'])->group(function () {
 
             $featuredIds = $topFeatured->pluck('id')->toArray();
 
-            // Get remaining active listings in normal chronological order (top 18 fresh listings)
+            // Get remaining active listings in normal chronological order
             $otherListings = \App\Models\Listing::with(['product', 'seller.addresses'])
                 ->where('status', 'active')
                 ->whereNotIn('id', $featuredIds)
                 ->latest('created_at')
-                ->take(18)
                 ->get();
 
             return $topFeatured->concat($otherListings);
