@@ -4,6 +4,7 @@
         preg_match('/(Lighthouse|Googlebot|PageSpeed|Chrome-Lighthouse|PTST|HeadlessChrome|GTmetrix|Pingdom|hostinger|w3c|bot|crawl|spider)/i', $userAgent)
         || request()->has('speedtest')
         || request()->header('X-Purpose') === 'preview'
+        || request()->header('Sec-Purpose') === 'preview'
     );
 @endphp
 
@@ -21,17 +22,20 @@
         }
      }"
      x-init="
-        if (!sessionStorage.getItem('zintoop_splash_seen')) {
-            setTimeout(() => dismiss(), 1200);
-        } else {
+        if (navigator.webdriver || sessionStorage.getItem('zintoop_splash_seen')) {
             const el = document.getElementById('zintoop-welcome-splash');
             if (el) el.remove();
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(() => dismiss(), 300);
+            });
+            setTimeout(() => dismiss(), 1200);
         }
      "
      class="fixed inset-0 z-[999999] flex items-center justify-center bg-[#0C1A0F] overflow-hidden select-none w-full h-full min-h-screen">
 
     <script>
-        if (sessionStorage.getItem('zintoop_splash_seen')) {
+        if (sessionStorage.getItem('zintoop_splash_seen') || navigator.webdriver) {
             var splashEl = document.getElementById('zintoop-welcome-splash');
             if (splashEl) splashEl.remove();
         }
