@@ -61,74 +61,82 @@
                 </div>
 
                 <style>
-                    /* Premium Clear Table Borders and Gridlines */
-                    .article-body-content table {
+                    /* Premium Responsive Table Styling (Zero-Overflow & Perfect Borders) */
+                    .table-scroll-wrapper {
                         width: 100% !important;
-                        border-collapse: separate !important;
-                        border-spacing: 0 !important;
+                        overflow-x: auto !important;
+                        -webkit-overflow-scrolling: touch !important;
                         margin: 2rem 0 !important;
-                        border: 2px solid #9CA3AF !important;
+                        border: 1.5px solid #CBD5E1 !important;
                         border-radius: 1rem !important;
-                        overflow: hidden !important;
-                        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+                        box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.06), 0 2px 6px -2px rgba(0, 0, 0, 0.04) !important;
                         background: #FFFFFF !important;
                     }
+                    .article-body-content table {
+                        width: 100% !important;
+                        min-width: 600px !important;
+                        border-collapse: collapse !important;
+                        margin: 0 !important;
+                        border: none !important;
+                        font-size: 0.875rem !important;
+                        line-height: 1.4 !important;
+                    }
                     .article-body-content thead {
-                        background: linear-gradient(135deg, #142E18 0%, #0C1A0F 100%) !important;
-                        color: #FFFFFF !important;
+                        background: linear-gradient(135deg, #142E18 0%, #0B170C 100%) !important;
                     }
                     .article-body-content thead th {
-                        padding: 1rem 1.25rem !important;
+                        padding: 0.85rem 1rem !important;
                         font-weight: 800 !important;
-                        font-size: 0.95rem !important;
+                        font-size: 0.875rem !important;
                         text-align: inherit !important;
                         color: #FFFFFF !important;
                         border-bottom: 3px solid #C8A356 !important;
-                        border-right: 1.5px solid rgba(255, 255, 255, 0.2) !important;
-                        white-space: nowrap !important;
-                    }
-                    .article-body-content thead th:last-child {
-                        border-right: none !important;
+                        border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+                        border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+                        vertical-align: middle !important;
                     }
                     .article-body-content tbody tr {
-                        border-bottom: 1.5px solid #D1D5DB !important;
+                        border-bottom: 1px solid #E2E8F0 !important;
                         transition: background-color 0.15s ease !important;
                     }
                     .article-body-content tbody tr:nth-child(even) {
-                        background-color: #F9FAFB !important;
+                        background-color: #F8FAFC !important;
                     }
                     .article-body-content tbody tr:hover {
                         background-color: #F0FDF4 !important;
                     }
                     .article-body-content tbody td {
-                        padding: 0.95rem 1.25rem !important;
-                        font-size: 0.95rem !important;
-                        color: #1F2937 !important;
+                        padding: 0.85rem 1rem !important;
+                        font-size: 0.875rem !important;
+                        color: #1E293B !important;
                         vertical-align: middle !important;
-                        border-bottom: 1.5px solid #D1D5DB !important;
-                        border-right: 1.5px solid #D1D5DB !important;
+                        border: 1px solid #E2E8F0 !important;
+                        text-align: inherit !important;
                     }
-                    .article-body-content tbody td:last-child {
-                        border-right: none !important;
-                    }
-                    .article-body-content tbody tr:last-child td {
+                    .article-body-content tbody tr:last-child {
                         border-bottom: none !important;
                     }
-                    
-                    /* Responsive Table Handling on Mobile */
-                    @media (max-width: 768px) {
-                        .article-body-content table {
-                            display: block !important;
-                            overflow-x: auto !important;
-                            -webkit-overflow-scrolling: touch !important;
-                            font-size: 0.85rem !important;
-                        }
-                        .article-body-content thead th, 
-                        .article-body-content tbody td {
-                            padding: 0.75rem 0.85rem !important;
-                        }
-                    }
                 </style>
+
+                <script>
+                    (function() {
+                        function wrapTables() {
+                            document.querySelectorAll('.article-body-content table').forEach(function(table) {
+                                if (!table.parentElement.classList.contains('table-scroll-wrapper')) {
+                                    var wrapper = document.createElement('div');
+                                    wrapper.className = 'table-scroll-wrapper';
+                                    table.parentNode.insertBefore(wrapper, table);
+                                    wrapper.appendChild(table);
+                                }
+                            });
+                        }
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', wrapTables);
+                        } else {
+                            wrapTables();
+                        }
+                    })();
+                </script>
 
                 <!-- Related Articles Section -->
                 @if(isset($relatedArticles) && $relatedArticles->count() > 0)
