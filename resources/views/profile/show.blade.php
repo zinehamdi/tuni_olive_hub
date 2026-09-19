@@ -150,6 +150,16 @@
                                                     {{ $listing->product->type === 'olive' ? 'زيتون' : 'زيت زيتون' }}
                                                 </span>
                                             @endif
+                                            @if($listing->is_saniya)
+                                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full">
+                                                    🌿 سانية للتخضير
+                                                </span>
+                                            @endif
+                                            @if($listing->tree_count)
+                                                <span class="bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                                    🌳 {{ $listing->tree_count }} شجرة
+                                                </span>
+                                            @endif
                                             @if($listing->status === 'active')
                                                 <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">نشط</span>
                                             @else
@@ -157,15 +167,16 @@
                                             @endif
                                         </div>
                                         
-                                        @if($listing->product && $listing->product->price)
-                                            <div class="text-lg font-bold text-[#6A8F3B] mb-2">
-                                                {{ number_format($listing->product->price, 2) }} دينار
-                                            </div>
-                                        @endif
+                                        <div class="text-lg font-bold text-[#6A8F3B] mb-2">
+                                            {{ $listing->price > 0 ? (number_format($listing->price, 2) . ' ' . ($listing->currency ?? 'دينار') . ' / ' . $listing->price_unit_label) : 'السعر عند الطلب' }}
+                                        </div>
                                         
-                                        <div class="flex gap-4 text-sm text-gray-600">
+                                        <div class="flex gap-4 text-sm text-gray-600 flex-wrap">
+                                            @if($listing->formatted_quantity)
+                                                <span>📦 {{ $listing->is_saniya ? 'الصابة التقديرية:' : 'الكمية:' }} {{ $listing->formatted_quantity }} {{ $listing->quantity_unit_label }}</span>
+                                            @endif
                                             @if($listing->min_order)
-                                                <span>📊 حد أدنى: {{ $listing->formatted_min_order }} {{ $listing->unit }}</span>
+                                                <span>📊 حد أدنى: {{ $listing->formatted_min_order }} {{ $listing->quantity_unit_label }}</span>
                                             @endif
                                             <span>🕒 {{ $listing->created_at->diffForHumans() }}</span>
                                         </div>

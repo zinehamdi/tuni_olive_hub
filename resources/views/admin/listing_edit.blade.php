@@ -24,16 +24,23 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('admin.listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data"
+                  x-data="{
+                      category: '{{ old('category', $product->type ?? 'oil') }}',
+                      saleMode: '{{ old('sale_mode', $listing->sale_mode ?? ($listing->is_saniya ? 'saniya' : 'grain')) }}',
+                      priceMode: '{{ old('price_mode', $listing->price_mode ?? 'whole') }}',
+                      unit: '{{ old('unit', ($listing->is_saniya && ($listing->unit === 'سانية' || empty($listing->unit))) ? 'ton' : ($listing->unit ?? ($product->type === 'oil' ? 'liter' : 'kg'))) }}',
+                      priceOnRequest: {{ old('price', $listing->price ?? $product->price) == 0 ? 'true' : 'false' }}
+                  }">
                 @csrf
                 @method('PATCH')
 
                 <div class="grid md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">نوع المنتج (Category)</label>
-                        <select id="categorySelect" name="category" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
-                            <option value="oil" {{ old('category', $product->type) === 'oil' ? 'selected' : '' }}>زيت زيتون (Olive Oil)</option>
-                            <option value="olive" {{ old('category', $product->type) === 'olive' ? 'selected' : '' }}>زيتون (Olives)</option>
+                        <select id="categorySelect" name="category" x-model="category" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white" required>
+                            <option value="oil">زيت زيتون (Olive Oil)</option>
+                            <option value="olive">زيتون (Olives)</option>
                         </select>
                     </div>
                     <div>
@@ -42,7 +49,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Quality') }}</label>
-                        <select name="quality" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        <select name="quality" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white">
                             <option value="">{{ __('None') }}</option>
                             <option value="بكر ممتاز (EVOO)" {{ old('quality', $product->quality) === 'بكر ممتاز (EVOO)' ? 'selected' : '' }}>بكر ممتاز (EVOO)</option>
                             <option value="بكر (Virgin)" {{ old('quality', $product->quality) === 'بكر (Virgin)' ? 'selected' : '' }}>بكر (Virgin)</option>
@@ -50,6 +57,42 @@
                             <option value="وقاد (Lampante)" {{ old('quality', $product->quality) === 'وقاد (Lampante)' ? 'selected' : '' }}>وقاد (Lampante)</option>
                             <option value="بيولوجي (Organic)" {{ old('quality', $product->quality) === 'بيولوجي (Organic)' ? 'selected' : '' }}>بيولوجي (Organic)</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Transaction / Sale Mode Selector (For Olives) -->
+                <div x-show="category === 'olive'" class="p-5 bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] border-2 border-emerald-200 rounded-2xl space-y-4">
+                    <label class="block text-base font-bold text-[#1B2A1B]">🌿 نوع المعاملة / Sale Mode</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" @click="saleMode = 'grain'; if(packaging === 'سانية للتخضير') packaging = 'زيتون حب';"
+                                :class="saleMode !== 'saniya' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-md' : 'bg-white text-gray-800 border-gray-300'"
+                                class="p-4 rounded-xl border-2 font-bold text-center transition flex items-center justify-center gap-2">
+                            <span class="text-2xl">🫒</span>
+                            <span>زيتون حب (Olive Drupes)</span>
+                        </button>
+                        <button type="button" @click="saleMode = 'saniya'; unit = 'ton';"
+                                :class="saleMode === 'saniya' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-md' : 'bg-white text-gray-800 border-gray-300'"
+                                class="p-4 rounded-xl border-2 font-bold text-center transition flex items-center justify-center gap-2">
+                            <span class="text-2xl">🌳</span>
+                            <span>سانية للتخضير (Standing Crop)</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="sale_mode" :value="saleMode">
+
+                    <!-- Saniya Details (Trees & Pricing Mode) -->
+                    <div x-show="saleMode === 'saniya'" class="grid md:grid-cols-2 gap-4 pt-3 border-t border-emerald-200" x-transition>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-800 mb-1">🌳 عدد الأشجار (Tree Count)</label>
+                            <input type="number" name="tree_count" value="{{ old('tree_count', $listing->tree_count) }}" placeholder="مثال: 8500 شجرة" min="1" step="1"
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-800 mb-1">💰 طريقة تسعير السانية</label>
+                            <select name="price_mode" x-model="priceMode" class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white">
+                                <option value="whole">سعر السانية بالكامل (Whole Farm Total)</option>
+                                <option value="per_unit">سعر بالطن الواحد (Price Per Ton)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -66,8 +109,10 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Packaging / Condition') }}</label>
-                        <select name="packaging" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                        <select name="packaging" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white">
                             <option value="">{{ __('None') }}</option>
+                            <option value="سانية للتخضير" {{ old('packaging', $listing->packaging) === 'سانية للتخضير' ? 'selected' : '' }}>سانية للتخضير</option>
+                            <option value="زيتون حب" {{ old('packaging', $listing->packaging) === 'زيتون حب' ? 'selected' : '' }}>زيتون حب</option>
                             <option value="صبّة (Vrac)" {{ old('packaging', $listing->packaging) === 'صبّة (Vrac)' ? 'selected' : '' }}>صبّة (Vrac)</option>
                             <option value="معلّب (Packaged)" {{ old('packaging', $listing->packaging) === 'معلّب (Packaged)' ? 'selected' : '' }}>معلّب (Packaged)</option>
                             <option value="جملة (Gros)" {{ old('packaging', $listing->packaging) === 'جملة (Gros)' ? 'selected' : '' }}>جملة (Gros)</option>
@@ -76,7 +121,7 @@
                     </div>
                 </div>
 
-                <div x-data="{ priceOnRequest: {{ old('price', $product->price) == 0 ? 'true' : 'false' }} }">
+                <div>
                     <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-xl">
                         <label class="flex items-center gap-3 cursor-pointer">
                             <div class="relative">
@@ -90,9 +135,12 @@
 
                     <div class="grid md:grid-cols-2 gap-4">
                         <div x-show="!priceOnRequest">
-                            <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Price') }} ({{ __('TND') }})</label>
-                            <!-- If priceOnRequest is true, we send a hidden input with 0. If false, we show the number input. -->
-                            <input type="number" step="0.01" min="0" name="price" :value="priceOnRequest ? 0 : '{{ old('price', $product->price) }}'" :required="!priceOnRequest" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
+                            <label class="block text-sm font-semibold text-gray-800 mb-1">
+                                <span x-show="saleMode === 'saniya' && priceMode === 'whole'">السعر الإجمالي للسانية بالكامل (دينار)</span>
+                                <span x-show="saleMode === 'saniya' && priceMode === 'per_unit'">السعر بالطن الواحد للسانية (دينار)</span>
+                                <span x-show="saleMode !== 'saniya'">{{ __('Price') }} ({{ __('TND') }})</span>
+                            </label>
+                            <input type="number" step="0.01" min="0" name="price" :value="priceOnRequest ? 0 : '{{ old('price', $listing->price ?? $product->price) }}'" :required="!priceOnRequest" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
                         </div>
                         <div x-show="!priceOnRequest">
                             <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Currency') }}</label>
@@ -103,23 +151,25 @@
 
                 <div class="grid md:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Quantity') }}</label>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">
+                            <span x-show="saleMode === 'saniya'">الكمية التقديرية للصابة (Estimated Harvest)</span>
+                            <span x-show="saleMode !== 'saniya'">{{ __('Quantity') }}</span>
+                        </label>
                         <input type="number" step="0.01" min="0" name="quantity" value="{{ old('quantity', $listing->quantity) }}" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Unit') }}</label>
-                        @php
-                            $currentUnit = old('unit', $listing->unit ?? ($product->type === 'oil' ? 'liter' : 'kg'));
-                        @endphp
-                        <select id="unitSelect" name="unit" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white" required>
-                            <option value="liter" {{ ($currentUnit === 'liter' || $currentUnit === 'لتر') ? 'selected' : '' }}>لتر (Liter)</option>
-                            <option value="kg" {{ ($currentUnit === 'kg' || $currentUnit === 'كيلو' || $currentUnit === 'كغ') ? 'selected' : '' }}>كيلوغرام (Kilogram - kg)</option>
-                            <option value="ton" {{ ($currentUnit === 'ton' || $currentUnit === 'tonne' || $currentUnit === 'طن') ? 'selected' : '' }}>طن (Tonne / Ton)</option>
-                            <option value="bottle" {{ ($currentUnit === 'bottle' || $currentUnit === 'قارورة') ? 'selected' : '' }}>قارورة (Bottle)</option>
-                            <option value="can" {{ ($currentUnit === 'can' || $currentUnit === 'صفيحة' || $currentUnit === 'بيدون') ? 'selected' : '' }}>صفيحة / بيدون (Tin Can / Bidon)</option>
-                            <option value="piece" {{ ($currentUnit === 'piece' || $currentUnit === 'قطعة') ? 'selected' : '' }}>قطعة (Piece)</option>
-                            <option value="barrel" {{ ($currentUnit === 'barrel' || $currentUnit === 'برميل') ? 'selected' : '' }}>برميل (Barrel / Fût)</option>
-                            <option value="سانية" {{ ($currentUnit === 'سانية' || $currentUnit === 'saniya') ? 'selected' : '' }}>سانية (Saniya)</option>
+                        <label class="block text-sm font-semibold text-gray-800 mb-1">
+                            <span x-show="saleMode === 'saniya'">وحدة الكمية التقديرية (Harvest Unit)</span>
+                            <span x-show="saleMode !== 'saniya'">{{ __('Unit') }}</span>
+                        </label>
+                        <select id="unitSelect" name="unit" x-model="unit" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white" required>
+                            <option value="ton">طن (Tonne / Ton)</option>
+                            <option value="kg">كيلوغرام (Kilogram - kg)</option>
+                            <option value="liter">لتر (Liter)</option>
+                            <option value="bottle">قارورة (Bottle)</option>
+                            <option value="can">صفيحة / بيدون (Tin Can / Bidon)</option>
+                            <option value="piece">قطعة (Piece)</option>
+                            <option value="barrel">برميل (Barrel / Fût)</option>
                         </select>
                     </div>
                     <div>
@@ -145,7 +195,7 @@
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-1">{{ __('Status') }}</label>
-                    <select name="status" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20" required>
+                    <select name="status" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 bg-white" required>
                         @foreach(['draft','active','paused','sold','out'] as $state)
                             <option value="{{ $state }}" {{ old('status', $listing->status) === $state ? 'selected' : '' }}>{{ ucfirst($state) }}</option>
                         @endforeach

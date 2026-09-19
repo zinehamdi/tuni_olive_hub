@@ -104,10 +104,20 @@
                 <div class="p-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __($listing->product->variety) }}</h3>
                     
-                    <div class="flex items-center gap-2 mb-3">
+                    <div class="flex items-center gap-2 mb-3 flex-wrap">
                         <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">
                             {{ $listing->product->type === 'oil' ? __('Olive Oil') : __('Olives') }}
                         </span>
+                        @if($listing->is_saniya)
+                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold">
+                                🌿 {{ app()->getLocale() === 'ar' ? 'سانية للتخضير' : 'Standing Crop' }}
+                            </span>
+                        @endif
+                        @if($listing->tree_count)
+                            <span class="px-2 py-1 bg-emerald-800 text-white rounded text-xs font-bold">
+                                🌳 {{ $listing->tree_count }} {{ app()->getLocale() === 'ar' ? 'شجرة' : __('trees') }}
+                            </span>
+                        @endif
                         @if($listing->product->quality)
                         <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-semibold">
                             {{ $listing->product->quality }}
@@ -115,15 +125,16 @@
                         @endif
                     </div>
 
-                    <div class="text-2xl font-bold text-[#6A8F3B] mb-4">
-                        {{ number_format($listing->product->price, 2) }} {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }}/
-                        @php
-                            $unitLabel = $listing->unit === 'liter'
-                                ? (__('L'))
-                                : (__('kg'));
-                        @endphp
-                        {{ $unitLabel }}
+                    <div class="text-2xl font-bold text-[#6A8F3B] mb-2">
+                        {{ number_format($listing->price ?? $listing->product->price, 2) }} {{ app()->getLocale() === 'ar' ? 'دينار' : __('TND') }} / {{ $listing->price_unit_label }}
                     </div>
+
+                    @if($listing->formatted_quantity)
+                        <div class="text-xs text-gray-500 font-semibold mb-4">
+                            {{ $listing->is_saniya ? (app()->getLocale() === 'ar' ? 'الصابة التقديرية:' : 'Est. Yield:') : (app()->getLocale() === 'ar' ? 'الكمية:' : 'Qty:') }}
+                            <span class="text-gray-900 font-bold">{{ $listing->formatted_quantity }} {{ $listing->quantity_unit_label }}</span>
+                        </div>
+                    @endif
 
                     <!-- Seller Info -->
                     <div class="flex items-center gap-2 mb-4 pb-4 border-b border-gray-200">

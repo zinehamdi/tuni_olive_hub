@@ -88,7 +88,8 @@ class Listing extends Model
         'media',
         'is_featured',
         'tree_count',
-        'sale_mode'
+        'sale_mode',
+        'price_mode'
     ];
     
     /**
@@ -104,6 +105,69 @@ class Listing extends Model
         'is_featured' => 'boolean',
         'tree_count' => 'integer'
     ];
+
+    /**
+     * Determine if this listing is a standing orchard / saniya sale
+     */
+    public function getIsSaniyaAttribute(): bool
+    {
+        return $this->sale_mode === 'saniya' 
+            || ($this->packaging && str_contains($this->packaging, 'سانية'))
+            || $this->unit === 'سانية';
+    }
+
+    /**
+     * Get clean unit label for estimated harvest quantity (e.g. طن / kg)
+     */
+    public function getQuantityUnitLabelAttribute(): string
+    {
+        $locale = app()->getLocale();
+        $u = $this->unit;
+        if ($this->is_saniya && ($u === 'سانية' || $u === 'saniya' || empty($u))) {
+            $u = 'ton';
+        }
+        return match($u) {
+            'kg', 'كغ', 'كيلو' => match($locale) { 'ar' => 'كغ', default => 'kg' },
+            'ton', 'tonne', 'طن' => match($locale) { 'ar' => 'طن', 'fr' => 'tonne', default => 'ton' },
+            'liter', 'لتر' => match($locale) { 'ar' => 'لتر', default => 'L' },
+            'bottle', 'قارورة' => match($locale) { 'ar' => 'قارورة', default => 'bottle' },
+            'can', 'صفيحة' => match($locale) { 'ar' => 'صفيحة', default => 'can' },
+            'barrel', 'برميل' => match($locale) { 'ar' => 'برميل', default => 'barrel' },
+            'piece', 'قطعة' => match($locale) { 'ar' => 'قطعة', default => 'piece' },
+            default => $u ?? '',
+        };
+    }
+
+    /**
+     * Get clean unit label for price (e.g. / السانية بالكامل vs / طن)
+     */
+    public function getPriceUnitLabelAttribute(): string
+    {
+        $locale = app()->getLocale();
+        if ($this->is_saniya && ($this->price_mode === 'whole' || $this->unit === 'سانية' || empty($this->price_mode))) {
+            return match($locale) {
+                'fr' => 'Le verger complet',
+                'en' => 'Whole orchard',
+                default => 'السانية بالكامل',
+            };
+        }
+        
+        $u = $this->unit;
+        if ($this->is_saniya && ($u === 'سانية' || $u === 'saniya' || empty($u))) {
+            $u = 'ton';
+        }
+
+        return match($u) {
+            'kg', 'كغ', 'كيلو' => match($locale) { 'ar' => 'كلغ', default => 'kg' },
+            'ton', 'tonne', 'طن' => match($locale) { 'ar' => 'طن', 'fr' => 'tonne', default => 'ton' },
+            'liter', 'لتر' => match($locale) { 'ar' => 'لتر', default => 'L' },
+            'bottle', 'قارورة' => match($locale) { 'ar' => 'قارورة', default => 'bottle' },
+            'can', 'صفيحة' => match($locale) { 'ar' => 'صفيحة', default => 'can' },
+            'barrel', 'برميل' => match($locale) { 'ar' => 'برميل', default => 'barrel' },
+            'piece', 'قطعة' => match($locale) { 'ar' => 'قطعة', default => 'piece' },
+            default => $u ?? '',
+        };
+    }
 
     /**
      * Get clean numeric float format for min_order without trailing zeros (.000)

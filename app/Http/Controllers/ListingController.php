@@ -89,6 +89,7 @@ class ListingController extends Controller
                 'estimated_oil_yield' => 'nullable|numeric|min:0|max:100',
                 'tree_count' => 'nullable|integer|min:1',
                 'sale_mode' => 'nullable|string|max:32',
+                'price_mode' => 'nullable|string|in:whole,per_unit',
                 'images' => 'required|array|min:1',
                 'images.*' => 'required|mimetypes:image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif|mimes:jpeg,jpg,png,webp,avif,heic,heif|max:51200', // Accept any image format/size, will be optimized
             ], [
@@ -154,6 +155,16 @@ class ListingController extends Controller
             
             // Handle price if null (means upon request)
             $validated['price'] = $validated['price'] ?? 0;
+
+            // Handle saniya defaults
+            if (($validated['sale_mode'] ?? null) === 'saniya') {
+                if (empty($validated['price_mode'])) {
+                    $validated['price_mode'] = 'whole';
+                }
+                if (($validated['unit'] ?? '') === 'سانية' || ($validated['unit'] ?? '') === 'saniya' || empty($validated['unit'])) {
+                    $validated['unit'] = 'ton';
+                }
+            }
             
             // Find or create product based on variety, category, and quality
             $product = Product::firstOrCreate(
@@ -422,58 +433,73 @@ class ListingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Validate the request
-        $validated = $request->validate([
-            'category' => 'required|string|in:oil,olive',
-            'variety' => 'required|string|max:255',
-            'quality' => 'nullable|string|max:255',
-            'quantity' => 'required|numeric|min:0',
-            'unit' => 'required|string|in:kg,ton,liter,bottle',
-            'price' => 'required|numeric|min:0',
-            'min_order' => 'nullable|numeric|min:0|lte:quantity',
-            'status' => 'nullable|string',
-            'payment_methods' => 'nullable|array',
-            'delivery_options' => 'nullable|array',
-            'location_text' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'governorate' => 'nullable|string|max:255',
-            'delegation' => 'nullable|string|max:255',
-            'images.*' => 'nullable|image|max:10240', // 10MB max per image
-        ], [
-            'min_order.lte' => app()->getLocale() === 'ar' 
-                ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
-                : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
-        ]);
+            // Validate the request
+            $validated = $request->validate([
+                'category' => 'required|string|in:oil,olive',
+                'variety' => 'required|string|max:255',
+                'quality' => 'nullable|string|max:255',
+                'quantity' => 'required|numeric|min:0',
+                'unit' => 'required|string|in:kg,ton,tonne,liter,bottle,can,barrel,piece,سانية,saniya',
+                'price' => 'required|numeric|min:0',
+                'min_order' => 'nullable|numeric|min:0|lte:quantity',
+                'status' => 'nullable|string',
+                'packaging' => 'nullable|string|max:255',
+                'sale_mode' => 'nullable|string|max:32',
+                'tree_count' => 'nullable|integer|min:0',
+                'price_mode' => 'nullable|string|in:whole,per_unit',
+                'payment_methods' => 'nullable|array',
+                'delivery_options' => 'nullable|array',
+                'location_text' => 'nullable|string|max:255',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'governorate' => 'nullable|string|max:255',
+                'delegation' => 'nullable|string|max:255',
+                'images.*' => 'nullable|image|max:10240', // 10MB max per image
+            ], [
+                'min_order.lte' => app()->getLocale() === 'ar' 
+                    ? 'أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج.' 
+                    : (app()->getLocale() === 'fr' ? 'La commande minimum ne peut pas être supérieure à la quantité totale.' : 'Minimum order cannot be greater than the total product quantity.'),
+            ]);
 
-        // Find or create the product associated with this listing/seller
-        $product = Product::updateOrCreate(
-            [
-                'variety' => $validated['variety'],
-                'type' => $validated['category'],
-                'seller_id' => $listing->seller_id,
-                'quality' => $validated['quality'] ?? null
-            ],
-            [
+            // Normalize saniya units
+            $saleMode = $validated['sale_mode'] ?? $listing->sale_mode;
+            $unit = $validated['unit'];
+            if ($saleMode === 'saniya' && ($unit === 'سانية' || $unit === 'saniya' || empty($unit))) {
+                $unit = 'ton';
+            }
+
+            // Find or create the product associated with this listing/seller
+            $product = Product::updateOrCreate(
+                [
+                    'variety' => $validated['variety'],
+                    'type' => $validated['category'],
+                    'seller_id' => $listing->seller_id,
+                    'quality' => $validated['quality'] ?? null
+                ],
+                [
+                    'price' => $validated['price'],
+                    'stock' => $validated['quantity'],
+                    'description' => $validated['variety'] . ' - ' . ($validated['category'] === 'olive' ? __('Olives') : __('Olive Oil'))
+                ]
+            );
+
+            // Update basic listing fields
+            $listingData = [
+                'product_id' => $product->id,
                 'price' => $validated['price'],
-                'stock' => $validated['quantity'],
-                'description' => $validated['variety'] . ' - ' . ($validated['category'] === 'olive' ? __('Olives') : __('Olive Oil'))
-            ]
-        );
-
-        // Update basic listing fields
-        $listingData = [
-            'product_id' => $product->id,
-            'price' => $validated['price'],
-            'quantity' => $validated['quantity'],
-            'unit' => $validated['unit'],
-            'min_order' => $validated['min_order'] ?? 0,
-            'status' => $validated['status'] ?? 'active',
-            'payment_methods' => $validated['payment_methods'] ?? [],
-            'delivery_options' => $validated['delivery_options'] ?? [],
-        ];
-        
-        $listing->update($listingData);
+                'quantity' => $validated['quantity'],
+                'unit' => $unit,
+                'packaging' => $validated['packaging'] ?? $listing->packaging,
+                'sale_mode' => $saleMode,
+                'tree_count' => $validated['tree_count'] ?? $listing->tree_count,
+                'price_mode' => $validated['price_mode'] ?? $listing->price_mode,
+                'min_order' => $validated['min_order'] ?? 0,
+                'status' => $validated['status'] ?? 'active',
+                'payment_methods' => $validated['payment_methods'] ?? [],
+                'delivery_options' => $validated['delivery_options'] ?? [],
+            ];
+            
+            $listing->update($listingData);
 
         // Create or update the seller's address if location data provided
         if ($request->has('latitude') && $request->has('longitude') && $request->latitude && $request->longitude) {

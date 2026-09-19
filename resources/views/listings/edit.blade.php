@@ -19,7 +19,13 @@
         <h2 class="text-2xl font-extrabold text-[#1B2A1B]">تعديل العرض الحالي</h2>
         <p class="text-sm text-gray-600">عدل تفاصيل عرضك للحفاظ على دقة معلومات البيع والشحن.</p>
         
-        <form id="listingForm" method="POST" action="{{ route('listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data">
+        <form id="listingForm" method="POST" action="{{ route('listings.update', $listing) }}" class="space-y-6" enctype="multipart/form-data"
+              x-data="{
+                  category: '{{ old('category', optional($listing->product)->type ?? 'oil') }}',
+                  saleMode: '{{ old('sale_mode', $listing->sale_mode ?? ($listing->is_saniya ? 'saniya' : 'grain')) }}',
+                  priceMode: '{{ old('price_mode', $listing->price_mode ?? 'whole') }}',
+                  unit: '{{ old('unit', ($listing->is_saniya && ($listing->unit === 'سانية' || empty($listing->unit))) ? 'ton' : ($listing->unit ?? 'kg')) }}'
+              }">
           @csrf
           @method('PUT')
           <input type="hidden" name="seller_id" value="{{ auth()->id() }}" />
@@ -30,10 +36,46 @@
             
             <div>
               <label for="category" class="block text-[#C8A356] font-semibold mb-1">نوع المنتج</label>
-              <select id="category" name="category" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required>
-                <option value="oil" {{ optional($listing->product)->type === 'oil' ? 'selected' : '' }}>زيت زيتون</option>
-                <option value="olive" {{ optional($listing->product)->type === 'olive' ? 'selected' : '' }}>زيتون</option>
+              <select id="category" name="category" x-model="category" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required>
+                <option value="oil">زيت زيتون</option>
+                <option value="olive">زيتون</option>
               </select>
+            </div>
+
+            <!-- Sale Mode for Olive (زيتون حب / سانية للتخضير) -->
+            <div x-show="category === 'olive'" class="bg-[#EEF5E9] border border-emerald-300 rounded-xl p-4 space-y-3" x-transition>
+              <label class="block text-sm font-bold text-[#1B2A1B]">🌿 طريقة البيع / نوع المعاملة</label>
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" @click="saleMode = 'grain'; if(unit === 'ton') unit = 'kg';"
+                        :class="saleMode !== 'saniya' ? 'bg-[#6A8F3B] text-white font-bold shadow-md' : 'bg-white text-gray-700 border border-gray-300'"
+                        class="p-3 rounded-xl transition text-center flex items-center justify-center gap-1.5 text-sm">
+                  <span>🫒</span>
+                  <span>زيتون حب</span>
+                </button>
+                <button type="button" @click="saleMode = 'saniya'; unit = 'ton';"
+                        :class="saleMode === 'saniya' ? 'bg-[#6A8F3B] text-white font-bold shadow-md' : 'bg-white text-gray-700 border border-gray-300'"
+                        class="p-3 rounded-xl transition text-center flex items-center justify-center gap-1.5 text-sm">
+                  <span>🌳</span>
+                  <span>سانية للتخضير</span>
+                </button>
+              </div>
+              <input type="hidden" name="sale_mode" :value="saleMode">
+              <input type="hidden" name="packaging" :value="saleMode === 'saniya' ? 'سانية للتخضير' : 'زيتون حب'">
+
+              <div x-show="saleMode === 'saniya'" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-emerald-200" x-transition>
+                <div>
+                  <label class="block text-xs font-bold text-[#1B2A1B] mb-1">🌳 عدد الأشجار</label>
+                  <input type="number" name="tree_count" value="{{ old('tree_count', $listing->tree_count) }}" placeholder="مثال: 8500" min="1" step="1"
+                         class="w-full rounded-xl border border-[#C7D1C7] px-3 py-2 bg-white text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-[#1B2A1B] mb-1">💰 طريقة التسعير</label>
+                  <select name="price_mode" x-model="priceMode" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-2 bg-white text-sm">
+                    <option value="whole">سعر السانية بالكامل</option>
+                    <option value="per_unit">سعر بالطن الواحد</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -48,20 +90,27 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label for="quantity" class="block text-[#C8A356] font-semibold mb-1">الكمية المتوفرة</label>
+                <label for="quantity" class="block text-[#C8A356] font-semibold mb-1">
+                  <span x-show="saleMode === 'saniya'">الكمية التقديرية للصابة</span>
+                  <span x-show="saleMode !== 'saniya'">الكمية المتوفرة</span>
+                </label>
                 <input id="quantity" name="quantity" type="number" step="0.01" value="{{ $listing->quantity }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required/>
               </div>
               <div>
                 <label for="unit" class="block text-[#C8A356] font-semibold mb-1">الوحدة (Unit)</label>
-                <select id="unit" name="unit" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required>
-                  <option value="kg" {{ ($listing->unit === 'kg' || $listing->unit === 'كيلو' || !$listing->unit) ? 'selected' : '' }}>كيلو جرام (kg)</option>
-                  <option value="liter" {{ ($listing->unit === 'liter' || $listing->unit === 'لتر') ? 'selected' : '' }}>لتر (liter)</option>
-                  <option value="ton" {{ ($listing->unit === 'ton' || $listing->unit === 'طن') ? 'selected' : '' }}>طن (ton)</option>
-                  <option value="bottle" {{ ($listing->unit === 'bottle' || $listing->unit === 'قارورة') ? 'selected' : '' }}>قارورة (bottle)</option>
+                <select id="unit" name="unit" x-model="unit" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required>
+                  <option value="ton">طن (ton)</option>
+                  <option value="kg">كيلو جرام (kg)</option>
+                  <option value="liter">لتر (liter)</option>
+                  <option value="bottle">قارورة (bottle)</option>
                 </select>
               </div>
               <div>
-                <label for="price" class="block text-[#C8A356] font-semibold mb-1">السعر (لكل وحدة)</label>
+                <label for="price" class="block text-[#C8A356] font-semibold mb-1">
+                  <span x-show="saleMode === 'saniya' && priceMode === 'whole'">السعر الإجمالي للسانية (دينار)</span>
+                  <span x-show="saleMode === 'saniya' && priceMode === 'per_unit'">السعر بالطن الواحد (دينار)</span>
+                  <span x-show="saleMode !== 'saniya'">السعر (لكل وحدة)</span>
+                </label>
                 <input id="price" name="price" type="number" step="0.01" value="{{ $listing->price }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required/>
               </div>
             </div>

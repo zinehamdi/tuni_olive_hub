@@ -3,8 +3,9 @@
 @php
     $locale = app()->getLocale();
     $variety = $listing->product->variety ?? 'زيت زيتون تونسي';
-    $unit = $listing->unit ? ($listing->unit == 'liter' ? ($locale === 'ar' ? 'لتر' : 'L') : ($listing->unit == 'kg' ? ($locale === 'ar' ? 'كغ' : 'kg') : $listing->unit)) : ($locale === 'ar' ? 'كغ' : 'kg');
-    $priceText = $listing->price == 0 ? __('Price on request') : (number_format((float)$listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . ' / ' . $unit);
+    $qtyUnit = $listing->quantity_unit_label;
+    $priceUnit = $listing->price_unit_label;
+    $priceText = $listing->price == 0 ? __('Price on request') : (number_format((float)$listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . ' / ' . $priceUnit);
     $city = optional($listing->seller->addresses->first())->city ?? optional($listing->seller->addresses->first())->governorate ?? 'Tunisie';
 
     // Image fallback
@@ -25,8 +26,19 @@
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                  loading="lazy">
             <span class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
-                {{ $listing->product->type === 'olive' ? '🫒 ' . __('Olives') : '🫗 ' . __('Extra Virgin') }}
+                @if($listing->is_saniya)
+                    🌿 {{ $locale === 'ar' ? 'سانية للتخضير' : ($locale === 'fr' ? 'Sur pied' : 'Standing Crop') }}
+                @elseif($listing->product?->type === 'olive')
+                    🫒 {{ __('Olives') }}
+                @else
+                    🫗 {{ __('Extra Virgin') }}
+                @endif
             </span>
+            @if($listing->tree_count)
+                <span class="absolute bottom-2.5 right-2.5 bg-emerald-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    🌳 {{ $listing->tree_count }} {{ $locale === 'ar' ? 'شجرة' : __('trees') }}
+                </span>
+            @endif
             @if($listing->product?->is_organic)
                 <span class="absolute top-2.5 left-2.5 bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-black px-2 py-0.5 rounded-full">
                     🌱 {{ __('Bio / Organic') }}
@@ -37,7 +49,7 @@
         <div class="p-4 space-y-2">
             <div class="flex items-center justify-between text-xs text-gray-500">
                 <span>📍 {{ $city }}</span>
-                <span class="font-bold text-emerald-700">{{ $listing->quantity ? number_format((float)$listing->quantity) . ' ' . $unit : __('Available') }}</span>
+                <span class="font-bold text-emerald-700">{{ $listing->quantity ? number_format((float)$listing->quantity) . ' ' . $qtyUnit : __('Available') }}</span>
             </div>
 
             <h3 class="font-bold text-gray-900 text-sm group-hover:text-[#6A8F3B] transition line-clamp-1">

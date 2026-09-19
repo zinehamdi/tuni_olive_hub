@@ -1223,20 +1223,35 @@ document.addEventListener('alpine:init', () => {
          * to display beside the price. Returns empty string for whole-farm units.
          */
         formatUnit(listing) {
-            const unit = listing.unit || listing.product?.unit || '';
             const isAr = this.locale === 'ar';
             const isFr = this.locale === 'fr';
+            
+            const isSaniya = listing.sale_mode === 'saniya' 
+                || (listing.packaging && listing.packaging.includes('سانية'))
+                || listing.unit === 'سانية'
+                || listing.price_mode === 'whole';
+
+            if (isSaniya && (listing.price_mode === 'whole' || listing.unit === 'سانية' || !listing.price_mode)) {
+                return isAr ? '/ السانية بالكامل' : (isFr ? '/ Verger complet' : '/ Whole orchard');
+            }
+
+            let unit = listing.unit || listing.product?.unit || '';
+            if (isSaniya && (unit === 'سانية' || unit === 'saniya' || !unit)) {
+                unit = 'ton';
+            }
+
             const map = {
                 'kg':     isAr ? '/ كغ' : '/ kg',
                 'liter':  isAr ? '/ لتر' : (isFr ? '/ L' : '/ L'),
                 'ton':    isAr ? '/ طن' : (isFr ? '/ tonne' : '/ ton'),
+                'tonne':  isAr ? '/ طن' : (isFr ? '/ tonne' : '/ ton'),
+                'bottle': isAr ? '/ قارورة' : (isFr ? '/ bouteille' : '/ bottle'),
+                'can':    isAr ? '/ صفيحة' : (isFr ? '/ bidon' : '/ can'),
+                'barrel': isAr ? '/ برميل' : (isFr ? '/ fût' : '/ barrel'),
+                'piece':  isAr ? '/ قطعة' : (isFr ? '/ pièce' : '/ piece'),
                 'كغ':    '/ كغ',
                 'لتر':  isAr ? '/ لتر' : '/ L',
                 'طن':    isAr ? '/ طن' : (isFr ? '/ tonne' : '/ ton'),
-                // Whole-farm modes: show nothing (price is for entire farm)
-                'سانية': '',
-                'saniya': '',
-                'whole':  '',
             };
             return map[unit] !== undefined ? map[unit] : (unit ? '/ ' + unit : '');
         },

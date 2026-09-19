@@ -226,7 +226,7 @@ class AdminController extends Controller
 
         $listing->load('product');
         $allowedStatuses = ['draft','active','paused','sold','out'];
-        $allowedUnits = ['kg', 'liter', 'ton', 'tonne', 'bottle', 'can', 'piece', 'barrel', 'سانية'];
+        $allowedUnits = ['kg', 'liter', 'ton', 'tonne', 'bottle', 'can', 'piece', 'barrel', 'سانية', 'saniya'];
 
         $data = $request->validate([
             'category' => ['required', 'string', 'in:oil,olive'],
@@ -245,6 +245,9 @@ class AdminController extends Controller
             'stock' => ['nullable', 'numeric', 'min:0'],
             'media' => ['nullable', 'string'],
             'packaging' => ['nullable', 'string', 'max:255'],
+            'sale_mode' => ['nullable', 'string', 'max:32'],
+            'tree_count' => ['nullable', 'integer', 'min:0'],
+            'price_mode' => ['nullable', 'string', 'in:whole,per_unit'],
             'new_media.*' => ['nullable', 'image', 'max:51200'],
         ]);
 
@@ -287,6 +290,10 @@ class AdminController extends Controller
         $product->save();
 
         $unit = $data['unit'] ?? ($listing->unit ?? ($product->type === 'oil' ? 'liter' : 'kg'));
+        $saleMode = $data['sale_mode'] ?? $listing->sale_mode;
+        if ($saleMode === 'saniya' && ($unit === 'سانية' || $unit === 'saniya' || empty($unit))) {
+            $unit = 'ton';
+        }
 
         $listing->update([
             'price' => $data['price'],
@@ -294,6 +301,9 @@ class AdminController extends Controller
             'quantity' => $data['quantity'] ?? $listing->quantity,
             'unit' => $unit,
             'packaging' => $data['packaging'] ?? $listing->packaging,
+            'sale_mode' => $saleMode,
+            'tree_count' => $data['tree_count'] ?? $listing->tree_count,
+            'price_mode' => $data['price_mode'] ?? $listing->price_mode,
             'min_order' => $data['min_order'] ?? $listing->min_order,
             'status' => $data['status'],
             'media' => $mediaArray ?? $listing->media,

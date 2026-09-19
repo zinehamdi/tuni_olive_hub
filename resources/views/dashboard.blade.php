@@ -1418,12 +1418,21 @@
                                 <h3 class="font-bold text-gray-900 group-hover:text-[#6A8F3B] transition text-sm mb-1 truncate">{{ $listing->product?->variety ?? __('Product') }}@if($listing->product?->quality)<span class="text-xs text-gray-400 font-normal"> — {{ $listing->product->quality }}</span>@endif</h3>
                                 <div class="text-xs text-gray-500 flex items-center gap-1.5 mb-3 flex-wrap">
                                     <span>📍 {{ $listing->governorate ?? 'تونس' }}</span>
-                                    <span>•</span>
-                                    <span>{{ $listing->quantity }} {{ __($listing->unit) }}</span>
+                                    @if($listing->is_saniya)
+                                        <span>•</span>
+                                        <span class="text-emerald-700 font-bold">🌿 {{ app()->getLocale() === 'ar' ? 'سانية للتخضير' : 'Standing Crop' }}</span>
+                                        @if($listing->tree_count)
+                                            <span class="text-emerald-800 font-semibold">({{ $listing->tree_count }} {{ app()->getLocale() === 'ar' ? 'شجرة' : 'trees' }})</span>
+                                        @endif
+                                    @endif
+                                    @if($listing->quantity)
+                                        <span>•</span>
+                                        <span>{{ $listing->is_saniya ? (app()->getLocale() === 'ar' ? 'الصابة التقديرية:' : 'Est:') : '' }} {{ $listing->formatted_quantity ?? $listing->quantity }} {{ $listing->quantity_unit_label }}</span>
+                                    @endif
                                 </div>
                                 <div class="flex items-center justify-between pt-3 border-t border-gray-50 mt-auto">
                                     <span class="text-[10px] font-bold text-gray-400 uppercase">{{ __('Price') }}</span>
-                                    <span class="text-sm font-black text-[#C8A356]">{{ $listing->price > 0 ? number_format($listing->price, 0).' TND' : __('Upon Request') }}</span>
+                                    <span class="text-sm font-black text-[#C8A356]">{{ $listing->price > 0 ? (number_format($listing->price, 0) . ' ' . ($listing->currency ?? 'TND') . ' / ' . $listing->price_unit_label) : __('Upon Request') }}</span>
                                 </div>
                                 <div class="flex gap-2 mt-auto">
                                     <a href="{{ route('listings.show', $listing) }}" class="flex-1 text-center bg-[#6A8F3B] text-white px-3 py-2 rounded-xl hover:bg-[#5a7a2f] transition font-bold text-xs">👁 {{ __('View') }}</a>

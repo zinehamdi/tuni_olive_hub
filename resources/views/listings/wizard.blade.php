@@ -71,6 +71,9 @@ console.log('[wizard] Variety selection mode - no product database needed');
                 <input type="hidden" name="currency" x-model="formData.currency">
                 <input type="hidden" name="unit" x-model="formData.unit">
                 <input type="hidden" name="min_order" x-model="formData.min_order">
+                <input type="hidden" name="sale_mode" x-model="formData.sale_mode">
+                <input type="hidden" name="tree_count" x-model="formData.tree_count">
+                <input type="hidden" name="price_mode" :value="formData.sale_mode === 'saniya' ? (formData.saniya_price_mode === 'whole' ? 'whole' : 'per_unit') : 'per_unit'">
                 <input type="hidden" name="payment_methods" x-model="JSON.stringify(formData.payment_methods)">
                 <input type="hidden" name="delivery_options" x-model="JSON.stringify(formData.delivery_options)">
                 
@@ -333,13 +336,13 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         <div x-show="!formData.price_on_request && formData.sale_mode === 'saniya'" class="bg-gradient-to-br from-[#F8F4EC] to-[#EEF5E9] rounded-2xl p-6 mb-6" x-transition>
                             <label class="block text-lg font-bold text-[#1B2A1B] mb-4">طريقة التسعير للسانية / Pricing Method</label>
                             <div class="grid grid-cols-2 gap-4">
-                                <button type="button" @click="formData.saniya_price_mode = 'per_ton'; formData.unit = 'ton';"
+                                <button type="button" @click="formData.saniya_price_mode = 'per_ton'; formData.price_mode = 'per_unit'; formData.unit = 'ton';"
                                         :class="formData.saniya_price_mode === 'per_ton' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
                                         class="p-4 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
                                     <span class="text-2xl">⚖️</span>
                                     <span>سعر للطن الواحد</span>
                                 </button>
-                                <button type="button" @click="formData.saniya_price_mode = 'whole'; formData.unit = 'سانية';"
+                                <button type="button" @click="formData.saniya_price_mode = 'whole'; formData.price_mode = 'whole'; formData.unit = 'ton';"
                                         :class="formData.saniya_price_mode === 'whole' ? 'bg-[#6A8F3B] text-white border-[#6A8F3B] shadow-lg' : 'bg-white text-gray-800 border-gray-300'"
                                         class="p-4 rounded-xl border-2 font-bold text-center transition flex flex-col items-center justify-center gap-2 hover:shadow-md">
                                     <span class="text-2xl">🌳</span>

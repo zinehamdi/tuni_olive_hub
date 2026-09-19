@@ -391,20 +391,7 @@
                                     @endif
                                 </span>
                                 <span class="text-lg text-gray-500 font-normal">
-                                    / 
-                                    @if($listing->unit === 'kg')
-                                        {{ app()->getLocale() === 'ar' ? 'كلغ' : __('Kilogram') }}
-                                    @elseif($listing->unit === 'ton')
-                                        {{ app()->getLocale() === 'ar' ? 'طن' : __('Ton') }}
-                                    @elseif($listing->unit === 'liter')
-                                        {{ app()->getLocale() === 'ar' ? 'لتر' : __('Liter') }}
-                                    @elseif($listing->unit === 'bottle')
-                                        {{ app()->getLocale() === 'ar' ? 'قارورة' : __('Bottle') }}
-                                    @elseif($listing->unit === 'سانية')
-                                        {{ __('Whole orchard') }}
-                                    @else
-                                        {{ $listing->unit ?? __('Unit') }}
-                                    @endif
+                                    / {{ $listing->price_unit_label }}
                                 </span>
                             @endif
                         </div>
@@ -481,22 +468,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
                                 <div>
-                                    <div class="text-sm text-gray-600">{{ __('Quantity') }}</div>
-                                    <div class="font-bold text-[#1B2A1B]">
-                                        {{ $listing->formatted_quantity }} 
-                                        @if($listing->unit === 'kg')
-                                            {{ __('kg') }}
-                                        @elseif($listing->unit === 'ton')
-                                            {{ __('ton') }}
-                                        @elseif($listing->unit === 'liter')
-                                            {{ __('liter') }}
-                                        @elseif($listing->unit === 'bottle')
-                                            {{ __('bottle') }}
-                                        @elseif($listing->unit === 'سانية')
-                                            {{ __('orchard') }}
+                                    <div class="text-sm text-gray-600">
+                                        @if($listing->is_saniya)
+                                            {{ app()->getLocale() === 'ar' ? 'الكمية التقديرية للصابة' : (app()->getLocale() === 'fr' ? 'Rendement estimé de la récolte' : __('Estimated Harvest Yield')) }}
                                         @else
-                                            {{ $listing->unit }}
+                                            {{ __('Quantity') }}
                                         @endif
+                                    </div>
+                                    <div class="font-bold text-[#1B2A1B]">
+                                        {{ $listing->formatted_quantity }} {{ $listing->quantity_unit_label }}
                                     </div>
                                 </div>
                             </div>
