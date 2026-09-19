@@ -727,7 +727,7 @@
 
                 <!-- Products Grid View -->
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <template x-for="listing in filteredListings" :key="listing.id">
+                    <template x-for="listing in visibleListings" :key="listing.id">
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 listing-card-item" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="h-48 flex items-center justify-center relative overflow-hidden">
@@ -864,7 +864,7 @@
 
                 <!-- Products List View -->
                 <div x-show="viewMode === 'list'" class="space-y-4">
-                    <template x-for="listing in filteredListings" :key="listing.id">
+                    <template x-for="listing in visibleListings" :key="listing.id">
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row listing-card-item">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="w-full md:w-48 h-48 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
@@ -989,6 +989,21 @@
                             </div>
                         </div>
                     </template>
+                </div>
+
+                <!-- Infinite Scroll Sentinel & Load More Trigger -->
+                <div x-show="visibleCount < filteredListings.length" 
+                     x-ref="loadMoreTrigger"
+                     class="w-full py-8 text-center flex items-center justify-center">
+                    <button @click="loadMore()" 
+                            type="button"
+                            class="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white hover:bg-gray-50 active:scale-95 shadow-md border border-gray-200 text-gray-700 text-xs font-bold transition">
+                        <svg class="w-4 h-4 animate-spin text-[#6A8F3B]" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{{ __('Displaying') }} <span x-text="Math.min(visibleCount, filteredListings.length)"></span> / <span x-text="filteredListings.length"></span> {{ __('products (Click or scroll to load more)') }}</span>
+                    </button>
                 </div>
 
                 <!-- Empty State -->
@@ -1121,8 +1136,31 @@ document.addEventListener('alpine:init', () => {
         targetListing: null,
         quickFilePreview: null,
         uploadingQuickFile: false,
-        listings: @json($featuredListings ?? []),
+        listings: @json($listingsPayload ?? $featuredListings ?? []),
         filteredListings: [],
+        visibleCount: 24,
+        get visibleListings() {
+            return this.filteredListings.slice(0, this.visibleCount);
+        },
+        loadMore() {
+            if (this.visibleCount < this.filteredListings.length) {
+                this.visibleCount = Math.min(this.visibleCount + 24, this.filteredListings.length);
+            }
+        },
+        setupInfiniteScroll() {
+            if (!window.IntersectionObserver) return;
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0] && entries[0].isIntersecting) {
+                    this.loadMore();
+                }
+            }, { rootMargin: '600px 0px' });
+
+            this.$nextTick(() => {
+                if (this.$refs.loadMoreTrigger) {
+                    observer.observe(this.$refs.loadMoreTrigger);
+                }
+            });
+        },
         searchQuery: '',
         viewMode: 'grid',
         fallbackImage: 'https://toop.kairouanhub.com/storage/listings/23/28bc3509-9426-4f36-9e71-fd694f3cbc45.webp',
@@ -1720,6 +1758,7 @@ document.addEventListener('alpine:init', () => {
 
             
             this.filteredListings = this.listings;
+            this.setupInfiniteScroll();
             // Try to get saved location from localStorage
             try {
                 const savedLocation = localStorage.getItem('userLocation');
@@ -1905,6 +1944,7 @@ document.addEventListener('alpine:init', () => {
             }
 
             this.filteredListings = results;
+            this.visibleCount = 24;
         },
 
         resetFilters() {

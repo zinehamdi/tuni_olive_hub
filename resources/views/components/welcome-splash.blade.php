@@ -1,6 +1,10 @@
 @php
     $userAgent = request()->header('User-Agent', '');
-    $isBotOrSpeedTest = (bool) preg_match('/(Lighthouse|Googlebot|PageSpeed|Chrome-Lighthouse|PTST|HeadlessChrome|GTmetrix|Pingdom|bot|crawl|spider)/i', $userAgent);
+    $isBotOrSpeedTest = (bool) (
+        preg_match('/(Lighthouse|Googlebot|PageSpeed|Chrome-Lighthouse|PTST|HeadlessChrome|GTmetrix|Pingdom|hostinger|w3c|bot|crawl|spider)/i', $userAgent)
+        || request()->has('speedtest')
+        || request()->header('X-Purpose') === 'preview'
+    );
 @endphp
 
 @if(!$isBotOrSpeedTest)

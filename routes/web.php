@@ -135,7 +135,47 @@ Route::middleware(['web', 'set.locale'])->group(function () {
             ];
         });
         
-        return view('home_marketplace', compact('featuredListings', 'articles', 'deals', 'serviceProviders', 'heroSlides', 'platformStats'));
+        $listingsPayload = $featuredListings->map(function ($listing) {
+            $seller = $listing->seller;
+            $address = $seller?->addresses?->first();
+            return [
+                'id' => $listing->id,
+                'category' => $listing->category ?? $listing->product?->type ?? 'oil',
+                'is_featured' => (bool)$listing->is_featured,
+                'price' => $listing->price ?? $listing->product?->price ?? 0,
+                'currency' => $listing->currency ?? 'TND',
+                'unit' => $listing->unit ?? $listing->product?->unit ?? '',
+                'packaging' => $listing->packaging,
+                'tree_count' => $listing->tree_count,
+                'status' => $listing->status,
+                'created_at' => $listing->created_at?->toISOString(),
+                'media' => $listing->media ?? [],
+                'delivery_options' => $listing->delivery_options,
+                'seller_id' => $listing->seller_id,
+                'seller' => $seller ? [
+                    'id' => $seller->id,
+                    'name' => $seller->name,
+                    'display_name' => $seller->display_name ?? $seller->mill_name ?? $seller->packer_name ?? $seller->company_name ?? $seller->farm_name ?? $seller->name ?? '',
+                    'role' => $seller->role,
+                    'profile_picture' => $seller->profile_picture,
+                    'location' => $seller->location ?? $seller->farm_location ?? '',
+                    'farm_location' => $seller->farm_location ?? '',
+                    'lat' => $address?->latitude ? (float)$address->latitude : null,
+                    'lng' => $address?->longitude ? (float)$address->longitude : null,
+                    'addresses' => $address ? [['governorate' => $address->governorate, 'latitude' => (float)$address->latitude, 'longitude' => (float)$address->longitude]] : []
+                ] : null,
+                'product' => $listing->product ? [
+                    'type' => $listing->product->type,
+                    'variety' => $listing->product->variety,
+                    'quality' => $listing->product->quality,
+                    'price' => $listing->product->price,
+                    'unit' => $listing->product->unit,
+                    'is_organic' => (bool)$listing->product->is_organic,
+                ] : null
+            ];
+        })->values();
+
+        return view('home_marketplace', compact('featuredListings', 'listingsPayload', 'articles', 'deals', 'serviceProviders', 'heroSlides', 'platformStats'));
     })->name('home');
     
     // Redirect /products and /market to home page anchored at products section
