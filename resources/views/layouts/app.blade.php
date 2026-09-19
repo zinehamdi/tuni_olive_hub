@@ -118,9 +118,10 @@
     <meta name="theme-color" content="#6A8F3B">
     <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
 
-    <!-- Preconnect for performance -->
+    <!-- Preconnect & Preload for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="{{ asset('images/hero_slide_1.png') }}" fetchpriority="high">
 
     @if(app()->environment('production') || file_exists(public_path('build/manifest.json')))
         @vite(['resources/css/app.css','resources/js/app.js'])

@@ -111,11 +111,17 @@
                      }, 6000);
                  }
              }">
-        <!-- Slideshow Backgrounds with Zoom Effect -->
+        <!-- Static Initial Slide (Instant LCP) -->
+        <div class="absolute inset-0 bg-cover bg-center transition-all duration-[6000ms] ease-linear"
+             :class="currentSlide === 0 ? 'opacity-100 scale-110' : 'opacity-0 scale-100'"
+             style="background-image: url('{{ $slideUrls[0] ?? asset('images/hero_slide_1.png') }}'); transition-property: opacity, transform;"></div>
+
+        <!-- Dynamic Subsequent Slides -->
         <template x-for="(slide, index) in slides" :key="index">
-            <div class="absolute inset-0 bg-cover bg-center transition-all duration-[6000ms] ease-linear"
+            <div x-show="index > 0"
+                 class="absolute inset-0 bg-cover bg-center transition-all duration-[6000ms] ease-linear"
                  :class="currentSlide === index ? 'opacity-100 scale-110' : 'opacity-0 scale-100'"
-                 :style="`background-image: ${index === 0 || currentSlide === index ? 'url(\'' + slide + '\')' : 'none'}; transition-property: opacity, transform;`"></div>
+                 :style="`background-image: ${currentSlide === index ? 'url(\'' + slide + '\')' : 'none'}; transition-property: opacity, transform;`"></div>
         </template>
         
         <!-- Gradient Overlay -->
@@ -123,51 +129,30 @@
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-8">
                 <!-- Hero Animation Inline -->
-                <div class="relative flex flex-col items-center justify-center py-12 px-4 text-center space-y-8 bg-transparent w-full max-w-4xl mx-auto">
+                <div class="relative flex flex-col items-center justify-center py-10 px-4 text-center space-y-6 bg-transparent w-full max-w-4xl mx-auto">
                     <!-- English Slogan -->
-                    <div class="animate-fade-in">
-                        <p class="text-white font-black text-lg md:text-2xl uppercase tracking-[0.25em] drop-shadow-lg">
+                    <div>
+                        <p class="text-white font-black text-base md:text-2xl uppercase tracking-[0.25em] drop-shadow-lg">
                             Zin Tunisian Olive Oil Platform
                         </p>
                     </div>
 
                     <!-- Main Brand: ZinToop -->
                     <div class="relative group">
-                        <h1 id="zintoop-brand" class="text-7xl md:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#C8A356] via-[#FFF9E0] to-[#C8A356] bg-[length:200%_auto] animate-shine drop-shadow-2xl">
+                        <h1 id="zintoop-brand" class="text-6xl sm:text-7xl md:text-9xl font-black tracking-tighter text-[#C8A356] bg-clip-text bg-gradient-to-r from-[#C8A356] via-[#FFF9E0] to-[#C8A356] drop-shadow-2xl">
                             ZinToop
                         </h1>
                         <!-- Subtle Glow -->
-                        <div class="absolute -inset-8 bg-[#C8A356]/20 blur-3xl rounded-full -z-10 animate-pulse"></div>
+                        <div class="absolute -inset-8 bg-[#C8A356]/20 blur-3xl rounded-full -z-10"></div>
                     </div>
 
                     <!-- Arabic Slogan -->
-                    <div class="animate-fade-in-delayed">
-                        <p class="text-[#C8A356] font-black text-3xl md:text-5xl drop-shadow-lg" dir="rtl">
+                    <div>
+                        <p class="text-[#C8A356] font-black text-2xl sm:text-3xl md:text-5xl drop-shadow-lg" dir="rtl">
                             منصة الزين لزيت الزيتون التونسي
                         </p>
                     </div>
                 </div>
-
-                <style>
-                    @keyframes shine {
-                        0% { background-position: 200% center; }
-                        100% { background-position: -200% center; }
-                    }
-                    .animate-shine {
-                        animation: shine 4s linear infinite;
-                    }
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                    .animate-fade-in {
-                        animation: fadeIn 1s ease-out forwards;
-                    }
-                    .animate-fade-in-delayed {
-                        animation: fadeIn 1.5s ease-out forwards;
-                        opacity: 0;
-                    }
-                </style>
                 
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap justify-center gap-4 mb-8">
