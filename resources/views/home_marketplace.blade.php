@@ -115,7 +115,7 @@
         <template x-for="(slide, index) in slides" :key="index">
             <div class="absolute inset-0 bg-cover bg-center transition-all duration-[6000ms] ease-linear"
                  :class="currentSlide === index ? 'opacity-100 scale-110' : 'opacity-0 scale-100'"
-                 :style="`background-image: url('${slide}'); transition-property: opacity, transform;`"></div>
+                 :style="`background-image: ${index === 0 || currentSlide === index ? 'url(\'' + slide + '\')' : 'none'}; transition-property: opacity, transform;`"></div>
         </template>
         
         <!-- Gradient Overlay -->
@@ -480,6 +480,8 @@
                         <img src="{{ Str::startsWith($article->image, ['http://', 'https://']) ? $article->image : (Str::startsWith($article->image, 'images/') ? asset($article->image) : (Str::startsWith($article->image, 'storage/') ? asset($article->image) : asset('images/' . $article->image))) }}" 
                              onerror="this.onerror=null;this.src='{{ asset('images/hero_slide_1.png') }}'" 
                              alt="{{ $article->title[app()->getLocale()] ?? 'Article' }}" 
+                             loading="lazy"
+                             decoding="async"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         @if(isset($article->category[app()->getLocale()]))
                         <div class="absolute top-3.5 {{ app()->getLocale() === 'ar' ? 'right-3.5' : 'left-3.5' }} bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-extrabold text-[#183b1c] shadow-md border border-white/50">
