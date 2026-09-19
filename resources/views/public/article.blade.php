@@ -56,9 +56,79 @@
                     </div>
                 </div>
 
-                <div class="prose prose-lg md:prose-xl prose-emerald max-w-none text-gray-800 leading-relaxed">
+                <div class="prose prose-lg md:prose-xl prose-emerald max-w-none text-gray-800 leading-relaxed article-body-content">
                     {!! Illuminate\Support\Str::markdown($article->content[app()->getLocale()] ?? $article->content['ar'] ?? $article->content['en'] ?? '') !!}
                 </div>
+
+                <style>
+                    /* Premium Clear Table Borders and Gridlines */
+                    .article-body-content table {
+                        width: 100% !important;
+                        border-collapse: separate !important;
+                        border-spacing: 0 !important;
+                        margin: 2rem 0 !important;
+                        border: 2px solid #9CA3AF !important;
+                        border-radius: 1rem !important;
+                        overflow: hidden !important;
+                        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+                        background: #FFFFFF !important;
+                    }
+                    .article-body-content thead {
+                        background: linear-gradient(135deg, #142E18 0%, #0C1A0F 100%) !important;
+                        color: #FFFFFF !important;
+                    }
+                    .article-body-content thead th {
+                        padding: 1rem 1.25rem !important;
+                        font-weight: 800 !important;
+                        font-size: 0.95rem !important;
+                        text-align: inherit !important;
+                        color: #FFFFFF !important;
+                        border-bottom: 3px solid #C8A356 !important;
+                        border-right: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+                        white-space: nowrap !important;
+                    }
+                    .article-body-content thead th:last-child {
+                        border-right: none !important;
+                    }
+                    .article-body-content tbody tr {
+                        border-bottom: 1.5px solid #D1D5DB !important;
+                        transition: background-color 0.15s ease !important;
+                    }
+                    .article-body-content tbody tr:nth-child(even) {
+                        background-color: #F9FAFB !important;
+                    }
+                    .article-body-content tbody tr:hover {
+                        background-color: #F0FDF4 !important;
+                    }
+                    .article-body-content tbody td {
+                        padding: 0.95rem 1.25rem !important;
+                        font-size: 0.95rem !important;
+                        color: #1F2937 !important;
+                        vertical-align: middle !important;
+                        border-bottom: 1.5px solid #D1D5DB !important;
+                        border-right: 1.5px solid #D1D5DB !important;
+                    }
+                    .article-body-content tbody td:last-child {
+                        border-right: none !important;
+                    }
+                    .article-body-content tbody tr:last-child td {
+                        border-bottom: none !important;
+                    }
+                    
+                    /* Responsive Table Handling on Mobile */
+                    @media (max-width: 768px) {
+                        .article-body-content table {
+                            display: block !important;
+                            overflow-x: auto !important;
+                            -webkit-overflow-scrolling: touch !important;
+                            font-size: 0.85rem !important;
+                        }
+                        .article-body-content thead th, 
+                        .article-body-content tbody td {
+                            padding: 0.75rem 0.85rem !important;
+                        }
+                    }
+                </style>
 
                 <!-- Related Articles Section -->
                 @if(isset($relatedArticles) && $relatedArticles->count() > 0)
