@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>استوديو ZinToop البصري الموحد – Visual Brand Studio</title>
     <!-- Google Fonts: Cairo & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1194,7 +1197,7 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* HEADLINE, STATS & MAIN CONTENT                                */
+        /* HEADLINE, STATS & MAIN CONTENT WITH 100% OPAQUE CARDS         */
         /* ------------------------------------------------------------- */
         .category-pill-tag {
             display: inline-flex;
@@ -1206,30 +1209,40 @@
             font-weight: 900;
             color: #ffffff;
             background: linear-gradient(135deg, #16a34a, #15803d);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
             box-shadow: 0 4px 15px rgba(22, 163, 74, 0.5);
-            margin-bottom: 10px;
-            align-self: flex-start;
-        }
-
-        .art-main-title {
-            font-size: 2.75rem;
-            font-weight: 900;
-            line-height: 1.24;
-            color: #ffffff;
             margin-bottom: 12px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0,0,0,0.9);
-        }
-
-        .art-main-title span {
-            color: var(--gold-accent);
-            text-shadow: 0 0 25px rgba(250, 204, 21, 0.7), 0 2px 6px rgba(0,0,0,0.9);
+            align-self: flex-start;
         }
 
         .art-content-middle {
             position: relative;
             z-index: 10;
             width: 100%;
+            background: rgba(3, 14, 8, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(34, 197, 94, 0.45);
+            border-radius: 20px;
+            padding: 16px 20px 14px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+
+        .art-main-title {
+            font-size: 2.65rem;
+            font-weight: 900;
+            line-height: 1.24;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
+            opacity: 1 !important;
+        }
+
+        .art-main-title span {
+            color: #fde047;
+            text-shadow: 0 0 20px rgba(250, 204, 21, 0.7);
         }
 
         .highlight-tags-row {
@@ -1242,15 +1255,15 @@
         }
 
         .highlight-tag {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.38);
+            background: #020c06;
+            border: 1.5px solid rgba(34, 197, 94, 0.6);
             color: #ffffff;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.92rem;
             font-weight: 800;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            opacity: 1 !important;
         }
 
         /* Stats Cards Layer */
@@ -1265,14 +1278,14 @@
         }
 
         .stat-card-item {
-            background: rgba(4, 18, 10, 0.94);
-            backdrop-filter: blur(16px);
-            border: 1.5px solid rgba(34, 197, 94, 0.55);
+            background: #020c06;
+            border: 1.5px solid rgba(34, 197, 94, 0.6);
             border-radius: 16px;
             padding: 12px 14px;
             display: flex;
             flex-direction: column;
             box-shadow: 0 12px 28px rgba(0,0,0,0.75);
+            opacity: 1 !important;
         }
 
         .stat-card-value-row {
@@ -1287,6 +1300,7 @@
             color: #fde047;
             line-height: 1;
             text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+            opacity: 1 !important;
         }
 
         .stat-card-unit {
@@ -1301,6 +1315,7 @@
             color: #ffffff;
             margin-top: 4px;
             text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+            opacity: 1 !important;
         }
 
         .art-desc-box {
@@ -1313,12 +1328,14 @@
             font-weight: 700;
             margin-bottom: 12px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.95);
-            background: rgba(2, 10, 6, 0.85);
-            padding: 10px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-inline-start: 5px solid #22c55e;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            background: #020c06;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(34, 197, 94, 0.35);
+            border-inline-start: 6px solid #22c55e;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+            box-sizing: border-box;
+            opacity: 1 !important;
         }
 
         /* ------------------------------------------------------------- */
@@ -1331,9 +1348,9 @@
             grid-template-columns: 1fr auto;
             gap: 16px;
             align-items: center;
-            background: rgba(6, 14, 10, 0.9);
+            background: rgba(3, 14, 8, 0.96);
             backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border: 1.5px solid rgba(34, 197, 94, 0.45);
             border-radius: 20px;
             padding: 12px 18px;
             box-shadow: 0 16px 40px rgba(0,0,0,0.75);
@@ -1402,23 +1419,108 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* 9:16 VERTICAL STORY / TIKTOK SCALED TYPOGRAPHY RULES          */
+        /* 4 DISTINCT TEMPLATE LAYOUT THEMES & VARIATIONS                */
         /* ------------------------------------------------------------- */
+        /* 1. BOURSE LAYOUT */
+        .template-artboard.layout-bourse .category-pill-tag {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border-color: #4ade80;
+        }
+        .template-artboard.layout-bourse .stat-card-value {
+            color: #fde047;
+        }
+
+        /* 2. PRODUCT / SHOWCASE LAYOUT */
+        .template-artboard.layout-product .multi-photo-showcase-box {
+            border: 2px solid #eab308;
+            box-shadow: 0 16px 45px rgba(234, 179, 8, 0.25);
+        }
+        .template-artboard.layout-product.ratio-1-1 .format-single .art-gallery-grid {
+            height: 320px;
+        }
+        .template-artboard.layout-product.ratio-1-1 .format-grid-2 .art-gallery-grid {
+            height: 280px;
+        }
+        .template-artboard.layout-product .category-pill-tag {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            border-color: #facc15;
+        }
+        .template-artboard.layout-product .art-content-middle {
+            border-color: rgba(234, 179, 8, 0.45);
+        }
+        .template-artboard.layout-product .stat-card-item {
+            border-color: rgba(234, 179, 8, 0.5);
+        }
+        .template-artboard.layout-product .stat-card-value {
+            color: #facc15;
+        }
+        .template-artboard.layout-product .art-desc-box {
+            border-inline-start-color: #eab308;
+        }
+
+        /* 3. BREAKING NEWS & REPORT LAYOUT */
+        .template-artboard.layout-news .category-pill-tag {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-color: #f87171;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+            animation: pulse 1.5s infinite;
+        }
+        .template-artboard.layout-news .art-content-middle {
+            background: rgba(12, 4, 4, 0.96);
+            border-color: rgba(239, 68, 68, 0.5);
+            border-inline-start: 6px solid #ef4444;
+        }
+        .template-artboard.layout-news .art-main-title {
+            color: #ffffff;
+        }
+        .template-artboard.layout-news .art-main-title span {
+            color: #f87171;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+        .template-artboard.layout-news .stat-card-item {
+            background: #110606;
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        .template-artboard.layout-news .stat-card-value {
+            color: #fca5a5;
+        }
+        .template-artboard.layout-news .art-desc-box {
+            background: #110606;
+            border-color: rgba(239, 68, 68, 0.4);
+            border-inline-start-color: #ef4444;
+        }
+        .template-artboard.layout-news .footer-qr-btn-pill {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-color: #ef4444;
+        }
+
+        /* 4. MODERN 9:16 STORY / TIKTOK SCALED TYPOGRAPHY RULES */
+        .template-artboard.ratio-9-16 {
+            padding: 60px 45px 50px 45px;
+            gap: 20px;
+        }
+
         .template-artboard.ratio-9-16 .category-pill-tag {
-            font-size: 1.2rem;
-            padding: 10px 24px;
-            margin-bottom: 16px;
+            font-size: 1.3rem;
+            padding: 12px 28px;
+            margin-bottom: 18px;
+        }
+
+        .template-artboard.ratio-9-16 .art-content-middle {
+            padding: 24px 26px 20px 26px;
+            border-radius: 26px;
+            margin-bottom: 20px;
         }
 
         .template-artboard.ratio-9-16 .art-main-title {
-            font-size: 3.8rem;
+            font-size: 3.6rem;
             line-height: 1.25;
             margin-bottom: 20px;
         }
 
         .template-artboard.ratio-9-16 .highlight-tag {
-            font-size: 1.15rem;
-            padding: 6px 18px;
+            font-size: 1.18rem;
+            padding: 8px 20px;
         }
 
         .template-artboard.ratio-9-16 .stats-highlight-cards {
@@ -1427,12 +1529,12 @@
         }
 
         .template-artboard.ratio-9-16 .stat-card-item {
-            padding: 16px 18px;
+            padding: 18px 20px;
             border-radius: 20px;
         }
 
         .template-artboard.ratio-9-16 .stat-card-value {
-            font-size: 3.4rem;
+            font-size: 3.2rem;
         }
 
         .template-artboard.ratio-9-16 .stat-card-unit {
@@ -1440,14 +1542,23 @@
         }
 
         .template-artboard.ratio-9-16 .stat-card-label {
-            font-size: 1.15rem;
+            font-size: 1.18rem;
         }
 
         .template-artboard.ratio-9-16 .art-desc-box {
-            font-size: 1.4rem;
+            font-size: 1.38rem;
             line-height: 1.6;
-            padding: 14px 20px;
+            padding: 18px 24px;
             margin-bottom: 20px;
+            border-radius: 18px;
+        }
+
+        .template-artboard.ratio-9-16 .format-single .art-gallery-grid {
+            height: 440px;
+        }
+
+        .template-artboard.ratio-9-16 .format-grid-2 .art-gallery-grid {
+            height: 380px;
         }
 
         .template-artboard.ratio-9-16 .brand-master-text .brand-main-title {
@@ -1464,11 +1575,11 @@
         }
 
         .template-artboard.ratio-9-16 .cta-action-headline {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
 
         .template-artboard.ratio-9-16 .cta-action-sub {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
         }
 
         .template-artboard.ratio-9-16 .footer-qr-frame {
@@ -3660,19 +3771,37 @@
         function setLayoutStyle(style) {
             currentLayout = style;
             document.querySelectorAll('.layout-btn').forEach(btn => btn.classList.remove('active'));
-            if (style === 'bourse') document.getElementById('btnLayoutBourse').classList.add('active');
-            if (style === 'product') document.getElementById('btnLayoutProduct').classList.add('active');
-            if (style === 'news') document.getElementById('btnLayoutNews').classList.add('active');
-            if (style === 'story') document.getElementById('btnLayoutStory').classList.add('active');
+            if (style === 'bourse') document.getElementById('btnLayoutBourse')?.classList.add('active');
+            if (style === 'product') document.getElementById('btnLayoutProduct')?.classList.add('active');
+            if (style === 'news') document.getElementById('btnLayoutNews')?.classList.add('active');
+            if (style === 'story') document.getElementById('btnLayoutStory')?.classList.add('active');
 
             const artboard = document.getElementById('artboard');
+            if (!artboard) return;
             artboard.classList.remove('layout-bourse', 'layout-product', 'layout-news', 'layout-story');
             artboard.classList.add(`layout-${style}`);
 
-            if (style === 'story') setRatio('9:16');
-            else if (style === 'product') {
-                if (galleryImages.length === 1) setGalleryFormat('single');
+            if (style === 'story') {
+                setRatio('9:16');
+            } else if (style === 'product') {
+                if (currentRatio === '9:16') setRatio('1:1');
+                if (galleryImages.length <= 1) setGalleryFormat('single');
+                else if (galleryImages.length === 2) setGalleryFormat('grid-2');
+                else setGalleryFormat('focus-3');
+            } else if (style === 'news') {
+                if (currentRatio === '9:16') setRatio('1:1');
+                const pillInput = document.getElementById('inputPill');
+                if (pillInput && !pillInput.value.includes('عاجل') && !pillInput.value.includes('FLASH') && !pillInput.value.includes('BREAKING')) {
+                    if (currentLang === 'fr') pillInput.value = '🔴 FLASH INFO | Rapport Officiel';
+                    else if (currentLang === 'en') pillInput.value = '🔴 BREAKING | Official Report';
+                    else pillInput.value = '🔴 عاجل | بيان رسمي ومتابعة حية';
+                }
+            } else if (style === 'bourse') {
+                if (currentRatio === '9:16') setRatio('1:1');
             }
+
+            updateArtboard();
+            updateCanvasScale();
         }
 
         function syncDirectEdit(artId, inputId) {

@@ -82,7 +82,7 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <a href="{{ asset('social_templates_zintoop.html') }}" target="_blank" class="px-4 py-2.5 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white rounded-xl font-bold text-sm flex items-center gap-2 shadow-sm transition">
+                <a href="{{ asset('social_templates_zintoop.html') }}?v={{ time() }}" target="_blank" class="px-4 py-2.5 bg-[#6A8F3B] hover:bg-[#5a7a2f] text-white rounded-xl font-bold text-sm flex items-center gap-2 shadow-sm transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     <span>{{ app()->getLocale() === 'ar' ? 'فتح في نافذة كاملة' : (app()->getLocale() === 'fr' ? 'Plein Écran Dédié' : 'Open in New Tab') }}</span>
                 </a>
@@ -96,7 +96,7 @@
         <div class="flex-1 bg-[#080c14] rounded-2xl shadow-xl border border-gray-800 overflow-hidden relative min-h-[750px] lg:min-h-[860px]">
             <iframe 
                 id="studioIframe"
-                src="{{ asset('social_templates_zintoop.html') }}" 
+                src="{{ asset('social_templates_zintoop.html') }}?v={{ time() }}" 
                 class="w-full h-full border-0 absolute inset-0"
                 allow="accelerometer; autoplay; camera; microphone; clipboard-write; clipboard-read; encrypted-media; gyroscope; picture-in-picture; web-share"
                 title="ZinToop Brand Studio">
