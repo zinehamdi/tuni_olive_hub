@@ -19,9 +19,9 @@
             --sidebar-width: 500px;
             --primary-emerald: #16a34a;
             --emerald-glow: rgba(34, 197, 94, 0.4);
-            --gold-accent: #eab308;
-            --gold-glow: rgba(234, 179, 8, 0.35);
-            --overlay-darkness: 0.35;
+            --gold-accent: #facc15;
+            --gold-glow: rgba(250, 204, 21, 0.35);
+            --overlay-darkness: 0.52;
             --bg-blur: 0px;
             --bg-brightness: 0.88;
         }
@@ -890,7 +890,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(3, 20, 12, var(--overlay-darkness)) 0%, rgba(3, 20, 12, 0.92) 80%);
+            background: linear-gradient(180deg, rgba(2, 12, 8, 0.72) 0%, rgba(2, 10, 6, 0.84) 50%, rgba(1, 8, 5, 0.95) 100%);
             z-index: 2;
         }
 
@@ -958,9 +958,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 4;
+            z-index: 3;
             pointer-events: none;
-            opacity: 0.16;
+            opacity: 0.08;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1045,19 +1045,20 @@
         }
 
         .brand-master-text .brand-main-title {
-            font-size: 1.22rem;
+            font-size: 1.38rem;
             font-weight: 900;
-            color: #fff;
+            color: #ffffff;
             letter-spacing: 0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
         }
 
         .brand-master-text .verified-badge {
-            background: rgba(34, 197, 94, 0.25);
+            background: rgba(34, 197, 94, 0.35);
             color: #4ade80;
             border: 1px solid #22c55e;
-            padding: 2px 7px;
+            padding: 3px 8px;
             border-radius: 20px;
-            font-size: 0.65rem;
+            font-size: 0.72rem;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -1065,25 +1066,26 @@
         }
 
         .brand-master-text .brand-sub-title {
-            font-size: 0.76rem;
-            font-weight: 700;
-            color: #cbd5e1;
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: var(--gold-accent);
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
         }
 
         .header-link-pill {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
-            padding: 7px 18px;
+            background: rgba(10, 20, 15, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            padding: 8px 20px;
             border-radius: 30px;
-            font-size: 0.88rem;
-            font-weight: 800;
+            font-size: 0.95rem;
+            font-weight: 900;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         /* ------------------------------------------------------------- */
@@ -1095,9 +1097,9 @@
             width: 100%;
             margin: 6px auto;
             border-radius: 20px;
-            background: rgba(10, 20, 15, 0.6);
+            background: rgba(10, 20, 15, 0.7);
             backdrop-filter: blur(18px);
-            border: 1.5px solid rgba(255, 255, 255, 0.16);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
             padding: 10px;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
             box-sizing: border-box;
@@ -1148,16 +1150,16 @@
         .format-grid-4 .art-gallery-grid {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            height: 330px;
+            height: 220px;
         }
 
         .art-gallery-item {
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            background: #000;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.18);
+            background: #0d1a12;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
             width: 100%;
             height: 100%;
         }
@@ -1172,12 +1174,12 @@
         .art-gallery-badge {
             position: absolute;
             bottom: 6px;
-            background: rgba(0, 0, 0, 0.78);
+            background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
-            color: #fff;
-            padding: 3px 9px;
+            color: var(--gold-accent);
+            padding: 3px 8px;
             border-radius: 6px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 800;
             border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 2;
@@ -1198,30 +1200,36 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 16px;
+            padding: 7px 18px;
             border-radius: 30px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #ffffff;
             background: linear-gradient(135deg, #16a34a, #15803d);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
-            margin-bottom: 8px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.5);
+            margin-bottom: 10px;
             align-self: flex-start;
         }
 
         .art-main-title {
-            font-size: 2.35rem;
+            font-size: 2.75rem;
             font-weight: 900;
-            line-height: 1.22;
+            line-height: 1.24;
             color: #ffffff;
-            margin-bottom: 10px;
-            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+            margin-bottom: 12px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0,0,0,0.9);
         }
 
         .art-main-title span {
             color: var(--gold-accent);
-            text-shadow: 0 0 25px rgba(234, 179, 8, 0.6);
+            text-shadow: 0 0 25px rgba(250, 204, 21, 0.7), 0 2px 6px rgba(0,0,0,0.9);
+        }
+
+        .art-content-middle {
+            position: relative;
+            z-index: 10;
+            width: 100%;
         }
 
         .highlight-tags-row {
@@ -1229,36 +1237,42 @@
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
         }
 
         .highlight-tag {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #f1f5f9;
-            padding: 4px 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.38);
+            color: #ffffff;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.92rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
         }
 
         /* Stats Cards Layer */
         .stats-highlight-cards {
+            position: relative;
+            z-index: 10;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            width: 100%;
         }
 
         .stat-card-item {
-            background: rgba(15, 30, 20, 0.72);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(4, 18, 10, 0.94);
+            backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(34, 197, 94, 0.55);
             border-radius: 16px;
             padding: 12px 14px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.75);
         }
 
         .stat-card-value-row {
@@ -1268,32 +1282,43 @@
         }
 
         .stat-card-value {
-            font-size: 1.95rem;
+            font-size: 2.35rem;
             font-weight: 900;
-            color: var(--gold-accent);
+            color: #fde047;
             line-height: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
         .stat-card-unit {
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 800;
-            color: #94a3b8;
+            color: #ffffff;
         }
 
         .stat-card-label {
-            font-size: 0.76rem;
-            font-weight: 700;
-            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
             margin-top: 4px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
         }
 
         .art-desc-box {
-            font-size: 0.88rem;
-            line-height: 1.45;
-            color: #cbd5e1;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            font-size: 1.08rem;
+            line-height: 1.55;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.95);
+            background: rgba(2, 10, 6, 0.85);
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-inline-start: 5px solid #22c55e;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
 
         /* ------------------------------------------------------------- */
@@ -1306,12 +1331,12 @@
             grid-template-columns: 1fr auto;
             gap: 16px;
             align-items: center;
-            background: rgba(8, 16, 12, 0.85);
+            background: rgba(6, 14, 10, 0.9);
             backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
             border-radius: 20px;
-            padding: 12px 16px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+            padding: 12px 18px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.75);
         }
 
         html[dir="ltr"] .template-footer {
@@ -1325,16 +1350,17 @@
         }
 
         .cta-action-headline {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 900;
             color: #ffffff;
             line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
         }
 
         .cta-action-sub {
-            font-size: 0.76rem;
-            color: #94a3b8;
-            font-weight: 600;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            font-weight: 700;
         }
 
         .footer-qr-container {
@@ -1369,10 +1395,91 @@
             color: #fff;
             padding: 3px 8px;
             border-radius: 20px;
-            font-size: 0.64rem;
+            font-size: 0.68rem;
             font-weight: 900;
             box-shadow: 0 2px 10px rgba(22, 163, 74, 0.4);
             white-space: nowrap;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* 9:16 VERTICAL STORY / TIKTOK SCALED TYPOGRAPHY RULES          */
+        /* ------------------------------------------------------------- */
+        .template-artboard.ratio-9-16 .category-pill-tag {
+            font-size: 1.2rem;
+            padding: 10px 24px;
+            margin-bottom: 16px;
+        }
+
+        .template-artboard.ratio-9-16 .art-main-title {
+            font-size: 3.8rem;
+            line-height: 1.25;
+            margin-bottom: 20px;
+        }
+
+        .template-artboard.ratio-9-16 .highlight-tag {
+            font-size: 1.15rem;
+            padding: 6px 18px;
+        }
+
+        .template-artboard.ratio-9-16 .stats-highlight-cards {
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .template-artboard.ratio-9-16 .stat-card-item {
+            padding: 16px 18px;
+            border-radius: 20px;
+        }
+
+        .template-artboard.ratio-9-16 .stat-card-value {
+            font-size: 3.4rem;
+        }
+
+        .template-artboard.ratio-9-16 .stat-card-unit {
+            font-size: 1.35rem;
+        }
+
+        .template-artboard.ratio-9-16 .stat-card-label {
+            font-size: 1.15rem;
+        }
+
+        .template-artboard.ratio-9-16 .art-desc-box {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+
+        .template-artboard.ratio-9-16 .brand-master-text .brand-main-title {
+            font-size: 1.8rem;
+        }
+
+        .template-artboard.ratio-9-16 .brand-master-text .brand-sub-title {
+            font-size: 1.1rem;
+        }
+
+        .template-artboard.ratio-9-16 .header-link-pill {
+            font-size: 1.3rem;
+            padding: 10px 24px;
+        }
+
+        .template-artboard.ratio-9-16 .cta-action-headline {
+            font-size: 1.8rem;
+        }
+
+        .template-artboard.ratio-9-16 .cta-action-sub {
+            font-size: 1.15rem;
+        }
+
+        .template-artboard.ratio-9-16 .footer-qr-frame {
+            width: 105px;
+            height: 105px;
+        }
+
+        .template-artboard.ratio-9-16 .footer-qr-frame img,
+        .template-artboard.ratio-9-16 .footer-qr-frame canvas {
+            width: 93px !important;
+            height: 93px !important;
         }
 
         /* ------------------------------------------------------------- */
@@ -1456,6 +1563,152 @@
         .template-artboard.theme-light-pearl .cta-action-headline {
             color: #0f172a;
         }
+
+        /* ------------------------------------------------------------- */
+        /* MOBILE RESPONSIVE STYLING (Smartphones & Tablets)             */
+        /* ------------------------------------------------------------- */
+        .mobile-bottom-bar {
+            display: none;
+        }
+
+        @media (max-width: 1023px) {
+            body {
+                flex-direction: column !important;
+                overflow-x: hidden !important;
+                padding-bottom: 70px !important;
+            }
+
+            .sidebar {
+                position: static !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 16px 12px 30px !important;
+                order: 2;
+                overflow-y: visible !important;
+            }
+
+            html[dir="rtl"] .sidebar, html[dir="ltr"] .sidebar {
+                right: auto !important;
+                left: auto !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .preview-workspace {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 12px 8px !important;
+                min-height: auto !important;
+                order: 1;
+            }
+
+            .preview-toolbar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+                padding: 10px 12px !important;
+            }
+
+            .preview-title {
+                justify-content: center !important;
+                text-align: center !important;
+                flex-wrap: wrap !important;
+                gap: 6px !important;
+            }
+
+            .preview-toolbar > div {
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+                width: 100% !important;
+            }
+
+            .layout-style-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6px !important;
+            }
+
+            .category-scroll-grid {
+                grid-template-columns: 1fr 1fr !important;
+                max-height: 200px !important;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6px !important;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 4px !important;
+            }
+
+            .gallery-format-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+
+            .social-share-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 6px !important;
+            }
+
+            .mobile-bottom-bar {
+                display: flex !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: #0d1322;
+                border-top: 1px solid #1e293b;
+                z-index: 9999;
+                align-items: center;
+                justify-content: space-around;
+                padding: 4px 8px;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+                backdrop-filter: blur(10px);
+            }
+
+            .mob-tab-btn {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                background: transparent;
+                border: none;
+                color: #94a3b8;
+                font-size: 0.7rem;
+                font-weight: 700;
+                cursor: pointer;
+                padding: 6px 4px;
+                border-radius: 8px;
+                transition: all 0.2s;
+            }
+
+            .mob-tab-btn i {
+                font-size: 1rem;
+            }
+
+            .mob-tab-btn.active, .mob-tab-btn:hover {
+                color: #22c55e;
+                background: rgba(34, 197, 94, 0.1);
+            }
+
+            .mob-tab-highlight {
+                color: var(--gold-accent) !important;
+            }
+
+            .mob-tab-highlight.active, .mob-tab-highlight:hover {
+                background: rgba(234, 179, 8, 0.15) !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1481,7 +1734,7 @@
         </div>
 
         <!-- 1. TEMPLATES & PRESETS -->
-        <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> <span id="uiSec1Title">1. قوالب المنشورات السريعة (Templates)</span></div>
+        <div class="section-title" id="secTemplates"><i class="fa-solid fa-wand-magic-sparkles"></i> <span id="uiSec1Title">1. قوالب المنشورات السريعة (Templates)</span></div>
         
         <!-- Layout Selection Grid -->
         <div class="layout-style-grid">
@@ -1552,7 +1805,7 @@
                 </div>
                 <div>
                     <label style="font-size:0.7rem;" id="uiLabelDarkness">تعتيم الحواف</label>
-                    <input type="range" id="inputDarkness" min="0" max="0.8" step="0.05" value="0.35" class="form-control" style="padding:0;" oninput="updateDarkness(this.value)">
+                    <input type="range" id="inputDarkness" min="0" max="0.9" step="0.05" value="0.52" class="form-control" style="padding:0;" oninput="updateDarkness(this.value)">
                 </div>
                 <div>
                     <label style="font-size:0.7rem;" id="uiLabelBgBlur">تمويه Blur</label>
@@ -1783,7 +2036,7 @@
         </button>
 
         <!-- 11. SOCIAL MEDIA SHARE & QUICK PUBLISH -->
-        <div class="section-title"><i class="fa-solid fa-share-nodes"></i> <span id="uiSec11Title">11. النشر والمشاركة في السوشيال ميديا (Social Share)</span></div>
+        <div class="section-title" id="secSocialShare"><i class="fa-solid fa-share-nodes"></i> <span id="uiSec11Title">11. النشر والمشاركة في السوشيال ميديا (Social Share)</span></div>
         <div class="section-box" style="margin-bottom:30px;">
             <!-- Native Web Share with HD Image -->
             <button type="button" class="share-action-btn-large btn-native-share" id="btnNativeShare" onclick="shareNativeImage()" title="مشاركة التصميم وصورته مباشرة لتطبيقات الهاتف والكمبيوتر">
@@ -3555,17 +3808,25 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* PERFECT CENTERED RATIO & SCALING HANDLER                      */
+        /* PERFECT CENTERED RATIO & DYNAMIC RESPONSIVE SCALING HANDLER   */
         /* ------------------------------------------------------------- */
         function updateCanvasScale() {
             const container = document.getElementById('captureTarget');
             const scaleWrapper = document.getElementById('scaleWrapper');
+            if (!container || !scaleWrapper) return;
             
             let w = 1080, h = 1080;
             if (currentRatio === '9:16') {
                 w = 1080; h = 1920;
             } else if (currentRatio === '16:9') {
                 w = 1920; h = 1080;
+            }
+
+            // On mobile (<1024px), automatically fit scale precisely to viewport width
+            if (window.innerWidth < 1024) {
+                const availableW = Math.max(280, window.innerWidth - 32);
+                const maxFitScale = (availableW / w) * 0.96;
+                currentScale = Math.max(0.18, Math.min(0.55, maxFitScale));
             }
 
             scaleWrapper.style.width = `${Math.round(w * currentScale)}px`;
@@ -3581,38 +3842,39 @@
                 }
             });
 
-            if (ratio === '1:1') document.getElementById('btnRatioSquare').classList.add('active');
-            if (ratio === '9:16') document.getElementById('btnRatioStory').classList.add('active');
-            if (ratio === '16:9') document.getElementById('btnRatioCover').classList.add('active');
+            if (ratio === '1:1') document.getElementById('btnRatioSquare')?.classList.add('active');
+            if (ratio === '9:16') document.getElementById('btnRatioStory')?.classList.add('active');
+            if (ratio === '16:9') document.getElementById('btnRatioCover')?.classList.add('active');
 
             const artboard = document.getElementById('artboard');
             const badge = document.getElementById('currentRatioBadge');
+            if (!artboard || !badge) return;
 
             artboard.classList.remove('ratio-9-16', 'ratio-16-9');
 
             if (ratio === '1:1') {
                 badge.innerText = '1080 × 1080 px (Square 1:1)';
-                currentScale = 0.58;
+                currentScale = window.innerWidth < 1024 ? 0.32 : 0.58;
             } else if (ratio === '9:16') {
                 artboard.classList.add('ratio-9-16');
                 badge.innerText = '1080 × 1920 px (Story 9:16)';
-                currentScale = 0.38;
+                currentScale = window.innerWidth < 1024 ? 0.28 : 0.38;
             } else if (ratio === '16:9') {
                 artboard.classList.add('ratio-16-9');
                 badge.innerText = '1920 × 1080 px (Landscape 16:9)';
-                currentScale = 0.42;
+                currentScale = window.innerWidth < 1024 ? 0.20 : 0.42;
             }
 
             updateCanvasScale();
         }
 
         function zoomDelta(delta) {
-            currentScale = Math.max(0.2, Math.min(1.0, currentScale + delta));
+            currentScale = Math.max(0.15, Math.min(1.0, currentScale + delta));
             updateCanvasScale();
         }
 
         /* ------------------------------------------------------------- */
-        /* EXPORT AND SOCIAL SHARING ENGINE                              */
+        /* EXPORT AND SOCIAL SHARING ENGINE (UNIVERSAL & MOBILE READY)   */
         /* ------------------------------------------------------------- */
         function showToastNotification(msg) {
             const toast = document.getElementById('studioToast');
@@ -3622,29 +3884,72 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3200);
+            }, 3500);
+        }
+
+        function copyTextSafely(text) {
+            return new Promise((resolve) => {
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text)
+                        .then(() => resolve(true))
+                        .catch(() => resolve(fallbackCopyText(text)));
+                } else {
+                    resolve(fallbackCopyText(text));
+                }
+            });
+        }
+
+        function fallbackCopyText(text) {
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "-9999px";
+                textArea.setAttribute("readonly", "");
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                return !!successful;
+            } catch (err) {
+                console.warn('Fallback copy failed', err);
+                return false;
+            }
         }
 
         function generateSocialCaption() {
-            const rawTitle = document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, '');
+            const rawTitle = (document.getElementById('inputTitle').value || '').replace(/<[^>]*>?/gm, '');
             const tag1 = document.getElementById('inputTag1').value;
             const tag2 = document.getElementById('inputTag2').value;
             const tag3 = document.getElementById('inputTag3').value;
-            const s1 = `${document.getElementById('inputStat1Label').value}: ${document.getElementById('inputStat1').value} ${document.getElementById('inputStat1Unit').value}`.trim();
-            const s2 = `${document.getElementById('inputStat2Label').value}: ${document.getElementById('inputStat2').value} ${document.getElementById('inputStat2Unit').value}`.trim();
-            const s3 = `${document.getElementById('inputStat3Label').value}: ${document.getElementById('inputStat3').value}`.trim();
+            const s1Val = document.getElementById('inputStat1').value;
+            const s1Lbl = document.getElementById('inputStat1Label').value;
+            const s1Unit = document.getElementById('inputStat1Unit').value;
+            const s2Val = document.getElementById('inputStat2').value;
+            const s2Lbl = document.getElementById('inputStat2Label').value;
+            const s2Unit = document.getElementById('inputStat2Unit').value;
+            const s3Val = document.getElementById('inputStat3').value;
+            const s3Lbl = document.getElementById('inputStat3Label').value;
             const desc = document.getElementById('inputDesc').value;
             const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
 
             let caption = `🫒 ${rawTitle}\n\n`;
-            caption += `📊 ${s1} | ${s2} | ${s3}\n`;
+            const stats = [];
+            if (s1Val) stats.push(`${s1Lbl}: ${s1Val} ${s1Unit}`.trim());
+            if (s2Val) stats.push(`${s2Lbl}: ${s2Val} ${s2Unit}`.trim());
+            if (s3Val) stats.push(`${s3Lbl}: ${s3Val}`.trim());
+            if (stats.length) {
+                caption += `📊 ${stats.join(' | ')}\n\n`;
+            }
             if (tag1 || tag2 || tag3) {
                 caption += `🏷️ ${[tag1, tag2, tag3].filter(Boolean).join(' | ')}\n\n`;
             }
             if (desc) {
                 caption += `📝 ${desc}\n\n`;
             }
-            caption += `🔗 التفاصيل والصفقات عبر الرابط: ${url}\n`;
+            caption += `🔗 للمزيد من التفاصيل والصفقات: ${url}\n`;
             caption += `#ZinToop #زيت_زيتون_تونسي #بورصة_الزيتون #OliveOilTunisia #HuileOliveTunisie #Agriculture`;
             return caption;
         }
@@ -3653,7 +3958,7 @@
             const artboard = document.getElementById('artboard');
             const container = document.getElementById('captureTarget');
             const btn = document.getElementById('btnExportImage');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> HD 2K Exporting...';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> HD 2K Exporting...';
 
             const prevTransform = container.style.transform;
             const prevPosition = container.style.position;
@@ -3666,6 +3971,7 @@
             html2canvas(artboard, {
                 scale: 2,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: null,
                 logging: false
             }).then(canvas => {
@@ -3677,28 +3983,32 @@
                 link.download = `ZinToop-${currentRatio.replace(':', '-')}-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Export Success!';
-                showToastNotification(currentLang === 'ar' ? 'تم تنزيل التصميم بجودة فائقة 2K بنجاح!' : 'HD Design exported successfully!');
+                if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Export Success!';
+                showToastNotification(currentLang === 'ar' ? '✅ تم تنزيل التصميم بجودة فائقة 2K بنجاح!' : '✅ HD Design exported successfully!');
                 setTimeout(() => {
                     const t = i18n[currentLang] || i18n.ar;
-                    btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
+                    if (btn) btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
                 }, 2500);
             }).catch(err => {
                 container.style.transform = prevTransform;
                 container.style.position = prevPosition;
                 container.style.left = prevLeft;
-                alert('Export Error: ' + err);
+                console.error('Export Error:', err);
                 const t = i18n[currentLang] || i18n.ar;
-                btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
             });
         }
 
+        /* 1. Universal Native Web Share */
         async function shareNativeImage() {
             const artboard = document.getElementById('artboard');
             const container = document.getElementById('captureTarget');
             const btn = document.getElementById('btnNativeShare');
             const origHtml = btn ? btn.innerHTML : '';
-            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري إعداد الصورة...';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحضير...';
+
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
 
             const prevTransform = container.style.transform;
             const prevPosition = container.style.position;
@@ -3712,6 +4022,7 @@
                 const canvas = await html2canvas(artboard, {
                     scale: 2,
                     useCORS: true,
+                    allowTaint: true,
                     backgroundColor: null,
                     logging: false
                 });
@@ -3723,38 +4034,44 @@
                 canvas.toBlob(async (blob) => {
                     if (!blob) return;
                     const file = new File([blob], `ZinToop-${Date.now()}.png`, { type: 'image/png' });
-                    const caption = generateSocialCaption();
                     const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
 
+                    let shared = false;
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try {
                             await navigator.share({
-                                title: document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''),
+                                title: (document.getElementById('inputTitle').value || '').replace(/<[^>]*>?/gm, ''),
                                 text: caption,
                                 files: [file]
                             });
-                            if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> تم فتح نافذة المشاركة!';
-                            showToastNotification(currentLang === 'ar' ? 'تمت مشاركة التصميم بنجاح!' : 'Shared successfully!');
+                            shared = true;
+                            showToastNotification(currentLang === 'ar' ? '🚀 تمت مشاركة التصميم بنجاح!' : '🚀 Shared successfully!');
                         } catch (shareErr) {
-                            if (shareErr.name !== 'AbortError') console.log('Share error:', shareErr);
+                            if (shareErr.name !== 'AbortError') console.log('Share file error:', shareErr);
                         }
-                    } else if (navigator.share) {
+                    }
+
+                    if (!shared && navigator.share) {
                         try {
                             await navigator.share({
-                                title: document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''),
+                                title: (document.getElementById('inputTitle').value || '').replace(/<[^>]*>?/gm, ''),
                                 text: caption,
                                 url: url
                             });
-                            showToastNotification(currentLang === 'ar' ? 'تمت مشاركة المنشور بنجاح!' : 'Shared successfully!');
+                            shared = true;
+                            showToastNotification(currentLang === 'ar' ? '🚀 تمت مشاركة المنشور بنجاح!' : '🚀 Shared successfully!');
                         } catch (shareErr) {
-                            if (shareErr.name !== 'AbortError') console.log('Share error:', shareErr);
+                            if (shareErr.name !== 'AbortError') console.log('Share url error:', shareErr);
                         }
-                    } else {
-                        await copyImageToClipboard(false);
-                        showToastNotification(currentLang === 'ar' ? 'المتصفح لا يدعم المشاركة المباشرة: تم نسخ الصورة إلى الحافظة!' : 'Image copied to clipboard!');
+                    }
+
+                    if (!shared) {
+                        exportImage();
+                        showToastNotification(currentLang === 'ar' ? '📥 تم تنزيل الصورة ونسخ النص والهاشتاغات بنجاح! جاهز للنشر.' : '📥 Image downloaded & caption copied!');
                     }
 
                     if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تمت العملية!' : 'Done!');
                         setTimeout(() => {
                             const t = i18n[currentLang] || i18n.ar;
                             btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span id="uiBtnNativeShare">${t.btn_native_share}</span>`;
@@ -3766,16 +4083,20 @@
                 container.style.position = prevPosition;
                 container.style.left = prevLeft;
                 if (btn) btn.innerHTML = origHtml;
-                console.error('Native share error:', err);
+                exportImage();
             }
         }
 
+        /* 2. Copy Image to Clipboard */
         async function copyImageToClipboard(showFeedback = true) {
             const artboard = document.getElementById('artboard');
             const container = document.getElementById('captureTarget');
             const btn = document.getElementById('btnCopyImage');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ...';
+
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
 
             const prevTransform = container.style.transform;
             const prevPosition = container.style.position;
@@ -3789,6 +4110,7 @@
                 const canvas = await html2canvas(artboard, {
                     scale: 2,
                     useCORS: true,
+                    allowTaint: true,
                     backgroundColor: null,
                     logging: false
                 });
@@ -3799,9 +4121,18 @@
 
                 canvas.toBlob(async (blob) => {
                     if (!blob) return;
+                    let copied = false;
                     try {
-                        const item = new ClipboardItem({ 'image/png': blob });
-                        await navigator.clipboard.write([item]);
+                        if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+                            const item = new ClipboardItem({ 'image/png': blob });
+                            await navigator.clipboard.write([item]);
+                            copied = true;
+                        }
+                    } catch (err) {
+                        console.warn('Direct image clipboard write error, fallback to export', err);
+                    }
+
+                    if (copied) {
                         if (btn) {
                             btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تم نسخ الصورة!' : 'Image Copied!');
                             setTimeout(() => {
@@ -3809,11 +4140,17 @@
                                 btn.innerHTML = `<i class="fa-solid fa-copy"></i> <span id="uiBtnCopyImage">${t.btn_copy_image}</span>`;
                             }, 2500);
                         }
-                        showToastNotification(currentLang === 'ar' ? 'تم نسخ الصورة بدقة HD إلى الحافظة! الصقها مباشرة (Ctrl+V)' : 'HD Image copied to clipboard! Paste directly (Ctrl+V)');
-                    } catch (err) {
-                        console.warn('Direct image clipboard write not supported by browser', err);
+                        showToastNotification(currentLang === 'ar' ? '📋 تم نسخ الصورة بدقة HD إلى الحافظة! الصقها مباشرة (Ctrl+V)' : '📋 HD Image copied to clipboard!');
+                    } else {
                         exportImage();
-                        if (btn) btn.innerHTML = origHtml;
+                        if (btn) {
+                            btn.innerHTML = '<i class="fa-solid fa-download"></i> ' + (currentLang === 'ar' ? 'تم التنزيل والنسخ!' : 'Downloaded & Copied!');
+                            setTimeout(() => {
+                                const t = i18n[currentLang] || i18n.ar;
+                                btn.innerHTML = `<i class="fa-solid fa-copy"></i> <span id="uiBtnCopyImage">${t.btn_copy_image}</span>`;
+                            }, 2500);
+                        }
+                        showToastNotification(currentLang === 'ar' ? '📥 تم تنزيل الصورة ونسخ النص بنجاح!' : '📥 Image downloaded & caption copied!');
                     }
                 }, 'image/png');
             } catch (err) {
@@ -3821,78 +4158,123 @@
                 container.style.position = prevPosition;
                 container.style.left = prevLeft;
                 if (btn) btn.innerHTML = origHtml;
+                exportImage();
             }
         }
 
+        /* 3. Copy Post Caption */
         function copyPostCaption() {
             const caption = generateSocialCaption();
-            navigator.clipboard.writeText(caption).then(() => {
+            copyTextSafely(caption).then(() => {
                 const btn = document.getElementById('btnCopyCaption');
-                const orig = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تم نسخ النص! ✨' : 'Caption Copied! ✨');
-                showToastNotification(currentLang === 'ar' ? 'تم نسخ نص المنشور والهاشتاغات بنجاح!' : 'Post caption & hashtags copied!');
-                setTimeout(() => {
-                    const t = i18n[currentLang] || i18n.ar;
-                    btn.innerHTML = `<i class="fa-solid fa-file-lines"></i> <span id="uiBtnCopyCaption">${t.btn_copy_caption}</span>`;
-                }, 2500);
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تم نسخ النص! ✨' : 'Caption Copied! ✨');
+                    setTimeout(() => {
+                        const t = i18n[currentLang] || i18n.ar;
+                        btn.innerHTML = `<i class="fa-solid fa-file-lines"></i> <span id="uiBtnCopyCaption">${t.btn_copy_caption}</span>`;
+                    }, 2500);
+                }
+                showToastNotification(currentLang === 'ar' ? '📝 تم نسخ نص المنشور والهاشتاغات بنجاح!' : '📝 Post caption & hashtags copied!');
             });
         }
 
+        /* 4. Copy Direct Link */
         function copyBrandLink() {
             const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
-            navigator.clipboard.writeText(url).then(() => {
-                showToastNotification(currentLang === 'ar' ? 'تم نسخ رابط المنصة: ' + url : 'Link copied: ' + url);
+            copyTextSafely(url).then(() => {
+                showToastNotification(currentLang === 'ar' ? '🔗 تم نسخ رابط المنصة: ' + url : '🔗 Link copied: ' + url);
             });
         }
 
+        /* 5. Direct WhatsApp */
         function shareToWhatsApp() {
-            const text = encodeURIComponent(generateSocialCaption());
-            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
+            const encoded = encodeURIComponent(caption);
+            window.open(`https://wa.me/?text=${encoded}`, '_blank');
+            showToastNotification(currentLang === 'ar' ? 'جاري فتح WhatsApp ونسخ النص...' : 'Opening WhatsApp & text copied!');
         }
 
+        /* 6. Direct TikTok (9:16 + Auto Download + Caption Copy) */
         function shareToTikTok() {
-            // Switch automatically to 9:16 vertical ratio for optimal TikTok presentation
             if (currentRatio !== '9:16') {
                 setRatio('9:16');
             }
+            window.open('https://www.tiktok.com/upload?lang=en', '_blank');
 
-            // Copy HD image & post caption to clipboard
-            copyImageToClipboard(false);
             const caption = generateSocialCaption();
-            navigator.clipboard.writeText(caption);
-
-            showToastNotification(currentLang === 'ar' 
-                ? '🎵 تم ضبط مقاس 9:16 ونسخ المنشور! جاري فتح TikTok...' 
-                : (currentLang === 'fr' 
-                    ? '🎵 Format 9:16 ajusté & texte copié ! Ouverture de TikTok...' 
-                    : '🎵 9:16 aspect ratio set & caption copied! Opening TikTok...'));
+            copyTextSafely(caption);
 
             setTimeout(() => {
-                window.open('https://www.tiktok.com/upload?lang=en', '_blank');
-            }, 800);
+                exportImage();
+            }, 300);
+
+            showToastNotification(currentLang === 'ar' 
+                ? '🎵 تم ضبط مقاس 9:16 وتنزيل الصورة ونسخ النص! جاهز للنشر على TikTok.' 
+                : (currentLang === 'fr' 
+                    ? '🎵 Format 9:16 ajusté, image téléchargée & texte copié ! Prêt pour TikTok.' 
+                    : '🎵 9:16 ratio set, image downloaded & caption copied! Ready for TikTok.'));
         }
 
+        /* 7. Direct Facebook */
         function shareToFacebook() {
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
             const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            const quote = encodeURIComponent(caption);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`, '_blank');
+            showToastNotification(currentLang === 'ar' ? 'جاري فتح Facebook ونسخ المنشور!' : 'Opening Facebook & caption copied!');
         }
 
+        /* 8. Direct LinkedIn */
         function shareToLinkedIn() {
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
             const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+            showToastNotification(currentLang === 'ar' ? 'جاري فتح LinkedIn ونسخ المنشور!' : 'Opening LinkedIn & post copied!');
         }
 
+        /* 9. Direct X / Twitter */
         function shareToTwitter() {
-            const text = encodeURIComponent(document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''));
+            const title = (document.getElementById('inputTitle').value || '').replace(/<[^>]*>?/gm, '');
             const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}&hashtags=ZinToop,OliveOil,Tunisia`, '_blank');
+            const text = encodeURIComponent(`🫒 ${title}\n\n#ZinToop #زيت_الزيتون #بورصة_الزيتون`);
+            window.open(`https://x.com/intent/post?text=${text}&url=${url}`, '_blank');
+            showToastNotification(currentLang === 'ar' ? 'جاري فتح منصة X (Twitter)...' : 'Opening X (Twitter)...');
         }
 
+        /* 10. Direct Telegram */
         function shareToTelegram() {
-            const text = encodeURIComponent(generateSocialCaption());
+            const caption = generateSocialCaption();
+            copyTextSafely(caption);
+            const text = encodeURIComponent(caption);
             const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
             window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+            showToastNotification(currentLang === 'ar' ? 'جاري فتح Telegram ونسخ النص!' : 'Opening Telegram & text copied!');
         }
+
+        /* 11. Mobile Smooth Scroll Tabs */
+        function scrollToSection(sec) {
+            document.querySelectorAll('.mob-tab-btn').forEach(b => b.classList.remove('active'));
+            if (sec === 'preview') {
+                document.getElementById('mobTabPreview')?.classList.add('active');
+                const target = document.querySelector('.preview-workspace');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (sec === 'editor') {
+                document.getElementById('mobTabEditor')?.classList.add('active');
+                const target = document.getElementById('secTemplates');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (sec === 'social') {
+                document.getElementById('mobTabSocial')?.classList.add('active');
+                const target = document.getElementById('secSocialShare');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            updateCanvasScale();
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
             renderFooterQrCode(document.getElementById('inputQrUrl').value);
@@ -3902,5 +4284,25 @@
             setStudioLanguage('ar');
         });
     </script>
+
+    <!-- MOBILE STICKY BOTTOM NAVIGATION BAR -->
+    <nav class="mobile-bottom-bar" id="mobileBottomBar">
+        <button type="button" class="mob-tab-btn active" id="mobTabPreview" onclick="scrollToSection('preview')">
+            <i class="fa-solid fa-eye"></i>
+            <span>المعاينة</span>
+        </button>
+        <button type="button" class="mob-tab-btn" id="mobTabEditor" onclick="scrollToSection('editor')">
+            <i class="fa-solid fa-sliders"></i>
+            <span>التحكم</span>
+        </button>
+        <button type="button" class="mob-tab-btn mob-tab-highlight" id="mobTabSocial" onclick="scrollToSection('social')">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>النشر والسوشيال</span>
+        </button>
+        <button type="button" class="mob-tab-btn" onclick="exportImage()">
+            <i class="fa-solid fa-download"></i>
+            <span>تنزيل HD</span>
+        </button>
+    </nav>
 </body>
 </html>

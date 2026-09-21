@@ -93,12 +93,12 @@
         </div>
 
         <!-- Studio Embedded Frame Container -->
-        <div class="flex-1 bg-[#080c14] rounded-2xl shadow-xl border border-gray-800 overflow-hidden relative" style="min-height: 820px;">
+        <div class="flex-1 bg-[#080c14] rounded-2xl shadow-xl border border-gray-800 overflow-hidden relative min-h-[750px] lg:min-h-[860px]">
             <iframe 
                 id="studioIframe"
                 src="{{ asset('social_templates_zintoop.html') }}" 
                 class="w-full h-full border-0 absolute inset-0"
-                allow="autoplay; camera; microphone; clipboard-write"
+                allow="accelerometer; autoplay; camera; microphone; clipboard-write; clipboard-read; encrypted-media; gyroscope; picture-in-picture; web-share"
                 title="ZinToop Brand Studio">
             </iframe>
         </div>
