@@ -17,6 +17,9 @@
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl font-bold transition">
                 <span>📊</span> {{ app()->getLocale() === 'ar' ? 'لوحة التحكم العامة' : 'Admin Dashboard' }}
             </a>
+            <a href="{{ route('admin.social_studio') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl font-bold transition">
+                <span>🎨</span> {{ app()->getLocale() === 'ar' ? 'استوديو التصميم والنشر' : (app()->getLocale() === 'fr' ? 'Studio Graphique' : 'Visual Brand Studio') }}
+            </a>
             <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'bg-[#6A8F3B]/10 text-[#6A8F3B] font-bold' : 'text-gray-600 hover:bg-gray-50'" class="w-full text-start flex items-center gap-3 px-4 py-2.5 rounded-xl transition">
                 <span>⚙️</span> {{ app()->getLocale() === 'ar' ? 'شخصية وسلوك الزيتوني' : 'Global Settings & Persona' }}
             </button>

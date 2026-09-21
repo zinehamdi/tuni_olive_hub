@@ -443,4 +443,19 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', __('User deleted successfully'));
     }
+
+    /**
+     * Display the Visual Brand Studio / Social Templates Designer
+     * عرض استوديو التصميم البصري وقوالب السوشيال ميديا
+     * 
+     * @return \Illuminate\View\View
+     */
+    public function socialStudio()
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        return view('admin.social_studio');
+    }
 }

@@ -1,0 +1,3906 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو ZinToop البصري الموحد – Visual Brand Studio</title>
+    <!-- Google Fonts: Cairo & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- html2canvas for instant HD export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 500px;
+            --primary-emerald: #16a34a;
+            --emerald-glow: rgba(34, 197, 94, 0.4);
+            --gold-accent: #eab308;
+            --gold-glow: rgba(234, 179, 8, 0.35);
+            --overlay-darkness: 0.35;
+            --bg-blur: 0px;
+            --bg-brightness: 0.88;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        html[dir="ltr"] * {
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #080c14;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: background-color 0.3s;
+        }
+
+        body.studio-slate {
+            background-color: #1e293b;
+        }
+
+        body.studio-light {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* SIDEBAR STYLING & BIDIRECTIONAL LAYOUT                        */
+        /* ------------------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #0d1322;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            padding: 20px;
+            z-index: 100;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.7);
+            transition: transform 0.3s ease;
+        }
+
+        html[dir="rtl"] .sidebar {
+            right: 0;
+            left: auto;
+            border-left: 1px solid #1e293b;
+            border-right: none;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.7);
+        }
+
+        html[dir="ltr"] .sidebar {
+            left: 0;
+            right: auto;
+            border-right: 1px solid #1e293b;
+            border-left: none;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.7);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .brand-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-header img {
+            height: 44px;
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .brand-header h1 {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .brand-header p {
+            font-size: 0.72rem;
+            color: #94a3b8;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gold-accent);
+            margin: 16px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-box {
+            background: #141c2e;
+            border: 1px solid #233047;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+
+        /* Layout Style Selector */
+        .layout-style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .layout-btn {
+            background: #1e293b;
+            border: 1.5px solid #334155;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        html[dir="rtl"] .layout-btn {
+            text-align: right;
+        }
+
+        html[dir="ltr"] .layout-btn {
+            text-align: left;
+        }
+
+        .layout-btn .layout-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .layout-btn .layout-desc {
+            font-size: 0.68rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .layout-btn:hover, .layout-btn.active {
+            background: rgba(22, 163, 74, 0.2);
+            border-color: #22c55e;
+            color: #fff;
+            box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
+        }
+
+        /* Category Preset Scroll Grid */
+        .category-scroll-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            max-height: 175px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        html[dir="rtl"] .category-scroll-grid {
+            padding-right: 2px;
+        }
+
+        html[dir="ltr"] .category-scroll-grid {
+            padding-left: 2px;
+        }
+
+        .category-scroll-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .category-scroll-grid::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .preset-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        html[dir="rtl"] .preset-btn {
+            text-align: right;
+        }
+
+        html[dir="ltr"] .preset-btn {
+            text-align: left;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: #16a34a;
+            border-color: #22c55e;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .form-group label .hint {
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #f1f5f9;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        html[dir="rtl"] .form-control {
+            text-align: right;
+        }
+
+        html[dir="ltr"] .form-control {
+            text-align: left;
+        }
+
+        .form-control:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
+            background: #0f172a;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+
+        /* Gallery Layout Selector Buttons */
+        .gallery-format-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .gallery-format-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 7px 6px;
+            color: #cbd5e1;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            text-align: center;
+        }
+
+        .gallery-format-btn:hover, .gallery-format-btn.active {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #4ade80;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+        }
+
+        .gallery-format-btn i {
+            font-size: 0.95rem;
+        }
+
+        /* Gallery Thumbnails List in Sidebar */
+        .gallery-thumbs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .gallery-thumbs-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .gallery-thumbs-list::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .gallery-thumb-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .gallery-thumb-card:hover {
+            border-color: #22c55e;
+        }
+
+        .gallery-thumb-img-wrap {
+            position: relative;
+            width: 46px;
+            height: 46px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #1e293b;
+        }
+
+        .gallery-thumb-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-thumb-del {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(239, 68, 68, 0.9);
+            color: #fff;
+            border: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 0.55rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .gallery-thumb-badge {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            background: rgba(0,0,0,0.7);
+            color: var(--gold-accent);
+            font-size: 0.55rem;
+            font-weight: 800;
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+
+        .thumb-label-input {
+            flex: 1;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.72rem;
+            color: #f1f5f9;
+        }
+
+        .gallery-thumb-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .thumb-tool-btn {
+            background: #334155;
+            border: none;
+            color: #e2e8f0;
+            padding: 4px 7px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .thumb-tool-btn:hover {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        /* Dropzone Box */
+        .media-dropzone-box {
+            border: 2px dashed #475569;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .media-dropzone-box:hover, .media-dropzone-box.dragover {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .action-upload-btn {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: 1px solid #22c55e;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-upload-btn:hover {
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Color Themes Grid */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .theme-chip {
+            background: #1e293b;
+            border: 1.5px solid #334155;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            transition: all 0.2s;
+        }
+
+        .theme-chip:hover, .theme-chip.active {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.15);
+            color: #fff;
+        }
+
+        .theme-chip .color-preview {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Ratio Buttons */
+        .ratio-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .ratio-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 8px 6px;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .ratio-btn:hover, .ratio-btn.active {
+            background: #16a34a;
+            border-color: #22c55e;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .export-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: 1.5px solid #22c55e;
+            padding: 14px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.96rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 28px rgba(34, 197, 94, 0.6);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* SOCIAL SHARE STYLES                                           */
+        /* ------------------------------------------------------------- */
+        .share-action-btn-large {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .share-action-btn-large:hover {
+            transform: translateY(-1.5px);
+            filter: brightness(1.1);
+        }
+
+        .btn-native-share {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+        }
+
+        .btn-copy-image {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+        }
+
+        .btn-copy-caption {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+        }
+
+        .social-share-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 6px;
+            margin-bottom: 24px;
+        }
+
+        .social-share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 8px;
+            border-radius: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .social-share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+            filter: brightness(1.12);
+        }
+
+        .social-btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .social-btn-tiktok { background: linear-gradient(135deg, #010101, #161823); border: 1.5px solid #fe2c55; box-shadow: 0 0 10px rgba(254, 44, 85, 0.3); }
+        .social-btn-tiktok:hover { box-shadow: 0 0 18px rgba(37, 244, 238, 0.6), 0 0 18px rgba(254, 44, 85, 0.6); border-color: #25f4ee; }
+        .social-btn-facebook { background: linear-gradient(135deg, #1877F2, #0d5bbd); }
+        .social-btn-linkedin { background: linear-gradient(135deg, #0A66C2, #004182); }
+        .social-btn-twitter { background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid #334155; }
+        .social-btn-telegram { background: linear-gradient(135deg, #229ED9, #1778a8); }
+        .social-btn-copy { background: linear-gradient(135deg, #475569, #334155); }
+
+        /* Floating Toast Notification */
+        .studio-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #22c55e;
+            color: #f1f5f9;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            backdrop-filter: blur(12px);
+        }
+
+        .studio-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .media-presets {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .media-thumb {
+            width: 50px;
+            height: 38px;
+            border-radius: 6px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.7;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .media-thumb:hover, .media-thumb.active {
+            opacity: 1;
+            border-color: var(--gold-accent);
+            transform: scale(1.05);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* PREVIEW WORKSPACE & PERFECT CENTERING ENGINE                  */
+        /* ------------------------------------------------------------- */
+        .preview-workspace {
+            flex: 1;
+            padding: 24px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: margin 0.3s ease;
+        }
+
+        html[dir="rtl"] .preview-workspace {
+            margin-right: var(--sidebar-width);
+            margin-left: 0;
+        }
+
+        html[dir="ltr"] .preview-workspace {
+            margin-left: var(--sidebar-width);
+            margin-right: 0;
+        }
+
+        .preview-toolbar {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #0d1322;
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        body.studio-light .preview-toolbar {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .preview-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Language Switcher Segment Control */
+        .lang-switcher-box {
+            display: flex;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 5px 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            color: #f1f5f9;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-emerald);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Flawless Centered Scaling Box */
+        .preview-scale-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0 auto 30px;
+            width: 626px;
+            height: 630px;
+            transition: width 0.25s ease, height 0.25s ease;
+        }
+
+        .canvas-container {
+            box-shadow: 0 35px 90px -10px rgba(0, 0, 0, 0.95);
+            border-radius: 28px;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scale(0.58);
+            transform-origin: top center;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* THE MASTER ARTBOARD */
+        .template-artboard {
+            width: 1080px;
+            height: 1080px;
+            position: relative;
+            background: #03140c;
+            color: #fff;
+            padding: 46px 50px 38px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        /* Ratio Variations */
+        .template-artboard.ratio-9-16 {
+            width: 1080px;
+            height: 1920px;
+            padding: 70px 50px 60px 50px;
+        }
+
+        .template-artboard.ratio-16-9 {
+            width: 1920px;
+            height: 1080px;
+            padding: 40px 60px 34px 60px;
+        }
+
+        /* Background Media Layer */
+        .artboard-bg-media {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.65;
+            filter: blur(var(--bg-blur)) brightness(var(--bg-brightness));
+            transition: filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        .artboard-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(3, 20, 12, var(--overlay-darkness)) 0%, rgba(3, 20, 12, 0.92) 80%);
+            z-index: 2;
+        }
+
+        /* Royal Ambient Glows */
+        .artboard-glow-1 {
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .artboard-glow-2 {
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Floating Audio Indicator on Artboard */
+        .art-audio-badge {
+            position: absolute;
+            top: 24px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #4ade80;
+            font-weight: 800;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        html[dir="rtl"] .art-audio-badge {
+            left: 30px;
+        }
+
+        html[dir="ltr"] .art-audio-badge {
+            right: 30px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.03); }
+        }
+
+        /* Central Watermark Seal */
+        .uncroppable-watermark-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            pointer-events: none;
+            opacity: 0.16;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .uncroppable-watermark-center .watermark-logo-img {
+            width: 170px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+        }
+
+        .uncroppable-watermark-center .watermark-brand-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .uncroppable-watermark-center .watermark-brand-sub {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--gold-accent);
+            letter-spacing: 6px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* ARTBOARD CONTENT LAYERS                                       */
+        /* ------------------------------------------------------------- */
+        .template-header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .brand-master-badge {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            padding: 8px 18px 8px 10px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .brand-logo-frame {
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-logo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-master-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-master-text .title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-master-text .brand-main-title {
+            font-size: 1.22rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-master-text .verified-badge {
+            background: rgba(34, 197, 94, 0.25);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .brand-master-text .brand-sub-title {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+
+        .header-link-pill {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            padding: 7px 18px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* FOREGROUND PRODUCT & ASSETS SHOWCASE GRID                     */
+        /* ------------------------------------------------------------- */
+        .multi-photo-showcase-box {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            margin: 6px auto;
+            border-radius: 20px;
+            background: rgba(10, 20, 15, 0.6);
+            backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(255, 255, 255, 0.16);
+            padding: 10px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+            box-sizing: border-box;
+        }
+
+        .art-gallery-grid {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            gap: 8px;
+        }
+
+        /* Format 1: Single Full Image */
+        .format-single .art-gallery-grid {
+            grid-template-columns: 1fr;
+            height: 240px;
+        }
+
+        /* Format 2: Two Side-by-Side */
+        .format-grid-2 .art-gallery-grid {
+            grid-template-columns: 1fr 1fr;
+            height: 220px;
+        }
+
+        /* Format 3: Three Horizontal Strip */
+        .format-strip-3 .art-gallery-grid {
+            grid-template-columns: repeat(3, 1fr);
+            height: 190px;
+        }
+
+        /* Format 4: Three Focus Layout (1 Large Hero + 2 Stacked) */
+        .format-focus-3 .art-gallery-grid {
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 230px;
+        }
+        .format-focus-3 .art-gallery-item:first-child {
+            grid-row: 1 / span 2;
+        }
+
+        /* Format 5: Four Horizontal Strip */
+        .format-strip-4 .art-gallery-grid {
+            grid-template-columns: repeat(4, 1fr);
+            height: 175px;
+        }
+
+        /* Format 6: Four Quad Grid (2x2) */
+        .format-grid-4 .art-gallery-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            height: 330px;
+        }
+
+        .art-gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.18);
+            width: 100%;
+            height: 100%;
+        }
+
+        .art-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .art-gallery-badge {
+            position: absolute;
+            bottom: 6px;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+
+        html[dir="rtl"] .art-gallery-badge {
+            right: 6px;
+        }
+
+        html[dir="ltr"] .art-gallery-badge {
+            left: 6px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* HEADLINE, STATS & MAIN CONTENT                                */
+        /* ------------------------------------------------------------- */
+        .category-pill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
+            margin-bottom: 8px;
+            align-self: flex-start;
+        }
+
+        .art-main-title {
+            font-size: 2.35rem;
+            font-weight: 900;
+            line-height: 1.22;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+        }
+
+        .art-main-title span {
+            color: var(--gold-accent);
+            text-shadow: 0 0 25px rgba(234, 179, 8, 0.6);
+        }
+
+        .highlight-tags-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .highlight-tag {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Stats Cards Layer */
+        .stats-highlight-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card-item {
+            background: rgba(15, 30, 20, 0.72);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        }
+
+        .stat-card-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .stat-card-value {
+            font-size: 1.95rem;
+            font-weight: 900;
+            color: var(--gold-accent);
+            line-height: 1;
+        }
+
+        .stat-card-unit {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #94a3b8;
+        }
+
+        .stat-card-label {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .art-desc-box {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* FOOTER & LARGE STANDALONE QR CODE                             */
+        /* ------------------------------------------------------------- */
+        .template-footer {
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            background: rgba(8, 16, 12, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+        }
+
+        html[dir="ltr"] .template-footer {
+            grid-template-columns: 1fr auto;
+        }
+
+        .footer-cta-column {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .cta-action-headline {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .cta-action-sub {
+            font-size: 0.76rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .footer-qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .footer-qr-frame {
+            background: #ffffff;
+            padding: 6px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 86px;
+            height: 86px;
+        }
+
+        .footer-qr-frame img, .footer-qr-frame canvas {
+            width: 74px !important;
+            height: 74px !important;
+            display: block;
+        }
+
+        .footer-qr-btn-pill {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: 1px solid #22c55e;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.64rem;
+            font-weight: 900;
+            box-shadow: 0 2px 10px rgba(22, 163, 74, 0.4);
+            white-space: nowrap;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* PALETTES & THEMES                                             */
+        /* ------------------------------------------------------------- */
+        .template-artboard.theme-emerald {
+            --primary-emerald: #16a34a;
+            --emerald-glow: rgba(34, 197, 94, 0.45);
+            --gold-accent: #facc15;
+            background: #021a0f;
+        }
+
+        .template-artboard.theme-gold {
+            --primary-emerald: #d97706;
+            --emerald-glow: rgba(217, 119, 6, 0.45);
+            --gold-accent: #fbbf24;
+            background: #1c1003;
+        }
+
+        .template-artboard.theme-slate {
+            --primary-emerald: #3b82f6;
+            --emerald-glow: rgba(59, 130, 246, 0.45);
+            --gold-accent: #38bdf8;
+            background: #0b1120;
+        }
+
+        .template-artboard.theme-gradient-mesh {
+            --primary-emerald: #8b5cf6;
+            --emerald-glow: rgba(139, 92, 246, 0.5);
+            --gold-accent: #ec4899;
+            background: linear-gradient(135deg, #052e16 0%, #312e81 50%, #4c0519 100%);
+        }
+
+        .template-artboard.theme-sunset {
+            --primary-emerald: #ea580c;
+            --emerald-glow: rgba(234, 88, 12, 0.45);
+            --gold-accent: #f59e0b;
+            background: #240a02;
+        }
+
+        .template-artboard.theme-light-pearl {
+            --primary-emerald: #15803d;
+            --emerald-glow: rgba(21, 128, 61, 0.2);
+            --gold-accent: #b45309;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        .template-artboard.theme-light-pearl .art-main-title {
+            color: #0f172a;
+            text-shadow: none;
+        }
+        .template-artboard.theme-light-pearl .brand-master-badge {
+            background: rgba(0, 0, 0, 0.06);
+            color: #0f172a;
+        }
+        .template-artboard.theme-light-pearl .brand-main-title {
+            color: #0f172a;
+        }
+        .template-artboard.theme-light-pearl .brand-sub-title {
+            color: #475569;
+        }
+        .template-artboard.theme-light-pearl .header-link-pill {
+            background: #0f172a;
+            color: #fff;
+        }
+        .template-artboard.theme-light-pearl .stat-card-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+        }
+        .template-artboard.theme-light-pearl .stat-card-label {
+            color: #475569;
+        }
+        .template-artboard.theme-light-pearl .art-desc-box {
+            color: #334155;
+            text-shadow: none;
+        }
+        .template-artboard.theme-light-pearl .template-footer {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+        }
+        .template-artboard.theme-light-pearl .cta-action-headline {
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Toast Notification -->
+    <div class="studio-toast" id="studioToast">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="txtStudioToast">تمت العملية بنجاح!</span>
+    </div>
+
+    <!-- SIDEBAR CONTROL PANEL -->
+    <aside class="sidebar">
+        <!-- Brand Header -->
+        <div class="brand-header">
+            <div class="brand-header-left">
+                <img src="images/zintoop-logo.png" alt="ZinToop Logo" onerror="this.onerror=null; this.src='images/zintoop-logo-sm.jpg'">
+                <div>
+                    <h1 id="uiBrandHeaderTitle">استوديو ZinToop البصري</h1>
+                    <p id="uiBrandHeaderSub">صانع المنشورات الإعلانية والبورصة</p>
+                </div>
+            </div>
+            <span style="font-size:0.7rem; background:#1e293b; color:var(--gold-accent); padding:3px 8px; border-radius:6px; font-weight:800;">v2.5 HD</span>
+        </div>
+
+        <!-- 1. TEMPLATES & PRESETS -->
+        <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> <span id="uiSec1Title">1. قوالب المنشورات السريعة (Templates)</span></div>
+        
+        <!-- Layout Selection Grid -->
+        <div class="layout-style-grid">
+            <button type="button" class="layout-btn active" id="btnLayoutBourse" onclick="setLayoutStyle('bourse')">
+                <div class="layout-title"><i class="fa-solid fa-chart-line" style="color:#22c55e;"></i> <span id="uiLayoutBourseTitle">إنفوجرافيك البورصة</span></div>
+                <div class="layout-desc" id="uiLayoutBourseDesc">إبراز السعر ومؤشرات السوق</div>
+            </button>
+            <button type="button" class="layout-btn" id="btnLayoutProduct" onclick="setLayoutStyle('product')">
+                <div class="layout-title"><i class="fa-solid fa-wine-bottle" style="color:#eab308;"></i> <span id="uiLayoutProductTitle">بطاقة منتج / صور</span></div>
+                <div class="layout-desc" id="uiLayoutProductDesc">معرض صور مع المواصفات</div>
+            </button>
+            <button type="button" class="layout-btn" id="btnLayoutNews" onclick="setLayoutStyle('news')">
+                <div class="layout-title"><i class="fa-solid fa-bullhorn" style="color:#ef4444;"></i> <span id="uiLayoutNewsTitle">تقرير وخبر عاجل</span></div>
+                <div class="layout-desc" id="uiLayoutNewsDesc">شريط عاجل ومصدر رسمي</div>
+            </button>
+            <button type="button" class="layout-btn" id="btnLayoutStory" onclick="setLayoutStyle('story')">
+                <div class="layout-title"><i class="fa-solid fa-mobile-screen" style="color:#38bdf8;"></i> <span id="uiLayoutStoryTitle">ستوري وريلز حديث</span></div>
+                <div class="layout-desc" id="uiLayoutStoryDesc">تصميم عمودي للموبايل</div>
+            </button>
+        </div>
+
+        <!-- 9 Ready Olive Categories -->
+        <div class="category-scroll-grid" id="categoryPresetsGrid">
+            <button type="button" class="preset-btn active" id="pBtn_price" onclick="applyPreset('price')">📈 بورصة الأسعار</button>
+            <button type="button" class="preset-btn" id="pBtn_bottled_oil" onclick="applyPreset('bottled_oil')">🍾 زيت معلب وماركات</button>
+            <button type="button" class="preset-btn" id="pBtn_bulk_oil" onclick="applyPreset('bulk_oil')">🛢️ زيت صب (Vrac)</button>
+            <button type="button" class="preset-btn" id="pBtn_deal" onclick="applyPreset('deal')">🌳 تخضير سواني / صابة</button>
+            <button type="button" class="preset-btn" id="pBtn_table_olives" onclick="applyPreset('table_olives')">🫒 زيتون طاولة وتخليل</button>
+            <button type="button" class="preset-btn" id="pBtn_transport" onclick="applyPreset('transport')">🚛 شاحنات ونقل</button>
+            <button type="button" class="preset-btn" id="pBtn_machinery" onclick="applyPreset('machinery')">⚙️ معدات معاصر</button>
+            <button type="button" class="preset-btn" id="pBtn_nurseries" onclick="applyPreset('nurseries')">🌱 مشاتل وشتلات</button>
+            <button type="button" class="preset-btn" id="pBtn_biomass" onclick="applyPreset('biomass')">🪵 فيتورة وحطب</button>
+            <button type="button" class="preset-btn" id="pBtn_lab_quality" onclick="applyPreset('lab_quality')">🔬 تحاليل مخبرية</button>
+        </div>
+
+        <!-- 2. POSTER BACKGROUND MEDIA & VIDEO AUDIO CONTROLS -->
+        <div class="section-title"><i class="fa-solid fa-panorama"></i> <span id="uiSec2Title">2. خلفية البوستر الجدارية (Poster Background)</span></div>
+        <div class="section-box">
+            <div style="font-size:0.68rem; color:#94a3b8; margin-bottom:8px;" id="uiSec2Hint">خلفية عامة للبوستر بأكمله (يمكن إخفاؤها للاكتفاء بالتدرج اللوني الملكي):</div>
+            <input type="file" id="realBgImageInput" accept="image/*" style="display:none;" onchange="handleBgImageFile(this.files[0])">
+            <input type="file" id="realVideoInput" accept="video/*" style="display:none;" onchange="handleVideoFile(this.files[0])">
+
+            <div class="media-actions-row" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:8px;">
+                <button type="button" class="action-upload-btn" onclick="document.getElementById('realBgImageInput').click()" title="تغيير صورة الخلفية">
+                    <i class="fa-solid fa-image"></i> <span id="uiBtnUploadImg">صورة 🌄</span>
+                </button>
+                <button type="button" class="action-upload-btn" style="background:linear-gradient(135deg, #0284c7, #0369a1);" onclick="document.getElementById('realVideoInput').click()" title="تغيير فيديو الخلفية">
+                    <i class="fa-solid fa-video"></i> <span id="uiBtnUploadVid">فيديو 🎥</span>
+                </button>
+                <button type="button" class="action-upload-btn" style="background:linear-gradient(135deg, #475569, #334155);" onclick="clearPosterBg()" title="إخفاء صورة الخلفية والاكتفاء بالستوديو النقي">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="uiBtnPureStudio">ستوديو نقي ✨</span>
+                </button>
+            </div>
+
+            <div style="font-size:0.7rem; color:#94a3b8; margin-bottom:4px;" id="uiBgPresetsLabel">خلفيات زيتون جاهزة (انقر للاختيار):</div>
+            <div class="media-presets" style="margin-bottom:8px;">
+                <img src="images/dealbackground-opt.jpg" class="media-thumb" alt="Groves" onclick="setPosterBg('images/dealbackground-opt.jpg')">
+                <img src="images/zitounchamal.jpg" class="media-thumb" alt="Harvest" onclick="setPosterBg('images/zitounchamal.jpg')">
+                <img src="images/mill-activity.jpg" class="media-thumb" alt="Mill Press" onclick="setPosterBg('images/mill-activity.jpg')">
+                <img src="images/agritech_hero_bg_real.png" class="media-thumb" alt="Agritech" onclick="setPosterBg('images/agritech_hero_bg_real.png')">
+                <img src="images/zitounroadbg-opt.jpg" class="media-thumb" alt="Transport" onclick="setPosterBg('images/zitounroadbg-opt.jpg')">
+            </div>
+
+            <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+                <div>
+                    <label style="font-size:0.7rem;" id="uiLabelMediaOpacity">شفافية الخلفية</label>
+                    <input type="range" id="inputMediaOpacity" min="0.0" max="1.0" step="0.05" value="0.65" class="form-control" style="padding:0;" oninput="updateMediaOpacity(this.value)">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;" id="uiLabelDarkness">تعتيم الحواف</label>
+                    <input type="range" id="inputDarkness" min="0" max="0.8" step="0.05" value="0.35" class="form-control" style="padding:0;" oninput="updateDarkness(this.value)">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;" id="uiLabelBgBlur">تمويه Blur</label>
+                    <input type="range" id="inputBgBlur" min="0" max="15" step="1" value="0" class="form-control" style="padding:0;" oninput="updateBgBlur(this.value)">
+                </div>
+            </div>
+
+            <!-- Video Audio Controls Box -->
+            <div id="videoAudioControlBox" style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:10px; margin-top:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:#38bdf8;" id="uiVideoAudioTitle"><i class="fa-solid fa-volume-high"></i> صوت وفيديو الخلفية</span>
+                    <span id="audioStateStatus" style="font-size:0.65rem; color:#94a3b8; background:#1e293b; padding:2px 6px; border-radius:4px;">مكتوم 🔇</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:8px; align-items:center;">
+                    <button type="button" class="action-upload-btn" id="btnToggleVideoSound" style="background:linear-gradient(135deg, #0284c7, #0369a1); font-size:0.74rem; padding:6px 10px;" onclick="toggleVideoAudio()">
+                        <i class="fa-solid fa-volume-xmark" id="iconSoundState"></i> <span id="txtSoundToggle">تشغيل الصوت</span>
+                    </button>
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:#94a3b8; margin-bottom:2px;">
+                            <span id="uiLabelVolumeSlider">مستوى الصوت</span>
+                            <span id="txtVolumePercent">80%</span>
+                        </div>
+                        <input type="range" id="inputVideoVolume" min="0" max="1" step="0.05" value="0.8" class="form-control" style="padding:0; margin:0; height:6px;" oninput="updateVideoVolume(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. PRODUCT & ASSET GALLERY GRID -->
+        <div class="section-title"><i class="fa-solid fa-images"></i> <span id="uiSec3Title">3. معرض صور الصنف والمنتجات (Product Gallery Grid)</span></div>
+        <div class="section-box">
+            <div style="font-size:0.68rem; color:#4ade80; background:rgba(34,197,94,0.12); padding:4px 8px; border-radius:6px; margin-bottom:8px; border:1px solid rgba(34,197,94,0.25);" id="uiGalleryHint">
+                <i class="fa-solid fa-circle-check"></i> شبكة صور أمامية بارزة ومستقلة تماماً عن خلفية البوستر.
+            </div>
+
+            <input type="file" id="realMultiImageInput" accept="image/*" multiple style="display:none;" onchange="handleMultipleImageFiles(this.files)">
+            <input type="file" id="realSingleAddInput" accept="image/*" style="display:none;" onchange="handleSingleAddImageFile(this.files[0])">
+
+            <div class="media-actions-row" style="display:grid; grid-template-columns:1.2fr 1fr 0.8fr; gap:5px; margin-bottom:8px;">
+                <button type="button" class="action-upload-btn" onclick="document.getElementById('realMultiImageInput').click()" title="رفع مجموعة صور معاً">
+                    <i class="fa-solid fa-images"></i> <span id="uiBtnUploadMulti">رفع عدة صور</span>
+                </button>
+                <button type="button" class="action-upload-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); border:1px solid #22c55e;" onclick="document.getElementById('realSingleAddInput').click()" title="إضافة صورة إضافية للمعرض">
+                    <i class="fa-solid fa-circle-plus"></i> <span id="uiBtnAddSingle">+ صورة</span>
+                </button>
+                <button type="button" class="action-upload-btn" style="background:#334155; border:1px solid #475569;" onclick="clearGallery()" title="تفريغ المعرض">
+                    <i class="fa-solid fa-trash-can"></i> <span id="uiBtnClearGallery">تفريغ</span>
+                </button>
+            </div>
+
+            <!-- Drag & Drop Zone for Multiple Pictures -->
+            <div class="media-dropzone-box" id="mediaDropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('realMultiImageInput').click()" style="margin-bottom:8px;">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.4rem; color:var(--gold-accent); margin-bottom:2px;"></i>
+                <div style="font-size:0.75rem; font-weight:700; color:#e2e8f0;" id="uiDropzoneTitle">اسحب وأفلت صور المنتجات (1 إلى 4 صور) معاً</div>
+                <div style="font-size:0.66rem; color:#94a3b8;" id="uiDropzoneSub">تتوزع تلقائياً في شبكة بارزة وعالية الوضوح</div>
+            </div>
+
+            <!-- Gallery Format Selector -->
+            <div style="font-size:0.7rem; color:#94a3b8; margin-bottom:4px;" id="uiLabelGalleryFormat">تنسيق وشكل شبكة الصور:</div>
+            <div class="gallery-format-grid">
+                <button type="button" class="gallery-format-btn active" id="btnGFormat_single" onclick="setGalleryFormat('single')" title="صورة فردية كاملة">
+                    <i class="fa-regular fa-square"></i> <span id="fmtTitle_single">صورة واحدة</span>
+                </button>
+                <button type="button" class="gallery-format-btn" id="btnGFormat_grid-2" onclick="setGalleryFormat('grid-2')" title="صورتان جنباً إلى جنب">
+                    <i class="fa-solid fa-pause"></i> <span id="fmtTitle_grid2">صورتان 1×2</span>
+                </button>
+                <button type="button" class="gallery-format-btn" id="btnGFormat_strip-3" onclick="setGalleryFormat('strip-3')" title="3 صور أفقية">
+                    <i class="fa-solid fa-bars"></i> <span id="fmtTitle_strip3">3 أفقية</span>
+                </button>
+                <button type="button" class="gallery-format-btn" id="btnGFormat_focus-3" onclick="setGalleryFormat('focus-3')" title="3 صور: رئيسية + 2 صغار">
+                    <i class="fa-solid fa-table-cells-large"></i> <span id="fmtTitle_focus3">3 بتركيز</span>
+                </button>
+                <button type="button" class="gallery-format-btn" id="btnGFormat_strip-4" onclick="setGalleryFormat('strip-4')" title="4 صور في صف أفقي">
+                    <i class="fa-solid fa-ellipsis"></i> <span id="fmtTitle_strip4">4 أفقية</span>
+                </button>
+                <button type="button" class="gallery-format-btn" id="btnGFormat_grid-4" onclick="setGalleryFormat('grid-4')" title="4 صور: شبكة مربعة 2x2">
+                    <i class="fa-solid fa-table-cells"></i> <span id="fmtTitle_grid4">4 شبكة 2×2</span>
+                </button>
+            </div>
+
+            <!-- Thumbnails List with Labels and Sort -->
+            <div class="gallery-thumbs-list" id="galleryThumbsList"></div>
+        </div>
+
+        <!-- 4. BRANDING & HEADER -->
+        <div class="section-title"><i class="fa-solid fa-shield-halved"></i> <span id="uiSec4Title">4. الهوية والشعار العلوي (Branding)</span></div>
+        <div class="section-box">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label id="uiLabelBrandTitle">اسم المنصة / العلامة</label>
+                    <input type="text" id="inputBrandTitle" class="form-control" value="ZinToop" oninput="updateArtboard()">
+                </div>
+                <div class="form-group">
+                    <label id="uiLabelBrandSub">الوصف الفرعي</label>
+                    <input type="text" id="inputBrandSubtitle" class="form-control" value="بورصة وسوق زيت الزيتون التونسي" oninput="updateArtboard()">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="uiLabelHeaderLink">رابط المنصة في الهيدر</label>
+                    <input type="text" id="inputHeaderLink" class="form-control" value="zintoop.com" oninput="updateArtboard()">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="uiLabelPill">شارة الصنف (Pill Badge)</label>
+                    <input type="text" id="inputPill" class="form-control" value="📈 بورصة الأسعار اليومية" oninput="updateArtboard()">
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. HEADLINE & TAGS -->
+        <div class="section-title"><i class="fa-solid fa-heading"></i> <span id="uiSec5Title">5. العنوان والوسومات (Headline & Tags)</span></div>
+        <div class="section-box">
+            <div class="form-group">
+                <label><span id="uiLabelMainTitle">العنوان الرئيسي</span> <span class="hint" id="uiHintSpan">(يدعم &lt;span&gt; للتلوين الذهبي)</span></label>
+                <textarea id="inputTitle" class="form-control" rows="2" oninput="updateArtboard()">أسعار زيت الزيتون <span>البكر الممتاز</span> اليوم في تونس 🇹🇳</textarea>
+            </div>
+            <div class="grid-3">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="uiLabelTag1">الوسم 1</label>
+                    <input type="text" id="inputTag1" class="form-control" value="📍 كافة ولايات الجمهورية" oninput="updateArtboard()">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="uiLabelTag2">الوسم 2</label>
+                    <input type="text" id="inputTag2" class="form-control" value="🌿 صنف شملالي وشتوي" oninput="updateArtboard()">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="uiLabelTag3">الوسم 3</label>
+                    <input type="text" id="inputTag3" class="form-control" value="🛡️ مفحوص مخبرياً 100%" oninput="updateArtboard()">
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. STATS GRID -->
+        <div class="section-title"><i class="fa-solid fa-chart-simple"></i> <span id="uiSec6Title">6. بطاقات الأرقام والإحصائيات (3 Stats)</span></div>
+        <div class="section-box">
+            <div class="grid-3" style="margin-bottom:8px;">
+                <input type="text" id="inputStat1" class="form-control" placeholder="18.500" value="18.500" oninput="updateArtboard()">
+                <input type="text" id="inputStat1Unit" class="form-control" placeholder="د.ت/كغ" value="د.ت/كغ" oninput="updateArtboard()">
+                <input type="text" id="inputStat1Label" class="form-control" placeholder="معدل السعر" value="معدل السعر" oninput="updateArtboard()">
+            </div>
+            <div class="grid-3" style="margin-bottom:8px;">
+                <input type="text" id="inputStat2" class="form-control" placeholder="< 0.3%" value="< 0.3%" oninput="updateArtboard()">
+                <input type="text" id="inputStat2Unit" class="form-control" placeholder="حموضة" value="" oninput="updateArtboard()">
+                <input type="text" id="inputStat2Label" class="form-control" placeholder="الحموضة القصوى" value="الحموضة القصوى" oninput="updateArtboard()">
+            </div>
+            <div class="grid-3">
+                <input type="text" id="inputStat3" class="form-control" placeholder="نشط ومطلوب 🔥" value="نشط ومطلوب 🔥" oninput="updateArtboard()">
+                <input type="text" id="inputStat3Unit" class="form-control" placeholder="رمز" value="" oninput="updateArtboard()">
+                <input type="text" id="inputStat3Label" class="form-control" placeholder="حالة السوق" value="حالة السوق" oninput="updateArtboard()">
+            </div>
+        </div>
+
+        <!-- 7. DESCRIPTION & WATERMARK -->
+        <div class="section-title"><i class="fa-solid fa-align-right"></i> <span id="uiSec7Title">7. نص الوصف والعلامة المائية</span></div>
+        <div class="section-box">
+            <div class="form-group">
+                <label id="uiLabelDesc">النص الوصفي</label>
+                <textarea id="inputDesc" class="form-control" rows="2" oninput="updateArtboard()">متابعة حية لأسعار التداول في أسواق وسوق قرمدة ومعاصر الشمال والوسط والجنوب التونسي مع تحاليل الجودة المعتمدة.</textarea>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label id="uiLabelWatermark">نص العلامة المائية المركزية (Uncroppable Seal)</label>
+                <input type="text" id="inputWatermark" class="form-control" value="ZinToop" oninput="updateArtboard()">
+            </div>
+        </div>
+
+        <!-- 8. FOOTER & BIG STANDALONE QR CODE -->
+        <div class="section-title"><i class="fa-solid fa-qrcode"></i> <span id="uiSec8Title">8. رمز QR الكبير وزر الفوتر (Big QR & CTA)</span></div>
+        <div class="section-box">
+            <div class="form-group">
+                <label id="uiLabelQrUrl">رابط وجهة رمز الـ QR <span class="hint">(QR Destination URL)</span></label>
+                <input type="text" id="inputQrUrl" class="form-control" value="https://zintoop.com" oninput="handleQrUrlChange(this.value)">
+            </div>
+            <div class="form-group">
+                <label id="uiLabelQrTag">نص زر المسح أسفل الـ QR</label>
+                <input type="text" id="inputQrLabel" class="form-control" value="SCAN ME 📲" oninput="updateArtboard()">
+            </div>
+            <div class="form-group">
+                <label id="uiLabelCta">نص زر الفوتر الرئيسي</label>
+                <input type="text" id="inputCta" class="form-control" value="📲 تابع تحديث الأسعار والصفقات لحظة بلحظة عبر تطبيق ZinToop" oninput="updateArtboard()">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label id="uiLabelCtaSub">نص الفوتر الفرعي</label>
+                <input type="text" id="inputCtaSub" class="form-control" value="متوفر مجاناً على Google Play & App Store | www.zintoop.com" oninput="updateArtboard()">
+            </div>
+        </div>
+
+        <!-- 9. COLOR THEMES -->
+        <div class="section-title"><i class="fa-solid fa-palette"></i> <span id="uiSec9Title">9. الألوان والتدرجات (Color Themes)</span></div>
+        <div class="theme-grid">
+            <div class="theme-chip active" onclick="setTheme('emerald')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #031e0f, #14532d);"></div>
+                <span id="uiThemeEmerald">🌿 زمردي فاخر</span>
+            </div>
+            <div class="theme-chip" onclick="setTheme('gold')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #612c07, #b45309);"></div>
+                <span id="uiThemeGold">🟡 ذهب ملكي</span>
+            </div>
+            <div class="theme-chip" onclick="setTheme('slate')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #0b1120, #334155);"></div>
+                <span id="uiThemeSlate">🩶 تيتانيوم داكن</span>
+            </div>
+            <div class="theme-chip" onclick="setTheme('gradient-mesh')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #052e16, #78350f, #0f172a);"></div>
+                <span id="uiThemeMesh">🌈 تدرج حديث</span>
+            </div>
+            <div class="theme-chip" onclick="setTheme('sunset')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #78350f, #ca8a04, #15803d);"></div>
+                <span id="uiThemeSunset">🌅 شمس تونس</span>
+            </div>
+            <div class="theme-chip" onclick="setTheme('light-pearl')">
+                <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #f1f5f9);"></div>
+                <span id="uiThemeLight">⚪ لؤلؤي ناصع</span>
+            </div>
+        </div>
+
+        <!-- 10. ASPECT RATIO -->
+        <div class="section-title"><i class="fa-solid fa-crop-simple"></i> <span id="uiSec10Title">10. مقاس التصميم (Aspect Ratio)</span></div>
+        <div class="ratio-selector">
+            <button class="ratio-btn active" id="btnRatioSquare" onclick="setRatio('1:1')">1:1 مربع (Feed)</button>
+            <button class="ratio-btn" id="btnRatioStory" onclick="setRatio('9:16')">9:16 طولي (Story)</button>
+            <button class="ratio-btn" id="btnRatioCover" onclick="setRatio('16:9')">16:9 عريض (Cover)</button>
+        </div>
+
+        <!-- EXPORT HD BUTTON -->
+        <button class="export-btn" id="btnExportImage" onclick="exportImage()">
+            <i class="fa-solid fa-download"></i>
+            <span id="uiBtnExport">تنزيل التصميم بجودة فائقة (Export HD PNG)</span>
+        </button>
+
+        <!-- 11. SOCIAL MEDIA SHARE & QUICK PUBLISH -->
+        <div class="section-title"><i class="fa-solid fa-share-nodes"></i> <span id="uiSec11Title">11. النشر والمشاركة في السوشيال ميديا (Social Share)</span></div>
+        <div class="section-box" style="margin-bottom:30px;">
+            <!-- Native Web Share with HD Image -->
+            <button type="button" class="share-action-btn-large btn-native-share" id="btnNativeShare" onclick="shareNativeImage()" title="مشاركة التصميم وصورته مباشرة لتطبيقات الهاتف والكمبيوتر">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span id="uiBtnNativeShare">🚀 مشاركة فورية للتصميم مع الصورة (Share Image)</span>
+            </button>
+
+            <!-- Copy Image and Copy Caption Row -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+                <button type="button" class="share-action-btn-large btn-copy-image" id="btnCopyImage" style="margin-bottom:0; font-size:0.75rem;" onclick="copyImageToClipboard()" title="نسخ صورة التصميم بدقة عالية إلى الحافظة للصقها في فيسبوك أو واتساب">
+                    <i class="fa-solid fa-copy"></i>
+                    <span id="uiBtnCopyImage">📋 نسخ الصورة</span>
+                </button>
+                <button type="button" class="share-action-btn-large btn-copy-caption" id="btnCopyCaption" style="margin-bottom:0; font-size:0.75rem;" onclick="copyPostCaption()" title="نسخ نص المنشور المنسق مع الهاشتاغات وروابط المنصة">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span id="uiBtnCopyCaption">📝 نسخ النص والوسوم</span>
+                </button>
+            </div>
+
+            <!-- Direct Social Platform Buttons Grid -->
+            <div class="social-share-grid">
+                <button type="button" class="social-share-btn social-btn-whatsapp" onclick="shareToWhatsApp()" title="مشاركة إلى واتساب">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> <span>WhatsApp</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-tiktok" onclick="shareToTikTok()" title="مشاركة ونشر على تيك توك (9:16)">
+                    <i class="fa-brands fa-tiktok text-lg" style="color:#25f4ee; text-shadow:1.5px 1.5px #fe2c55;"></i> <span>TikTok</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-facebook" onclick="shareToFacebook()" title="مشاركة على فيسبوك">
+                    <i class="fa-brands fa-facebook-f text-lg"></i> <span>Facebook</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-linkedin" onclick="shareToLinkedIn()" title="مشاركة على لينكد إن">
+                    <i class="fa-brands fa-linkedin-in text-lg"></i> <span>LinkedIn</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-twitter" onclick="shareToTwitter()" title="مشاركة على منصة X">
+                    <i class="fa-brands fa-x-twitter text-lg"></i> <span>X (Twitter)</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-telegram" onclick="shareToTelegram()" title="مشاركة على تيليجرام">
+                    <i class="fa-brands fa-telegram text-lg"></i> <span>Telegram</span>
+                </button>
+                <button type="button" class="social-share-btn social-btn-copy" onclick="copyBrandLink()" title="نسخ الرابط المباشر">
+                    <i class="fa-solid fa-link text-lg"></i> <span id="uiBtnCopyLink">نسخ الرابط</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- PREVIEW WORKSPACE -->
+    <main class="preview-workspace">
+        <div class="preview-toolbar">
+            <div class="preview-title">
+                <i class="fa-solid fa-eye" style="color:var(--gold-accent);"></i>
+                <span id="uiPreviewTitle">معاينة حية للتصميم المطور</span>
+                <span class="badge" id="currentRatioBadge" style="background:rgba(234,179,8,0.2); color:var(--gold-accent); padding:2px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;">1080 × 1080 px (1:1)</span>
+                <span style="font-size:0.72rem; color:#4ade80; background:rgba(34,197,94,0.15); padding:2px 8px; border-radius:6px;" id="uiEditHint"><i class="fa-solid fa-pen"></i> انقر على أي نص لتعديله فوراً</span>
+            </div>
+            
+            <!-- Toolbar Controls: Quick Share + Language Switcher + Theme + Zoom -->
+            <div style="display:flex; gap:6px; align-items:center;">
+                <!-- Quick Share Action from Toolbar -->
+                <button type="button" class="ratio-btn" id="btnToolbarShare" onclick="shareNativeImage()" style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff; border-color:#38bdf8; display:flex; align-items:center; gap:5px; padding:5px 10px;" title="مشاركة سريعة">
+                    <i class="fa-solid fa-share-nodes"></i> <span id="uiToolbarShareTxt">مشاركة</span>
+                </button>
+
+                <div style="width:1px; height:18px; background:#334155; margin:0 2px;"></div>
+
+                <!-- 3 Languages Switcher -->
+                <div class="lang-switcher-box">
+                    <button type="button" class="lang-btn active" id="btnLangAr" onclick="setStudioLanguage('ar')">
+                        🇹🇳 العربية
+                    </button>
+                    <button type="button" class="lang-btn" id="btnLangFr" onclick="setStudioLanguage('fr')">
+                        🇫🇷 Français
+                    </button>
+                    <button type="button" class="lang-btn" id="btnLangEn" onclick="setStudioLanguage('en')">
+                        🇬🇧 English
+                    </button>
+                </div>
+
+                <div style="width:1px; height:18px; background:#334155; margin:0 2px;"></div>
+
+                <button class="ratio-btn active" id="btnStudioDark" onclick="setStudioEnv('dark')">🌑 داكن</button>
+                <button class="ratio-btn" id="btnStudioSlate" onclick="setStudioEnv('slate')">🩶 محايد</button>
+                <button class="ratio-btn" id="btnStudioLight" onclick="setStudioEnv('light')">☀️ ناصع</button>
+                
+                <div style="width:1px; height:18px; background:#334155; margin:0 2px;"></div>
+                
+                <button class="ratio-btn" onclick="zoomDelta(0.05)" title="تكبير"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <button class="ratio-btn" onclick="zoomDelta(-0.05)" title="تصغير"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+            </div>
+        </div>
+
+        <!-- CENTERED CANVAS CONTAINER -->
+        <div class="preview-scale-wrapper" id="scaleWrapper">
+            <div class="canvas-container" id="captureTarget" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <div class="template-artboard theme-emerald layout-bourse" id="artboard">
+                    <!-- Background Media -->
+                    <img src="images/dealbackground-opt.jpg" class="artboard-bg-media" id="artBgImage" alt="Media Background">
+                    <video class="artboard-bg-media" id="artBgVideo" autoplay loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+                    
+                    <div class="artboard-bg-overlay" id="artOverlay"></div>
+                    <div class="artboard-glow-1"></div>
+                    <div class="artboard-glow-2"></div>
+
+                    <!-- Video Audio Active Indicator Badge on Canvas -->
+                    <div class="art-audio-badge" id="artVideoAudioBadge" style="display:none;">
+                        <i class="fa-solid fa-volume-high"></i> <span id="txtArtVideoBadge">الصوت مشغل</span>
+                    </div>
+
+                    <!-- UNCROPPABLE CENTER WATERMARK SEAL -->
+                    <div class="uncroppable-watermark-center" id="artWatermarkCenter">
+                        <img src="images/zintoop-logo.png" alt="ZinToop Watermark" class="watermark-logo-img" onerror="this.onerror=null; this.src='images/zintoop-logo-sm.jpg'">
+                        <div class="watermark-brand-title" id="artWatermark" contenteditable="true" oninput="syncDirectEdit('artWatermark', 'inputWatermark')">ZinToop</div>
+                        <div class="watermark-brand-sub" id="artWatermarkSub">BOURSE & OLIVE HUB</div>
+                    </div>
+
+                    <!-- 1. TOP HEADER LAYER -->
+                    <div class="template-header">
+                        <div class="brand-master-badge">
+                            <div class="brand-logo-frame">
+                                <img src="images/zintoop-logo.png" id="artLogoImg" alt="ZinToop" onerror="this.onerror=null; this.src='images/zintoop-logo-sm.jpg'">
+                            </div>
+                            <div class="brand-master-text">
+                                <div class="title-row">
+                                    <span class="brand-main-title" id="artBrandTitle" contenteditable="true" oninput="syncDirectEdit('artBrandTitle', 'inputBrandTitle')">ZinToop</span>
+                                    <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> <span id="artVerifiedText">رسمي</span></span>
+                                </div>
+                                <span class="brand-sub-title" id="artBrandSubtitle" contenteditable="true" oninput="syncDirectEdit('artBrandSubtitle', 'inputBrandSubtitle')">بورصة وسوق زيت الزيتون التونسي</span>
+                            </div>
+                        </div>
+
+                        <div class="header-link-pill" id="artHeaderLink" contenteditable="true" oninput="syncDirectEdit('artHeaderLink', 'inputHeaderLink')">
+                            zintoop.com
+                        </div>
+                    </div>
+
+                    <!-- 2. FOREGROUND PRODUCT & ASSETS SHOWCASE GALLERY -->
+                    <div class="multi-photo-showcase-box format-single" id="multiPhotoShowcaseBox">
+                        <div class="art-gallery-grid" id="artGalleryGrid">
+                            <div class="art-gallery-item">
+                                <img src="images/dealbackground-opt.jpg" alt="Featured Product">
+                                <div class="art-gallery-badge">سوق التداول</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. MAIN HEADLINE & HIGHLIGHT TAGS -->
+                    <div class="art-content-middle">
+                        <div class="category-pill-tag" id="artPill" contenteditable="true" oninput="syncDirectEdit('artPill', 'inputPill')">
+                            📈 بورصة الأسعار اليومية
+                        </div>
+
+                        <h2 class="art-main-title" id="artTitle" contenteditable="true" oninput="syncDirectEdit('artTitle', 'inputTitle')">
+                            أسعار زيت الزيتون <span>البكر الممتاز</span> اليوم في تونس 🇹🇳
+                        </h2>
+
+                        <div class="highlight-tags-row">
+                            <span class="highlight-tag" id="artTag1" contenteditable="true" oninput="syncDirectEdit('artTag1', 'inputTag1')">📍 كافة ولايات الجمهورية</span>
+                            <span class="highlight-tag" id="artTag2" contenteditable="true" oninput="syncDirectEdit('artTag2', 'inputTag2')">🌿 صنف شملالي وشتوي</span>
+                            <span class="highlight-tag" id="artTag3" contenteditable="true" oninput="syncDirectEdit('artTag3', 'inputTag3')">🛡️ مفحوص مخبرياً 100%</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. STATS HIGHLIGHT CARDS (3 Stats) -->
+                    <div class="stats-highlight-cards" id="artStatsCards">
+                        <div class="stat-card-item">
+                            <div class="stat-card-value-row">
+                                <span class="stat-card-value" id="artStat1Val" contenteditable="true" oninput="syncDirectEdit('artStat1Val', 'inputStat1')">18.500</span>
+                                <span class="stat-card-unit" id="artStat1Unit" contenteditable="true" oninput="syncDirectEdit('artStat1Unit', 'inputStat1Unit')">د.ت/كغ</span>
+                            </div>
+                            <span class="stat-card-label" id="artStat1Label" contenteditable="true" oninput="syncDirectEdit('artStat1Label', 'inputStat1Label')">معدل السعر</span>
+                        </div>
+
+                        <div class="stat-card-item">
+                            <div class="stat-card-value-row">
+                                <span class="stat-card-value" id="artStat2Val" contenteditable="true" oninput="syncDirectEdit('artStat2Val', 'inputStat2')">&lt; 0.3%</span>
+                                <span class="stat-card-unit" id="artStat2Unit" contenteditable="true" oninput="syncDirectEdit('artStat2Unit', 'inputStat2Unit')"></span>
+                            </div>
+                            <span class="stat-card-label" id="artStat2Label" contenteditable="true" oninput="syncDirectEdit('artStat2Label', 'inputStat2Label')">الحموضة القصوى</span>
+                        </div>
+
+                        <div class="stat-card-item">
+                            <div class="stat-card-value-row">
+                                <span class="stat-card-value" id="artStat3Val" contenteditable="true" oninput="syncDirectEdit('artStat3Val', 'inputStat3')">نشط ومطلوب 🔥</span>
+                                <span class="stat-card-unit" id="artStat3Unit" contenteditable="true" oninput="syncDirectEdit('artStat3Unit', 'inputStat3Unit')"></span>
+                            </div>
+                            <span class="stat-card-label" id="artStat3Label" contenteditable="true" oninput="syncDirectEdit('artStat3Label', 'inputStat3Label')">حالة السوق</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. DESCRIPTION TEXT -->
+                    <div class="art-desc-box" id="artDesc" contenteditable="true" oninput="syncDirectEdit('artDesc', 'inputDesc')">
+                        متابعة حية لأسعار التداول في أسواق وسوق قرمدة ومعاصر الشمال والوسط والجنوب التونسي مع تحاليل الجودة المعتمدة.
+                    </div>
+
+                    <!-- 6. FOOTER WITH LARGE STANDALONE QR CODE -->
+                    <div class="template-footer">
+                        <div class="footer-cta-column">
+                            <div class="cta-action-headline" id="artCtaText" contenteditable="true" oninput="syncDirectEdit('artCtaText', 'inputCta')">
+                                📲 تابع تحديث الأسعار والصفقات لحظة بلحظة عبر تطبيق ZinToop
+                            </div>
+                            <div class="cta-action-sub" id="artCtaSub" contenteditable="true" oninput="syncDirectEdit('artCtaSub', 'inputCtaSub')">
+                                متوفر مجاناً على Google Play & App Store | www.zintoop.com
+                            </div>
+                        </div>
+
+                        <div class="footer-qr-container">
+                            <div class="footer-qr-frame" id="artQrCodeFrame">
+                                <!-- QR Code Canvas generated by QRCode.js -->
+                            </div>
+                            <div class="footer-qr-btn-pill" id="artQrLabel" contenteditable="true" oninput="syncDirectEdit('artQrLabel', 'inputQrLabel')">
+                                <i class="fa-solid fa-qrcode"></i> SCAN ME 📲
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ------------------------------------------------------------- -->
+    <!-- MASTER JAVASCRIPT LOGIC ENGINE                                -->
+    <!-- ------------------------------------------------------------- -->
+    <script>
+        let currentScale = 0.58;
+        let currentRatio = '1:1';
+        let currentLayout = 'bourse';
+        let currentGalleryFormat = 'single';
+        let currentLang = 'ar';
+        let isVideoMuted = true;
+        let videoVolume = 0.8;
+        let qrCodeInstance = null;
+
+        // Multi-image asset array
+        let galleryImages = [
+            { src: 'images/dealbackground-opt.jpg', label: 'سوق التداول' }
+        ];
+
+        /* ------------------------------------------------------------- */
+        /* TRILINGUAL UI DICTIONARY (AR, FR, EN)                         */
+        /* ------------------------------------------------------------- */
+        const i18n = {
+            ar: {
+                brand_header_title: "استوديو ZinToop البصري",
+                brand_header_sub: "صانع المنشورات الإعلانية والبورصة",
+                sec1_title: "1. قوالب المنشورات السريعة (Templates)",
+                layout_bourse_title: "إنفوجرافيك البورصة",
+                layout_bourse_desc: "إبراز السعر ومؤشرات السوق",
+                layout_product_title: "بطاقة منتج / صور",
+                layout_product_desc: "معرض صور مع المواصفات",
+                layout_news_title: "تقرير وخبر عاجل",
+                layout_news_desc: "شريط عاجل ومصدر رسمي",
+                layout_story_title: "ستوري وريلز حديث",
+                layout_story_desc: "تصميم عمودي للموبايل",
+                sec2_title: "2. خلفية البوستر الجدارية (Poster Background)",
+                sec2_hint: "خلفية عامة للبوستر بأكمله (يمكن إخفاؤها للاكتفاء بالتدرج اللوني الملكي):",
+                btn_upload_img: "صورة 🌄",
+                btn_upload_vid: "فيديو 🎥",
+                btn_pure_studio: "ستوديو نقي ✨",
+                bg_presets_label: "خلفيات زيتون جاهزة (انقر للاختيار):",
+                label_media_opacity: "شفافية الخلفية",
+                label_darkness: "تعتيم الحواف",
+                label_bg_blur: "تمويه Blur",
+                video_audio_title: "صوت وفيديو الخلفية",
+                btn_sound_unmute: "تشغيل الصوت",
+                btn_sound_mute: "كتم الصوت",
+                sound_status_muted: "مكتوم 🔇",
+                sound_status_active: "مشغل 🔊",
+                label_volume: "مستوى الصوت",
+                video_badge_active: "الصوت مشغل 🔊",
+                sec3_title: "3. معرض صور الصنف والمنتجات (Product Gallery Grid)",
+                gallery_hint: "شبكة صور أمامية بارزة ومستقلة تماماً عن خلفية البوستر.",
+                btn_upload_multi: "رفع عدة صور",
+                btn_add_single: "+ صورة",
+                btn_clear_gallery: "تفريغ",
+                dropzone_title: "اسحب وأفلت صور المنتجات (1 إلى 4 صور) معاً",
+                dropzone_sub: "تتوزع تلقائياً في شبكة بارزة وعالية الوضوح",
+                label_gallery_format: "تنسيق وشكل شبكة الصور:",
+                fmt_single: "صورة واحدة",
+                fmt_grid2: "صورتان 1×2",
+                fmt_strip3: "3 أفقية",
+                fmt_focus3: "3 بتركيز",
+                fmt_strip4: "4 أفقية",
+                fmt_grid4: "4 شبكة 2×2",
+                sec4_title: "4. الهوية والشعار العلوي (Branding)",
+                label_brand_title: "اسم المنصة / العلامة",
+                label_brand_sub: "الوصف الفرعي",
+                label_header_link: "رابط المنصة في الهيدر",
+                label_pill: "شارة الصنف (Pill Badge)",
+                sec5_title: "5. العنوان والوسومات (Headline & Tags)",
+                label_main_title: "العنوان الرئيسي",
+                hint_span: "(يدعم <span> للتلوين الذهبي)",
+                label_tag1: "الوسم 1",
+                label_tag2: "الوسم 2",
+                label_tag3: "الوسم 3",
+                sec6_title: "6. بطاقات الأرقام والإحصائيات (3 Stats)",
+                sec7_title: "7. نص الوصف والعلامة المائية",
+                label_desc: "النص الوصفي",
+                label_watermark: "نص العلامة المائية المركزية",
+                sec8_title: "8. رمز QR الكبير وزر الفوتر (Big QR & CTA)",
+                label_qr_url: "رابط وجهة رمز الـ QR (URL)",
+                label_qr_tag: "نص زر المسح أسفل الـ QR",
+                label_cta: "نص زر الفوتر الرئيسي",
+                label_cta_sub: "نص الفوتر الفرعي",
+                sec9_title: "9. الألوان والتدرجات (Color Themes)",
+                theme_emerald: "🌿 زمردي فاخر",
+                theme_gold: "🟡 ذهب ملكي",
+                theme_slate: "🩶 تيتانيوم داكن",
+                theme_mesh: "🌈 تدرج حديث",
+                theme_sunset: "🌅 شمس تونس",
+                theme_light: "⚪ لؤلؤي ناصع",
+                sec10_title: "10. مقاس التصميم (Aspect Ratio)",
+                btn_export: "تنزيل التصميم بجودة فائقة (Export HD PNG)",
+                sec11_title: "11. النشر والمشاركة في السوشيال ميديا (Social Share)",
+                btn_native_share: "🚀 مشاركة فورية للتصميم مع الصورة (Share Image)",
+                btn_copy_image: "📋 نسخ الصورة",
+                btn_copy_caption: "📝 نسخ النص والوسوم",
+                btn_copy_link: "نسخ الرابط",
+                preview_title: "معاينة حية للتصميم المطور",
+                toolbar_share: "مشاركة",
+                edit_hint: "انقر على أي نص لتعديله فوراً",
+                verified_badge: "رسمي",
+                watermark_sub: "BOURSE & OLIVE HUB"
+            },
+            fr: {
+                brand_header_title: "Studio Graphique ZinToop",
+                brand_header_sub: "Créateur de Publications & Infographies",
+                sec1_title: "1. Modèles & Formats Rapides (Templates)",
+                layout_bourse_title: "Infographie Bourse",
+                layout_bourse_desc: "Mise en avant des cours & marché",
+                layout_product_title: "Vitrine Produit / Photos",
+                layout_product_desc: "Galerie d'actifs & caractéristiques",
+                layout_news_title: "Rapport & Flash Info",
+                layout_news_desc: "Bandeau urgent & source officielle",
+                layout_story_title: "Story & Reels Moderne",
+                layout_story_desc: "Design vertical optimisé mobile",
+                sec2_title: "2. Arrière-plan de l'Affiche (Wallpaper)",
+                sec2_hint: "Arrière-plan global (peut être masqué pour un style dégradé royal pur) :",
+                btn_upload_img: "Image 🌄",
+                btn_upload_vid: "Vidéo 🎥",
+                btn_pure_studio: "Studio Épuré ✨",
+                bg_presets_label: "Fonds d'oliveraies prêts (cliquer pour choisir) :",
+                label_media_opacity: "Opacité du fond",
+                label_darkness: "Vignettage / Sombre",
+                label_bg_blur: "Flou d'Arrière-plan",
+                video_audio_title: "Audio Vidéo & Fond",
+                btn_sound_unmute: "Activer le son",
+                btn_sound_mute: "Couper le son",
+                sound_status_muted: "Muet 🔇",
+                sound_status_active: "Actif 🔊",
+                label_volume: "Volume Audio",
+                video_badge_active: "Audio Activé 🔊",
+                sec3_title: "3. Galerie Photos Produits (Product Gallery Grid)",
+                gallery_hint: "Grille photos au premier plan, totalement indépendante de l'arrière-plan.",
+                btn_upload_multi: "Importer photos",
+                btn_add_single: "+ Photo",
+                btn_clear_gallery: "Vider",
+                dropzone_title: "Glissez-déposez vos photos produits (1 à 4 images)",
+                dropzone_sub: "Disposition automatique en haute définition",
+                label_gallery_format: "Disposition de la grille photos :",
+                fmt_single: "1 Photo",
+                fmt_grid2: "2 Photos 1×2",
+                fmt_strip3: "3 en Bande",
+                fmt_focus3: "3 avec Focus",
+                fmt_strip4: "4 en Bande",
+                fmt_grid4: "4 Grille 2×2",
+                sec4_title: "4. Marque & En-tête Supérieur",
+                label_brand_title: "Nom de la Marque / Plateforme",
+                label_brand_sub: "Slogan / Sous-titre",
+                label_header_link: "Lien d'en-tête supérieur",
+                label_pill: "Badge Catégorie (Pill Badge)",
+                sec5_title: "5. Titres Principaux & Tags",
+                label_main_title: "Titre Principal",
+                hint_span: "(supporte <span> pour le doré)",
+                label_tag1: "Tag 1",
+                label_tag2: "Tag 2",
+                label_tag3: "Tag 3",
+                sec6_title: "6. Indicateurs & Métriques Clés (3 Stats)",
+                sec7_title: "7. Description & Filigrane Central",
+                label_desc: "Texte Descriptif",
+                label_watermark: "Filigrane Central de Sécurité",
+                sec8_title: "8. Code QR Géant & Bannière (Big QR & CTA)",
+                label_qr_url: "Lien Cible du Code QR (URL)",
+                label_qr_tag: "Texte sous le Code QR",
+                label_cta: "Bannière d'Appel à l'Action (CTA)",
+                label_cta_sub: "Texte Secondaire du Pied",
+                sec9_title: "9. Thèmes & Palettes Royales",
+                theme_emerald: "🌿 Émeraude Royal",
+                theme_gold: "🟡 Or Authentique",
+                theme_slate: "🩶 Acier Titane",
+                theme_mesh: "🌈 Dégradé Néon",
+                theme_sunset: "🌅 Soleil de Tunisie",
+                theme_light: "⚪ Perle Blanche",
+                sec10_title: "10. Format de l'Image (Aspect Ratio)",
+                btn_export: "Télécharger en Haute Définition (Export HD PNG)",
+                sec11_title: "11. Partage sur les Réseaux Sociaux (Social Share)",
+                btn_native_share: "🚀 Partager l'Image Directement (Share Image)",
+                btn_copy_image: "📋 Copier l'Image",
+                btn_copy_caption: "📝 Copier Texte & Tags",
+                btn_copy_link: "Copier Lien",
+                preview_title: "Aperçu Interactif en Direct",
+                toolbar_share: "Partager",
+                edit_hint: "Cliquez sur n'importe quel texte pour l'éditer",
+                verified_badge: "OFFICIEL",
+                watermark_sub: "BOURSE & HUILERIES DE TUNISIE"
+            },
+            en: {
+                brand_header_title: "ZinToop Visual Studio",
+                brand_header_sub: "Olive Bourse & Social Media Creator",
+                sec1_title: "1. Quick Presets & Formats (Templates)",
+                layout_bourse_title: "Bourse Infographic",
+                layout_bourse_desc: "Spotlight prices & market metrics",
+                layout_product_title: "Product Card / Assets",
+                layout_product_desc: "Photo showcase with key specs",
+                layout_news_title: "Breaking News & Report",
+                layout_news_desc: "Urgent banner & official source",
+                layout_story_title: "Modern Story & Reels",
+                layout_story_desc: "Engaging vertical mobile layout",
+                sec2_title: "2. Poster Wallpaper Background (Media)",
+                sec2_hint: "Global poster background (can be cleared for a pure royal gradient studio):",
+                btn_upload_img: "Photo 🌄",
+                btn_upload_vid: "Video 🎥",
+                btn_pure_studio: "Pure Studio ✨",
+                bg_presets_label: "Ready olive grove wallpapers (click to select):",
+                label_media_opacity: "Background Opacity",
+                label_darkness: "Edge Darkness",
+                label_bg_blur: "Background Blur",
+                video_audio_title: "Video Audio & Sound",
+                btn_sound_unmute: "Unmute Audio",
+                btn_sound_mute: "Mute Audio",
+                sound_status_muted: "Muted 🔇",
+                sound_status_active: "Playing 🔊",
+                label_volume: "Volume Level",
+                video_badge_active: "Audio Active 🔊",
+                sec3_title: "3. Product & Asset Gallery Grid",
+                gallery_hint: "Foreground photo showcase, fully decoupled from wallpaper background.",
+                btn_upload_multi: "Upload Photos",
+                btn_add_single: "+ Photo",
+                btn_clear_gallery: "Clear",
+                dropzone_title: "Drag & drop product photos (1 to 4 images)",
+                dropzone_sub: "Auto-arranges into high clarity crisp grid",
+                label_gallery_format: "Gallery Grid Layout:",
+                fmt_single: "1 Photo",
+                fmt_grid2: "2 Photos 1×2",
+                fmt_strip3: "3 Horizontal",
+                fmt_focus3: "3 Focused",
+                fmt_strip4: "4 Horizontal",
+                fmt_grid4: "4 Quad 2×2",
+                sec4_title: "4. Brand Identity & Header",
+                label_brand_title: "Platform / Brand Name",
+                label_brand_sub: "Brand Subtitle",
+                label_header_link: "Top Header Link",
+                label_pill: "Category Pill Badge",
+                sec5_title: "5. Headlines & Highlight Tags",
+                label_main_title: "Main Headline",
+                hint_span: "(supports <span> for gold glow)",
+                label_tag1: "Tag 1",
+                label_tag2: "Tag 2",
+                label_tag3: "Tag 3",
+                sec6_title: "6. Highlight Metrics Cards (3 Stats)",
+                sec7_title: "7. Description & Central Watermark",
+                label_desc: "Description Copy",
+                label_watermark: "Uncroppable Watermark Seal",
+                sec8_title: "8. Big QR Code & Footer Banner (CTA)",
+                label_qr_url: "QR Code Target Link (URL)",
+                label_qr_tag: "Label Under QR Code",
+                label_cta: "Main Call to Action Banner",
+                label_cta_sub: "Sub-Footer Disclaimer",
+                sec9_title: "9. Royal Color Themes & Palettes",
+                theme_emerald: "🌿 Royal Emerald",
+                theme_gold: "🟡 Authentic Gold",
+                theme_slate: "🩶 Slate Titanium",
+                theme_mesh: "🌈 Neon Mesh",
+                theme_sunset: "🌅 Tunisian Sunset",
+                theme_light: "⚪ Pearl White",
+                sec10_title: "10. Design Canvas Aspect Ratio",
+                btn_export: "Download Ultra-HD Design (Export HD PNG)",
+                sec11_title: "11. Share to Social Media & Publish",
+                btn_native_share: "🚀 Share Design with Image (Web Share)",
+                btn_copy_image: "📋 Copy Image",
+                btn_copy_caption: "📝 Copy Caption & Tags",
+                btn_copy_link: "Copy Link",
+                preview_title: "Live Interactive Preview",
+                toolbar_share: "Share",
+                edit_hint: "Click any canvas text to edit directly",
+                verified_badge: "VERIFIED",
+                watermark_sub: "TUNISIAN OLIVE BOURSE & HUB"
+            }
+        };
+
+        /* ------------------------------------------------------------- */
+        /* TRILINGUAL PRESETS DATASET (AR, FR, EN)                       */
+        /* ------------------------------------------------------------- */
+        const presets = {
+            price: {
+                ar: {
+                    btnName: '📈 بورصة الأسعار',
+                    pill: '📈 بورصة الأسعار اليومية',
+                    brandTitle: 'ZinToop',
+                    brandSubtitle: 'بورصة وسوق زيت الزيتون التونسي',
+                    headerLink: 'zintoop.com',
+                    qrUrl: 'https://zintoop.com',
+                    qrLabel: 'SCAN ME 📲',
+                    title: 'أسعار زيت الزيتون <span>البكر الممتاز</span> اليوم في تونس 🇹🇳',
+                    tag1: '📍 كافة ولايات الجمهورية',
+                    tag2: '🌿 صنف شملالي وشتوي',
+                    tag3: '🛡️ مفحوص مخبرياً 100%',
+                    stat1: '18.500', stat1Unit: 'د.ت/كغ', stat1Label: 'معدل السعر',
+                    stat2: '< 0.3%', stat2Unit: '', stat2Label: 'الحموضة القصوى',
+                    stat3: 'نشط ومطلوب 🔥', stat3Unit: '', stat3Label: 'حالة السوق',
+                    desc: 'متابعة حية لأسعار التداول في أسواق وسوق قرمدة ومعاصر الشمال والوسط والجنوب التونسي مع تحاليل الجودة المعتمدة.',
+                    watermark: 'ZinToop',
+                    cta: '📲 تابع تحديث الأسعار والصفقات لحظة بلحظة عبر تطبيق ZinToop',
+                    ctaSub: 'متوفر مجاناً على Google Play & App Store | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                fr: {
+                    btnName: '📈 Cours & Bourse',
+                    pill: '📈 Cours Officiels du Jour',
+                    brandTitle: 'ZinToop Bourse',
+                    brandSubtitle: 'Marché et Bourse de l\'Huile d\'Olive Tunisienne',
+                    headerLink: 'zintoop.com/bourse',
+                    qrUrl: 'https://zintoop.com',
+                    qrLabel: 'SCAN ME 📲',
+                    title: 'Cours de l\'Huile d\'Olive <span>Extra Vierge</span> en Tunisie 🇹🇳',
+                    tag1: '📍 Toutes Régions de Tunisie',
+                    tag2: '🌿 Variétés Chétoui & Chemlali',
+                    tag3: '🛡️ Testé en Laboratoire 100%',
+                    stat1: '18.500', stat1Unit: 'TND/kg', stat1Label: 'Prix Moyen',
+                    stat2: '< 0.3%', stat2Unit: 'Acide', stat2Label: 'Acidité Max',
+                    stat3: 'Forte Demande 🔥', stat3Unit: '', stat3Label: 'Tendance Marché',
+                    desc: 'Suivi en direct des cotations au marché de Gremda et dans toutes les huileries de Tunisie avec certification COI.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Suivez les cours et transactions en temps réel sur ZinToop',
+                    ctaSub: 'Téléchargez gratuitement sur Google Play & App Store | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                en: {
+                    btnName: '📈 Price Bourse',
+                    pill: '📈 Daily Market Prices',
+                    brandTitle: 'ZinToop Bourse',
+                    brandSubtitle: 'Tunisian Olive Oil Bourse & Trade Hub',
+                    headerLink: 'zintoop.com/market',
+                    qrUrl: 'https://zintoop.com',
+                    qrLabel: 'SCAN ME 📲',
+                    title: 'Extra Virgin Olive Oil <span>Market Prices</span> in Tunisia 🇹🇳',
+                    tag1: '📍 All Tunisian Governorates',
+                    tag2: '🌿 Chemlali & Chétoui Cultivars',
+                    tag3: '🛡️ 100% Certified Lab Tested',
+                    stat1: '18.500', stat1Unit: 'TND/kg', stat1Label: 'Average Price',
+                    stat2: '< 0.3%', stat2Unit: 'Acidity', stat2Label: 'Max Acidity',
+                    stat3: 'High Demand 🔥', stat3Unit: '', stat3Label: 'Market Momentum',
+                    desc: 'Live verified price tracking across Gremda market and regional Tunisian mills with accredited quality analysis.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Track real-time prices and verified deals on ZinToop App',
+                    ctaSub: 'Free download on Google Play & App Store | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                gallery: [
+                    { src: 'images/dealbackground-opt.jpg', label: 'سوق التداول' }
+                ]
+            },
+            bottled_oil: {
+                ar: {
+                    btnName: '🍾 زيت معلب وماركات',
+                    pill: '🍾 زيت معلب وماركات',
+                    brandTitle: 'ZinToop Brands',
+                    brandSubtitle: 'كتالوج الماركات التونسية الفاخرة',
+                    headerLink: 'zintoop.com/brands',
+                    qrUrl: 'https://zintoop.com/market',
+                    qrLabel: 'اطلب قواريرك 🍾',
+                    title: 'قوارير زيت زيتون بكر ممتاز <span>معلب للتصدير والاستهلاك</span> 🫒',
+                    tag1: '📍 ماركات مسجلة',
+                    tag2: '🏆 جوائز دولية',
+                    tag3: '🌿 بيولوجي Bio عضوي',
+                    stat1: '0.75', stat1Unit: 'لتر', stat1Label: 'سعة القارورة',
+                    stat2: 'Bio', stat2Unit: 'Certifié', stat2Label: 'شهادة بيولوجية',
+                    stat3: 'تصدير فوري 🚢', stat3Unit: '', stat3Label: 'جاهزية الشحن',
+                    desc: 'زيت زيتون معلب في عبوات زجاجية معتمة مطابقة للمعايير الدولية مع شهادات التحليل الكيميائي والحسي المعتمدة.',
+                    watermark: 'ZinToop',
+                    cta: '🛒 اكتشف كتالوج العلامات التونسية واطلب مباشرة عبر ZinToop',
+                    ctaSub: 'شحن محلي ودولي لكافة الوجهات | www.zintoop.com',
+                    theme: 'gold'
+                },
+                fr: {
+                    btnName: '🍾 Huile Conditionnée',
+                    pill: '🍾 Huile Bouteille & Marques',
+                    brandTitle: 'ZinToop Brands',
+                    brandSubtitle: 'Catalogue des Marques Haut de Gamme',
+                    headerLink: 'zintoop.com/brands',
+                    qrUrl: 'https://zintoop.com/market',
+                    qrLabel: 'Commander 🍾',
+                    title: 'Huile d\'Olive Extra Vierge <span>Conditionnée pour Export & Table</span> 🫒',
+                    tag1: '📍 Marques Enregistrées',
+                    tag2: '🏆 Médailles Internationales',
+                    tag3: '🌿 Certifiée Bio & Organique',
+                    stat1: '0.75', stat1Unit: 'Litre', stat1Label: 'Contenance',
+                    stat2: 'Bio', stat2Unit: 'Certifié', stat2Label: 'Norme Bio',
+                    stat3: 'Export Prêt 🚢', stat3Unit: '', stat3Label: 'Disponibilité',
+                    desc: 'Bouteilles en verre teinté anti-UV avec certificats d\'analyses organoleptiques et chimiques conformes aux normes UE.',
+                    watermark: 'ZinToop',
+                    cta: '🛒 Commandez directement auprès des marques sur ZinToop',
+                    ctaSub: 'Expédition locale et internationale express | www.zintoop.com',
+                    theme: 'gold'
+                },
+                en: {
+                    btnName: '🍾 Bottled & Brands',
+                    pill: '🍾 Bottled Premium Brands',
+                    brandTitle: 'ZinToop Brands',
+                    brandSubtitle: 'Tunisian Award-Winning Brand Showcase',
+                    headerLink: 'zintoop.com/brands',
+                    qrUrl: 'https://zintoop.com/market',
+                    qrLabel: 'Order Now 🍾',
+                    title: 'Extra Virgin Olive Oil <span>Bottled for Export & Retail</span> 🫒',
+                    tag1: '📍 Registered Brands',
+                    tag2: '🏆 Global Gold Medals',
+                    tag3: '🌿 100% Organic Bio',
+                    stat1: '0.75', stat1Unit: 'Litre', stat1Label: 'Bottle Volume',
+                    stat2: 'Bio', stat2Unit: 'Organic', stat2Label: 'Certification',
+                    stat3: 'Ready to Ship 🚢', stat3Unit: '', stat3Label: 'Fulfillment',
+                    desc: 'UV-shielded dark glass bottles complying with international food standards, accompanied by official panel test certificates.',
+                    watermark: 'ZinToop',
+                    cta: '🛒 Explore premium Tunisian brands & place direct orders on ZinToop',
+                    ctaSub: 'Domestic delivery and global export logistics | www.zintoop.com',
+                    theme: 'gold'
+                },
+                gallery: [
+                    { src: 'images/agritech_hero_bg_real.png', label: 'قوارير التصدير 🍾' },
+                    { src: 'images/dealbackground-opt.jpg', label: 'الضيعة والمنشأ 🌿' }
+                ]
+            },
+            bulk_oil: {
+                ar: {
+                    btnName: '🛢️ زيت صب (Vrac)',
+                    pill: '🛢️ زيت صب للتصدير (Vrac)',
+                    brandTitle: 'ZinToop Vrac',
+                    brandSubtitle: 'بورصة صفقات التصدير السائب',
+                    headerLink: 'zintoop.com/vrac',
+                    qrUrl: 'https://zintoop.com/vrac',
+                    qrLabel: 'صفقات الصهاريج 🛢️',
+                    title: 'كميات زيت زيتون صب (Vrac) <span>جاهزة للتصدير بالصهاريج</span> 🚢',
+                    tag1: '📍 متوفر بالمعاصر',
+                    tag2: '🧪 شهادة COI / ISO',
+                    tag3: '⚡ تسليم فوري',
+                    stat1: '50 - 500', stat1Unit: 'طن', stat1Label: 'الكمية المتوفرة',
+                    stat2: '0.2%', stat2Unit: 'Acidité', stat2Label: 'نسبة الحموضة',
+                    stat3: 'شاحنات صهريج 🚛', stat3Unit: '', stat3Label: 'نوع التسليم',
+                    desc: 'صفقات زيت زيتون بكر ممتاز صب معدة للمصدرين والمشترين الدوليين مع ضمان تتبع المنشأ والتحاليل المخبرية.',
+                    watermark: 'ZinToop',
+                    cta: '🤝 تواصل مع أصحاب المعاصر والمصدرين فوراً عبر ZinToop',
+                    ctaSub: 'عقود موثقة وضمان الشفافية التجارية | www.zintoop.com',
+                    theme: 'gold'
+                },
+                fr: {
+                    btnName: '🛢️ Huile en Vrac',
+                    pill: '🛢️ Huile en Vrac pour Export',
+                    brandTitle: 'ZinToop Vrac',
+                    brandSubtitle: 'Bourse de l\'Huile d\'Olive en Vrac',
+                    headerLink: 'zintoop.com/vrac',
+                    qrUrl: 'https://zintoop.com/vrac',
+                    qrLabel: 'Contrats Citernes 🛢️',
+                    title: 'Huile d\'Olive Extra Vierge en Vrac <span>Prête pour Export par Citernes</span> 🚢',
+                    tag1: '📍 Disponible en Moulins',
+                    tag2: '🧪 Norme COI / ISO',
+                    tag3: '⚡ Livraison Immédiate',
+                    stat1: '50 - 500', stat1Unit: 'Tonnes', stat1Label: 'Volume Disponible',
+                    stat2: '0.2%', stat2Unit: 'Acidité', stat2Label: 'Taux d\'Acidité',
+                    stat3: 'Camions Citernes 🚛', stat3Unit: '', stat3Label: 'Mode de Transport',
+                    desc: 'Lots d\'huile d\'olive extra vierge en vrac pour négociants et exportateurs avec traçabilité intégrale.',
+                    watermark: 'ZinToop',
+                    cta: '🤝 Négociez directement avec les moulins et exportateurs sur ZinToop',
+                    ctaSub: 'Contrats certifiés et transparence totale | www.zintoop.com',
+                    theme: 'gold'
+                },
+                en: {
+                    btnName: '🛢️ Bulk Olive Oil',
+                    pill: '🛢️ Bulk Oil Export Lots',
+                    brandTitle: 'ZinToop Bulk',
+                    brandSubtitle: 'Commercial Bulk Olive Oil Exchange',
+                    headerLink: 'zintoop.com/vrac',
+                    qrUrl: 'https://zintoop.com/vrac',
+                    qrLabel: 'Tanker Deals 🛢️',
+                    title: 'Bulk Extra Virgin Olive Oil <span>Ready for Tanker Export</span> 🚢',
+                    tag1: '📍 In Mill Silos',
+                    tag2: '🧪 IOC / ISO Certified',
+                    tag3: '⚡ Prompt Delivery',
+                    stat1: '50 - 500', stat1Unit: 'Tons', stat1Label: 'Available Supply',
+                    stat2: '0.2%', stat2Unit: 'Acidity', stat2Label: 'Free Acidity',
+                    stat3: 'Tanker Trucks 🚛', stat3Unit: '', stat3Label: 'Logistics Type',
+                    desc: 'High-volume extra virgin lots for international traders and bottlers with verified origin traceability and chemical assays.',
+                    watermark: 'ZinToop',
+                    cta: '🤝 Connect directly with mill owners and licensed exporters on ZinToop',
+                    ctaSub: 'Verified trade contracts & guaranteed escrow options | www.zintoop.com',
+                    theme: 'gold'
+                },
+                gallery: [
+                    { src: 'images/mill-activity.jpg', label: 'المعصرة والصهاريج 🛢️' },
+                    { src: 'images/zitounroadbg-opt.jpg', label: 'شحن الصهريج 🚛' }
+                ]
+            },
+            deal: {
+                ar: {
+                    btnName: '🌳 تخضير سواني / صابة',
+                    pill: '🌳 تخضير سواني / صابة',
+                    brandTitle: 'ZinToop Sania',
+                    brandSubtitle: 'سوق تخضير السواني والصابة',
+                    headerLink: 'zintoop.com/deals',
+                    qrUrl: 'https://zintoop.com/deals',
+                    qrLabel: 'عاين الصابة 🌳',
+                    title: 'صابة زيتون للبيع <span>على رءوس أشجارها (تخضير)</span> 🌿',
+                    tag1: '📍 القيروان / بوحجلة',
+                    tag2: '🌿 100% شملالي أصيل',
+                    tag3: '💧 ري قطرة قطرة',
+                    stat1: '15', stat1Unit: 'طن تقديري', stat1Label: 'الكمية التقديرية',
+                    stat2: '1,200', stat2Unit: 'أصل', stat2Label: 'أصول الزيتون',
+                    stat3: 'جاهز للجني 🚜', stat3Unit: '', stat3Label: 'حالة الصابة',
+                    desc: 'صابة ممتازة مروية ومستجيبة لكافة شروط الجودة العالية. فرصة مباشرة للمشترين وأصحاب المعاصر.',
+                    watermark: 'ZinToop',
+                    cta: '📞 للتواصل مع الفلاح وحجز المعاينة: افتح إعلان ZinToop رقم #512',
+                    ctaSub: 'معاينة ميدانية وتفاوض مباشر دون وسيط | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                fr: {
+                    btnName: '🌳 Récolte sur Pied',
+                    pill: '🌳 Récolte d\'Oliveraies sur Pied',
+                    brandTitle: 'ZinToop Terroirs',
+                    brandSubtitle: 'Marché des Oliveraies et Récoltes',
+                    headerLink: 'zintoop.com/deals',
+                    qrUrl: 'https://zintoop.com/deals',
+                    qrLabel: 'Inspecter 🌳',
+                    title: 'Récolte d\'Olives sur Pied à Vendre <span>Directement dans l\'Oliveraie</span> 🌿',
+                    tag1: '📍 Kairouan / Bouhajla',
+                    tag2: '🌿 100% Chemlali Authentique',
+                    tag3: '💧 Irrigation Goutte-à-goutte',
+                    stat1: '15', stat1Unit: 'Tonnes Est.', stat1Label: 'Production Est.',
+                    stat2: '1 200', stat2Unit: 'Pieds', stat2Label: 'Oliviers',
+                    stat3: 'Prêt à Cueillir 🚜', stat3Unit: '', stat3Label: 'Stade Végétatif',
+                    desc: 'Excellente récolte irriguée répondant aux exigences strictes de rendement et d\'extraction d\'huile.',
+                    watermark: 'ZinToop',
+                    cta: '📞 Pour visiter l\'oliveraie et négocier, ouvrez l\'annonce ZinToop #512',
+                    ctaSub: 'Visites sur site et contact direct avec l\'agriculteur | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                en: {
+                    btnName: '🌳 Harvest on Trees',
+                    pill: '🌳 Grove Standing Crop Deals',
+                    brandTitle: 'ZinToop Groves',
+                    brandSubtitle: 'Olive Grove Standing Crop Marketplace',
+                    headerLink: 'zintoop.com/deals',
+                    qrUrl: 'https://zintoop.com/deals',
+                    qrLabel: 'Inspect Crop 🌳',
+                    title: 'Standing Olive Harvest For Sale <span>Directly on the Trees</span> 🌿',
+                    tag1: '📍 Kairouan / Bouhajla',
+                    tag2: '🌿 100% Chemlali Variety',
+                    tag3: '💧 Drip Irrigated Orchard',
+                    stat1: '15', stat1Unit: 'Est. Tons', stat1Label: 'Estimated Crop',
+                    stat2: '1,200', stat2Unit: 'Trees', stat2Label: 'Olive Tree Count',
+                    stat3: 'Harvest Ready 🚜', stat3Unit: '', stat3Label: 'Ripeness Status',
+                    desc: 'Premium irrigated crop with exceptional fruit health and high oil extraction yield. Direct opportunity for mills & traders.',
+                    watermark: 'ZinToop',
+                    cta: '📞 Contact the grower & schedule an orchard inspection on ZinToop #512',
+                    ctaSub: 'Direct negotiations with zero intermediary fees | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                gallery: [
+                    { src: 'images/zitounchamal.jpg', label: 'أشجار الصابة 🌳' },
+                    { src: 'images/dealbackground-opt.jpg', label: 'ثمار الزيتون 🫒' },
+                    { src: 'images/mill-activity.jpg', label: 'جاهزية العصر ⚡' }
+                ]
+            },
+            table_olives: {
+                ar: {
+                    btnName: '🫒 زيتون طاولة وتخليل',
+                    pill: '🫒 زيتون طاولة وتخليل',
+                    brandTitle: 'ZinToop Olives',
+                    brandSubtitle: 'سوق زيتون المائدة والتخليل',
+                    headerLink: 'zintoop.com/olives',
+                    qrUrl: 'https://zintoop.com/table-olives',
+                    qrLabel: 'احجز طلبيتك 🫒',
+                    title: 'زيتون طاولة ومخلل <span>أصناف مسكي وبسباسي فاخر</span> 🍽️',
+                    tag1: '📍 الشمال والوسط',
+                    tag2: '✨ حبة كبيرة فاخرة',
+                    tag3: '🌿 قطاف يدوي سليم',
+                    stat1: 'Calibre 1', stat1Unit: '', stat1Label: 'عيار الحبة',
+                    stat2: '10', stat2Unit: 'طن', stat2Label: 'الكمية الجاهزة',
+                    stat3: 'أخضر وأسود 🫒', stat3Unit: '', stat3Label: 'التصنيف',
+                    desc: 'زيتون طاولة منتقى حبة بحبة ومناسب للمصانع والتعليب وتجارة الجملة بأعلى معايير السلامة الغذائية.',
+                    watermark: 'ZinToop',
+                    cta: '📲 احجز طلبيتك وتفاوض مع الفلاح مباشرة عبر منصة ZinToop',
+                    ctaSub: 'متوفر بكميات جملة وتفصيل مع إمكانية التوصيل | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                fr: {
+                    btnName: '🫒 Olives de Table',
+                    pill: '🫒 Olives de Table & Conserverie',
+                    brandTitle: 'ZinToop Olives',
+                    brandSubtitle: 'Marché des Olives de Bouche & Table',
+                    headerLink: 'zintoop.com/olives',
+                    qrUrl: 'https://zintoop.com/table-olives',
+                    qrLabel: 'Réserver 🫒',
+                    title: 'Olives de Table de Premier Choix <span>Variétés Meski & Besbassi</span> 🍽️',
+                    tag1: '📍 Nord & Centre Tunisie',
+                    tag2: '✨ Gros Calibre Supérieur',
+                    tag3: '🌿 Récolte Manuelle Délicate',
+                    stat1: 'Calibre 1', stat1Unit: 'A+', stat1Label: 'Calibre du Fruit',
+                    stat2: '10', stat2Unit: 'Tonnes', stat2Label: 'Stock Disponible',
+                    stat3: 'Vertes & Noires 🫒', stat3Unit: '', stat3Label: 'Catégorie',
+                    desc: 'Olives de bouche sélectionnées fruit par fruit pour les conserveries et grossistes exigeants.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Réservez vos lots directement auprès des producteurs sur ZinToop',
+                    ctaSub: 'Vente en gros et demi-gros avec livraison possible | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                en: {
+                    btnName: '🫒 Table Olives',
+                    pill: '🫒 Table Olives & Canning',
+                    brandTitle: 'ZinToop Olives',
+                    brandSubtitle: 'Table Olive & Pickling Marketplace',
+                    headerLink: 'zintoop.com/olives',
+                    qrUrl: 'https://zintoop.com/table-olives',
+                    qrLabel: 'Book Batch 🫒',
+                    title: 'Handpicked Table Olives <span>Premium Mesky & Besbassi Cultivars</span> 🍽️',
+                    tag1: '📍 North & Central Tunisia',
+                    tag2: '✨ Extra Jumbo Size',
+                    tag3: '🌿 Bruise-Free Hand Harvest',
+                    stat1: 'Calibre 1', stat1Unit: 'A+', stat1Label: 'Fruit Calibre',
+                    stat2: '10', stat2Unit: 'Tons', stat2Label: 'Ready Quantity',
+                    stat3: 'Green & Black 🫒', stat3Unit: '', stat3Label: 'Assortment',
+                    desc: 'Strictly sorted fruit ideal for commercial canning, brine processing, and wholesale gourmet markets.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Book your batches & negotiate directly with growers on ZinToop',
+                    ctaSub: 'Available in bulk lots with optional refrigerated transport | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                gallery: [
+                    { src: 'images/zitounchamal.jpg', label: 'زيتون طاولة منتقى 🫒' }
+                ]
+            },
+            transport: {
+                ar: {
+                    btnName: '🚛 شاحنات ونقل',
+                    pill: '🚛 شاحنات ونقل الزيتون',
+                    brandTitle: 'ZinToop Logistics',
+                    brandSubtitle: 'شبكة نقل اللوجستيك والشاحنات',
+                    headerLink: 'zintoop.com/transport',
+                    qrUrl: 'https://zintoop.com/transport',
+                    qrLabel: 'احجز شاحنتك 🚛',
+                    title: 'متوفر شاحنات نقل مجهزة <span>من الحقل إلى المعصرة</span> 🚚',
+                    tag1: '📍 تغطية كامل تونس',
+                    tag2: '⏱️ استجابة 24/7',
+                    tag3: '📦 صناديق تهوية',
+                    stat1: '10 - 25', stat1Unit: 'طن', stat1Label: 'حمولة الشاحنة',
+                    stat2: '100%', stat2Unit: '', stat2Label: 'مطابقة للشروط',
+                    stat3: 'تتبع GPS 🛰️', stat3Unit: '', stat3Label: 'مراقبة الشحنة',
+                    desc: 'شاحنات نقل مجهزة بصناديق بلاستيكية وشباك تهوية لحماية ثمار الزيتون من التخمر وضمان أعلى جودة للزيت.',
+                    watermark: 'ZinToop',
+                    cta: '📲 احجز شاحنتك الآن عبر منصة ZinToop للنقل واللوجستيك',
+                    ctaSub: 'سائقون محترفون وتأمين شامل على البضائع | www.zintoop.com',
+                    theme: 'slate'
+                },
+                fr: {
+                    btnName: '🚛 Transport & Fret',
+                    pill: '🚛 Logistique & Transport d\'Olives',
+                    brandTitle: 'ZinToop Fret',
+                    brandSubtitle: 'Réseau de Camions & Citernes',
+                    headerLink: 'zintoop.com/transport',
+                    qrUrl: 'https://zintoop.com/transport',
+                    qrLabel: 'Réserver Camion 🚛',
+                    title: 'Flotte de Camions Équipés <span>Du Champ au Moulin d\'Extraction</span> 🚚',
+                    tag1: '📍 Couverture Nationale',
+                    tag2: '⏱️ Disponibilité 24/7',
+                    tag3: '📦 Caisses Aérées Pro',
+                    stat1: '10 - 25', stat1Unit: 'Tonnes', stat1Label: 'Capacité de Charge',
+                    stat2: '100%', stat2Unit: 'Conforme', stat2Label: 'Norme Hygiène',
+                    stat3: 'GPS Live 🛰️', stat3Unit: '', stat3Label: 'Suivi Trajet',
+                    desc: 'Véhicules adaptés pour éviter l\'échauffement et la fermentation des olives pendant le trajet.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Réservez votre transport d\'olives et citernes sur ZinToop',
+                    ctaSub: 'Chauffeurs professionnels et assurance cargaison complète | www.zintoop.com',
+                    theme: 'slate'
+                },
+                en: {
+                    btnName: '🚛 Truck Logistics',
+                    pill: '🚛 Olive Transport Fleet',
+                    brandTitle: 'ZinToop Logistics',
+                    brandSubtitle: 'Dedicated Agro-Logistics Network',
+                    headerLink: 'zintoop.com/transport',
+                    qrUrl: 'https://zintoop.com/transport',
+                    qrLabel: 'Book Truck 🚛',
+                    title: 'Specialized Olive Haulage Trucks <span>From Farm to Press Mill</span> 🚚',
+                    tag1: '📍 Nationwide Coverage',
+                    tag2: '⏱️ 24/7 Fast Dispatch',
+                    tag3: '📦 Ventilated Crates',
+                    stat1: '10 - 25', stat1Unit: 'Tons', stat1Label: 'Truck Capacity',
+                    stat2: '100%', stat2Unit: 'Compliance', stat2Label: 'Agro Standards',
+                    stat3: 'GPS Monitored 🛰️', stat3Unit: '', stat3Label: 'Live Fleet Tracking',
+                    desc: 'Crate-equipped trucks with optimal airflow to prevent olive fermentation and preserve acidity during transit.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Schedule your transport trucks or bulk tankers instantly on ZinToop',
+                    ctaSub: 'Vetted experienced drivers and cargo insurance included | www.zintoop.com',
+                    theme: 'slate'
+                },
+                gallery: [
+                    { src: 'images/zitounroadbg-opt.jpg', label: 'أسطول الشاحنات 🚛' },
+                    { src: 'images/dealbackground-opt.jpg', label: 'التحميل من الحقل 📦' }
+                ]
+            },
+            machinery: {
+                ar: {
+                    btnName: '⚙️ معدات معاصر',
+                    pill: '⚙️ معدات معاصر وميكنة',
+                    brandTitle: 'ZinToop Machina',
+                    brandSubtitle: 'سوق آلات المعاصر ومعدات الجني',
+                    headerLink: 'zintoop.com/machinery',
+                    qrUrl: 'https://zintoop.com/machinery',
+                    qrLabel: 'عروض المعدات ⚙️',
+                    title: 'معدات معاصر متطورة <span>وآلات جني الزيتون الميكانيكية</span> 🔧',
+                    tag1: '📍 صيانة وضمان',
+                    tag2: '⚡ توفير 40% وقت',
+                    tag3: '🇮🇹 تصنيع أوروبي',
+                    stat1: '3 Phase', stat1Unit: '', stat1Label: 'نظام العصر المستمر',
+                    stat2: '100', stat2Unit: 'طن/يوم', stat2Label: 'طاقة العصر اليومية',
+                    stat3: 'ضمان سنتين 🛡️', stat3Unit: '', stat3Label: 'الضمان وقطع الغيار',
+                    desc: 'عروض خطوط إنتاج المعاصر وهزازات الجني الإيطالية مع الدعم الفني وتوفير قطع الغيار الأصلية.',
+                    watermark: 'ZinToop',
+                    cta: '📞 اتصل بالموردين واطلب عرض أسعار فوري عبر سوق ZinToop للمعدات',
+                    ctaSub: 'تمويل ميسر وإمكانية البيع بالتقسيط البنكي | www.zintoop.com',
+                    theme: 'slate'
+                },
+                fr: {
+                    btnName: '⚙️ Équipements Moulins',
+                    pill: '⚙️ Équipements & Machinerie',
+                    brandTitle: 'ZinToop Matériel',
+                    brandSubtitle: 'Lignes d\'Extraction & Récolteuses',
+                    headerLink: 'zintoop.com/machinery',
+                    qrUrl: 'https://zintoop.com/machinery',
+                    qrLabel: 'Offres Matériel ⚙️',
+                    title: 'Lignes d\'Extraction Modernes <span>& Vibreurs Mécaniques de Récolte</span> 🔧',
+                    tag1: '📍 Garantie & SAV',
+                    tag2: '⚡ Gain 40% de Temps',
+                    tag3: '🇮🇹 Technologie Européenne',
+                    stat1: '3 Phases', stat1Unit: 'Continu', stat1Label: 'Système Continu',
+                    stat2: '100', stat2Unit: 'T/Jour', stat2Label: 'Capacité de Trituration',
+                    stat3: '2 Ans Garantie 🛡️', stat3Unit: '', stat3Label: 'Pièces d\'Origine',
+                    desc: 'Lignes de trituration continues et peignes vibreurs avec assistance technique locale et pièces certifiées.',
+                    watermark: 'ZinToop',
+                    cta: '📞 Demandez votre devis auprès des constructeurs et distributeurs sur ZinToop',
+                    ctaSub: 'Facilités de leasing et financement agricole disponibles | www.zintoop.com',
+                    theme: 'slate'
+                },
+                en: {
+                    btnName: '⚙️ Mill Machinery',
+                    pill: '⚙️ Mill Lines & Harvesters',
+                    brandTitle: 'ZinToop Machina',
+                    brandSubtitle: 'Olive Processing & Harvesting Machinery',
+                    headerLink: 'zintoop.com/machinery',
+                    qrUrl: 'https://zintoop.com/machinery',
+                    qrLabel: 'View Machines ⚙️',
+                    title: 'Advanced Continuous Milling Lines <span>& Mechanical Harvesters</span> 🔧',
+                    tag1: '📍 Warranty & Support',
+                    tag2: '⚡ Save 40% Labor Time',
+                    tag3: '🇮🇹 European Engineering',
+                    stat1: '3 Phase', stat1Unit: 'Decanter', stat1Label: 'Continuous Flow',
+                    stat2: '100', stat2Unit: 'T/Day', stat2Label: 'Crushing Capacity',
+                    stat3: '2-Year Warranty 🛡️', stat3Unit: '', stat3Label: 'Spare Parts Ready',
+                    desc: 'High-performance centrifugal decanter lines and pneumatic shaker rakes with on-site technician support.',
+                    watermark: 'ZinToop',
+                    cta: '📞 Request an instant quote from official equipment suppliers on ZinToop',
+                    ctaSub: 'Agricultural bank financing & leasing support available | www.zintoop.com',
+                    theme: 'slate'
+                },
+                gallery: [
+                    { src: 'images/mill-activity.jpg', label: 'خط إنتاج المعصرة ⚙️' }
+                ]
+            },
+            nurseries: {
+                ar: {
+                    btnName: '🌱 مشاتل وشتلات',
+                    pill: '🌱 مشاتل وشتلات زيتون',
+                    brandTitle: 'ZinToop Nurseries',
+                    brandSubtitle: 'مشاتل الزيتون والأشجار المثمرة',
+                    headerLink: 'zintoop.com/nurseries',
+                    qrUrl: 'https://zintoop.com/nurseries',
+                    qrLabel: 'اطلب شتلاتك 🌱',
+                    title: 'شتلات زيتون معتمدة <span>شملالي، شتوي، سيالي، وزلماطي</span> 🪴',
+                    tag1: '📍 مراقبة رسمياً',
+                    tag2: '🌱 خالية من الأمراض',
+                    tag3: '🪴 تكثير خضري',
+                    stat1: '100%', stat1Unit: '', stat1Label: 'نسبة النجاح والنمو',
+                    stat2: '1 - 3', stat2Unit: 'سنوات', stat2Label: 'عمر الشتلة',
+                    stat3: 'توصيل للمزرعة 🚚', stat3Unit: '', stat3Label: 'خدمة النقل',
+                    desc: 'شتلات زيتون أصيلة منتجة بالإكثار الخضري في أكياس زراعية معتمدة وجاهزة للغراسة مع الإشراف التقني.',
+                    watermark: 'ZinToop',
+                    cta: '🌿 اطلب شتلاتك مع خدمة التوصيل للمزرعة عبر منصة ZinToop',
+                    ctaSub: 'استشارات مجانية لاختيار الصنف المناسب لتربتك | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                fr: {
+                    btnName: '🌱 Pépinières & Plants',
+                    pill: '🌱 Pépinières & Plants d\'Oliviers',
+                    brandTitle: 'ZinToop Plants',
+                    brandSubtitle: 'Pépinières Agréées & Variétés Certifiées',
+                    headerLink: 'zintoop.com/nurseries',
+                    qrUrl: 'https://zintoop.com/nurseries',
+                    qrLabel: 'Commander Plants 🌱',
+                    title: 'Plants d\'Oliviers Certifiés <span>Chemlali, Chétoui, Sayali & Zalmati</span> 🪴',
+                    tag1: '📍 Contrôlés Officiellement',
+                    tag2: '🌱 Indemnes de Maladies',
+                    tag3: '🪴 Bouturage Sous Brouillard',
+                    stat1: '100%', stat1Unit: 'Reprise', stat1Label: 'Taux de Reprise',
+                    stat2: '1 - 3', stat2Unit: 'Ans', stat2Label: 'Âge des Plants',
+                    stat3: 'Livraison Domaine 🚚', stat3Unit: '', stat3Label: 'Service Transport',
+                    desc: 'Plants certifiés en godets prêts pour plantation avec encadrement agronomique personnalisé.',
+                    watermark: 'ZinToop',
+                    cta: '🌿 Commandez vos plants d\'oliviers avec livraison au domaine sur ZinToop',
+                    ctaSub: 'Conseil pédologique gratuit pour le choix des variétés | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                en: {
+                    btnName: '🌱 Olive Nurseries',
+                    pill: '🌱 Certified Olive Saplings',
+                    brandTitle: 'ZinToop Nurseries',
+                    brandSubtitle: 'Certified Olive Saplings & Rootstocks',
+                    headerLink: 'zintoop.com/nurseries',
+                    qrUrl: 'https://zintoop.com/nurseries',
+                    qrLabel: 'Order Saplings 🌱',
+                    title: 'Certified Olive Nursery Saplings <span>Chemlali, Chétoui, Sayali & Zalmati</span> 🪴',
+                    tag1: '📍 Ministry Certified',
+                    tag2: '🌱 Disease-Free Stock',
+                    tag3: '🪴 Mist-Propagated',
+                    stat1: '100%', stat1Unit: 'Survival', stat1Label: 'Rooting Rate',
+                    stat2: '1 - 3', stat2Unit: 'Years', stat2Label: 'Sapling Age',
+                    stat3: 'Direct Delivery 🚚', stat3Unit: '', stat3Label: 'Farm Dispatch',
+                    desc: 'True-to-type olive saplings in soil bags ready for field transplanting with agronomic soil guidance.',
+                    watermark: 'ZinToop',
+                    cta: '🌿 Order certified olive saplings with direct delivery on ZinToop',
+                    ctaSub: 'Free agronomic advice on selecting the right cultivar | www.zintoop.com',
+                    theme: 'emerald'
+                },
+                gallery: [
+                    { src: 'images/dealbackground-opt.jpg', label: 'المشتل والشتلات 🌱' }
+                ]
+            },
+            biomass: {
+                ar: {
+                    btnName: '🪵 فيتورة وحطب',
+                    pill: '🪵 فيتورة وحطب الزيتون',
+                    brandTitle: 'ZinToop Biomass',
+                    brandSubtitle: 'سوق الفيتورة والطاقة الحيوية',
+                    headerLink: 'zintoop.com/biomass',
+                    qrUrl: 'https://zintoop.com/biomass',
+                    qrLabel: 'احجز الفيتورة 🪵',
+                    title: 'فيتورة جافة ومخلفات المعاصر <span>وحطب الزيتون للطاقة والتدفئة</span> 🪵',
+                    tag1: '📍 كبرى المعاصر',
+                    tag2: '🔥 طاقة حرارية عالية',
+                    tag3: '♻️ صديق للبيئة',
+                    stat1: '0%', stat1Unit: 'رطوبة', stat1Label: 'فيتورة مجففة ومعالجة',
+                    stat2: 'Bulk', stat2Unit: 'Vrac', stat2Label: 'تسليم بالشاحنات',
+                    stat3: 'كميات كبرى 🏭', stat3Unit: '', stat3Label: 'جاهزية العقود',
+                    desc: 'كميات فيتورة زيتون وحطب تقليم الزيتون المخصص للمصانع ومحطات توليد الطاقة بأسعار الجملة المباشرة.',
+                    watermark: 'ZinToop',
+                    cta: '📲 تواصل مع المعاصر واحجز شحنتك فوراً عبر ZinToop',
+                    ctaSub: 'عقود سنوية وتوريد منتظم لكبرى المصانع | www.zintoop.com',
+                    theme: 'slate'
+                },
+                fr: {
+                    btnName: '🪵 Grignon & Biomasse',
+                    pill: '🪵 Grignon d\'Olive & Biomasse',
+                    brandTitle: 'ZinToop Biomasse',
+                    brandSubtitle: 'Énergie Renouvelable & Grignon d\'Olive',
+                    headerLink: 'zintoop.com/biomass',
+                    qrUrl: 'https://zintoop.com/biomass',
+                    qrLabel: 'Contrat Biomasse 🪵',
+                    title: 'Grignon Épuisé Sec & Bois d\'Olivier <span>Pour Énergie et Chauffage Industriel</span> 🪵',
+                    tag1: '📍 Grands Moulins',
+                    tag2: '🔥 Haut Pouvoir Calorifique',
+                    tag3: '♻️ Énergie Verte 100%',
+                    stat1: '< 10%', stat1Unit: 'Humidité', stat1Label: 'Taux d\'Humidité',
+                    stat2: 'Vrac', stat2Unit: 'Camions', stat2Label: 'Livraison en Vrac',
+                    stat3: 'Contrats Annuels 🏭', stat3Unit: '', stat3Label: 'Approvisionnement',
+                    desc: 'Lots de grignon séché et bois de taille d\'olivier pour cimenteries, briqueteries et centrales thermiques.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Réservez vos volumes de grignon auprès des huileries sur ZinToop',
+                    ctaSub: 'Fourniture régulière garantie pour les industriels | www.zintoop.com',
+                    theme: 'slate'
+                },
+                en: {
+                    btnName: '🪵 Biomass & Pomace',
+                    pill: '🪵 Olive Pomace & Biomass',
+                    brandTitle: 'ZinToop Biomass',
+                    brandSubtitle: 'Renewable Olive Biomass & Pomace Exchange',
+                    headerLink: 'zintoop.com/biomass',
+                    qrUrl: 'https://zintoop.com/biomass',
+                    qrLabel: 'Book Pomace 🪵',
+                    title: 'Dry Olive Pomace & Pruning Wood <span>For Industrial Biofuel & Heating</span> 🪵',
+                    tag1: '📍 Mill Direct Supply',
+                    tag2: '🔥 High Calorific Value',
+                    tag3: '♻️ Eco-Friendly Biofuel',
+                    stat1: '< 10%', stat1Unit: 'Moisture', stat1Label: 'Dry Moisture Rate',
+                    stat2: 'Bulk', stat2Unit: 'Trucks', stat2Label: 'Tipper Truck Loads',
+                    stat3: 'Annual Contracts 🏭', stat3Unit: '', stat3Label: 'Supply Security',
+                    desc: 'Standardized dry olive cake and shredded pruning timber for industrial boilers and energy powerhouses.',
+                    watermark: 'ZinToop',
+                    cta: '📲 Connect with regional mills & contract bulk pomace on ZinToop',
+                    ctaSub: 'Guaranteed scheduled delivery for factories & kilns | www.zintoop.com',
+                    theme: 'slate'
+                },
+                gallery: [
+                    { src: 'images/mill-activity.jpg', label: 'فيتورة جافة 🪵' }
+                ]
+            },
+            lab_quality: {
+                ar: {
+                    btnName: '🔬 تحاليل مخبرية',
+                    pill: '🔬 تحاليل مخبرية وجودة',
+                    brandTitle: 'ZinToop Lab',
+                    brandSubtitle: 'المخبر الرقمي لتحاليل زيت الزيتون',
+                    headerLink: 'zintoop.com/lab',
+                    qrUrl: 'https://zintoop.com/lab',
+                    qrLabel: 'افحص عينتك 🔬',
+                    title: 'تحاليل مخبرية وشهادات مطابقة <span>لضمان تصنيف البكر الممتاز</span> 📜',
+                    tag1: '📍 مخابر COI / ISO',
+                    tag2: '🧪 بوليفينول وبيروكسيد',
+                    tag3: '📜 شهادة رقمية QR',
+                    stat1: '< 0.3%', stat1Unit: 'Acidité', stat1Label: 'الحموضة المثالية',
+                    stat2: '< 15', stat2Unit: 'meq/kg', stat2Label: 'مؤشر البيروكسيد',
+                    stat3: 'نتيجة في 24h ⚡', stat3Unit: '', stat3Label: 'سرعة الاختبار',
+                    desc: 'خدمة الفحص السريع لعينات زيت الزيتون في أقل من 24 ساعة مع إصدار الشهادات الرقمية المعترف بها دولياً.',
+                    watermark: 'ZinToop',
+                    cta: '🔬 اطلب تحليل عينتك أو اعتمد دفعتك عبر ZinToop مخابر',
+                    ctaSub: 'استلام العينات من معصرتك في كافة أنحاء تونس | www.zintoop.com',
+                    theme: 'gradient-mesh'
+                },
+                fr: {
+                    btnName: '🔬 Analyses Labo',
+                    pill: '🔬 Analyses & Certification',
+                    brandTitle: 'ZinToop Lab',
+                    brandSubtitle: 'Laboratoire Numérique & Panel Test',
+                    headerLink: 'zintoop.com/lab',
+                    qrUrl: 'https://zintoop.com/lab',
+                    qrLabel: 'Analyser Échantillon 🔬',
+                    title: 'Analyses Physico-Chimiques & Sensorielles <span>Garantie Extra Vierge Certifiée</span> 📜',
+                    tag1: '📍 Agréé COI / ISO 17025',
+                    tag2: '🧪 Polyphénols & Peroxydes',
+                    tag3: '📜 Rapport Sécurisé QR',
+                    stat1: '< 0.3%', stat1Unit: 'Acidité', stat1Label: 'Acidité Libre',
+                    stat2: '< 15', stat2Unit: 'meq/kg', stat2Label: 'Indice de Peroxyde',
+                    stat3: 'Résultats en 24h ⚡', stat3Unit: '', stat3Label: 'Délai d\'Analyse',
+                    desc: 'Analyse rapide et certifiée pour l\'export et le classement de vos cuves en moins de 24 heures.',
+                    watermark: 'ZinToop',
+                    cta: '🔬 Commandez votre analyse d\'huile d\'olive sur ZinToop Lab',
+                    ctaSub: 'Collecte sécurisée des échantillons dans toutes les huileries | www.zintoop.com',
+                    theme: 'gradient-mesh'
+                },
+                en: {
+                    btnName: '🔬 Lab Testing',
+                    pill: '🔬 Certified Lab Testing',
+                    brandTitle: 'ZinToop Lab',
+                    brandSubtitle: 'Accredited Olive Oil Testing & Panel',
+                    headerLink: 'zintoop.com/lab',
+                    qrUrl: 'https://zintoop.com/lab',
+                    qrLabel: 'Test Sample 🔬',
+                    title: 'Certified Chemical & Sensory Testing <span>Extra Virgin Grade Assurance</span> 📜',
+                    tag1: '📍 IOC / ISO 17025 Labs',
+                    tag2: '🧪 Polyphenols & Peroxides',
+                    tag3: '📜 QR-Secured Certificate',
+                    stat1: '< 0.3%', stat1Unit: 'Acidity', stat1Label: 'Free Acidity',
+                    stat2: '< 15', stat2Unit: 'meq/kg', stat2Label: 'Peroxide Index',
+                    stat3: '24h Turnaround ⚡', stat3Unit: '', stat3Label: 'Rapid Delivery',
+                    desc: 'Fast certified testing for export lots and batch classification with international IOC accreditation.',
+                    watermark: 'ZinToop',
+                    cta: '🔬 Order certified olive oil testing & tank grading on ZinToop Lab',
+                    ctaSub: 'Courier sample pickup from mills across all Tunisia | www.zintoop.com',
+                    theme: 'gradient-mesh'
+                },
+                gallery: [
+                    { src: 'images/agritech_hero_bg_real.png', label: 'التحليل المخبري 🔬' }
+                ]
+            }
+        };
+
+        /* ------------------------------------------------------------- */
+        /* LANGUAGE SWITCHING ENGINE (AR, FR, EN)                        */
+        /* ------------------------------------------------------------- */
+        function setStudioLanguage(lang) {
+            currentLang = lang;
+            
+            // Set HTML lang and dir attributes
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+
+            // Update language switcher buttons
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            if (lang === 'ar') document.getElementById('btnLangAr').classList.add('active');
+            if (lang === 'fr') document.getElementById('btnLangFr').classList.add('active');
+            if (lang === 'en') document.getElementById('btnLangEn').classList.add('active');
+
+            const t = i18n[lang];
+            if (!t) return;
+
+            // Update Sidebar Headings & UI Elements
+            document.getElementById('uiBrandHeaderTitle').innerText = t.brand_header_title;
+            document.getElementById('uiBrandHeaderSub').innerText = t.brand_header_sub;
+            document.getElementById('uiSec1Title').innerText = t.sec1_title;
+            document.getElementById('uiLayoutBourseTitle').innerText = t.layout_bourse_title;
+            document.getElementById('uiLayoutBourseDesc').innerText = t.layout_bourse_desc;
+            document.getElementById('uiLayoutProductTitle').innerText = t.layout_product_title;
+            document.getElementById('uiLayoutProductDesc').innerText = t.layout_product_desc;
+            document.getElementById('uiLayoutNewsTitle').innerText = t.layout_news_title;
+            document.getElementById('uiLayoutNewsDesc').innerText = t.layout_news_desc;
+            document.getElementById('uiLayoutStoryTitle').innerText = t.layout_story_title;
+            document.getElementById('uiLayoutStoryDesc').innerText = t.layout_story_desc;
+
+            // Section 2 UI
+            document.getElementById('uiSec2Title').innerText = t.sec2_title;
+            document.getElementById('uiSec2Hint').innerText = t.sec2_hint;
+            document.getElementById('uiBtnUploadImg').innerText = t.btn_upload_img;
+            document.getElementById('uiBtnUploadVid').innerText = t.btn_upload_vid;
+            document.getElementById('uiBtnPureStudio').innerText = t.btn_pure_studio;
+            document.getElementById('uiBgPresetsLabel').innerText = t.bg_presets_label;
+            document.getElementById('uiLabelMediaOpacity').innerText = t.label_media_opacity;
+            document.getElementById('uiLabelDarkness').innerText = t.label_darkness;
+            document.getElementById('uiLabelBgBlur').innerText = t.label_bg_blur;
+            document.getElementById('uiVideoAudioTitle').innerHTML = `<i class="fa-solid fa-volume-high"></i> ` + t.video_audio_title;
+            document.getElementById('uiLabelVolumeSlider').innerText = t.label_volume;
+            document.getElementById('txtArtVideoBadge').innerText = t.video_badge_active;
+
+            const txtToggle = document.getElementById('txtSoundToggle');
+            const statusAudio = document.getElementById('audioStateStatus');
+            if (isVideoMuted) {
+                if (txtToggle) txtToggle.innerText = t.btn_sound_unmute;
+                if (statusAudio) { statusAudio.innerText = t.sound_status_muted; statusAudio.style.color = '#94a3b8'; }
+            } else {
+                if (txtToggle) txtToggle.innerText = t.btn_sound_mute;
+                if (statusAudio) { statusAudio.innerText = t.sound_status_active; statusAudio.style.color = '#4ade80'; }
+            }
+
+            // Section 3 UI
+            document.getElementById('uiSec3Title').innerText = t.sec3_title;
+            document.getElementById('uiGalleryHint').innerHTML = `<i class="fa-solid fa-circle-check"></i> ` + t.gallery_hint;
+            document.getElementById('uiBtnUploadMulti').innerText = t.btn_upload_multi;
+            document.getElementById('uiBtnAddSingle').innerText = t.btn_add_single;
+            document.getElementById('uiBtnClearGallery').innerText = t.btn_clear_gallery;
+            document.getElementById('uiDropzoneTitle').innerText = t.dropzone_title;
+            document.getElementById('uiDropzoneSub').innerText = t.dropzone_sub;
+            document.getElementById('uiLabelGalleryFormat').innerText = t.label_gallery_format;
+            document.getElementById('fmtTitle_single').innerText = t.fmt_single;
+            document.getElementById('fmtTitle_grid2').innerText = t.fmt_grid2;
+            document.getElementById('fmtTitle_strip3').innerText = t.fmt_strip3;
+            document.getElementById('fmtTitle_focus3').innerText = t.fmt_focus3;
+            document.getElementById('fmtTitle_strip4').innerText = t.fmt_strip4;
+            document.getElementById('fmtTitle_grid4').innerText = t.fmt_grid4;
+
+            // Section 4 UI
+            document.getElementById('uiSec4Title').innerText = t.sec4_title;
+            document.getElementById('uiLabelBrandTitle').innerText = t.label_brand_title;
+            document.getElementById('uiLabelBrandSub').innerText = t.label_brand_sub;
+            document.getElementById('uiLabelHeaderLink').innerText = t.label_header_link;
+            document.getElementById('uiLabelPill').innerText = t.label_pill;
+
+            // Section 5 UI
+            document.getElementById('uiSec5Title').innerText = t.sec5_title;
+            document.getElementById('uiLabelMainTitle').innerText = t.label_main_title;
+            document.getElementById('uiHintSpan').innerText = t.hint_span;
+            document.getElementById('uiLabelTag1').innerText = t.label_tag1;
+            document.getElementById('uiLabelTag2').innerText = t.label_tag2;
+            document.getElementById('uiLabelTag3').innerText = t.label_tag3;
+
+            // Section 6 UI
+            document.getElementById('uiSec6Title').innerText = t.sec6_title;
+
+            // Section 7 UI
+            document.getElementById('uiSec7Title').innerText = t.sec7_title;
+            document.getElementById('uiLabelDesc').innerText = t.label_desc;
+            document.getElementById('uiLabelWatermark').innerText = t.label_watermark;
+
+            // Section 8 UI
+            document.getElementById('uiSec8Title').innerText = t.sec8_title;
+            document.getElementById('uiLabelQrUrl').innerHTML = t.label_qr_url;
+            document.getElementById('uiLabelQrTag').innerText = t.label_qr_tag;
+            document.getElementById('uiLabelCta').innerText = t.label_cta;
+            document.getElementById('uiLabelCtaSub').innerText = t.label_cta_sub;
+
+            // Section 9 UI Themes
+            document.getElementById('uiSec9Title').innerText = t.sec9_title;
+            document.getElementById('uiThemeEmerald').innerText = t.theme_emerald;
+            document.getElementById('uiThemeGold').innerText = t.theme_gold;
+            document.getElementById('uiThemeSlate').innerText = t.theme_slate;
+            document.getElementById('uiThemeMesh').innerText = t.theme_mesh;
+            document.getElementById('uiThemeSunset').innerText = t.theme_sunset;
+            document.getElementById('uiThemeLight').innerText = t.theme_light;
+
+            // Section 10 & Export
+            document.getElementById('uiSec10Title').innerText = t.sec10_title;
+            document.getElementById('uiBtnExport').innerText = t.btn_export;
+
+            // Section 11 Social Share
+            document.getElementById('uiSec11Title').innerText = t.sec11_title;
+            document.getElementById('uiBtnNativeShare').innerText = t.btn_native_share;
+            document.getElementById('uiBtnCopyImage').innerText = t.btn_copy_image;
+            document.getElementById('uiBtnCopyCaption').innerText = t.btn_copy_caption;
+            document.getElementById('uiBtnCopyLink').innerText = t.btn_copy_link;
+            document.getElementById('uiToolbarShareTxt').innerText = t.toolbar_share;
+
+            document.getElementById('uiPreviewTitle').innerText = t.preview_title;
+            document.getElementById('uiEditHint').innerHTML = `<i class="fa-solid fa-pen"></i> ` + t.edit_hint;
+            document.getElementById('artVerifiedText').innerText = t.verified_badge;
+            document.getElementById('artWatermarkSub').innerText = t.watermark_sub;
+
+            // Update Preset Buttons Labels
+            Object.keys(presets).forEach(key => {
+                const p = presets[key];
+                const btn = document.getElementById(`pBtn_${key}`);
+                if (btn && p[lang] && p[lang].btnName) {
+                    btn.innerText = p[lang].btnName;
+                }
+            });
+
+            // Reload active preset in current language
+            const activePresetBtn = document.querySelector('.preset-btn.active');
+            if (activePresetBtn) {
+                const presetKey = activePresetBtn.id.replace('pBtn_', '');
+                if (presets[presetKey]) {
+                    applyPreset(presetKey);
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------- */
+        /* VIDEO AUDIO CONTROL FUNCTIONS                                 */
+        /* ------------------------------------------------------------- */
+        function toggleVideoAudio() {
+            const vid = document.getElementById('artBgVideo');
+            const btn = document.getElementById('btnToggleVideoSound');
+            const icon = document.getElementById('iconSoundState');
+            const txt = document.getElementById('txtSoundToggle');
+            const status = document.getElementById('audioStateStatus');
+            const badge = document.getElementById('artVideoAudioBadge');
+            const t = i18n[currentLang] || i18n.ar;
+
+            if (!vid) return;
+
+            if (vid.muted) {
+                vid.muted = false;
+                isVideoMuted = false;
+                vid.volume = videoVolume;
+                if (icon) icon.className = 'fa-solid fa-volume-high';
+                if (txt) txt.innerText = t.btn_sound_mute;
+                if (btn) btn.style.background = 'linear-gradient(135deg, #16a34a, #15803d)';
+                if (status) {
+                    status.innerText = t.sound_status_active;
+                    status.style.color = '#4ade80';
+                }
+                if (badge && vid.style.display !== 'none') {
+                    badge.style.display = 'flex';
+                }
+                vid.play().catch(e => console.log('Audio autoplay prevented:', e));
+            } else {
+                vid.muted = true;
+                isVideoMuted = true;
+                if (icon) icon.className = 'fa-solid fa-volume-xmark';
+                if (txt) txt.innerText = t.btn_sound_unmute;
+                if (btn) btn.style.background = 'linear-gradient(135deg, #0284c7, #0369a1)';
+                if (status) {
+                    status.innerText = t.sound_status_muted;
+                    status.style.color = '#94a3b8';
+                }
+                if (badge) {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+
+        function updateVideoVolume(val) {
+            videoVolume = parseFloat(val);
+            const vid = document.getElementById('artBgVideo');
+            const txt = document.getElementById('txtVolumePercent');
+            if (txt) txt.innerText = Math.round(videoVolume * 100) + '%';
+            if (vid) {
+                vid.volume = videoVolume;
+            }
+        }
+
+        /* ------------------------------------------------------------- */
+        /* PRESET APPLICATION ENGINE                                     */
+        /* ------------------------------------------------------------- */
+        function applyPreset(key) {
+            const p = presets[key];
+            if (!p) return;
+
+            const loc = p[currentLang] || p.ar;
+
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`pBtn_${key}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Apply fields
+            document.getElementById('inputPill').value = loc.pill || '';
+            document.getElementById('inputBrandTitle').value = loc.brandTitle || 'ZinToop';
+            document.getElementById('inputBrandSubtitle').value = loc.brandSubtitle || '';
+            document.getElementById('inputHeaderLink').value = loc.headerLink || 'zintoop.com';
+            document.getElementById('inputQrUrl').value = loc.qrUrl || 'https://zintoop.com';
+            document.getElementById('inputQrLabel').value = loc.qrLabel || 'SCAN ME 📲';
+            document.getElementById('inputTitle').value = loc.title || '';
+            document.getElementById('inputTag1').value = loc.tag1 || '';
+            document.getElementById('inputTag2').value = loc.tag2 || '';
+            document.getElementById('inputTag3').value = loc.tag3 || '';
+            document.getElementById('inputStat1').value = loc.stat1 || '';
+            document.getElementById('inputStat1Unit').value = loc.stat1Unit || '';
+            document.getElementById('inputStat1Label').value = loc.stat1Label || '';
+            document.getElementById('inputStat2').value = loc.stat2 || '';
+            document.getElementById('inputStat2Unit').value = loc.stat2Unit || '';
+            document.getElementById('inputStat2Label').value = loc.stat2Label || '';
+            document.getElementById('inputStat3').value = loc.stat3 || '';
+            document.getElementById('inputStat3Unit').value = loc.stat3Unit || '';
+            document.getElementById('inputStat3Label').value = loc.stat3Label || '';
+            document.getElementById('inputDesc').value = loc.desc || '';
+            document.getElementById('inputWatermark').value = loc.watermark || 'ZinToop';
+            document.getElementById('inputCta').value = loc.cta || '';
+            document.getElementById('inputCtaSub').value = loc.ctaSub || '';
+
+            if (p.gallery && p.gallery.length > 0) {
+                galleryImages = JSON.parse(JSON.stringify(p.gallery));
+                renderSidebarGalleryThumbs();
+            }
+
+            if (loc.theme) setTheme(loc.theme);
+
+            renderFooterQrCode(loc.qrUrl || 'https://zintoop.com');
+            updateArtboard();
+        }
+
+        /* ------------------------------------------------------------- */
+        /* GALLERY AND MEDIA CONTROLS                                    */
+        /* ------------------------------------------------------------- */
+        function setGalleryFormat(format) {
+            currentGalleryFormat = format;
+            document.querySelectorAll('.gallery-format-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btnGFormat_${format}`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderArtboardGallery();
+        }
+
+        function renderSidebarGalleryThumbs() {
+            const list = document.getElementById('galleryThumbsList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            galleryImages.forEach((imgObj, idx) => {
+                const card = document.createElement('div');
+                card.className = 'gallery-thumb-card';
+                card.innerHTML = `
+                    <div class="gallery-thumb-img-wrap">
+                        <img src="${imgObj.src}" alt="Photo ${idx + 1}">
+                        <button type="button" class="gallery-thumb-del" onclick="removeGalleryImage(${idx})" title="حذف الصورة">✕</button>
+                        <span class="gallery-thumb-badge">#${idx + 1}</span>
+                    </div>
+                    <input type="text" class="thumb-label-input" value="${imgObj.label || 'صورة ' + (idx + 1)}" oninput="updateGalleryLabel(${idx}, this.value)" placeholder="تسمية الشارة">
+                    <div class="gallery-thumb-actions">
+                        <button type="button" class="thumb-tool-btn" onclick="moveGalleryImage(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''} title="تحريك للأعلى">▲</button>
+                        <button type="button" class="thumb-tool-btn" onclick="setMainGalleryImage(${idx})" title="استخدام كخلفية للبوستر">📸 كخلفية</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function removeGalleryImage(idx) {
+            galleryImages.splice(idx, 1);
+            renderSidebarGalleryThumbs();
+            renderArtboardGallery();
+        }
+
+        function clearGallery() {
+            galleryImages = [];
+            renderSidebarGalleryThumbs();
+            renderArtboardGallery();
+        }
+
+        function updateGalleryLabel(idx, label) {
+            if (galleryImages[idx]) {
+                galleryImages[idx].label = label;
+                const badge = document.getElementById(`artGalleryBadge_${idx}`);
+                if (badge) badge.innerText = label;
+            }
+        }
+
+        function moveGalleryImage(idx, delta) {
+            const targetIdx = idx + delta;
+            if (targetIdx < 0 || targetIdx >= galleryImages.length) return;
+            const temp = galleryImages[idx];
+            galleryImages[idx] = galleryImages[targetIdx];
+            galleryImages[targetIdx] = temp;
+            renderSidebarGalleryThumbs();
+            renderArtboardGallery();
+        }
+
+        function handleMultipleImageFiles(files) {
+            if (!files || files.length === 0) return;
+            const promises = Array.from(files).map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve({ src: e.target.result, label: file.name.split('.')[0].substring(0, 15) });
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.all(promises).then(newImages => {
+                galleryImages = newImages;
+                if (galleryImages.length === 1) setGalleryFormat('single');
+                else if (galleryImages.length === 2) setGalleryFormat('grid-2');
+                else if (galleryImages.length === 3) setGalleryFormat('focus-3');
+                else if (galleryImages.length >= 4) setGalleryFormat('grid-4');
+
+                renderSidebarGalleryThumbs();
+                renderArtboardGallery();
+            });
+            document.getElementById('realMultiImageInput').value = '';
+        }
+
+        function handleSingleAddImageFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                galleryImages.push({ src: e.target.result, label: file.name.split('.')[0].substring(0, 15) });
+                if (galleryImages.length === 2) setGalleryFormat('grid-2');
+                else if (galleryImages.length === 3) setGalleryFormat('focus-3');
+                else if (galleryImages.length >= 4) setGalleryFormat('grid-4');
+
+                renderSidebarGalleryThumbs();
+                renderArtboardGallery();
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('realSingleAddInput').value = '';
+        }
+
+        function setPosterBg(src) {
+            const img = document.getElementById('artBgImage');
+            const vid = document.getElementById('artBgVideo');
+            const badge = document.getElementById('artVideoAudioBadge');
+            if (vid) { vid.pause(); vid.style.display = 'none'; }
+            if (badge) badge.style.display = 'none';
+            if (img) {
+                if (src) {
+                    img.src = src;
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+            }
+        }
+
+        function clearPosterBg() {
+            setPosterBg('');
+        }
+
+        function updateBgBlur(val) {
+            document.documentElement.style.setProperty('--bg-blur', `${val}px`);
+        }
+
+        function updateMediaOpacity(val) {
+            document.getElementById('artBgImage').style.opacity = val;
+        }
+
+        function updateDarkness(val) {
+            document.documentElement.style.setProperty('--overlay-darkness', val);
+        }
+
+        function handleBgImageFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                setPosterBg(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('realBgImageInput').value = '';
+        }
+
+        function setMainGalleryImage(idx) {
+            if (galleryImages[idx]) {
+                setPosterBg(galleryImages[idx].src);
+            }
+        }
+
+        function renderArtboardGallery() {
+            const container = document.getElementById('multiPhotoShowcaseBox');
+            const grid = document.getElementById('artGalleryGrid');
+            if (!container || !grid) return;
+
+            container.className = `multi-photo-showcase-box format-${currentGalleryFormat}`;
+            
+            if (galleryImages.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            grid.innerHTML = '';
+
+            let maxItems = galleryImages.length;
+            if (currentGalleryFormat === 'single') maxItems = 1;
+            else if (currentGalleryFormat === 'grid-2') maxItems = Math.min(2, galleryImages.length);
+            else if (currentGalleryFormat === 'strip-3' || currentGalleryFormat === 'focus-3') maxItems = Math.min(3, galleryImages.length);
+            else if (currentGalleryFormat === 'strip-4' || currentGalleryFormat === 'grid-4') maxItems = Math.min(4, galleryImages.length);
+
+            for (let i = 0; i < maxItems; i++) {
+                const imgObj = galleryImages[i];
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'art-gallery-item';
+                itemDiv.innerHTML = `
+                    <img src="${imgObj.src}" alt="Gallery Item ${i + 1}">
+                    <div class="art-gallery-badge" id="artGalleryBadge_${i}">${imgObj.label || ''}</div>
+                `;
+                grid.appendChild(itemDiv);
+            }
+        }
+
+        /* ------------------------------------------------------------- */
+        /* LAYOUT, THEMES & ARTBOARD SYNCHRONIZATION                     */
+        /* ------------------------------------------------------------- */
+        function setLayoutStyle(style) {
+            currentLayout = style;
+            document.querySelectorAll('.layout-btn').forEach(btn => btn.classList.remove('active'));
+            if (style === 'bourse') document.getElementById('btnLayoutBourse').classList.add('active');
+            if (style === 'product') document.getElementById('btnLayoutProduct').classList.add('active');
+            if (style === 'news') document.getElementById('btnLayoutNews').classList.add('active');
+            if (style === 'story') document.getElementById('btnLayoutStory').classList.add('active');
+
+            const artboard = document.getElementById('artboard');
+            artboard.classList.remove('layout-bourse', 'layout-product', 'layout-news', 'layout-story');
+            artboard.classList.add(`layout-${style}`);
+
+            if (style === 'story') setRatio('9:16');
+            else if (style === 'product') {
+                if (galleryImages.length === 1) setGalleryFormat('single');
+            }
+        }
+
+        function syncDirectEdit(artId, inputId) {
+            const artEl = document.getElementById(artId);
+            const inpEl = document.getElementById(inputId);
+            if (artEl && inpEl) {
+                if (inputId === 'inputTitle') inpEl.value = artEl.innerHTML;
+                else inpEl.value = artEl.innerText;
+            }
+        }
+
+        function handleQrUrlChange(val) {
+            renderFooterQrCode(val);
+            updateArtboard();
+        }
+
+        function renderFooterQrCode(url) {
+            const frame = document.getElementById('artQrCodeFrame');
+            if (!frame) return;
+            frame.innerHTML = '';
+            qrCodeInstance = new QRCode(frame, {
+                text: url || 'https://zintoop.com',
+                width: 74,
+                height: 74,
+                colorDark: '#031a0f',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function updateArtboard() {
+            // Header
+            document.getElementById('artBrandTitle').innerText = document.getElementById('inputBrandTitle').value;
+            document.getElementById('artBrandSubtitle').innerText = document.getElementById('inputBrandSubtitle').value;
+            document.getElementById('artHeaderLink').innerText = document.getElementById('inputHeaderLink').value;
+            document.getElementById('artPill').innerText = document.getElementById('inputPill').value;
+
+            // Main Title & Tags
+            document.getElementById('artTitle').innerHTML = document.getElementById('inputTitle').value;
+            document.getElementById('artTag1').innerText = document.getElementById('inputTag1').value;
+            document.getElementById('artTag2').innerText = document.getElementById('inputTag2').value;
+            document.getElementById('artTag3').innerText = document.getElementById('inputTag3').value;
+
+            // 3 Stats
+            document.getElementById('artStat1Val').innerText = document.getElementById('inputStat1').value;
+            document.getElementById('artStat1Unit').innerText = document.getElementById('inputStat1Unit').value;
+            document.getElementById('artStat1Label').innerText = document.getElementById('inputStat1Label').value;
+
+            document.getElementById('artStat2Val').innerText = document.getElementById('inputStat2').value;
+            document.getElementById('artStat2Unit').innerText = document.getElementById('inputStat2Unit').value;
+            document.getElementById('artStat2Label').innerText = document.getElementById('inputStat2Label').value;
+
+            document.getElementById('artStat3Val').innerText = document.getElementById('inputStat3').value;
+            document.getElementById('artStat3Unit').innerText = document.getElementById('inputStat3Unit').value;
+            document.getElementById('artStat3Label').innerText = document.getElementById('inputStat3Label').value;
+
+            // Desc & Central Watermark
+            document.getElementById('artDesc').innerText = document.getElementById('inputDesc').value;
+            document.getElementById('artWatermark').innerText = document.getElementById('inputWatermark').value;
+
+            // Footer & Standalone QR
+            document.getElementById('artCtaText').innerText = document.getElementById('inputCta').value;
+            document.getElementById('artCtaSub').innerText = document.getElementById('inputCtaSub').value;
+            document.getElementById('artQrLabel').innerHTML = `<i class="fa-solid fa-qrcode"></i> ` + document.getElementById('inputQrLabel').value;
+
+            renderArtboardGallery();
+        }
+
+        function handleVideoFile(file) {
+            if (!file) return;
+            const videoUrl = URL.createObjectURL(file);
+            const bgVid = document.getElementById('artBgVideo');
+            const bgImg = document.getElementById('artBgImage');
+            const badge = document.getElementById('artVideoAudioBadge');
+            
+            bgImg.style.display = 'none';
+            bgVid.style.display = 'block';
+            bgVid.src = videoUrl;
+            bgVid.muted = isVideoMuted;
+            bgVid.volume = videoVolume;
+            bgVid.play().catch(e => console.log('Autoplay error:', e));
+
+            if (!isVideoMuted && badge) badge.style.display = 'flex';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const dz = document.getElementById('mediaDropzone');
+            if (dz) dz.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            const dz = document.getElementById('mediaDropzone');
+            if (dz) dz.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            handleDragLeave(e);
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const f = e.dataTransfer.files[0];
+                if (f.type.startsWith('video/')) handleVideoFile(f);
+                else handleMultipleImageFiles(e.dataTransfer.files);
+            }
+        }
+
+        function setTheme(theme) {
+            document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
+            const artboard = document.getElementById('artboard');
+            artboard.classList.remove('theme-emerald', 'theme-gold', 'theme-slate', 'theme-gradient-mesh', 'theme-sunset', 'theme-light-pearl');
+            artboard.classList.add(`theme-${theme}`);
+
+            if (window.event && window.event.currentTarget && window.event.currentTarget.classList.contains('theme-chip')) {
+                window.event.currentTarget.classList.add('active');
+            }
+        }
+
+        function setStudioEnv(mode) {
+            document.body.className = '';
+            document.getElementById('btnStudioDark').classList.remove('active');
+            document.getElementById('btnStudioSlate').classList.remove('active');
+            document.getElementById('btnStudioLight').classList.remove('active');
+
+            if (mode === 'dark') document.getElementById('btnStudioDark').classList.add('active');
+            else if (mode === 'slate') {
+                document.body.classList.add('studio-slate');
+                document.getElementById('btnStudioSlate').classList.add('active');
+            } else if (mode === 'light') {
+                document.body.classList.add('studio-light');
+                document.getElementById('btnStudioLight').classList.add('active');
+            }
+        }
+
+        /* ------------------------------------------------------------- */
+        /* PERFECT CENTERED RATIO & SCALING HANDLER                      */
+        /* ------------------------------------------------------------- */
+        function updateCanvasScale() {
+            const container = document.getElementById('captureTarget');
+            const scaleWrapper = document.getElementById('scaleWrapper');
+            
+            let w = 1080, h = 1080;
+            if (currentRatio === '9:16') {
+                w = 1080; h = 1920;
+            } else if (currentRatio === '16:9') {
+                w = 1920; h = 1080;
+            }
+
+            scaleWrapper.style.width = `${Math.round(w * currentScale)}px`;
+            scaleWrapper.style.height = `${Math.round(h * currentScale)}px`;
+            container.style.transform = `translateX(-50%) scale(${currentScale})`;
+        }
+
+        function setRatio(ratio) {
+            currentRatio = ratio;
+            document.querySelectorAll('.ratio-btn').forEach(btn => {
+                if (btn.parentElement && btn.parentElement.classList.contains('ratio-selector')) {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (ratio === '1:1') document.getElementById('btnRatioSquare').classList.add('active');
+            if (ratio === '9:16') document.getElementById('btnRatioStory').classList.add('active');
+            if (ratio === '16:9') document.getElementById('btnRatioCover').classList.add('active');
+
+            const artboard = document.getElementById('artboard');
+            const badge = document.getElementById('currentRatioBadge');
+
+            artboard.classList.remove('ratio-9-16', 'ratio-16-9');
+
+            if (ratio === '1:1') {
+                badge.innerText = '1080 × 1080 px (Square 1:1)';
+                currentScale = 0.58;
+            } else if (ratio === '9:16') {
+                artboard.classList.add('ratio-9-16');
+                badge.innerText = '1080 × 1920 px (Story 9:16)';
+                currentScale = 0.38;
+            } else if (ratio === '16:9') {
+                artboard.classList.add('ratio-16-9');
+                badge.innerText = '1920 × 1080 px (Landscape 16:9)';
+                currentScale = 0.42;
+            }
+
+            updateCanvasScale();
+        }
+
+        function zoomDelta(delta) {
+            currentScale = Math.max(0.2, Math.min(1.0, currentScale + delta));
+            updateCanvasScale();
+        }
+
+        /* ------------------------------------------------------------- */
+        /* EXPORT AND SOCIAL SHARING ENGINE                              */
+        /* ------------------------------------------------------------- */
+        function showToastNotification(msg) {
+            const toast = document.getElementById('studioToast');
+            const txt = document.getElementById('txtStudioToast');
+            if (!toast || !txt) return;
+            txt.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3200);
+        }
+
+        function generateSocialCaption() {
+            const rawTitle = document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, '');
+            const tag1 = document.getElementById('inputTag1').value;
+            const tag2 = document.getElementById('inputTag2').value;
+            const tag3 = document.getElementById('inputTag3').value;
+            const s1 = `${document.getElementById('inputStat1Label').value}: ${document.getElementById('inputStat1').value} ${document.getElementById('inputStat1Unit').value}`.trim();
+            const s2 = `${document.getElementById('inputStat2Label').value}: ${document.getElementById('inputStat2').value} ${document.getElementById('inputStat2Unit').value}`.trim();
+            const s3 = `${document.getElementById('inputStat3Label').value}: ${document.getElementById('inputStat3').value}`.trim();
+            const desc = document.getElementById('inputDesc').value;
+            const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
+
+            let caption = `🫒 ${rawTitle}\n\n`;
+            caption += `📊 ${s1} | ${s2} | ${s3}\n`;
+            if (tag1 || tag2 || tag3) {
+                caption += `🏷️ ${[tag1, tag2, tag3].filter(Boolean).join(' | ')}\n\n`;
+            }
+            if (desc) {
+                caption += `📝 ${desc}\n\n`;
+            }
+            caption += `🔗 التفاصيل والصفقات عبر الرابط: ${url}\n`;
+            caption += `#ZinToop #زيت_زيتون_تونسي #بورصة_الزيتون #OliveOilTunisia #HuileOliveTunisie #Agriculture`;
+            return caption;
+        }
+
+        function exportImage() {
+            const artboard = document.getElementById('artboard');
+            const container = document.getElementById('captureTarget');
+            const btn = document.getElementById('btnExportImage');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> HD 2K Exporting...';
+
+            const prevTransform = container.style.transform;
+            const prevPosition = container.style.position;
+            const prevLeft = container.style.left;
+
+            container.style.transform = 'none';
+            container.style.position = 'static';
+            container.style.left = 'auto';
+
+            html2canvas(artboard, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: null,
+                logging: false
+            }).then(canvas => {
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+
+                const link = document.createElement('a');
+                link.download = `ZinToop-${currentRatio.replace(':', '-')}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Export Success!';
+                showToastNotification(currentLang === 'ar' ? 'تم تنزيل التصميم بجودة فائقة 2K بنجاح!' : 'HD Design exported successfully!');
+                setTimeout(() => {
+                    const t = i18n[currentLang] || i18n.ar;
+                    btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
+                }, 2500);
+            }).catch(err => {
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+                alert('Export Error: ' + err);
+                const t = i18n[currentLang] || i18n.ar;
+                btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
+            });
+        }
+
+        async function shareNativeImage() {
+            const artboard = document.getElementById('artboard');
+            const container = document.getElementById('captureTarget');
+            const btn = document.getElementById('btnNativeShare');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري إعداد الصورة...';
+
+            const prevTransform = container.style.transform;
+            const prevPosition = container.style.position;
+            const prevLeft = container.style.left;
+
+            container.style.transform = 'none';
+            container.style.position = 'static';
+            container.style.left = 'auto';
+
+            try {
+                const canvas = await html2canvas(artboard, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: null,
+                    logging: false
+                });
+
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+
+                canvas.toBlob(async (blob) => {
+                    if (!blob) return;
+                    const file = new File([blob], `ZinToop-${Date.now()}.png`, { type: 'image/png' });
+                    const caption = generateSocialCaption();
+                    const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                title: document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''),
+                                text: caption,
+                                files: [file]
+                            });
+                            if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> تم فتح نافذة المشاركة!';
+                            showToastNotification(currentLang === 'ar' ? 'تمت مشاركة التصميم بنجاح!' : 'Shared successfully!');
+                        } catch (shareErr) {
+                            if (shareErr.name !== 'AbortError') console.log('Share error:', shareErr);
+                        }
+                    } else if (navigator.share) {
+                        try {
+                            await navigator.share({
+                                title: document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''),
+                                text: caption,
+                                url: url
+                            });
+                            showToastNotification(currentLang === 'ar' ? 'تمت مشاركة المنشور بنجاح!' : 'Shared successfully!');
+                        } catch (shareErr) {
+                            if (shareErr.name !== 'AbortError') console.log('Share error:', shareErr);
+                        }
+                    } else {
+                        await copyImageToClipboard(false);
+                        showToastNotification(currentLang === 'ar' ? 'المتصفح لا يدعم المشاركة المباشرة: تم نسخ الصورة إلى الحافظة!' : 'Image copied to clipboard!');
+                    }
+
+                    if (btn) {
+                        setTimeout(() => {
+                            const t = i18n[currentLang] || i18n.ar;
+                            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span id="uiBtnNativeShare">${t.btn_native_share}</span>`;
+                        }, 2500);
+                    }
+                }, 'image/png');
+            } catch (err) {
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+                if (btn) btn.innerHTML = origHtml;
+                console.error('Native share error:', err);
+            }
+        }
+
+        async function copyImageToClipboard(showFeedback = true) {
+            const artboard = document.getElementById('artboard');
+            const container = document.getElementById('captureTarget');
+            const btn = document.getElementById('btnCopyImage');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ...';
+
+            const prevTransform = container.style.transform;
+            const prevPosition = container.style.position;
+            const prevLeft = container.style.left;
+
+            container.style.transform = 'none';
+            container.style.position = 'static';
+            container.style.left = 'auto';
+
+            try {
+                const canvas = await html2canvas(artboard, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: null,
+                    logging: false
+                });
+
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+
+                canvas.toBlob(async (blob) => {
+                    if (!blob) return;
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
+                        if (btn) {
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تم نسخ الصورة!' : 'Image Copied!');
+                            setTimeout(() => {
+                                const t = i18n[currentLang] || i18n.ar;
+                                btn.innerHTML = `<i class="fa-solid fa-copy"></i> <span id="uiBtnCopyImage">${t.btn_copy_image}</span>`;
+                            }, 2500);
+                        }
+                        showToastNotification(currentLang === 'ar' ? 'تم نسخ الصورة بدقة HD إلى الحافظة! الصقها مباشرة (Ctrl+V)' : 'HD Image copied to clipboard! Paste directly (Ctrl+V)');
+                    } catch (err) {
+                        console.warn('Direct image clipboard write not supported by browser', err);
+                        exportImage();
+                        if (btn) btn.innerHTML = origHtml;
+                    }
+                }, 'image/png');
+            } catch (err) {
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+                if (btn) btn.innerHTML = origHtml;
+            }
+        }
+
+        function copyPostCaption() {
+            const caption = generateSocialCaption();
+            navigator.clipboard.writeText(caption).then(() => {
+                const btn = document.getElementById('btnCopyCaption');
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + (currentLang === 'ar' ? 'تم نسخ النص! ✨' : 'Caption Copied! ✨');
+                showToastNotification(currentLang === 'ar' ? 'تم نسخ نص المنشور والهاشتاغات بنجاح!' : 'Post caption & hashtags copied!');
+                setTimeout(() => {
+                    const t = i18n[currentLang] || i18n.ar;
+                    btn.innerHTML = `<i class="fa-solid fa-file-lines"></i> <span id="uiBtnCopyCaption">${t.btn_copy_caption}</span>`;
+                }, 2500);
+            });
+        }
+
+        function copyBrandLink() {
+            const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
+            navigator.clipboard.writeText(url).then(() => {
+                showToastNotification(currentLang === 'ar' ? 'تم نسخ رابط المنصة: ' + url : 'Link copied: ' + url);
+            });
+        }
+
+        function shareToWhatsApp() {
+            const text = encodeURIComponent(generateSocialCaption());
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function shareToTikTok() {
+            // Switch automatically to 9:16 vertical ratio for optimal TikTok presentation
+            if (currentRatio !== '9:16') {
+                setRatio('9:16');
+            }
+
+            // Copy HD image & post caption to clipboard
+            copyImageToClipboard(false);
+            const caption = generateSocialCaption();
+            navigator.clipboard.writeText(caption);
+
+            showToastNotification(currentLang === 'ar' 
+                ? '🎵 تم ضبط مقاس 9:16 ونسخ المنشور! جاري فتح TikTok...' 
+                : (currentLang === 'fr' 
+                    ? '🎵 Format 9:16 ajusté & texte copié ! Ouverture de TikTok...' 
+                    : '🎵 9:16 aspect ratio set & caption copied! Opening TikTok...'));
+
+            setTimeout(() => {
+                window.open('https://www.tiktok.com/upload?lang=en', '_blank');
+            }, 800);
+        }
+
+        function shareToFacebook() {
+            const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+
+        function shareToLinkedIn() {
+            const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+        }
+
+        function shareToTwitter() {
+            const text = encodeURIComponent(document.getElementById('inputTitle').value.replace(/<[^>]*>?/gm, ''));
+            const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}&hashtags=ZinToop,OliveOil,Tunisia`, '_blank');
+        }
+
+        function shareToTelegram() {
+            const text = encodeURIComponent(generateSocialCaption());
+            const url = encodeURIComponent(document.getElementById('inputQrUrl').value || 'https://zintoop.com');
+            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderFooterQrCode(document.getElementById('inputQrUrl').value);
+            renderSidebarGalleryThumbs();
+            updateArtboard();
+            setRatio('1:1');
+            setStudioLanguage('ar');
+        });
+    </script>
+</body>
+</html>

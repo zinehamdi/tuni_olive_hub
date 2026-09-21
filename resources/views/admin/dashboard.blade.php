@@ -22,6 +22,9 @@
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold transition">
                 <span class="text-xl">📊</span> {{ __('Dashboard') }}
             </a>
+            <a href="{{ route('admin.social_studio') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
+                <span class="text-xl group-hover:scale-110 transition">🎨</span> {{ app()->getLocale() === 'ar' ? 'استوديو التصميم والنشر' : (app()->getLocale() === 'fr' ? 'Studio Graphique' : 'Visual Brand Studio') }}
+            </a>
             <a href="{{ route('admin.analytics.visitors') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">🌍</span> {{ __('Visitor Analytics') }}
             </a>
