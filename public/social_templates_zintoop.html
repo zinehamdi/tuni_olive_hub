@@ -3912,27 +3912,27 @@
         function setTheme(theme) {
             document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
             const artboard = document.getElementById('artboard');
-            artboard.classList.remove('theme-emerald', 'theme-gold', 'theme-slate', 'theme-gradient-mesh', 'theme-sunset', 'theme-light-pearl');
-            artboard.classList.add(`theme-${theme}`);
-
-            if (window.event && window.event.currentTarget && window.event.currentTarget.classList.contains('theme-chip')) {
-                window.event.currentTarget.classList.add('active');
+            if (artboard) {
+                artboard.classList.remove('theme-emerald', 'theme-gold', 'theme-slate', 'theme-gradient-mesh', 'theme-sunset', 'theme-light-pearl');
+                artboard.classList.add(`theme-${theme}`);
             }
+            const chip = document.querySelector(`.theme-chip[onclick*="${theme}"]`);
+            if (chip) chip.classList.add('active');
         }
 
         function setStudioEnv(mode) {
             document.body.className = '';
-            document.getElementById('btnStudioDark').classList.remove('active');
-            document.getElementById('btnStudioSlate').classList.remove('active');
-            document.getElementById('btnStudioLight').classList.remove('active');
+            document.getElementById('btnStudioDark')?.classList.remove('active');
+            document.getElementById('btnStudioSlate')?.classList.remove('active');
+            document.getElementById('btnStudioLight')?.classList.remove('active');
 
-            if (mode === 'dark') document.getElementById('btnStudioDark').classList.add('active');
+            if (mode === 'dark') document.getElementById('btnStudioDark')?.classList.add('active');
             else if (mode === 'slate') {
                 document.body.classList.add('studio-slate');
-                document.getElementById('btnStudioSlate').classList.add('active');
+                document.getElementById('btnStudioSlate')?.classList.add('active');
             } else if (mode === 'light') {
                 document.body.classList.add('studio-light');
-                document.getElementById('btnStudioLight').classList.add('active');
+                document.getElementById('btnStudioLight')?.classList.add('active');
             }
         }
 
@@ -4083,55 +4083,99 @@
             return caption;
         }
 
-        function exportImage() {
+        async function renderArtboardToCanvas() {
             const artboard = document.getElementById('artboard');
             const container = document.getElementById('captureTarget');
-            const btn = document.getElementById('btnExportImage');
-            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> HD 2K Exporting...';
+            const scaleWrapper = document.getElementById('scaleWrapper');
+            if (!artboard || !container || !scaleWrapper) return null;
 
+            let targetW = 1080, targetH = 1080;
+            if (currentRatio === '9:16') { targetW = 1080; targetH = 1920; }
+            else if (currentRatio === '16:9') { targetW = 1920; targetH = 1080; }
+
+            const prevWrapperW = scaleWrapper.style.width;
+            const prevWrapperH = scaleWrapper.style.height;
             const prevTransform = container.style.transform;
             const prevPosition = container.style.position;
             const prevLeft = container.style.left;
 
+            scaleWrapper.style.width = `${targetW}px`;
+            scaleWrapper.style.height = `${targetH}px`;
             container.style.transform = 'none';
-            container.style.position = 'static';
-            container.style.left = 'auto';
+            container.style.position = 'relative';
+            container.style.left = '0';
 
-            html2canvas(artboard, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: null,
-                logging: false
-            }).then(canvas => {
+            try {
+                const canvas = await html2canvas(artboard, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: null,
+                    logging: false,
+                    width: targetW,
+                    height: targetH,
+                    windowWidth: targetW,
+                    windowHeight: targetH,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                });
+
+                scaleWrapper.style.width = prevWrapperW;
+                scaleWrapper.style.height = prevWrapperH;
                 container.style.transform = prevTransform;
                 container.style.position = prevPosition;
                 container.style.left = prevLeft;
 
+                return canvas;
+            } catch (err) {
+                scaleWrapper.style.width = prevWrapperW;
+                scaleWrapper.style.height = prevWrapperH;
+                container.style.transform = prevTransform;
+                container.style.position = prevPosition;
+                container.style.left = prevLeft;
+                console.error('html2canvas Render Error:', err);
+                throw err;
+            }
+        }
+
+        async function exportImage() {
+            const btn = document.getElementById('btnExportImage');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> HD 2K Exporting...';
+            showToastNotification(currentLang === 'ar' ? '⏳ جاري تجهيز وتصدير التصميم بدقة HD 2K...' : '⏳ Generating HD Design...');
+
+            try {
+                const canvas = await renderArtboardToCanvas();
+                if (!canvas) throw new Error('Canvas render returned null');
+
+                const dataUrl = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
+                link.style.display = 'none';
                 link.download = `ZinToop-${currentRatio.replace(':', '-')}-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.href = dataUrl;
+                document.body.appendChild(link);
                 link.click();
+                setTimeout(() => {
+                    if (link.parentNode) link.parentNode.removeChild(link);
+                }, 500);
+
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Export Success!';
                 showToastNotification(currentLang === 'ar' ? '✅ تم تنزيل التصميم بجودة فائقة 2K بنجاح!' : '✅ HD Design exported successfully!');
                 setTimeout(() => {
                     const t = i18n[currentLang] || i18n.ar;
                     if (btn) btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
                 }, 2500);
-            }).catch(err => {
-                container.style.transform = prevTransform;
-                container.style.position = prevPosition;
-                container.style.left = prevLeft;
+            } catch (err) {
                 console.error('Export Error:', err);
-                const t = i18n[currentLang] || i18n.ar;
-                if (btn) btn.innerHTML = `<i class="fa-solid fa-download"></i> <span id="uiBtnExport">${t.btn_export}</span>`;
-            });
+                if (btn) btn.innerHTML = origHtml;
+                showToastNotification(currentLang === 'ar' ? '⚠️ حدث خطأ أثناء التصدير، يرجى المحاولة ثانية' : '⚠️ Export failed, please retry');
+            }
         }
 
         /* 1. Universal Native Web Share */
         async function shareNativeImage() {
-            const artboard = document.getElementById('artboard');
-            const container = document.getElementById('captureTarget');
             const btn = document.getElementById('btnNativeShare');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحضير...';
@@ -4139,29 +4183,15 @@
             const caption = generateSocialCaption();
             copyTextSafely(caption);
 
-            const prevTransform = container.style.transform;
-            const prevPosition = container.style.position;
-            const prevLeft = container.style.left;
-
-            container.style.transform = 'none';
-            container.style.position = 'static';
-            container.style.left = 'auto';
-
             try {
-                const canvas = await html2canvas(artboard, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: null,
-                    logging: false
-                });
-
-                container.style.transform = prevTransform;
-                container.style.position = prevPosition;
-                container.style.left = prevLeft;
+                const canvas = await renderArtboardToCanvas();
+                if (!canvas) throw new Error('Canvas render failed');
 
                 canvas.toBlob(async (blob) => {
-                    if (!blob) return;
+                    if (!blob) {
+                        exportImage();
+                        return;
+                    }
                     const file = new File([blob], `ZinToop-${Date.now()}.png`, { type: 'image/png' });
                     const url = document.getElementById('inputQrUrl').value || 'https://zintoop.com';
 
@@ -4208,18 +4238,14 @@
                     }
                 }, 'image/png');
             } catch (err) {
-                container.style.transform = prevTransform;
-                container.style.position = prevPosition;
-                container.style.left = prevLeft;
+                console.error('Share native error:', err);
                 if (btn) btn.innerHTML = origHtml;
                 exportImage();
             }
         }
 
         /* 2. Copy Image to Clipboard */
-        async function copyImageToClipboard(showFeedback = true) {
-            const artboard = document.getElementById('artboard');
-            const container = document.getElementById('captureTarget');
+        async function copyImageToClipboard() {
             const btn = document.getElementById('btnCopyImage');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ...';
@@ -4227,29 +4253,15 @@
             const caption = generateSocialCaption();
             copyTextSafely(caption);
 
-            const prevTransform = container.style.transform;
-            const prevPosition = container.style.position;
-            const prevLeft = container.style.left;
-
-            container.style.transform = 'none';
-            container.style.position = 'static';
-            container.style.left = 'auto';
-
             try {
-                const canvas = await html2canvas(artboard, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: null,
-                    logging: false
-                });
-
-                container.style.transform = prevTransform;
-                container.style.position = prevPosition;
-                container.style.left = prevLeft;
+                const canvas = await renderArtboardToCanvas();
+                if (!canvas) throw new Error('Canvas render failed');
 
                 canvas.toBlob(async (blob) => {
-                    if (!blob) return;
+                    if (!blob) {
+                        exportImage();
+                        return;
+                    }
                     let copied = false;
                     try {
                         if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
@@ -4279,13 +4291,10 @@
                                 btn.innerHTML = `<i class="fa-solid fa-copy"></i> <span id="uiBtnCopyImage">${t.btn_copy_image}</span>`;
                             }, 2500);
                         }
-                        showToastNotification(currentLang === 'ar' ? '📥 تم تنزيل الصورة ونسخ النص بنجاح!' : '📥 Image downloaded & caption copied!');
                     }
                 }, 'image/png');
             } catch (err) {
-                container.style.transform = prevTransform;
-                container.style.position = prevPosition;
-                container.style.left = prevLeft;
+                console.error('Copy image error:', err);
                 if (btn) btn.innerHTML = origHtml;
                 exportImage();
             }
