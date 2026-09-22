@@ -286,7 +286,6 @@
              }
          @endauth" 
          @scroll.window="scrolled = window.scrollY > 20">
-        {{-- Platform Update Notification Banner (hidden after deploy) --}}
 
         <!-- Main Nav Bar -->
         <div class="bg-gradient-to-r from-[#5a7a2f] via-[#6A8F3B] to-[#5a7a2f] text-white transition-shadow duration-300" :class="scrolled ? 'shadow-2xl' : 'shadow-xl'">

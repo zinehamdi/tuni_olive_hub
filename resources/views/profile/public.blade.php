@@ -49,6 +49,7 @@
 
     // Compute User Title & Role Name for Social Cards
     $roleMap = [
+        'admin' => ['ar' => 'إدارة المنصة', 'fr' => 'Administration ZinToop', 'en' => 'Platform Administration'],
         'farmer' => ['ar' => 'مزارع زيتون', 'fr' => 'Producteur d\'Olives', 'en' => 'Olive Grower'],
         'carrier' => ['ar' => 'ناقل بري وبحري', 'fr' => 'Transporteur & Logistique', 'en' => 'Transporter & Logistics'],
         'mill' => ['ar' => 'معصرة زيتون', 'fr' => 'Moulin à Huile d\'Olive', 'en' => 'Olive Oil Mill'],
@@ -202,19 +203,20 @@
                                 @else
                                     @php
                                         $roleNames = [
-                                            'farmer' => ['ar' => '🌾 مزارع زيتون', 'en' => '🌾 Olive Grower'],
-                                            'carrier' => ['ar' => '🚛 ناقل بري وبحري', 'en' => '🚛 Transporter'],
-                                            'mill' => ['ar' => '🏭 معصرة زيتون', 'en' => '🏭 Oil Mill'],
-                                            'packer' => ['ar' => '📦 وحدة تعبئة وتغليف', 'en' => '📦 Packaging Facility'],
-                                            'transiteur' => ['ar' => '🛃 مخلص جمركي', 'en' => '🛃 Customs Broker'],
-                                            'comptable' => ['ar' => '📊 محاسب خبير', 'en' => '📊 Accountant'],
-                                            'service_bureau' => ['ar' => '📝 مكتب خدمات إدارية', 'en' => '📝 Service Bureau'],
-                                            'agri_equipment' => ['ar' => '🚜 معدات وآليات فلاحية', 'en' => '🚜 Agri-Equipment'],
-                                            'agri_materials' => ['ar' => '🌱 مواد فلاحية وأسمدة', 'en' => '🌱 Agri-Materials'],
-                                            'agri_study_office' => ['ar' => '📐 مكتب دراسات فلاحية', 'en' => '📐 Agri-Study Office'],
+                                            'admin' => ['ar' => '🛡️ إدارة منصة الزين', 'fr' => '🛡️ Administration ZinToop', 'en' => '🛡️ Platform Admin'],
+                                            'farmer' => ['ar' => '🌾 مزارع زيتون', 'fr' => '🌾 Producteur d\'Olives', 'en' => '🌾 Olive Grower'],
+                                            'carrier' => ['ar' => '🚛 ناقل بري وبحري', 'fr' => '🚛 Transporteur', 'en' => '🚛 Transporter'],
+                                            'mill' => ['ar' => '🏭 معصرة زيتون', 'fr' => '🏭 Huilerie / Moulin', 'en' => '🏭 Oil Mill'],
+                                            'packer' => ['ar' => '📦 وحدة تعبئة وتغليف', 'fr' => '📦 Unité d\'Embouteillage', 'en' => '📦 Packaging Facility'],
+                                            'transiteur' => ['ar' => '🛃 مخلص جمركي', 'fr' => '🛃 Transitaire', 'en' => '🛃 Customs Broker'],
+                                            'comptable' => ['ar' => '📊 محاسب خبير', 'fr' => '📊 Expert-Comptable', 'en' => '📊 Accountant'],
+                                            'service_bureau' => ['ar' => '📝 مكتب خدمات إدارية', 'fr' => '📝 Bureau de Services', 'en' => '📝 Service Bureau'],
+                                            'agri_equipment' => ['ar' => '🚜 معدات وآليات فلاحية', 'fr' => '🚜 Équipements Agricoles', 'en' => '🚜 Agri-Equipment'],
+                                            'agri_materials' => ['ar' => '🌱 مواد فلاحية وأسمدة', 'fr' => '🌱 Intrants & Engrais', 'en' => '🌱 Agri-Materials'],
+                                            'agri_study_office' => ['ar' => '📐 مكتب دراسات فلاحية', 'fr' => '📐 Bureau d\'Études', 'en' => '📐 Agri-Study Office'],
                                         ];
                                         $locale = app()->getLocale();
-                                        $roleName = $roleNames[$user->role][$locale === 'ar' ? 'ar' : 'en'] ?? ($locale === 'ar' ? '✨ عضو منصة الزين' : '✨ Member');
+                                        $roleName = $roleNames[$user->role][$locale] ?? ($roleNames[$user->role]['ar'] ?? ($locale === 'ar' ? '✨ عضو منصة الزين' : '✨ Member'));
                                     @endphp
                                     <span>{{ $roleName }}</span>
                                 @endif

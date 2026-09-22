@@ -236,29 +236,39 @@
                     </button>
                     @php
                         $roleNames = [
-                            'farmer' => ['ar' => 'مزارع زيتون', 'en' => 'Farmer', 'icon' => '🌿', 'color' => 'bg-green-100 text-green-700'],
-                            'carrier' => ['ar' => 'ناقل بري وبحري', 'en' => 'Carrier', 'icon' => '🚚', 'color' => 'bg-blue-100 text-blue-700'],
-                            'mill' => ['ar' => 'معصرة زيتون', 'en' => 'Mill', 'icon' => '⚙️', 'color' => 'bg-amber-100 text-amber-700'],
-                            'packer' => ['ar' => 'تعبئة وتغليف', 'en' => 'Packer', 'icon' => '📦', 'color' => 'bg-purple-100 text-purple-700'],
-                            'transiteur' => ['ar' => 'مخلص جمركي', 'en' => 'Customs Broker', 'icon' => '🛃', 'color' => 'bg-indigo-100 text-indigo-700'],
-                            'comptable' => ['ar' => 'محاسب', 'en' => 'Accountant', 'icon' => '📊', 'color' => 'bg-rose-100 text-rose-700'],
-                            'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'en' => 'Service Bureau', 'icon' => '📝', 'color' => 'bg-cyan-100 text-cyan-700'],
-                            'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'en' => 'Agri-Equipment', 'icon' => '🚜', 'color' => 'bg-orange-100 text-orange-700'],
-                            'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'en' => 'Agri-Materials', 'icon' => '🌱', 'color' => 'bg-emerald-100 text-emerald-700'],
-                            'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'en' => 'Agri-Study Office', 'icon' => '📐', 'color' => 'bg-teal-100 text-teal-700'],
+                            'admin' => ['ar' => 'مدير المنصة', 'fr' => 'Administrateur', 'en' => 'Platform Admin', 'icon' => '🛡️', 'color' => 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-900 border border-amber-300 shadow-sm'],
+                            'farmer' => ['ar' => 'مزارع زيتون', 'fr' => 'Producteur d\'Olives', 'en' => 'Farmer', 'icon' => '🌿', 'color' => 'bg-green-100 text-green-700'],
+                            'carrier' => ['ar' => 'ناقل بري وبحري', 'fr' => 'Transporteur', 'en' => 'Carrier', 'icon' => '🚚', 'color' => 'bg-blue-100 text-blue-700'],
+                            'mill' => ['ar' => 'معصرة زيتون', 'fr' => 'Huilerie / Moulin', 'en' => 'Mill', 'icon' => '⚙️', 'color' => 'bg-amber-100 text-amber-700'],
+                            'packer' => ['ar' => 'تعبئة وتغليف', 'fr' => 'Unité d\'Embouteillage', 'en' => 'Packer', 'icon' => '📦', 'color' => 'bg-purple-100 text-purple-700'],
+                            'transiteur' => ['ar' => 'مخلص جمركي', 'fr' => 'Transitaire', 'en' => 'Customs Broker', 'icon' => '🛃', 'color' => 'bg-indigo-100 text-indigo-700'],
+                            'comptable' => ['ar' => 'محاسب', 'fr' => 'Expert-Comptable', 'en' => 'Accountant', 'icon' => '📊', 'color' => 'bg-rose-100 text-rose-700'],
+                            'service_bureau' => ['ar' => 'مكتب خدمات إدارية', 'fr' => 'Bureau de Services', 'en' => 'Service Bureau', 'icon' => '📝', 'color' => 'bg-cyan-100 text-cyan-700'],
+                            'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Équipements Agricoles', 'en' => 'Agri-Equipment', 'icon' => '🚜', 'color' => 'bg-orange-100 text-orange-700'],
+                            'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Intrants & Engrais', 'en' => 'Agri-Materials', 'icon' => '🌱', 'color' => 'bg-emerald-100 text-emerald-700'],
+                            'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'Études', 'en' => 'Agri-Study Office', 'icon' => '📐', 'color' => 'bg-teal-100 text-teal-700'],
                         ];
                         $userRole = Auth::user()->role;
-                        $roleData = $roleNames[$userRole] ?? ['ar' => 'مستخدم', 'en' => 'User', 'icon' => '👤', 'color' => 'bg-gray-100 text-gray-700'];
+                        $roleData = $roleNames[$userRole] ?? ['ar' => 'مستخدم', 'fr' => 'Utilisateur', 'en' => 'User', 'icon' => '👤', 'color' => 'bg-gray-100 text-gray-700'];
                         $locale = app()->getLocale();
-                        $roleName = $roleData[$locale === 'ar' ? 'ar' : 'en'];
+                        $roleName = $roleData[$locale] ?? $roleData['ar'];
                     @endphp
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold mt-0.5 {{ $roleData['color'] }}">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold mt-0.5 {{ $roleData['color'] }}">
                         {{ $roleData['icon'] }} {{ $roleName }}
                     </span>
                 </div>
             </div>
 
             <div class="mt-4 space-y-1.5">
+                @if(Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="w-full flex items-center justify-between px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-sm font-bold transition shadow-sm group">
+                    <div class="flex items-center gap-2">
+                        <span>🛡️</span>
+                        <span>{{ __('Admin Panel') }} ({{ __('لوحة الإدارة') }})</span>
+                    </div>
+                    <span class="text-xs bg-white/20 px-2 py-0.5 rounded-md group-hover:translate-x-1 transition-transform">←</span>
+                </a>
+                @endif
                 @if(Auth::user()->role === 'farmer')
                 <button @click="openEdit('farm_name')" class="w-full flex items-center gap-2 px-3 py-2 bg-green-50 hover:bg-green-100 rounded-xl text-sm transition group">
                     <span>🌿</span><span id="display-farm_name" class="flex-1 truncate text-gray-700 font-medium text-right">{{ Auth::user()->farm_name ?: __('Add Farm Name') }}</span>
