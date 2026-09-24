@@ -33,20 +33,28 @@ class ApiAuthController extends ApiController
         ]);
 
         $input = trim($request->input('email'));
+        $cleanDigits = preg_replace('/[^0-9]/', '', $input);
         
-        // Clean phone inputs (remove space, +, -, brackets)
-        $cleanInput = preg_replace('/[\s\+\-\(\)]/', '', $input);
-        $isPhone = preg_match('/^\d+$/', $cleanInput);
-        
-        if ($isPhone) {
-            if (strlen($cleanInput) === 11 && str_starts_with($cleanInput, '216')) {
-                $cleanInput = substr($cleanInput, 3);
-            }
-            $credentials = ['phone' => $cleanInput, 'password' => $request->input('password')];
-            $user = User::where('phone', $cleanInput)->first();
-        } else {
-            $credentials = ['email' => $input, 'password' => $request->input('password')];
+        $user = null;
+        if (!empty($cleanDigits) && strlen($cleanDigits) >= 8) {
+            $eightDigits = substr($cleanDigits, -8);
+            $user = User::where(function ($query) use ($eightDigits, $input) {
+                $query->where('phone', $eightDigits)
+                      ->orWhere('phone', '+216' . $eightDigits)
+                      ->orWhere('phone', '+216 ' . $eightDigits)
+                      ->orWhere('phone', '216' . $eightDigits)
+                      ->orWhere('phone', '00216' . $eightDigits)
+                      ->orWhere('phone', $input)
+                      ->orWhere('phone', 'like', '%' . $eightDigits);
+            })->first();
+        }
+
+        if (!$user) {
             $user = User::where('email', $input)->first();
+        }
+
+        if (!$user) {
+            $user = User::where('phone', $input)->first();
         }
 
         if (!$user || !Hash::check($request->input('password'), $user->password)) {

@@ -194,6 +194,7 @@ Route::middleware(['web', 'set.locale'])->group(function () {
     Route::view('/about', 'public.about')->name('about');
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
     Route::view('/pricing', 'public.pricing')->name('pricing');
+    Route::view('/pitch', 'pitch.deck')->name('pitch.deck');
     Route::get('/servicehub', [\App\Http\Controllers\ServiceProviderController::class, 'index'])->name('services.index');
     Route::view('/services/pricing', 'public.services_pricing')->name('services.pricing');
     Route::get('/services/register', [\App\Http\Controllers\Auth\ServiceProviderRegisterController::class, 'create'])->name('services.register')->middleware('guest');
@@ -365,6 +366,7 @@ Route::middleware('set.locale')->group(function () {
 // Limit: 60 requests per minute per user
 Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+    Route::view('/pitch', 'pitch.deck')->name('pitch');
     Route::get('/social-studio', [\App\Http\Controllers\AdminController::class, 'socialStudio'])->name('social_studio');
     Route::get('/analytics/visitors', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'index'])->name('analytics.visitors');
     Route::get('/analytics/marketing', [\App\Http\Controllers\Admin\VisitorAnalyticsController::class, 'marketing'])->name('analytics.marketing');

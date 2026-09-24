@@ -22,6 +22,13 @@
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#6A8F3B]/10 text-[#6A8F3B] rounded-xl font-bold transition">
                 <span class="text-xl">📊</span> {{ __('Dashboard') }}
             </a>
+            <a href="{{ asset('pitch.html') }}" target="_blank" class="flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-amber-500/15 via-[#6A8F3B]/15 to-emerald-500/10 text-amber-800 border border-amber-500/30 rounded-xl font-black transition group shadow-sm hover:scale-[1.02]">
+                <span class="text-xl animate-pulse">🚀</span>
+                <div class="flex flex-col text-left">
+                    <span class="leading-tight text-xs md:text-sm font-bold text-amber-900">{{ app()->getLocale() === 'ar' ? 'عرض الـ Pitch الرسمي' : 'Pitch Deck Startup Label' }}</span>
+                    <span class="text-[9px] text-emerald-700 font-medium">Bilingual 50/50 • Teams Ready</span>
+                </div>
+            </a>
             <a href="{{ route('admin.social_studio') }}" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold transition group">
                 <span class="text-xl group-hover:scale-110 transition">🎨</span> {{ app()->getLocale() === 'ar' ? 'استوديو التصميم والنشر' : (app()->getLocale() === 'fr' ? 'Studio Graphique' : 'Visual Brand Studio') }}
             </a>

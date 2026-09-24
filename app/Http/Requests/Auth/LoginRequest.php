@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+use Illuminate\Support\Facades\Hash;
+
 class LoginRequest extends FormRequest
 {
     /**
@@ -41,27 +43,58 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Determine if input is email or phone number
+        $input = trim((string) $this->input('email'));
+        $password = (string) $this->input('password');
+        $cleanDigits = preg_replace('/[^0-9]/', '', $input);
+        
+        $user = null;
+
+        // 1. If input contains a phone number (Tunisian 8 digits or with +216/00216 prefix)
+        if (!empty($cleanDigits) && strlen($cleanDigits) >= 8) {
+            $eightDigits = substr($cleanDigits, -8);
+            
+            $user = \App\Models\User::where(function ($query) use ($eightDigits, $input) {
+                $query->where('phone', $eightDigits)
+                      ->orWhere('phone', '+216' . $eightDigits)
+                      ->orWhere('phone', '+216 ' . $eightDigits)
+                      ->orWhere('phone', '216' . $eightDigits)
+                      ->orWhere('phone', '00216' . $eightDigits)
+                      ->orWhere('phone', $input)
+                      ->orWhere('phone', 'like', '%' . $eightDigits);
+            })->first();
+        }
+
+        // 2. If not found by phone, search by email
+        if (!$user) {
+            $user = \App\Models\User::where('email', $input)->first();
+        }
+
+        // 3. Fallback: search raw input against phone
+        if (!$user) {
+            $user = \App\Models\User::where('phone', $input)->first();
+        }
+
+        // 4. If user found and password matches, log in immediately
+        if ($user && Hash::check($password, $user->password)) {
+            $remember = $this->boolean('remember') || ($user->role !== 'admin');
+            Auth::login($user, $remember);
+            RateLimiter::clear($this->throttleKey());
+            return;
+        }
+
+        // 5. Standard fallback attempt (if any custom provider/hashing applies)
         $credentials = $this->getCredentials();
-        
-        $field = isset($credentials['phone']) ? 'phone' : 'email';
-        $user = \App\Models\User::where($field, $credentials[$field])->first();
-        
-        // Force remember me for non-admins to keep session open long term
-        $remember = $this->boolean('remember');
-        if ($user && $user->role !== 'admin') {
-            $remember = true;
+        $remember = $this->boolean('remember') || ($user && $user->role !== 'admin');
+        if (Auth::attempt($credentials, $remember)) {
+            RateLimiter::clear($this->throttleKey());
+            return;
         }
 
-        if (! Auth::attempt($credentials, $remember)) {
-            RateLimiter::hit($this->throttleKey());
+        RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+        throw ValidationException::withMessages([
+            'email' => trans('auth.failed'),
+        ]);
     }
 
     /**

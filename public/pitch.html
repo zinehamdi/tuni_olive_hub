@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop • Pitch Deck Officiel — Label Startup Tunisia</title>
+
+    <!-- Google Fonts: Cairo & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            /* Rich Dark Olive Green, Imperial Gold & Sahara Beige Palette */
+            --bg-page: #0b1a0e;
+            --bg-dark-olive: #09170c;
+            --bg-mid-olive: #122817;
+            --bg-light-olive: #1b3820;
+
+            --gold: #c9982a;
+            --gold-light: #e5b958;
+            --gold-bg: rgba(201, 152, 42, 0.18);
+
+            --beige-warm: #d9cca8;
+            --beige-light: #efe7d3;
+
+            --glass-bg: rgba(255, 255, 255, 0.94);
+            --glass-bg-hover: #ffffff;
+            --glass-border: rgba(201, 152, 42, 0.35);
+            --glass-shadow: 0 16px 44px rgba(0, 0, 0, 0.3), 0 0 20px rgba(201, 152, 42, 0.1);
+
+            --olive-dark: #0a1f0f;
+            --olive-primary: #23592b;
+            --olive-light: #44804c;
+
+            --text-main: #132517;
+            --text-muted: #445e48;
+            --text-light: #6c8270;
+
+            --danger-bg: rgba(254, 242, 242, 0.94);
+            --danger-border: rgba(239, 68, 68, 0.35);
+            --danger-text: #b91c1c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            background-image:
+                radial-gradient(circle at 10% 12%, rgba(68, 130, 60, 0.48) 0%, transparent 48%),
+                radial-gradient(circle at 90% 15%, rgba(201, 152, 42, 0.42) 0%, transparent 42%),
+                radial-gradient(circle at 50% 90%, rgba(217, 204, 168, 0.36) 0%, transparent 50%),
+                radial-gradient(circle at 15% 85%, rgba(195, 145, 40, 0.30) 0%, transparent 40%),
+                radial-gradient(circle at 82% 80%, rgba(42, 90, 48, 0.45) 0%, transparent 45%),
+                linear-gradient(140deg, #09170c 0%, #112615 35%, #19381e 70%, #0d1e11 100%);
+            color: var(--text-main);
+            font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        html[dir="rtl"] body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        html[dir="ltr"] body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* ─── Top Header Bar (Gold Beige) ─── */
+        header {
+            height: 60px;
+            background: linear-gradient(135deg, rgba(238, 226, 203, 0.94) 0%, rgba(225, 208, 175, 0.92) 50%, rgba(214, 192, 150, 0.95) 100%);
+            border-bottom: 2px solid rgba(184, 134, 38, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 50;
+            flex-shrink: 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28), 0 0 15px rgba(201, 152, 42, 0.15);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .header-brand img {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(45, 102, 52, 0.25));
+        }
+
+        .brand-title {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #102d16;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title span {
+            color: #9c6c10;
+        }
+
+        /* Language Toggle Switcher */
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(184, 134, 38, 0.4);
+            padding: 3px;
+            border-radius: 12px;
+            gap: 2px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 5px 14px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #4e3f22;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #23592b, #153c1b);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(35, 89, 43, 0.35);
+            border: 1px solid rgba(184, 134, 38, 0.45);
+        }
+
+        /* Center Progress */
+        .progress-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-counter {
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 800;
+            color: #4e3f22;
+        }
+
+        .slide-counter .current-num {
+            color: #1b4d24;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .progress-track {
+            width: 140px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(184, 134, 38, 0.35);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #23592b, #b88626);
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(184, 134, 38, 0.4);
+            color: #102d16;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .timer-btn:hover {
+            background: #ffffff;
+            border-color: #23592b;
+        }
+
+        .timer-warn {
+            color: #d97706 !important;
+            font-weight: 900;
+        }
+
+        .timer-danger {
+            color: #dc2626 !important;
+            font-weight: 900;
+            animation: pulseWarning 1s infinite;
+        }
+
+        @keyframes pulseWarning {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(184, 134, 38, 0.4);
+            color: #102d16;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .action-btn:hover {
+            background: #ffffff;
+            border-color: #23592b;
+            color: #23592b;
+        }
+
+        .action-btn.demo-btn {
+            background: linear-gradient(135deg, #23592b, #153c1b);
+            border: 1px solid rgba(184, 134, 38, 0.5);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(35, 89, 43, 0.35);
+        }
+
+        .action-btn.demo-btn:hover {
+            filter: brightness(1.15);
+            color: #fff;
+        }
+
+        .action-btn.script-btn.active {
+            background: linear-gradient(135deg, #b88626, #8f6516);
+            color: #fff;
+            border-color: #f7d584;
+        }
+
+        /* ─── Main Slide Stage ─── */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 10px 36px 60px 36px;
+            position: relative;
+            transition: padding-bottom 0.3s ease;
+        }
+
+        main.drawer-open {
+            padding-bottom: 240px !important;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1260px;
+            animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 6px;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.99);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Slide Titles */
+        .slide-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .slide-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 14px;
+            border-radius: 9999px;
+            background: rgba(201, 152, 42, 0.18);
+            color: #f7d584;
+            border: 1px solid rgba(201, 152, 42, 0.45);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .slide-title {
+            font-size: 1.95rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            text-shadow: 0 3px 14px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-desc {
+            font-size: 0.95rem;
+            color: #dfd6c4;
+            font-weight: 600;
+            max-width: 850px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ─── Layouts: Visual + Content Split ─── */
+        .visual-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.25s ease;
+        }
+
+        .glass-panel:hover {
+            box-shadow: 0 20px 52px rgba(0, 0, 0, 0.35), 0 0 28px rgba(201, 152, 42, 0.16);
+            border-color: rgba(201, 152, 42, 0.55);
+        }
+
+        /* Generated Graphic Image Frame */
+        .slide-visual-frame {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 2px solid rgba(201, 152, 42, 0.35);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+            background: #fff;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-visual-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .slide-visual-frame:hover img {
+            transform: scale(1.02);
+        }
+
+        .visual-caption {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--olive-primary);
+            backdrop-filter: blur(8px);
+        }
+
+        html[dir="ltr"] .visual-caption {
+            right: auto;
+            left: 12px;
+        }
+
+        /* Slide 1: Hero Layout */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .hero-cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hero-card-item {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s;
+        }
+
+        .hero-card-item:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            border-color: var(--olive-primary);
+        }
+
+        .hero-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(106, 143, 59, 0.12);
+            color: var(--olive-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .hero-card-icon.gold {
+            background: var(--gold-bg);
+            color: var(--gold);
+        }
+
+        /* Problem Items (Slide 2) */
+        .problem-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .problem-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--danger-border);
+            border-right: 4px solid var(--danger-text);
+            border-radius: 16px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.05);
+        }
+
+        html[dir="ltr"] .problem-item {
+            border-right: 1px solid var(--danger-border);
+            border-left: 4px solid var(--danger-text);
+        }
+
+        .problem-item h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--danger-text);
+            margin-bottom: 2px;
+        }
+
+        .problem-item p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Solution Items (Slide 3) */
+        .solution-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .solution-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--olive-primary);
+            border-radius: 14px;
+            padding: 10px 16px;
+        }
+
+        html[dir="ltr"] .solution-item {
+            border-right: 1px solid var(--glass-border);
+            border-left: 4px solid var(--olive-primary);
+        }
+
+        .solution-item h4 {
+            font-size: 0.96rem;
+            font-weight: 800;
+            color: var(--olive-dark);
+            margin-bottom: 2px;
+        }
+
+        .solution-item p {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Innovation (Slide 4) */
+        .inno-side-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .inno-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--olive-primary);
+            border-radius: 15px;
+            padding: 11px 16px;
+        }
+
+        html[dir="ltr"] .inno-box {
+            border-right: 1px solid var(--glass-border);
+            border-left: 4px solid var(--olive-primary);
+        }
+
+        .inno-box.gold {
+            border-right-color: var(--gold);
+        }
+
+        html[dir="ltr"] .inno-box.gold {
+            border-left-color: var(--gold);
+        }
+
+        .inno-box.martech {
+            border-right-color: #1f6e8c;
+        }
+
+        html[dir="ltr"] .inno-box.martech {
+            border-left-color: #1f6e8c;
+        }
+
+        .inno-box-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .inno-box-header h4 {
+            font-size: 0.96rem;
+            font-weight: 900;
+            color: var(--olive-dark);
+        }
+
+        .inno-box p {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            line-height: 1.38;
+        }
+
+        /* Business Model Grid (Slide 5) */
+        .bm-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.08fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .bm-right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .bm-mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+
+        .bm-mini-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 9px 11px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+            border-top: 3px solid var(--olive-primary);
+        }
+
+        .bm-mini-card.gold {
+            border-top-color: var(--gold);
+        }
+
+        .bm-mini-price {
+            font-size: 1.22rem;
+            font-weight: 900;
+            font-family: monospace;
+            color: var(--olive-dark);
+            line-height: 1.1;
+        }
+
+        .bm-mini-price.gold {
+            color: var(--gold);
+        }
+
+        .bm-mini-title {
+            font-size: 0.81rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 2px 0;
+            line-height: 1.25;
+        }
+
+        .bm-mini-desc {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+            line-height: 1.28;
+        }
+
+        .bm-services-box {
+            background: rgba(255, 255, 255, 0.93);
+            border: 1px solid rgba(200, 163, 86, 0.35);
+            border-radius: 14px;
+            padding: 9px 12px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bm-services-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--olive-primary), var(--gold), var(--olive-primary));
+        }
+
+        .bm-services-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed rgba(200, 163, 86, 0.25);
+        }
+
+        .bm-services-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bm-services-title {
+            font-size: 0.79rem;
+            font-weight: 800;
+            color: var(--olive-dark);
+        }
+
+        .bm-services-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 12px;
+            background: rgba(200, 163, 86, 0.15);
+            color: #8c6b1e;
+            border: 1px solid rgba(200, 163, 86, 0.3);
+        }
+
+        .bm-services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .bm-service-pill {
+            background: #fafaf7;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            padding: 5px 7px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            text-align: right;
+        }
+
+        [dir="ltr"] .bm-service-pill {
+            text-align: left;
+        }
+
+        .bm-service-pill-icon {
+            font-size: 0.92rem;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .bm-service-pill-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bm-service-pill-name {
+            font-size: 0.71rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bm-service-pill-price {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--gold);
+            font-family: monospace;
+            white-space: nowrap;
+        }
+
+        .bm-service-pill-desc {
+            font-size: 0.64rem;
+            color: var(--text-muted);
+            line-height: 1.22;
+            margin-top: 1px;
+        }
+
+        /* Traction KPIs (Slide 6) */
+        .traction-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .traction-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 22px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.2s;
+        }
+
+        .traction-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--olive-primary);
+        }
+
+        .traction-icon {
+            font-size: 26px;
+            color: var(--olive-primary);
+            margin-bottom: 2px;
+        }
+
+        .traction-num {
+            font-size: 2.8rem;
+            font-weight: 900;
+            font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+            color: var(--olive-dark);
+            line-height: 1;
+            direction: ltr !important;
+            unicode-bidi: isolate;
+            display: inline-block;
+        }
+
+        .traction-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* Founder Layout (Slide 7) */
+        .founder-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .founder-photo-box {
+            background: rgba(255, 255, 255, 0.92);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .founder-photo-box img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 10%;
+            border: 4px solid var(--gold);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            background: #fdfaf3;
+        }
+
+        .founder-name {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--olive-dark);
+        }
+
+        .founder-roles {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--olive-primary);
+        }
+
+        .founder-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .f-badge-item {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+        }
+
+        .f-badge-icon {
+            font-size: 26px;
+            color: var(--olive-primary);
+        }
+
+        /* Demo Layout (Slide 8) */
+        .demo-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 22px;
+            padding: 34px;
+        }
+
+        .demo-big-btn {
+            background: linear-gradient(135deg, var(--olive-primary), #1a4d25);
+            color: #fff;
+            text-decoration: none;
+            padding: 18px 48px;
+            border-radius: 20px;
+            font-size: 1.35rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 12px 32px rgba(45, 102, 52, 0.3);
+            transition: all 0.25s;
+        }
+
+        .demo-big-btn:hover {
+            transform: scale(1.04);
+            filter: brightness(1.1);
+        }
+
+        /* ─── Bottom Footer Bar (Gold Beige) ─── */
+        footer {
+            height: 62px;
+            background: linear-gradient(135deg, rgba(238, 226, 203, 0.95) 0%, rgba(225, 208, 175, 0.93) 50%, rgba(214, 192, 150, 0.96) 100%);
+            border-top: 2px solid rgba(184, 134, 38, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 50;
+            flex-shrink: 0;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.28), 0 0 15px rgba(201, 152, 42, 0.15);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(184, 134, 38, 0.4);
+            color: #102d16;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 8px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #ffffff;
+            border-color: #23592b;
+            color: #23592b;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.btn-next {
+            background: linear-gradient(135deg, #23592b, #b88626);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(35, 89, 43, 0.35);
+        }
+
+        .slide-dots {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(184, 134, 38, 0.35);
+            color: #4e3f22;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+
+        .dot-btn:hover {
+            background: #ffffff;
+            border-color: #b88626;
+        }
+
+        .dot-btn.active {
+            background: linear-gradient(135deg, #23592b, #153c1b);
+            color: #ffffff;
+            border-color: #23592b;
+            box-shadow: 0 2px 10px rgba(35, 89, 43, 0.4);
+        }
+
+        /* ─── Speaker Script / Description Drawer (Gold Beige) ─── */
+        .script-drawer {
+            position: fixed;
+            bottom: 62px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(244, 236, 218, 0.98) 0%, rgba(232, 218, 190, 0.98) 100%);
+            border-top: 3px solid #b88626;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 16px 32px;
+            z-index: 45;
+            box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            animation: slideUp 0.25s ease-out forwards;
+        }
+
+        .script-drawer.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .script-content {
+            max-width: 1050px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .script-tag {
+            background: linear-gradient(135deg, var(--olive-primary), #1a4421);
+            border: 1px solid rgba(184, 134, 38, 0.45);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .script-timing {
+            font-family: monospace;
+            font-size: 12px;
+            color: #9c6c10;
+            font-weight: 800;
+        }
+
+        .script-text {
+            font-size: 1.05rem;
+            color: #122816;
+            line-height: 1.6;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .script-close-btn {
+            background: rgba(184, 134, 38, 0.15);
+            border: 1px solid rgba(184, 134, 38, 0.4);
+            color: #3d2f14;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 800;
+            transition: all 0.2s;
+        }
+
+        .script-close-btn:hover {
+            background: rgba(184, 134, 38, 0.3);
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ─── TOP HEADER BAR ─── -->
+    <header>
+        <div class="header-brand">
+            <a href="/" target="_blank" class="header-brand" title="ZinToop Home">
+                <img src="/images/zintoop-logo.png" alt="ZinToop Logo">
+                <span class="brand-title" data-ar="زينتوپ • ZinToop" data-fr="ZinToop • Plateforme">زينتوپ
+                    • Zin<span>Toop</span></span>
+            </a>
+
+            <!-- Language Switcher: AR (Tunisian Flag) / FR -->
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btnLangAr" onclick="setLanguage('ar')" title="العربية (تونس)">
+                    <svg width="20" height="14" viewBox="0 0 30 20" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.4); vertical-align: middle; display: inline-block;">
+                        <rect width="30" height="20" fill="#E70013"/>
+                        <circle cx="15" cy="10" r="6" fill="#FFFFFF"/>
+                        <circle cx="15" cy="10" r="4.5" fill="#E70013"/>
+                        <circle cx="16.2" cy="10" r="3.6" fill="#FFFFFF"/>
+                        <polygon points="14.8,10 13.5,8.8 14.1,10.7 12.5,9.6 14.5,9.6" fill="#E70013" transform="rotate(-25 14.5 10)"/>
+                    </svg>
+                    العربية
+                </button>
+                <button class="lang-btn" id="btnLangFr" onclick="setLanguage('fr')" title="Français">
+                    <svg width="20" height="14" viewBox="0 0 30 20" style="border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.4); vertical-align: middle; display: inline-block;">
+                        <rect width="10" height="20" fill="#002395"/>
+                        <rect x="10" width="10" height="20" fill="#FFFFFF"/>
+                        <rect x="20" width="10" height="20" fill="#ED2939"/>
+                    </svg>
+                    Français
+                </button>
+            </div>
+        </div>
+
+        <div class="progress-box">
+            <div class="slide-counter">
+                SLIDE <span class="current-num" id="currentSlideDisplay">1</span> / 8
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width: 12.5%;"></div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <!-- 5-Minute Timer -->
+            <button class="timer-btn" id="timerBtn" onclick="toggleTimer()" title="توقيت 5 دقائق">
+                <i class="fa-regular fa-clock"></i>
+                <span id="timerDisplay">00:00</span>
+                <span style="font-size: 10px; color: var(--text-muted);">/ 05:00</span>
+            </button>
+
+            <!-- Script / Description Toggle -->
+            <button class="action-btn script-btn" id="scriptBtn" onclick="toggleScript()"
+                title="عرض الشرح والوصف (حرف S)">
+                <i class="fa-solid fa-file-lines"></i>
+                <span id="scriptBtnLabel">الشرح والوصف</span>
+            </button>
+
+            <!-- Live Demo Link -->
+            <a href="/" target="_blank" class="action-btn demo-btn" title="فتح المنصة الحية">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Live Demo</span>
+            </a>
+
+            <!-- Fullscreen Toggle -->
+            <button class="action-btn" onclick="toggleFullscreen()" title="ملء الشاشة (حرف F)">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ─── MAIN SLIDE STAGE ─── -->
+    <main>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 1: صفحة البداية (30 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="جلسة تحكيم علامة Startup Tunisia"
+                    data-fr="Candidature Officielle Label Startup Tunisia">
+                    جلسة تحكيم علامة Startup Tunisia
+                </span>
+                <h1 class="slide-title" data-ar="منصة الزين لزيت الزيتون التونسي — زين توب (ZinToop)"
+                    data-fr="EZZINE TUNISIAN OLIVE OIL PLATFORM — ZINTOOP">
+                    منصة الزين لزيت الزيتون التونسي — زين توب (ZinToop)
+                </h1>
+                <p class="slide-desc" data-ar="المنظومة الرقمية الشاملة لقطاع زيت الزيتون التونسي (SaaS-Enabled Marketplace)"
+                    data-fr="L'Écosystème Numérique & SaaS-Enabled Marketplace de la Filière Oléicole">
+                    المنظومة الرقمية الشاملة لقطاع زيت الزيتون التونسي (SaaS-Enabled Marketplace)
+                </p>
+            </div>
+
+            <div class="hero-layout">
+                <!-- Left: Official ZinToop Logo Showcase (Pure Vivid Agritech 5-Roles Background, No Dark Layer) -->
+                <div class="slide-visual-frame official-logo-showcase"
+                    style="background: url('/images/pitch/agritech_5_roles.jpg') center/cover no-repeat; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; border: 2.5px solid var(--gold); box-shadow: 0 16px 40px rgba(0,0,0,0.35);">
+                    
+                    <!-- Round Logo Medallion Badge -->
+                    <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 130px; height: 130px; border-radius: 50%; background: #ffffff; border: 3.5px solid var(--gold); box-shadow: 0 8px 25px rgba(0,0,0,0.35), 0 0 16px rgba(201,152,42,0.4); z-index: 2; padding: 10px; transition: transform 0.3s ease;">
+                        <img src="/images/zintoop-logo.png" alt="ZinToop Official Logo"
+                            style="max-width: 92%; max-height: 92%; object-fit: contain; border-radius: 50%;">
+                    </div>
+
+                    <!-- Texts wrapped in visible high-contrast spans (Clean Light Glassmorphism) -->
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; position: relative; z-index: 2;">
+                        <span style="display: inline-block; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid var(--gold); padding: 5px 20px; border-radius: 999px; font-size: 14px; font-weight: 900; color: #0e2b14; letter-spacing: -0.2px; box-shadow: 0 4px 16px rgba(0,0,0,0.22);"
+                            data-ar="منصة الزين لزيت الزيتون التونسي" data-fr="Ezzine Tunisian Olive Oil Platform">
+                            منصة الزين لزيت الزيتون التونسي
+                        </span>
+                        <span style="display: inline-block; background: linear-gradient(135deg, #b88626, #8f6516); border: 1.5px solid #ffffff; padding: 4px 16px; border-radius: 999px; font-size: 11.5px; font-weight: 800; color: #ffffff; box-shadow: 0 4px 14px rgba(0,0,0,0.25);"
+                            data-ar="العلامة الرسمية المسجلة • ZinToop"
+                            data-fr="Marque Officielle Enregistrée • ZinToop">
+                            العلامة الرسمية المسجلة • ZinToop
+                        </span>
+                    </div>
+
+                    <!-- Visual Caption Badge -->
+                    <span class="visual-caption" style="background: rgba(255, 255, 255, 0.95); color: #0e2b14; border: 1.5px solid var(--gold); backdrop-filter: blur(10px); font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"
+                        data-ar="منظومة الـ 5 أدوار • شركة ZinToop (SUARL)"
+                        data-fr="Écosystème 5 Rôles • SUARL ZinToop">منظومة الـ 5 أدوار • شركة ZinToop (SUARL)</span>
+                </div>
+
+                <!-- Right: Core 3 Pillars Cards -->
+                <div class="hero-cards-list">
+                    <div class="hero-card-item">
+                        <div class="hero-card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                                <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                                <path d="M2 7h20"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1rem;" data-ar="سوق رقمي B2B & B2C"
+                                data-fr="Marketplace B2B & B2C">سوق رقمي B2B & B2C</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="منصة متوفرة بثلاث لغات لربط المنتج المحلي بالمستهلك والمستورد مباشرة."
+                                data-fr="Plateforme trilingue reliant directement les producteurs locaux aux acheteurs et importateurs.">
+                                منصة متوفرة بثلاث لغات لربط المنتج المحلي بالمستهلك والمستورد مباشرة.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="hero-card-item">
+                        <div class="hero-card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                                <path d="M15 18H9"/>
+                                <path d="M19 18h2a1 1 0 0 0 1-1v-5l-3-4h-5v10h1"/>
+                                <circle cx="7" cy="18" r="2"/>
+                                <circle cx="17" cy="18" r="2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1rem;" data-ar="رقمنة النقل الفلاحي"
+                                data-fr="Numérisation du Fret">رقمنة النقل الفلاحي</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="نظام نداء آلي، تتبع حي ومباشر، وتأكيد التسليم بكود PIN لإنهاء السمسرة."
+                                data-fr="Dispatch d'ordres de mission, Live Tracking et validation sécurisée par Code PIN.">
+                                نظام نداء آلي، تتبع حي ومباشر، وتأكيد التسليم بكود PIN لإنهاء السمسرة.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="hero-card-item">
+                        <div class="hero-card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                                <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
+                                <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
+                                <path d="M12 10V2"/>
+                                <path d="M12 2l5 3"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1rem;" data-ar="جسر نحو التصدير"
+                                data-fr="Passerelle d'Export">جسر نحو التصدير</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="شبكة تضم 75 وحدة تعليب لضمان عدم ضياع أي صفقة."
+                                data-fr="75 unités de conditionnement pour transformer le vrac en produit fini exportable.">
+                                شبكة تضم 75 وحدة تعليب لضمان عدم ضياع أي صفقة.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 6px;">
+                <span style="font-size: 12px; font-weight: 800; color: #dfd6c4; text-shadow: 0 1px 4px rgba(0,0,0,0.5);"
+                    data-ar="المؤسس ورئيس المشروع: حمدي الزين — شركة زين توب (SUARL)"
+                    data-fr="Fondateur & Lead Dev : Hamdi Zine — SUARL ZinToop">
+                    المؤسس ورئيس المشروع: حمدي الزين — شركة زين توب (SUARL)
+                </span>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 2: المشكل (45 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <span class="slide-tag"
+                    style="background: rgba(239, 68, 68, 0.2); color: #ff9b9b; border: 1px solid rgba(239, 68, 68, 0.45);"
+                    data-ar="تشخيص القطاع • المشكل الأساسي" data-fr="Diagnostic du Marché • Le Problème">
+                    تشخيص القطاع • المشكل الأساسي
+                </span>
+                <h1 class="slide-title" data-ar="انقطاع سلسلة القيمة وفوضى الوساطة"
+                    data-fr="Rupture de la Chaîne de Valeur">
+                    انقطاع سلسلة القيمة وفوضى الوساطة
+                </h1>
+                <p class="slide-desc"
+                    data-ar="المشكل الأساسي هو كثرة الوسطاء الذين يرفعون الأسعار وصعوبة تواصل المستورد الأجنبي مع المنتج"
+                    data-fr="Multiplication des intermédiaires informels et rupture entre importateurs et producteurs">
+                    المشكل الأساسي هو كثرة الوسطاء الذين يرفعون الأسعار وصعوبة تواصل المستورد الأجنبي مع المنتج
+                </p>
+            </div>
+
+            <div class="visual-content-grid">
+                <!-- Left: 3D Broken Chain Artwork -->
+                <div class="slide-visual-frame" style="border-color: var(--danger-border);">
+                    <img src="/images/pitch/slide2_problem.jpg" alt="Broken Supply Chain Infographic">
+                    <span class="visual-caption" style="color: var(--danger-text);">Chaîne Fragmentée &
+                        Inefficace</span>
+                </div>
+
+                <!-- Right: Problem Bullets -->
+                <div class="problem-bullets">
+                    <div class="problem-item">
+                        <h4 data-ar="1. كثرة الوسطاء والسماسرة" data-fr="1. Intermédiation Sauvage">1. كثرة الوسطاء
+                            والسماسرة</h4>
+                        <p data-ar="يرفعون الأسعار على المستهلك ويضيعون حق الفلاح وهامش ربحه المستحق."
+                            data-fr="Des courtiers informels qui écrasent la marge de l'agriculteur et augmentent les prix.">
+                            يرفعون الأسعار على المستهلك ويضيعون حق الفلاح وهامش ربحه المستحق.
+                        </p>
+                    </div>
+
+                    <div class="problem-item">
+                        <h4 data-ar="2. عائق التصدير والتواصل المباشر" data-fr="2. Barrière à l'Exportation">2. عائق
+                            التصدير والتواصل المباشر</h4>
+                        <p data-ar="الموردون والشركات الأجنبية المهتمة بالإنتاج التونسي تجد صعوبة بالغة في التواصل المباشر مع المُنتج."
+                            data-fr="Les acheteurs internationaux peinent à identifier et contacter directement les producteurs certifiés.">
+                            الموردون والشركات الأجنبية المهتمة بالإنتاج التونسي تجد صعوبة بالغة في التواصل المباشر مع
+                            المُنتج.
+                        </p>
+                    </div>
+
+                    <div class="problem-item">
+                        <h4 data-ar="3. انقطاع سلسلة القيمة داخلياً" data-fr="3. Rupture de la Chaîne Locale">3. انقطاع
+                            سلسلة القيمة داخلياً</h4>
+                        <p data-ar="انقطاع بين المعاصر ووحدات التعليب، ونقل عشوائي غير منظم يفتقر للأمان والتتبع."
+                            data-fr="Manque de coordination entre moulins et conditionneurs, et logistique désorganisée.">
+                            انقطاع بين المعاصر ووحدات التعليب، ونقل عشوائي غير منظم يفتقر للأمان والتتبع.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 3: الحل (منصة ZinToop) — [50 ثانية]
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="الحل الرقمي الشامل" data-fr="La Solution Intégrée">الحل الرقمي
+                    الشامل</span>
+                <h1 class="slide-title">منصة ZinToop : الجسر الرقمي</h1>
+                <p class="slide-desc"
+                    data-ar="ربط المستهلك والمستورد بالمنتج، وتكامل أدوار الفلاح والمعصرة ووحدة التعليب والناقل لضمان عدم ضياع أي صفقة وحماية 'Made in Tunisia'"
+                    data-fr="Connexion directe local & export, et synergie des 5 acteurs clés pour zéro deal perdu et valorisation du 'Made in Tunisia'">
+                    ربط المستهلك والمستورد بالمنتج، وتكامل أدوار الفلاح والمعصرة ووحدة التعليب والناقل لضمان عدم ضياع أي صفقة وحماية 'Made in Tunisia'
+                </p>
+            </div>
+
+            <div class="visual-content-grid">
+                <!-- Left: 3D Digital Bridge Artwork -->
+                <div class="slide-visual-frame">
+                    <img src="/images/pitch/slide3_solution.jpg" alt="ZinToop Digital Agritech Bridge">
+                    <span class="visual-caption">Passerelle Numérique Intégrée</span>
+                </div>
+
+                <!-- Right: Solution Explanation (4 Core Pillars) -->
+                <div class="solution-bullets">
+                    <div class="solution-item">
+                        <h4 data-ar="🛒 ربط المستهلك المحلي بالمنتج مباشرة (B2C)"
+                            data-fr="🛒 Vente Directe du Producteur au Consommateur (B2C)">🛒 ربط المستهلك المحلي بالمنتج مباشرة (B2C)</h4>
+                        <p data-ar="تمكين المواطن والعائلة التونسية من اقتناء زيت زيتون بكر ممتاز أصلي وموثوق مباشرة من الفلاح والمعصرة بأسعار عادلة دون وسطاء."
+                            data-fr="Accès direct pour le consommateur local à une huile d'olive extra vierge authentique et garantie, au juste prix sans intermédiaires.">
+                            تمكين المواطن والعائلة التونسية من اقتناء زيت زيتون بكر ممتاز أصلي وموثوق مباشرة من الفلاح والمعصرة بأسعار عادلة دون وسطاء.
+                        </p>
+                    </div>
+
+                    <div class="solution-item">
+                        <h4 data-ar="🌐 بوابة التصدير وربط المستورد الأجنبي (B2B)"
+                            data-fr="🌐 Passerelle Export & Mise en Relation B2B">🌐 بوابة التصدير وربط المستورد الأجنبي (B2B)</h4>
+                        <p data-ar="منصة متوفرة بثلاث لغات تربط المستوردين والشركات الأجنبية مباشرة بالمنتجين والمعاصر والماركات التونسية لكسر حواجز التصدير."
+                            data-fr="Plateforme trilingue connectant directement les acheteurs internationaux aux producteurs et moulins tunisiens.">
+                            منصة متوفرة بثلاث لغات تربط المستوردين والشركات الأجنبية مباشرة بالمنتجين والمعاصر والماركات التونسية لكسر حواجز التصدير.
+                        </p>
+                    </div>
+
+                    <div class="solution-item" style="border-right-color: var(--gold);">
+                        <h4 style="color: var(--gold);" data-ar="🍾 تكامل الأدوار والتشجيع على التعليب والماركات"
+                            data-fr="🍾 Synergie des Acteurs & Promotion des Marques">🍾 تكامل الأدوار والتشجيع على التعليب والماركات
+                        </h4>
+                        <p data-ar="تكامل الأدوار بين (الفلاح، المعصرة، 75 وحدة تعليب، والناقل): حتى لو جلب طرف واحد منهم صفقة، يتكامل الجميع كلٌ في دوره لتصل للمستورد ولا تضيع أي صفقة، مع تشجيع التعليب وتسجيل الماركات لضمان علامة Made in Tunisia وحق كل متدخل."
+                            data-fr="Synergie entre paysan, moulin, 75 unités d'embouteillage et transporteur : si l'un décroche un contrat, tous s'associent pour livrer sans perdre le deal, en stimulant l'embouteillage et les marques 'Made in Tunisia'.">
+                            تكامل الأدوار بين (الفلاح، المعصرة، 75 وحدة تعليب، والناقل): حتى لو جلب طرف واحد منهم صفقة، يتكامل الجميع كلٌ في دوره لتصل للمستورد ولا تضيع أي صفقة، مع تشجيع التعليب وتسجيل الماركات لضمان علامة Made in Tunisia وحق كل متدخل.
+                        </p>
+                    </div>
+
+                    <div class="solution-item">
+                        <h4 data-ar="🤝 منظومة رابح - رابح وضمان حقوق الجميع"
+                            data-fr="🤝 Écosystème Gagnant-Gagnant & Droits Garantis">🤝 منظومة رابح - رابح وضمان حقوق الجميع</h4>
+                        <p data-ar="سعر عادل للمستهلك، رفع دخل الفلاح، تشغيل المعاصر ووحدات التعليب، ونقل منظم؛ كل طرف يضمن حقه وقيمة مضافة عليا للمنتوج التونسي."
+                            data-fr="Prix juste pour le consommateur, rentabilité pour le paysan, activité pour les moulins et fret sécurisé : chacun garantit ses droits.">
+                            سعر عادل للمستهلك، رفع دخل الفلاح، تشغيل المعاصر ووحدات التعليب، ونقل منظم؛ كل طرف يضمن حقه وقيمة مضافة عليا للمنتوج التونسي.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 4: الابتكار والتكنولوجيا (50 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="التكنولوجيا والابتكار" data-fr="L'Innovation Technologique">التكنولوجيا
+                    والابتكار</span>
+                <h1 class="slide-title" data-ar="ذكاء اصطناعي، نقل ذكي، وخوارزميات تسويق متقدمة"
+                    data-fr="IA Ezzaytoune, Fret Numérique & Algorithmes MarTech">ذكاء اصطناعي، نقل ذكي، وخوارزميات تسويق متقدمة</h1>
+                <p class="slide-desc"
+                    data-ar="3 ركائز ابتكار: المساعد الذكي 'الزيتوني' (LLM)، النقل الذكي عبر WhatsApp، وخوارزمية ذكاء وتتبع الزوار (Visitor Intelligence)"
+                    data-fr="3 piliers d'innovation : Assistant IA Ezzaytoune (LLM), Fret via WhatsApp Cloud API, et Moteur de Visitor Intelligence">
+                    3 ركائز ابتكار: المساعد الذكي 'الزيتوني' (LLM)، النقل الذكي عبر WhatsApp، وخوارزمية ذكاء وتتبع الزوار (Visitor Intelligence)
+                </p>
+            </div>
+
+            <div class="visual-content-grid">
+                <!-- Left: 3D Innovation Artwork -->
+                <div class="slide-visual-frame">
+                    <img src="/images/pitch/slide4_innovation.jpg" alt="AI Bot, Smart Transport PIN and Visitor Intelligence">
+                    <span class="visual-caption">Gemini AI • WhatsApp Cloud API • Visitor Intelligence</span>
+                </div>
+
+                <!-- Right: Innovation Bullets (3 Pillars) -->
+                <div class="inno-side-bullets">
+                    <div class="inno-box">
+                        <div class="inno-box-header">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--olive-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="10" rx="2"/>
+                                <circle cx="12" cy="5" r="2"/>
+                                <path d="M12 7v4"/>
+                                <line x1="8" y1="16" x2="8" y2="16.01"/>
+                                <line x1="16" y1="16" x2="16" y2="16.01"/>
+                            </svg>
+                            <h4 data-ar="1. المساعد الذكي 'الزيتوني' (Gemini AI LLM)" data-fr="1. Assistant IA 'Ezzaytoune' (LLM)">1.
+                                المساعد الذكي 'الزيتوني' (Gemini AI LLM)</h4>
+                        </div>
+                        <p data-ar="محرك ذكاء اصطناعي (LLM) مدرب على الدارجة ولغات التصدير وكيمياء الزيت (الحموضة والأصناف)، يربط المشترين بالعروض المناسبة (Smart Matching) ويترجم الصفقات فورياً."
+                            data-fr="Modèle d'IA générative (LLM) expert en chimie oléicole et multilingue : Smart Matching qualité/prix/proximité et traduction instantanée des négociations export.">
+                            محرك ذكاء اصطناعي (LLM) مدرب على الدارجة ولغات التصدير وكيمياء الزيت (الحموضة والأصناف)، يربط المشترين بالعروض المناسبة (Smart Matching) ويترجم الصفقات فورياً.
+                        </p>
+                    </div>
+
+                    <div class="inno-box gold">
+                        <div class="inno-box-header">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                                <path d="M19 18h2a1 1 0 0 0 1-1v-5l-3-4h-5v10h1"/>
+                                <circle cx="7" cy="18" r="2"/>
+                                <circle cx="17" cy="18" r="2"/>
+                            </svg>
+                            <h4 style="color: var(--gold);" data-ar="2. النقل الذكي وتنبيهات WhatsApp الرسمية (Meta API)"
+                                data-fr="2. Fret Intelligent & Alertes WhatsApp (Meta API)">2. النقل الذكي وتنبيهات WhatsApp الرسمية (Meta API)</h4>
+                        </div>
+                        <p data-ar="نداء فوري للشاحنات عبر WhatsApp دون الحاجة لإيميل، تأكيد التسليم بكود PIN مشفر، وتتبع مسار الشحنات لحظياً (Live GPS) عبر تطبيق الموبايل المخصص."
+                            data-fr="Dispatch automatisé via Meta WhatsApp Cloud API sans friction d'e-mail, validation sécurisée par code PIN chiffré et Live Tracking GPS sur application mobile dédiée.">
+                            نداء فوري للشاحنات عبر WhatsApp دون الحاجة لإيميل، تأكيد التسليم بكود PIN مشفر، وتتبع مسار الشحنات لحظياً (Live GPS) عبر تطبيق الموبايل المخصص.
+                        </p>
+                    </div>
+
+                    <div class="inno-box martech">
+                        <div class="inno-box-header">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1f6e8c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="22" y1="12" x2="18" y2="12"/>
+                                <line x1="6" y1="12" x2="2" y2="12"/>
+                                <line x1="12" y1="6" x2="12" y2="2"/>
+                                <line x1="12" y1="22" x2="12" y2="18"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <h4 style="color: #1f6e8c;" data-ar="3. خوارزمية ذكاء وتتبع الزوار (Visitor Intelligence)"
+                                data-fr="3. Intelligence Visiteurs & Détection de Bots">3. خوارزمية ذكاء وتتبع الزوار (Visitor Intelligence)</h4>
+                        </div>
+                        <p data-ar="فلترة صارمة للروبوتات (Human vs Bots)، تقسيم جغرافي وتقني حسب الدول والأجهزة، وتتبع الزائر العائد عبر كوكيز دائم (5 سنوات) وتكامله مع أكواد Pixel للتسويق الاستهدافي الذكي."
+                            data-fr="Filtrage strict Human vs Bots, segmentation pays et devices, et reconnaissance du visiteur récurrent (cookie 5 ans) intégrée aux Pixels pour un ciblage programmatique d'acheteurs réels.">
+                            فلترة صارمة للروبوتات (Human vs Bots)، تقسيم جغرافي وتقني حسب الدول والأجهزة، وتتبع الزائر العائد عبر كوكيز دائم (5 سنوات) وتكامله مع أكواد Pixel للتسويق الاستهدافي الذكي.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 5: نموذج الربح (50 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="نموذج الربحية" data-fr="Le Modèle Économique">نموذج الربحية</span>
+                <h1 class="slide-title" data-ar="كيف نحقق الأرباح؟" data-fr="Comment Générons-nous des Revenus ?">كيف
+                    نحقق الأرباح؟</h1>
+                <p class="slide-desc"
+                    data-ar="المرحلة الحالية: مجانية 100% للاستقطاب + استجابة لطلبات المعاصر في الخدمات الرقمية + عروض صفقات تصدير بعمولة 1%"
+                    data-fr="Phase actuelle : 100% gratuit pour l'adoption + Demandes entrantes des moulins en services tech + Deals export à 1%">
+                    المرحلة الحالية: مجانية 100% للاستقطاب + استجابة لطلبات المعاصر في الخدمات الرقمية + عروض صفقات تصدير بعمولة 1%
+                </p>
+            </div>
+
+            <div class="bm-layout">
+                <!-- Left: 3D Monetization Funnel Artwork -->
+                <div class="slide-visual-frame">
+                    <img src="/images/pitch/slide5_business_model.jpg" alt="Monetization Funnel Infographic">
+                    <span class="visual-caption">Funnel de Monétisation Hybride</span>
+                </div>
+
+                <!-- Right: 4 Revenue Stream Cards + B2B Tech Services -->
+                <div class="bm-right-column">
+                    <div class="bm-mini-grid">
+                        <div class="bm-mini-card">
+                            <div class="bm-mini-price">0 د.ت</div>
+                            <div class="bm-mini-title" data-ar="تسجيل مجاني + Social Studio" data-fr="Gratuit + Social Studio">تسجيل مجاني + Social Studio</div>
+                            <div class="bm-mini-desc"
+                                data-ar="صفقات مباشرة مجانية 100% بين المستخدمين دون أي عمولة (0% عمولة) + استوديو آلي يولد بطاقات ترويج فيروسية على فيسبوك وواتساب."
+                                data-fr="Deals directs 100% gratuits (0% com.) sans intermédiaire + Social Studio pour bannières virales Facebook et WhatsApp.">
+                                صفقات مباشرة مجانية 100% بين المستخدمين دون أي عمولة (0% عمولة) + استوديو آلي يولد بطاقات ترويج فيروسية على فيسبوك وواتساب.
+                            </div>
+                        </div>
+
+                        <div class="bm-mini-card gold">
+                            <div class="bm-mini-price gold">30 د.ت</div>
+                            <div class="bm-mini-title" data-ar="الاشتراك المتميز Premium" data-fr="Abonnement Premium">
+                                الاشتراك المتميز Premium</div>
+                            <div class="bm-mini-desc"
+                                data-ar="اختياري ويمنح الأولوية والظهور الأكبر في المنصة، وسيكون مطلوباً بشدة مع كبر الجمهور."
+                                data-fr="Optionnel : confère la priorité d'affichage et une visibilité maximale.">
+                                اختياري ويمنح الأولوية والظهور الأكبر في المنصة، وسيكون مطلوباً بشدة مع كبر الجمهور.
+                            </div>
+                        </div>
+
+                        <div class="bm-mini-card">
+                            <div class="bm-mini-price">1 د.ت</div>
+                            <div class="bm-mini-title" data-ar="دينار واحد عن كل نقلة" data-fr="Micro-commission Fret">دينار
+                                واحد عن كل نقلة</div>
+                            <div class="bm-mini-desc"
+                                data-ar="عن كل عملية نقل تنجزها المنصة مع استقطاب مئات الآلاف من الرحلات الفلاحية."
+                                data-fr="1 DT sur chaque course de fret réalisée (stratégie volumique).">
+                                عن كل عملية نقل تنجزها المنصة مع استقطاب مئات الآلاف من الرحلات الفلاحية.
+                            </div>
+                        </div>
+
+                        <div class="bm-mini-card gold">
+                            <div class="bm-mini-price gold">1%</div>
+                            <div class="bm-mini-title" data-ar="1% عمولة الصفقات بتدخلنا" data-fr="1% Deals Accompagnés">1% عمولة الصفقات بتدخلنا</div>
+                            <div class="bm-mini-desc"
+                                data-ar="تُطبّق حصراً عند التدخل ومرافقة وتأمين صفقات التصدير، أما الصفقات المباشرة بين المستخدمين فمجانية تماماً (0% عمولة)."
+                                data-fr="Uniquement en cas d'intervention pour sécuriser l'export. Les transactions directes entre usagers sont 100% gratuites (0% com.).">
+                                تُطبّق حصراً عند التدخل ومرافقة وتأمين صفقات التصدير، أما الصفقات المباشرة بين المستخدمين فمجانية تماماً (0% عمولة).
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B2B Digital & Technical Services Box -->
+                    <div class="bm-services-box">
+                        <div class="bm-services-head">
+                            <div class="bm-services-title-wrap">
+                                <span style="font-size: 0.95rem;">💻</span>
+                                <span class="bm-services-title" data-ar="خدمات رقمية وتطوير تقني B2B (استجابة لطلبات الميدان)" data-fr="Services Digitaux & Tech B2B (Demandes du terrain)">خدمات رقمية وتطوير تقني B2B (استجابة لطلبات الميدان)</span>
+                            </div>
+                            <span class="bm-services-badge" data-ar="طلبات واردة ومسعّرة" data-fr="Demandes entrantes">طلبات واردة ومسعّرة</span>
+                        </div>
+                        <div class="bm-services-grid">
+                            <div class="bm-service-pill">
+                                <span class="bm-service-pill-icon">📣</span>
+                                <div class="bm-service-pill-body">
+                                    <div class="bm-service-pill-name">
+                                        <span data-ar="تسويق رقمي وهوية" data-fr="Marketing & Branding">تسويق رقمي وهوية</span>
+                                        <span class="bm-service-pill-price">215 - 350 DT</span>
+                                    </div>
+                                    <div class="bm-service-pill-desc" data-ar="حملات ممولة، تصاميم الملصقات، وتوليد اتصالات ومبيعات حية." data-fr="Campagnes sponsorisées, design d'étiquettes et leads qualifiés.">حملات ممولة، تصاميم الملصقات، وتوليد اتصالات ومبيعات حية.</div>
+                                </div>
+                            </div>
+
+                            <div class="bm-service-pill">
+                                <span class="bm-service-pill-icon">🌐</span>
+                                <div class="bm-service-pill-body">
+                                    <div class="bm-service-pill-name">
+                                        <span data-ar="واجهات ومتاجر تصدير" data-fr="Sites & E-Commerce Export">واجهات ومتاجر تصدير</span>
+                                        <span class="bm-service-pill-price">1,900 - 3,500 DT</span>
+                                    </div>
+                                    <div class="bm-service-pill-desc" data-ar="مواقع مخصصة للمعاصر ومتاجر إلكترونية دولية متعددة العملات." data-fr="Sites web pour pressoirs et boutiques e-commerce export.">مواقع مخصصة للمعاصر ومتاجر إلكترونية دولية متعددة العملات.</div>
+                                </div>
+                            </div>
+
+                            <div class="bm-service-pill">
+                                <span class="bm-service-pill-icon">🤖</span>
+                                <div class="bm-service-pill-body">
+                                    <div class="bm-service-pill-name">
+                                        <span data-ar="برمجيات ERP وتطبيقات" data-fr="ERP Pressoir & Apps Mobiles">برمجيات ERP وتطبيقات</span>
+                                        <span class="bm-service-pill-price">2,200 - 5,900 DT</span>
+                                    </div>
+                                    <div class="bm-service-pill-desc" data-ar="نظام إدارة إنتاج المعاصر وتتبع الخزانات وتطبيقات جوال خاصة." data-fr="Logiciel ERP gestion production oléicole et applications mobiles.">نظام إدارة إنتاج المعاصر وتتبع الخزانات وتطبيقات جوال خاصة.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 6: الأرقام والإنجازات (40 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="الإنجازات الميدانية الحقيقية"
+                    data-fr="Traction Réelle sur le Terrain">الإنجازات الميدانية الحقيقية</span>
+                <h1 class="slide-title" data-ar="أرقامنا تنمو بسرعة على أرض الواقع"
+                    data-fr="Des Métriques Réelles en Forte Croissance">أرقامنا تنمو بسرعة على أرض الواقع</h1>
+                <p class="slide-desc"
+                    data-ar="نحن حالياً في مرحلة بناء قاعدة جماهيرية وتوفير المنتجات، وأرقامنا الموثقة تثبت الإقبال الكبير"
+                    data-fr="Phase d'acquisition et de constitution de l'offre validée par des données réelles">
+                    نحن حالياً في مرحلة بناء قاعدة جماهيرية وتوفير المنتجات، وأرقامنا الموثقة تثبت الإقبال الكبير
+                </p>
+            </div>
+
+            <div class="traction-grid">
+                <div class="traction-card">
+                    <div class="traction-icon-wrap" style="color: var(--olive-primary); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">1,791</span></div>
+                    <div class="traction-title" data-ar="مستخدم مسجل" data-fr="Utilisateurs Inscrits">مستخدم مسجل</div>
+                </div>
+
+                <div class="traction-card" style="border-top: 3px solid var(--gold);">
+                    <div class="traction-icon-wrap" style="color: var(--gold); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- Farmer with wide brim hat -->
+                            <path d="M2 10.5c0-1.2 4.5-3 10-3s10 1.8 10 3c0 1.2-4.5 2-10 2s-10-.8-10-2z"/>
+                            <path d="M7 9C7.3 5.5 9.2 3.5 12 3.5s4.7 2 5 5.5"/>
+                            <circle cx="12" cy="13.2" r="2.2"/>
+                            <path d="M6 21v-1.8a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4V21"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr" style="color: var(--gold);"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">1,277</span></div>
+                    <div class="traction-title" data-ar="فلاح ومُنتج" data-fr="Agriculteurs & Producteurs">فلاح ومُنتج</div>
+                </div>
+
+                <div class="traction-card">
+                    <div class="traction-icon-wrap" style="color: var(--olive-primary); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+                            <path d="M18 16h2"/>
+                            <path d="M6 16h2"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">131</span></div>
+                    <div class="traction-title" data-ar="معصرة شريكة" data-fr="Moulins & Huileries">معصرة شريكة</div>
+                </div>
+
+                <div class="traction-card" style="border-top: 3px solid var(--gold);">
+                    <div class="traction-icon-wrap" style="color: var(--gold); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 2h4"/>
+                            <path d="M10 2v3a2 2 0 0 1-.6 1.4L8 8v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8l-1.4-1.6A2 2 0 0 1 14 5V2"/>
+                            <path d="M10 13h4"/>
+                            <path d="M19 14v6a2 2 0 0 1-2 2h-1"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr" style="color: var(--gold);"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">75</span></div>
+                    <div class="traction-title" data-ar="وحدات تعليب" data-fr="Unités de Conditionnement">وحدات تعليب</div>
+                </div>
+
+                <div class="traction-card">
+                    <div class="traction-icon-wrap" style="color: var(--olive-primary); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m3 11 18-5v12L3 14v-3z"/>
+                            <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">233</span></div>
+                    <div class="traction-title" data-ar="عرض نشط بالمنصة" data-fr="Offres Commerciales Actives">عرض نشط بالمنصة</div>
+                </div>
+
+                <div class="traction-card" style="border-top: 3px solid var(--gold);">
+                    <div class="traction-icon-wrap" style="color: var(--gold); display: flex; align-items: center; justify-content: center; height: 34px; margin-bottom: 8px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                            <path d="M15 18H9"/>
+                            <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                            <circle cx="17" cy="18" r="2"/>
+                            <circle cx="7" cy="18" r="2"/>
+                        </svg>
+                    </div>
+                    <div class="traction-num" dir="ltr" style="color: var(--gold);"><span dir="ltr" style="direction: ltr !important; unicode-bidi: isolate;">25</span></div>
+                    <div class="traction-title" data-ar="ناقل مسجل (للموبايل)" data-fr="Transporteurs Pilotes">ناقل مسجل (للموبايل)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 7: فريق العمل (20 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="فريق العمل والقيادة" data-fr="L'Équipe & Leadership">فريق العمل
+                    والقيادة</span>
+                <h1 class="slide-title" data-ar="مطور متكامل وابن القطاع الميداني"
+                    data-fr="Maîtrise Technique & Expertise Terrain">مطور متكامل وابن القطاع الميداني</h1>
+                <p class="slide-desc" data-ar="بناء المنصة ذاتياً بكفاءة تكنولوجية كاملة وفهم عميق لمعاناة الفلاح"
+                    data-fr="Développement 100% interne et connaissance intime de la filière oléicole">
+                    بناء المنصة ذاتياً بكفاءة تكنولوجية كاملة وفهم عميق لمعاناة الفلاح
+                </p>
+            </div>
+
+            <div class="founder-layout">
+                <div class="founder-photo-box">
+                    <img src="/images/profili2.jpg" alt="حمدي الزين">
+                    <div class="founder-name">حمدي الزين</div>
+                    <div class="founder-roles">CEO • CTO • Lead Full-Stack</div>
+                    <span style="font-size: 11px; font-weight: 800; padding: 5px 14px; border-radius: 999px; background: linear-gradient(135deg, #18421f, #0d2813); color: #ffffff; border: 1.5px solid var(--gold); box-shadow: 0 4px 12px rgba(13,40,19,0.25); display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.3px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f7d584" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="6"/>
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                        </svg>
+                        PSPO™ • PSM™ Certified
+                    </span>
+                </div>
+
+                <div class="founder-badges">
+                    <div class="f-badge-item">
+                        <div class="f-badge-icon" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(35, 89, 43, 0.1); color: var(--olive-primary);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1.05rem;" data-ar="مطور ويب Full-Stack"
+                                data-fr="Développeur Web Full-Stack">مطور ويب Full-Stack</strong>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="تحكم تقني كامل في البنية البرمجية، سرعة قياسية في التنفيذ، واستقلالية دون شركات وسيطة."
+                                data-fr="Maîtrise totale de l'architecture logicielle, zéro dépendance externe et exécution rapide.">
+                                تحكم تقني كامل في البنية البرمجية، سرعة قياسية في التنفيذ، واستقلالية دون شركات وسيطة.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="f-badge-item">
+                        <div class="f-badge-icon" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(201, 152, 42, 0.15); color: var(--gold);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="6"/>
+                                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1.05rem;"
+                                data-ar="شهائد في الإدارة الرشيقة" data-fr="Certifié en Gestion Agile">شهائد في الإدارة الرشيقة</strong>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="حاصل على شهادات Scrum Master (PSM) و Product Owner (PSPO) لضمان إدارة منتج رشيقة واحترافية."
+                                data-fr="Certifié Scrum Master & Product Owner par Scrum.org pour une gestion de produit rigoureuse.">
+                                حاصل على شهادات Scrum Master (PSM) و Product Owner (PSPO) لضمان إدارة منتج رشيقة
+                                واحترافية.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="f-badge-item">
+                        <div class="f-badge-icon" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(35, 89, 43, 0.1); color: var(--olive-primary);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22v-7"/>
+                                <path d="M7 10a5 5 0 0 1 10 0c1.7 0 3 1.3 3 3a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3c0-1.7 1.3-3 3-3z"/>
+                                <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+                                <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong style="color: var(--olive-dark); font-size: 1.05rem;" data-ar="ابن القيروان والميدان (فلاح وعندي غرس زيتون)"
+                                data-fr="Fils de Kairouan & Oléiculteur (Propriétaire d'Oliveraies)">ابن القيروان والميدان (فلاح وعندي غرس زيتون)</strong>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 2px;"
+                                data-ar="عايش في صلب بيئة زيت الزيتون في القيروان، فلاح وعندي غرس زيتون ونفهم بدقة لغة ومعاناة الفلاح وأصحاب المعاصر."
+                                data-fr="Ancré au cœur du bassin oléicole à Kairouan, agriculteur et propriétaire d'oliveraies, avec une maîtrise intime du terrain.">
+                                عايش في صلب بيئة زيت الزيتون في القيروان، فلاح وعندي غرس زيتون ونفهم بدقة لغة ومعاناة الفلاح وأصحاب المعاصر.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             SLIDE 8: الختام والـ Demo (15 ثانية)
+             ════════════════════════════════════════════════════════════════ -->
+        <div class="slide" id="slide-8">
+            <div class="slide-header">
+                <span class="slide-tag" data-ar="الختام والتسريع" data-fr="Conclusion & Accélération">الختام
+                    والتسريع</span>
+                <h1 class="slide-title" data-ar="علامة Startup Tunisia لتسريع النمو"
+                    data-fr="Accélérer avec le Label Startup">علامة Startup Tunisia لتسريع النمو</h1>
+                <p class="slide-desc" data-ar="علامة Startup Tunisia باش تسرّع نمونا التكنولوجي وتوسعنا محلياً ودولياً"
+                    data-fr="Le Label Startup permettra d'accélérer notre expansion technologique et logistique">
+                    علامة Startup Tunisia باش تسرّع نمونا التكنولوجي وتوسعنا محلياً ودولياً
+                </p>
+            </div>
+
+            <div class="demo-layout glass-panel" style="max-width: 800px; margin: 0 auto; width: 100%;">
+                <div style="font-size: 40px; color: var(--olive-primary);">🚀</div>
+                <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--olive-dark);"
+                    data-ar="يسعدنا الآن مشاركة الشاشة لعرض منصة ZinToop الحية"
+                    data-fr="Démonstration Live de la Plateforme ZinToop">
+                    يسعدنا الآن مشاركة الشاشة لعرض منصة ZinToop الحية
+                </h2>
+                <p style="font-size: 1rem; color: var(--text-muted); max-width: 600px;"
+                    data-ar="شكراً جزيلاً للجنة التحكيم على حسن الاستماع، ومستعدون للإجابة على جميع الأسئلة التقنية والتجارية."
+                    data-fr="Merci aux membres du collège pour leur écoute. Nous sommes prêts pour la session Q&A.">
+                    شكراً جزيلاً للجنة التحكيم على حسن الاستماع، ومستعدون للإجابة على جميع الأسئلة التقنية والتجارية.
+                </p>
+                <a href="/" target="_blank" class="demo-big-btn">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Live Demo • عرض المنصة</span>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── SPEAKER SCRIPT DRAWER (حرف S) ─── -->
+    <div class="script-drawer" id="scriptDrawer">
+        <div class="script-content">
+            <button class="script-close-btn" onclick="toggleScript()">✕ إغلاق</button>
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                    <span class="script-tag" id="scriptTagTitle">الشرح والوصف • الشريحة <span
+                            id="scriptSlideNum">1</span></span>
+                    <span class="script-timing" id="scriptTiming">30 ثانية</span>
+                </div>
+                <p class="script-text" id="scriptText">
+                    "صباح الخير، أنا حمدي الزين، مؤسس ZinToop. تونس من أكبر منتجي زيت الزيتون البكر الممتاز في العالم،
+                    لكن القطاع يعاني من فوضى الوساطة، التشتت، وغياب الرقمنة في كامل سلسلة القيمة (Value Chain)."
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── BOTTOM CONTROLS & NAVIGATION ─── -->
+    <footer>
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>
+            <i class="fa-solid fa-arrow-right"></i>
+            <span id="prevBtnText">السابق</span>
+        </button>
+
+        <div class="slide-dots">
+            <button class="dot-btn active" onclick="goToSlide(1)">1</button>
+            <button class="dot-btn" onclick="goToSlide(2)">2</button>
+            <button class="dot-btn" onclick="goToSlide(3)">3</button>
+            <button class="dot-btn" onclick="goToSlide(4)">4</button>
+            <button class="dot-btn" onclick="goToSlide(5)">5</button>
+            <button class="dot-btn" onclick="goToSlide(6)">6</button>
+            <button class="dot-btn" onclick="goToSlide(7)">7</button>
+            <button class="dot-btn" onclick="goToSlide(8)">8</button>
+        </div>
+
+        <button class="nav-btn btn-next" id="nextBtn" onclick="nextSlide()">
+            <span id="nextBtnText">التالي</span>
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+    </footer>
+
+    <!-- ─── LOGIC CONTROLLER ─── -->
+    <script>
+        const totalSlides = 8;
+        let currentSlide = 1;
+        let currentLang = 'ar';
+        let isScriptOpen = false;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        const scriptsData = {
+            1: {
+                timing: "30 ثانية",
+                ar: '"صباح الخير، أنا حمدي الزين، مؤسس ZinToop. تونس من أكبر منتجي زيت الزيتون البكر الممتاز في العالم، لكن القطاع يعاني من فوضى الوساطة، التشتت، وغياب الرقمنة في كامل سلسلة القيمة (Value Chain)."',
+                fr: '"Bonjour, je suis Hamdi Zine, fondateur de ZinToop. La Tunisie est l\'un des plus grands producteurs d\'huile d\'olive extra vierge au monde, mais le secteur souffre du désordre de l\'intermédiation, de la dispersion et de l\'absence de numérisation sur toute la chaîne de valeur."'
+            },
+            2: {
+                timing: "45 ثانية",
+                ar: '"المشكل الأساسي في القطاع هو كثرة الوسطاء الذين يرفعون الأسعار على المستهلك ويضيعون حق الفلاح. بالإضافة إلى ذلك، الموردون والشركات الأجنبية المهتمة بالإنتاج التونسي تجد صعوبة بالغة في التواصل المباشر مع المُنتج. هذا يخلق انقطاعاً في سلسلة القيمة، سواء خارجياً مع المستوردين، أو داخلياً بين المعاصر ووحدات التعليب."',
+                fr: '"Le problème majeur réside dans la multiplication des intermédiaires qui gonflent les prix au détriment de l\'agriculteur. De plus, les importateurs étrangers ont de grandes difficultés à contacter directement les producteurs. Cela crée une rupture dans la chaîne de valeur, tant avec l\'export qu\'entre moulins et unités de conditionnement."'
+            },
+            3: {
+                timing: "50 ثانية",
+                ar: '"ZinToop هي الجسر الرقمي الشامل. أولاً، نربط المستهلك المحلي مباشرة بالفلاح والمعصرة (B2C) لزيت بكر ممتاز أصلي وموثوق دون وسطاء. ثانياً، نفتح آفاق التصدير (B2B) بربط المستورد الأجنبي مباشرة بالمنتجين. وثالثاً، الأهم هو تكامل الأدوار بين 5 أطراف: الفلاح، المعصرة، وحدة التعليب (75 وحدة شريكة)، الناقل، والمستورد. حتى لو جلب واحد منهم صفقة تصدير وما عندوش مصنع أو وسيلة شحن، يتكامل الجميع وكل متدخل يقوم بدوره لتصل الصفقة للمستورد دون أن تضيع أي فرصة؛ وخاصة عبر تشجيع تعليب زيت الزيتون وتسجيل الماركات لضمان علامة Made in Tunisia وخلق قيمة مضافة عليا تضمن حق وربح كل طرف في المنظومة."',
+                fr: '"ZinToop est la passerelle numérique globale. D\'abord, nous relions le consommateur local au producteur et au moulin (B2C) sans intermédiaire. Ensuite, nous ouvrons l\'export (B2B) en connectant les importateurs étrangers aux producteurs via notre plateforme trilingue. Et surtout, nous réalisons la synergie complète des 5 acteurs clés : l\'agriculteur, le pressoir, l\'unité de conditionnement (75 partenaires), le transporteur et l\'importateur. Si l\'un d\'eux décroche un contrat export, toute la chaîne s\'associe pour livrer sans perdre le deal, tout en stimulant activement l\'embouteillage et le dépôt de marques pour valoriser le \'Made in Tunisia\' et garantir les gains de chacun."'
+            },
+            4: {
+                timing: "50 ثانية",
+                ar: '"الابتكار في ZinToop مبني على 3 ركائز تكنولوجية مستقلة: أولاً، المساعد الذكي \'الزيتوني\' المدعوم بـ LLM (Google Gemini) وخبير في كيمياء الزيت وترجمة الصفقات. ثانياً، منظومة النقل الذكي المرتبطة بـ Meta WhatsApp Cloud API بكود PIN وتتبع حي GPS عبر تطبيق الموبايل. وثالثاً، خوارزمية ذكاء وتتبع الزوار (Visitor Intelligence) التي تعزل الروبوتات والـ Scrapers عن البشر، تصنف الزوار حسب الدول والأجهزة، وتتعرف على الزائر العائد لتغذي أكواد Pixel وتسوق بدقة عالية للعملاء الحقيقيين."',
+                fr: '"L\'innovation ZinToop repose sur 3 piliers technologiques distincts : premièrement, l\'Assistant IA \'Ezzaytoune\' propulsé par LLM (Google Gemini), expert en chimie oléicole et multilingue pour le Smart Matching et la traduction export. Deuxièmement, la logistique intelligente connectée à l\'API Meta WhatsApp Cloud — alertes instantanées sur mobile, sécurisation par code PIN et Live Tracking GPS. Et troisièmement, notre algorithme propriétaire de Visitor Intelligence qui filtre rigoureusement les bots, segmente les visiteurs réels par pays et devices, et s\'intègre aux Pixels pour un ciblage marketing hautement qualifié."'
+            },
+            5: {
+                timing: "50 ثانية",
+                ar: '"نموذج الربحية في ZinToop مبني على الواقع والميدان: نحن حالياً في مرحلة المجانية التامة 100% لبناء القاعدة وتثبيت العرض (0% عمولة على الصفقات المباشرة بين المستخدمين دون تدخلنا)، مع \'Social Studio\' للانتشار الفيروسي. لكن تواجدنا الميداني خلق طلباً تلقائياً حقيقياً: معاصر ومنتجون اتصلوا بنا يطلبون خدمات تقنية ومواقع وبرمجيات إنتاج وتسويق، وتلقينا عروضاً حقيقية لصفقات تصدير بعمولة 1% إذا أمنّا نحن الصفقة والمشتري. هذا الطلب الوارد هو ما قادنا لتسعير هذه الخدمات لفتح مصادر دخل قريبة، إلى جانب الاشتراك المتميز Premium (30 د.ت) ودينار رمزي عن كل عملية نقل تنجزها المنصة."',
+                fr: '"Notre modèle économique est ancré dans la réalité du terrain : nous sommes actuellement en phase de gratuité totale (0% de commission sur les deals directs sans intermédiaire) afin de maximiser l\'adoption. Cependant, notre présence sur le terrain a déjà déclenché des demandes spontanées concrètes : des meuniers nous sollicitent pour des sites web, des logiciels ERP de pressoir et du marketing digital, et nous avons reçu des offres concrètes d\'export à 1% de commission si nous sécurisons la transaction. C\'est cette validation directe par la demande entrante qui a guidé notre grille tarifaire pour monétiser dès la prochaine étape, en plus du Premium (30 DT) et d\'un micro-frais de 1 DT par fret."'
+            },
+            6: {
+                timing: "40 ثانية",
+                ar: '"نحن حالياً في مرحلة بناء قاعدة جماهيرية وتوفير المنتجات، وأرقامنا تنمو بسرعة. وصلنا اليوم إلى 1,791 مستخدماً، منهم 1,277 فلاحاً ومُنتجاً، و131 معصرة، و75 وحدة تعليب. لدينا 233 عرضاً نشطاً ليجد الزائر ما يبحث عنه. كما سجلنا حضور 25 ناقلاً، وسنركز عليهم أكثر عند إطلاق تطبيق الهاتف المحمول لتصبح عمليات النقل حية وفورية."',
+                fr: '"Nos métriques parlent d\'elles-mêmes : 1 791 utilisateurs inscrits, dont 1 277 agriculteurs, 131 moulins, 75 unités de conditionnement et 233 offres actives. Nous comptons également 25 transporteurs pilotes prêts pour le déploiement mobile pour un fret immédiat."'
+            },
+            7: {
+                timing: "20 ثانية",
+                ar: '"وراء هذا المشروع، أنا حمدي الزين، مطور ويب Full-Stack، حاصل على شهائد في الإدارة الرشيقة (Scrum Master / Product Owner). وقبل كل شيء، أنا ابن القيروان وابن الميدان، فلاح وعندي غرس زيتون ونفهم بدقة معاناة الفلاح وأصحاب المعاصر."',
+                fr: '"Derrière ce projet, je suis Hamdi Zine, développeur web Full-Stack, certifié en méthodes Agiles (PSPO / PSM), et surtout fils de Kairouan et agriculteur propriétaire d\'oliveraies avec une maîtrise intime du terrain."'
+            },
+            8: {
+                timing: "15 ثانية",
+                ar: '"علامة Startup Tunisia باش تسرّع نمونا التكنولوجي وتوسعنا. شكراً لكم، ويسعدني الآن نعمل بارتاج للشاشة باش تشوفو منصة ZinToop وكيفاش تخدم في الواقع."',
+                fr: '"Le Label Startup Tunisia va accélérer notre expansion technologique. Merci pour votre écoute, et j\'ai le plaisir maintenant de partager mon écran pour vous montrer la démo live de ZinToop en direct."'
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const htmlRoot = document.getElementById('htmlRoot');
+            const btnAr = document.getElementById('btnLangAr');
+            const btnFr = document.getElementById('btnLangFr');
+
+            if (lang === 'ar') {
+                htmlRoot.setAttribute('dir', 'rtl');
+                htmlRoot.setAttribute('lang', 'ar');
+                btnAr.classList.add('active');
+                btnFr.classList.remove('active');
+                document.getElementById('prevBtnText').textContent = "السابق";
+                document.getElementById('nextBtnText').textContent = currentSlide === totalSlides ? "Live Demo • المنصة" : "التالي";
+                document.getElementById('scriptBtnLabel').textContent = "الشرح والوصف";
+                const tagEl = document.getElementById('scriptTagTitle');
+                if (tagEl) tagEl.innerHTML = 'الشرح والوصف • الشريحة <span id="scriptSlideNum">' + currentSlide + '</span>';
+            } else {
+                htmlRoot.setAttribute('dir', 'ltr');
+                htmlRoot.setAttribute('lang', 'fr');
+                btnFr.classList.add('active');
+                btnAr.classList.remove('active');
+                document.getElementById('prevBtnText').textContent = "Précédent";
+                document.getElementById('nextBtnText').textContent = currentSlide === totalSlides ? "Live Demo" : "Suivant";
+                document.getElementById('scriptBtnLabel').textContent = "Description & Notes";
+                const tagEl = document.getElementById('scriptTagTitle');
+                if (tagEl) tagEl.innerHTML = 'Description & Notes • Slide <span id="scriptSlideNum">' + currentSlide + '</span>';
+            }
+
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                const text = (lang === 'ar') ? el.getAttribute('data-ar') : el.getAttribute('data-fr');
+                if (text) {
+                    el.textContent = text;
+                }
+            });
+
+            updateScriptUI();
+        }
+
+        function updateSlideUI() {
+            document.querySelectorAll('.slide').forEach((el, index) => {
+                if (index + 1 === currentSlide) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            document.getElementById('currentSlideDisplay').textContent = currentSlide;
+            const pct = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+
+            document.querySelectorAll('.dot-btn').forEach((btn, index) => {
+                if (index + 1 === currentSlide) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            document.getElementById('prevBtn').disabled = (currentSlide === 1);
+            const nextBtnText = document.getElementById('nextBtnText');
+            if (currentSlide === totalSlides) {
+                nextBtnText.textContent = (currentLang === 'ar') ? "Live Demo • المنصة" : "Live Demo";
+            } else {
+                nextBtnText.textContent = (currentLang === 'ar') ? "التالي" : "Suivant";
+            }
+
+            updateScriptUI();
+        }
+
+        function updateScriptUI() {
+            const script = scriptsData[currentSlide];
+            if (script) {
+                document.getElementById('scriptSlideNum').textContent = currentSlide;
+                document.getElementById('scriptTiming').textContent = script.timing;
+                document.getElementById('scriptText').textContent = (currentLang === 'ar') ? script.ar : script.fr;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideUI();
+            } else {
+                window.open('/', '_blank');
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideUI();
+            }
+        }
+
+        function goToSlide(n) {
+            if (n >= 1 && n <= totalSlides) {
+                currentSlide = n;
+                updateSlideUI();
+            }
+        }
+
+        function toggleScript() {
+            isScriptOpen = !isScriptOpen;
+            const drawer = document.getElementById('scriptDrawer');
+            const btn = document.getElementById('scriptBtn');
+            const mainEl = document.querySelector('main');
+            if (isScriptOpen) {
+                drawer.classList.add('show');
+                btn.classList.add('active');
+                if (mainEl) mainEl.classList.add('drawer-open');
+            } else {
+                drawer.classList.remove('show');
+                btn.classList.remove('active');
+                if (mainEl) mainEl.classList.remove('drawer-open');
+            }
+        }
+
+        function toggleTimer() {
+            const display = document.getElementById('timerDisplay');
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+            } else {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    const m = Math.floor(timerSeconds / 60);
+                    const s = timerSeconds % 60;
+                    display.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                    if (timerSeconds >= 270) {
+                        display.className = "timer-danger";
+                    } else if (timerSeconds >= 240) {
+                        display.className = "timer-warn";
+                    }
+                }, 1000);
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                if (currentLang === 'ar') nextSlide(); else prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                if (currentLang === 'ar') prevSlide(); else nextSlide();
+            } else if (e.key === 'Space') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            } else if (e.key === 's' || e.key === 'S') {
+                toggleScript();
+            }
+        });
+
+        // Initialize on load
+        updateSlideUI();
+    </script>
+</body>
+
+</html>
