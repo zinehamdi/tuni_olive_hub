@@ -43,7 +43,7 @@ class ServiceProviderRegisterController extends Controller
             ],
             'phone' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:carrier,mill,packer,transiteur,comptable,service_bureau,agri_equipment,agri_materials,agri_study_office'],
+            'role' => ['required', 'in:carrier,mill,packer,transiteur,comptable,service_bureau,agri_equipment,agri_materials,agri_study_office,olive_harvesting'],
             'provider_type' => ['required', 'in:freelancer,bureau,societe'],
             'governorate' => ['required', 'string'],
             'service_description' => ['required', 'string', 'max:1000'],

@@ -13,7 +13,8 @@ class ServiceProviderController extends Controller
         $query = User::with('addresses')
             ->whereIn('role', [
                 'carrier', 'mill', 'packer', 'transiteur', 
-                'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
+                'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office',
+                'olive_harvesting'
             ]);
 
         // Filter by Type

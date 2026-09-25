@@ -24,6 +24,7 @@
                     <option value="carrier" {{ request('role') === 'carrier' ? 'selected' : '' }}>{{ __('Carriers') }}</option>
                     <option value="mill" {{ request('role') === 'mill' ? 'selected' : '' }}>{{ __('Mills') }}</option>
                     <option value="packer" {{ request('role') === 'packer' ? 'selected' : '' }}>{{ __('Packers') }}</option>
+                    <option value="olive_harvesting" {{ request('role') === 'olive_harvesting' ? 'selected' : '' }}>🫒 {{ __('Olive Harvesting') }}</option>
                     <option value="normal" {{ request('role') === 'normal' ? 'selected' : '' }}>{{ __('Normal Users') }}</option>
                 </select>
 

@@ -21,4 +21,5 @@ enum Role: string
     case AgriEquipment = 'agri_equipment';
     case AgriMaterials = 'agri_materials';
     case AgriStudyOffice = 'agri_study_office';
+    case OliveHarvesting = 'olive_harvesting';
 }

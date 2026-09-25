@@ -220,7 +220,7 @@ class ProfileController extends Controller
             }
         }
 
-        if (in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
+        if (in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting'])) {
             $services = [];
             if ($request->filled('services')) {
                 $decoded = json_decode($request->input('services'), true);
@@ -432,7 +432,7 @@ class ProfileController extends Controller
 
         $user = $request->user();
         
-        if (!in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'])) {
+        if (!in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting'])) {
             return back()->with('error', __('Only service providers can add services.'));
         }
 

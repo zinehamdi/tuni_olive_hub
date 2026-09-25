@@ -569,7 +569,7 @@
             </div>
         @endif
 
-        @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+        @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
             <!-- Service Provider Settings -->
             <div class="bg-gradient-to-br from-indigo-50 to-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-2 border-indigo-100 hover:border-indigo-300 transition-all duration-300">
                 <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">

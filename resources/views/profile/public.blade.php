@@ -60,6 +60,7 @@
         'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Équipements Agricoles', 'en' => 'Agri-Equipment'],
         'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Intrants & Engrais', 'en' => 'Agri-Materials'],
         'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'Études Agricoles', 'en' => 'Agri-Study Office'],
+        'olive_harvesting' => ['ar' => 'خدمات جني الزيتون', 'fr' => 'Récolte des Olives', 'en' => 'Olive Harvesting'],
     ];
     $displayRole = $roleMap[$user->role][$locale] ?? ($user->farm_name ?? $user->company_name ?? ($locale === 'ar' ? 'عضو منصة زين توب' : ($locale === 'fr' ? 'Membre ZinToop' : 'ZinToop Member')));
 
@@ -214,6 +215,7 @@
                                             'agri_equipment' => ['ar' => '🚜 معدات وآليات فلاحية', 'fr' => '🚜 Équipements Agricoles', 'en' => '🚜 Agri-Equipment'],
                                             'agri_materials' => ['ar' => '🌱 مواد فلاحية وأسمدة', 'fr' => '🌱 Intrants & Engrais', 'en' => '🌱 Agri-Materials'],
                                             'agri_study_office' => ['ar' => '📐 مكتب دراسات فلاحية', 'fr' => '📐 Bureau d\'Études', 'en' => '📐 Agri-Study Office'],
+                                            'olive_harvesting' => ['ar' => '🫒 خدمات جني الزيتون', 'fr' => '🫒 Récolte des Olives', 'en' => '🫒 Olive Harvesting'],
                                         ];
                                         $locale = app()->getLocale();
                                         $roleName = $roleNames[$user->role][$locale] ?? ($roleNames[$user->role]['ar'] ?? ($locale === 'ar' ? '✨ عضو منصة الزين' : '✨ Member'));
@@ -566,7 +568,7 @@
 
                 <!-- MIDDLE COLUMN: PRODUCTS & SERVICES LISTINGS -->
                 <main class="flex-1 min-w-0 w-full order-2 xl:order-2 space-y-6">
-                    @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+                    @if(in_array($user->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         <div class="px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-700 flex justify-between items-center">
                             <h2 class="font-bold text-white text-sm flex items-center gap-2">

@@ -54,6 +54,7 @@
                             <option value="service_bureau">{{ __('📝 Administrative Services Office') }}</option>
                             <option value="agri_equipment">{{ __('🚜 Agricultural Equipment Companies') }}</option>
                             <option value="agri_materials">{{ __('🌱 Fertilizers and Agricultural Materials Companies') }}</option>
+                            <option value="olive_harvesting">{{ __('🫒 Olive Harvesting Services') }}</option>
                             <option value="agri_study_office">{{ __('📐 Agricultural Studies Office') }}</option>
                         </select>
                     </div>

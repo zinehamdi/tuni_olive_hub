@@ -46,6 +46,7 @@
                             <option value="mill" {{ old('role', $user->role) === 'mill' ? 'selected' : '' }}>🏭 {{ __('صاحب معصرة (Oil Mill Owner)') }}</option>
                             <option value="farmer" {{ old('role', $user->role) === 'farmer' ? 'selected' : '' }}>👨‍🌾 {{ __('فلاح ومنتج (Farmer / Producer)') }}</option>
                             <option value="carrier" {{ old('role', $user->role) === 'carrier' ? 'selected' : '' }}>🚛 {{ __('ناقل ومزود لوجستيك (Carrier / Transporter)') }}</option>
+                            <option value="olive_harvesting" {{ old('role', $user->role) === 'olive_harvesting' ? 'selected' : '' }}>🫒 {{ __('خدمات جني الزيتون (Olive Harvesting)') }}</option>
                             <option value="normal" {{ old('role', $user->role) === 'normal' ? 'selected' : '' }}>🛒 {{ __('مشتري / مستخدم عادي (Buyer / Trader)') }}</option>
                             <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>🛡️ {{ __('مدير المنصة (Administrator)') }}</option>
                         </select>

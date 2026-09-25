@@ -1266,6 +1266,7 @@
     "📝 Administrative Services Office": "📝 Bureau de services administratifs",
     "🚜 Agricultural Equipment Companies": "🚜 Sociétés de matériel agricole",
     "🌱 Fertilizers and Agricultural Materials Companies": "🌱 Sociétés d'engrais et de produits agricoles",
+    "🫒 Olive Harvesting Services": "🫒 Services de Récolte des Olives",
     "📐 Agricultural Studies Office": "📐 Bureau d'études agricoles",
     "Business Structure / Entity Type": "Structure d'activité / Type d'entité",
     "👤 Freelancer": "👤 Indépendant (Freelancer)",
@@ -1411,5 +1412,8 @@
     "انتهت صلاحية الجلسة. يرجى تحديث الصفحة والمحاولة مرة أخرى.": "La session a expiré. Veuillez actualiser la page et réessayer.",
     "فشل نشر العرض. يرجى التأكد من ملء جميع الحقول المطلوبة والمحاولة مرة أخرى.": "Échec de la publication. Veuillez vérifier les champs obligatoires et réessayer.",
     "خطأ في الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.": "Erreur de connexion réseau. Veuillez vérifier votre connexion Internet.",
-    "انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.": "Délai de téléversement dépassé. Veuillez réessayer avec des photos plus légères."
+    "انتهت مهلة الرفع. حاول مرة أخرى أو استخدم صوراً أصغر.": "Délai de téléversement dépassé. Veuillez réessayer avec des photos plus légères.",
+    "Olive Harvesting": "Récolte des Olives",
+    "Olive Harvesting Services": "Services de Récolte des Olives",
+    "Olive harvesting and gathering services with specialized labor and equipment": "Services professionnels de récolte et ramassage des olives (manuel et mécanique)"
 }

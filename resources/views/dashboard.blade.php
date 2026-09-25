@@ -247,6 +247,7 @@
                             'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Équipements Agricoles', 'en' => 'Agri-Equipment', 'icon' => '🚜', 'color' => 'bg-orange-100 text-orange-700'],
                             'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Intrants & Engrais', 'en' => 'Agri-Materials', 'icon' => '🌱', 'color' => 'bg-emerald-100 text-emerald-700'],
                             'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'Études', 'en' => 'Agri-Study Office', 'icon' => '📐', 'color' => 'bg-teal-100 text-teal-700'],
+                            'olive_harvesting' => ['ar' => 'خدمات جني الزيتون', 'fr' => 'Récolte des Olives', 'en' => 'Olive Harvesting', 'icon' => '🫒', 'color' => 'bg-lime-100 text-lime-800'],
                         ];
                         $userRole = Auth::user()->role;
                         $roleData = $roleNames[$userRole] ?? ['ar' => 'مستخدم', 'fr' => 'Utilisateur', 'en' => 'User', 'icon' => '👤', 'color' => 'bg-gray-100 text-gray-700'];
@@ -336,7 +337,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 {{ __('nav.dashboard') }}
             </a>
-            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 hover:text-[#6A8F3B] rounded-xl font-bold text-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 {{ __('Manage Services') }}
@@ -429,7 +430,7 @@
                     {{ Auth::user()->name }}
                 @endif
             </span>
-            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
             <a href="{{ route('profile.edit') }}" class="px-3 py-2 bg-[#6A8F3B] text-white rounded-xl flex items-center gap-1 font-bold text-sm hover:bg-[#5a7a2f] transition-colors">
                 {{ __('Services') }}
             </a>
@@ -904,7 +905,7 @@
             </div>
 
             <!-- Offered Services & Products / Photo Gallery -->
-            @if(in_array(Auth::user()->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+            @if(in_array(Auth::user()->role, ['carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
             <!-- B2B Service Cards (In place of Photo Gallery) -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" x-data="{ showAddCardModal: false, showEditCardModal: false, editService: {}, editIndex: -1 }">
                 <div class="flex items-center justify-between px-5 py-4 border-b border-gray-50 bg-gradient-to-r from-indigo-50 to-white">
@@ -1191,7 +1192,7 @@
             </div>
             @endif
 
-             @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office']))
+             @if(in_array(Auth::user()->role, ['carrier', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting']))
             <!-- My B2B Services Profile Card -->
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6 border border-gray-100" x-data="{ showAddModal: false }">
                 <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-indigo-600 to-indigo-800">

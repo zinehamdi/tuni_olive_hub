@@ -26,6 +26,7 @@
         'agri_equipment' => ['ar' => 'شركات معدات وآلات فلاحية', 'fr' => 'Matériel Agricole', 'en' => 'Agri Equipment & Machinery'],
         'agri_materials' => ['ar' => 'شركات أسمدة ومواد فلاحية', 'fr' => 'Matières & Engrais Agricoles', 'en' => 'Agri Materials & Fertilizers'],
         'agri_study_office' => ['ar' => 'مكتب دراسات واستشارات فلاحية', 'fr' => 'Bureau d\'études agricoles', 'en' => 'Agri Study Office & Consulting'],
+        'olive_harvesting' => ['ar' => 'خدمات جني وجمع الزيتون', 'fr' => 'Services de Récolte des Olives', 'en' => 'Olive Harvesting Services'],
     ];
 
     $roleLabelsGlobal = [
@@ -38,6 +39,7 @@
         'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Matériel Agricole', 'en' => 'Agri Equipment', 'icon' => '🚜'],
         'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Matières & Engrais Agricoles', 'en' => 'Agri Materials & Fertilizers', 'icon' => '🌱'],
         'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'études agricoles', 'en' => 'Agri Study Office', 'icon' => '📐'],
+        'olive_harvesting' => ['ar' => 'خدمات جني الزيتون', 'fr' => 'Récolte des Olives', 'en' => 'Olive Harvesting', 'icon' => '🫒'],
     ];
 
     $providerTypeLabelsGlobal = [
@@ -56,6 +58,7 @@
         'agri_equipment' => ['ar' => 'بيع وتوفير المعدات والآلات الفلاحية الحديثة لقطاع الزيتون', 'fr' => 'Vente de matériel et machines agricoles', 'en' => 'Sale of agricultural equipment and machinery'],
         'agri_materials' => ['ar' => 'توفير الأسمدة والمشاتل والمواد الفلاحية ذات الجودة العالية', 'fr' => 'Fourniture d\'engrais et de matériel agricole', 'en' => 'Supply of fertilizers and agricultural materials'],
         'agri_study_office' => ['ar' => 'دراسات فلاحية واستشارات هندسية لتطوير وإدارة المشاريع', 'fr' => 'Études agricoles et conseil en ingénierie', 'en' => 'Agricultural studies and engineering consulting'],
+        'olive_harvesting' => ['ar' => 'خدمات جني وجمع الزيتون يدوياً وبالمعدات الحديثة وشباك الجني مع توفير اليد العاملة', 'fr' => 'Services professionnels de récolte et ramassage des olives (manuel et mécanique)', 'en' => 'Professional olive harvesting and gathering services (manual and mechanical)'],
     ];
 
     $providersJsonData = collect($providers)->mapWithKeys(function($p) use ($roleLabelsGlobal, $providerTypeLabelsGlobal, $defaultDescsGlobal) {
@@ -240,6 +243,7 @@
                                 <option value="service_bureau"  {{ request('type') === 'service_bureau' ? 'selected' : '' }}>📝 {{ __('Service Bureau') }}</option>
                                 <option value="agri_equipment"  {{ request('type') === 'agri_equipment' ? 'selected' : '' }}>🚜 {{ __('Agri-Equipment') }}</option>
                                 <option value="agri_materials"  {{ request('type') === 'agri_materials' ? 'selected' : '' }}>🌱 {{ __('Agri-Materials') }}</option>
+                                <option value="olive_harvesting"  {{ request('type') === 'olive_harvesting' ? 'selected' : '' }}>🫒 {{ __('Olive Harvesting') }}</option>
                                 <option value="agri_study_office"  {{ request('type') === 'agri_study_office' ? 'selected' : '' }}>📐 {{ __('Agri-Study Office') }}</option>
                             </select>
                         </div>
@@ -318,6 +322,7 @@
                             'agri_equipment' => ['ar' => 'معدات وآليات فلاحية', 'fr' => 'Matériel Agricole', 'en' => 'Agri Equipment', 'icon' => '🚜'],
                             'agri_materials' => ['ar' => 'مواد فلاحية وأسمدة', 'fr' => 'Matières & Engrais Agricoles', 'en' => 'Agri Materials & Fertilizers', 'icon' => '🌱'],
                             'agri_study_office' => ['ar' => 'مكتب دراسات فلاحية', 'fr' => 'Bureau d\'études agricoles', 'en' => 'Agri Study Office', 'icon' => '📐'],
+                            'olive_harvesting' => ['ar' => 'خدمات جني الزيتون', 'fr' => 'Récolte des Olives', 'en' => 'Olive Harvesting', 'icon' => '🫒'],
                         ];
                         $roleData = $roleLabels[$provider->role] ?? ['ar' => 'مزود خدمة', 'fr' => 'Prestataire', 'en' => 'Service Provider', 'icon' => '👥'];
                         

@@ -149,7 +149,10 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
             'phone' => ['nullable', 'string', 'max:20'],
-            'role' => ['required', 'string', Rule::in(['farmer', 'mill', 'carrier', 'packer', 'normal', 'admin'])],
+            'role' => ['required', 'string', Rule::in([
+                'farmer', 'mill', 'carrier', 'packer', 'normal', 'admin',
+                'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting'
+            ])],
             'show_contact_info' => ['sometimes', 'boolean'],
             'show_address' => ['sometimes', 'boolean'],
         ]);

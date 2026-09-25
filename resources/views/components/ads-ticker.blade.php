@@ -153,7 +153,7 @@
                 // Fetch active registered service providers from Cache to avoid slow database queries
                 $cachedProviders = \Illuminate\Support\Facades\Cache::remember('ticker_b2b_providers', 600, function() {
                     return \App\Models\User::whereIn('role', [
-                            'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office'
+                            'carrier', 'mill', 'packer', 'transiteur', 'comptable', 'service_bureau', 'agri_equipment', 'agri_materials', 'agri_study_office', 'olive_harvesting'
                         ])
                         ->latest()
                         ->get();
@@ -179,6 +179,7 @@
                     'agri_equipment' => '🚜',
                     'agri_materials' => '🌱',
                     'agri_study_office' => '📐',
+                    'olive_harvesting' => '🫒',
                 ];
 
                 $defaultDescs = [
@@ -191,6 +192,7 @@
                     'agri_equipment' => __('Selling and providing modern agricultural equipment and machinery for the olive sector'),
                     'agri_materials' => __('Providing high-quality fertilizers, seedlings, and agricultural materials'),
                     'agri_study_office' => __('Agricultural studies and engineering consultations for project development and management'),
+                    'olive_harvesting' => __('Olive harvesting and gathering services with specialized labor and equipment'),
                 ];
 
                 $providerAds = [];
