@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 
                                 @if($listing->product->price)
                                     <div class="text-lg font-bold text-[#6A8F3B] mb-3">
-                                        {{ number_format($listing->product->price, 2) }} دينار
+                                        {{ fmod((float)$listing->product->price, 1.0) == 0.0 ? number_format($listing->product->price, 0, '.', '') : number_format($listing->product->price, 3, '.', '') }} دينار
                                     </div>
                                 @endif
                                 

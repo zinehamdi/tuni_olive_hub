@@ -155,11 +155,16 @@ class CurrencyConverter
         $converted = $this->convert($amount, $storedCurrency, $displayCurrency);
 
         if ($displayCurrency === 'USD') {
-            return '$' . number_format($converted, 2);
+            return '$' . (fmod($converted, 1.0) == 0.0 ? number_format($converted, 0) : number_format($converted, 2));
         }
 
-        // TND — Arabic display
-        return number_format($converted, 2) . ' ' . ($locale === 'ar' ? 'دينار' : 'TND');
+        // TND — Arabic / local display (in Tunisia, millimes are 3 digits, integers have no decimals, no thousand separator)
+        $currencyLabel = ($locale === 'ar' ? 'دينار' : 'TND');
+        if (fmod($converted, 1.0) == 0.0) {
+            return number_format($converted, 0, '.', '') . ' ' . $currencyLabel;
+        }
+
+        return number_format($converted, 3, '.', '') . ' ' . $currencyLabel;
     }
 
     /**

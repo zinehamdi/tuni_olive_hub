@@ -63,7 +63,9 @@
         default => ($listing->unit ?: match($curLocale) { 'fr' => 'kg', 'ar' => 'كغ', default => 'kg' })
     };
     
-    $priceFormatted = number_format($listing->price, 2);
+    $priceFormatted = fmod((float)$listing->price, 1.0) == 0.0
+        ? number_format($listing->price, 0, '.', '')
+        : (($curr === 'TND') ? number_format($listing->price, 3, '.', '') : number_format($listing->price, 2, '.', ''));
     $curr = $listing->currency ?? 'TND';
     $priceText = $listing->price == 0 
         ? match($curLocale) { 'fr' => 'Prix sur demande', 'ar' => 'السعر عند الطلب', default => 'Price upon request' }
@@ -380,7 +382,7 @@
                             @if($listing->price == 0)
                                 <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-3xl animate-pulse">السعر عند الطلب</span>
                             @else
-                                {{ number_format($listing->price, 2) }}
+                                {{ fmod((float)$listing->price, 1.0) == 0.0 ? number_format($listing->price, 0, '.', '') : (($listing->currency ?? 'TND') === 'TND' ? number_format($listing->price, 3, '.', '') : number_format($listing->price, 2, '.', '')) }}
                                 <span class="text-2xl text-gray-600">
                                     @if($listing->currency === 'USD')
                                         $
@@ -969,7 +971,8 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                 @if($related->price == 0)
                                     <span class="bg-gradient-to-r from-[#6A8F3B] to-[#C8A356] text-transparent bg-clip-text text-lg animate-pulse">السعر عند الطلب</span>
                                 @else
-                                    {{ number_format($related->product->price, 2) }} 
+                                    @php $relPrice = (float)($related->product->price ?? $related->price); @endphp
+                                    {{ fmod($relPrice, 1.0) == 0.0 ? number_format($relPrice, 0, '.', '') : (($related->currency ?? 'TND') === 'TND' ? number_format($relPrice, 3, '.', '') : number_format($relPrice, 2, '.', '')) }} 
                                     @if($related->currency === 'USD')
                                         $
                                     @elseif($related->currency === 'EUR')

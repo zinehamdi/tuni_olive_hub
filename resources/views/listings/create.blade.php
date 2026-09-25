@@ -100,8 +100,9 @@
           </div>
           <div class="grid md:grid-cols-3 gap-5">
             <div>
-              <label for="price_per_unit" class="block text-[#C8A356] font-semibold mb-1">السعر للوحدة <span class="text-red-600">*</span></label>
-              <input id="price_per_unit" name="price_per_unit" type="number" step="0.001" min="0" required value="{{ old('price_per_unit', request('price')) }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 18.5">
+              <label for="price_per_unit" class="block text-[#C8A356] font-semibold mb-1">السعر للوحدة (بالدينار التونسي DT) <span class="text-red-600">*</span></label>
+              <input id="price_per_unit" name="price_per_unit" type="number" step="0.001" min="0" required value="{{ old('price_per_unit', request('price')) }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-white focus:ring-2 focus:ring-[#C8A356]" placeholder="مثال: 18 أو 18.500">
+              <div id="price_helper" class="mt-2 text-xs font-semibold hidden p-2.5 rounded-xl border transition-all"></div>
             </div>
             <div>
               <label for="currency" class="block text-[#C8A356] font-semibold mb-1">العملة</label>
@@ -471,6 +472,49 @@
               citySelect.innerHTML = '<option value="">اختر المدينة</option>' + cities.map(c => `<option value="${c}">${c}</option>`).join('');
             }
           });
+        }
+
+        const priceInput = document.getElementById('price_per_unit');
+        const priceHelper = document.getElementById('price_helper');
+        if (priceInput && priceHelper) {
+          function updatePriceHelper() {
+            const raw = priceInput.value.trim();
+            const val = parseFloat(raw);
+            if (isNaN(val) || val <= 0) {
+              priceHelper.classList.add('hidden');
+              priceHelper.innerHTML = '';
+              return;
+            }
+
+            const dinar = Math.floor(val);
+            const millimes = Math.round((val - dinar) * 1000);
+            
+            let html = '';
+            if (millimes === 0) {
+              html = `💰 <strong>${dinar} دينار تونسي</strong>`;
+            } else {
+              html = `💰 <strong>${dinar} دينار و ${millimes} مليم</strong> (${val.toFixed(3)} د.ت)`;
+            }
+
+            const unitVal = (document.getElementById('qty_unit')?.value || '').toLowerCase();
+            const isSmallUnit = unitVal.includes('kg') || unitVal.includes('كغ') || unitVal.includes('liter') || unitVal.includes('لتر') || unitVal.includes('قارورة') || unitVal.includes('bottle');
+
+            if (isSmallUnit && val >= 1000) {
+              const suggestedDinar = val / 1000;
+              html += `<div class="mt-1 text-amber-700 bg-amber-50 p-1.5 rounded border border-amber-200">
+                ⚠️ هل تقصد <strong>${suggestedDinar} دينار</strong>؟ لقد أدخلت <strong>${dinar} دينار</strong> (السعر بالدينار وليس بالمليم).
+              </div>`;
+              priceHelper.className = 'mt-2 text-xs font-semibold p-2.5 rounded-xl border bg-amber-50/50 border-amber-300 text-amber-900 block';
+            } else {
+              priceHelper.className = 'mt-2 text-xs font-semibold p-2.5 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-800 block';
+            }
+
+            priceHelper.innerHTML = html;
+          }
+
+          priceInput.addEventListener('input', updatePriceHelper);
+          priceInput.addEventListener('change', updatePriceHelper);
+          if (priceInput.value) updatePriceHelper();
         }
       });
 

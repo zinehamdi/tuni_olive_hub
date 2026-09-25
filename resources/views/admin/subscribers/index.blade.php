@@ -352,7 +352,7 @@ L'équipe ZinToop.</p>
 <ul style="direction:rtl;text-align:right;">
     <li><strong>المنتج:</strong> {{ addslashes($latestListing?->product?->variety ?? '—') }} ({{ addslashes($latestListing?->product?->type === 'oil' ? 'زيت زيتون' : 'زيتون') }})</li>
     <li><strong>الكمية:</strong> {{ addslashes(number_format($latestListing?->quantity ?? 0, 0)) }} {{ addslashes($latestListing?->unit ?? '') }}</li>
-    <li><strong>السعر:</strong> {{ addslashes($latestListing && $latestListing->price > 0 ? number_format($latestListing->price, 2).' '.($latestListing->currency ?? 'TND') : 'عند الطلب') }}</li>
+    <li><strong>السعر:</strong> {{ addslashes($latestListing && $latestListing->price > 0 ? (fmod((float)$latestListing->price, 1.0) == 0.0 ? number_format($latestListing->price, 0) : number_format($latestListing->price, 3)).' '.($latestListing->currency ?? 'TND') : 'عند الطلب') }}</li>
     {{ $latestListing?->governorate ? '<li><strong>المنطقة:</strong> '.addslashes($latestListing->governorate).'</li>' : '' }}
 </ul>
 <p style="direction:rtl;text-align:right;"><a href="{{ $latestListing ? route('listings.show', $latestListing) : url('/#products') }}">👁 مشاهدة العرض الآن</a></p>`

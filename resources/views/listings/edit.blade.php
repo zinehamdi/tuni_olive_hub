@@ -107,11 +107,12 @@
               </div>
               <div>
                 <label for="price" class="block text-[#C8A356] font-semibold mb-1">
-                  <span x-show="saleMode === 'saniya' && priceMode === 'whole'">السعر الإجمالي للسانية (دينار)</span>
-                  <span x-show="saleMode === 'saniya' && priceMode === 'per_unit'">السعر بالطن الواحد (دينار)</span>
-                  <span x-show="saleMode !== 'saniya'">السعر (لكل وحدة)</span>
+                  <span x-show="saleMode === 'saniya' && priceMode === 'whole'">السعر الإجمالي للسانية (دينار تونسي DT)</span>
+                  <span x-show="saleMode === 'saniya' && priceMode === 'per_unit'">السعر بالطن الواحد (دينار تونسي DT)</span>
+                  <span x-show="saleMode !== 'saniya'">السعر بالدينار التونسي (DT) لكل وحدة</span>
                 </label>
-                <input id="price" name="price" type="number" step="0.01" value="{{ $listing->price }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" required/>
+                <input id="price" name="price" type="number" step="0.001" value="{{ $listing->price }}" class="w-full rounded-xl border border-[#C7D1C7] px-3 py-3 bg-gradient-to-br from-white to-[#F8F4EC] focus:ring-2 focus:ring-[#C8A356] focus:border-transparent transition" placeholder="مثال: 18 أو 18.500" required/>
+                <div id="price_helper" class="mt-2 text-xs font-semibold hidden p-2.5 rounded-xl border transition-all"></div>
               </div>
             </div>
 
@@ -471,5 +472,48 @@ document.getElementById('listingForm').addEventListener('submit', function(e) {
     btn.textContent = 'جاري الحفظ...';
   }
 });
+
+const priceInput = document.getElementById('price');
+const priceHelper = document.getElementById('price_helper');
+if (priceInput && priceHelper) {
+  function updatePriceHelper() {
+    const raw = priceInput.value.trim();
+    const val = parseFloat(raw);
+    if (isNaN(val) || val <= 0) {
+      priceHelper.classList.add('hidden');
+      priceHelper.innerHTML = '';
+      return;
+    }
+
+    const dinar = Math.floor(val);
+    const millimes = Math.round((val - dinar) * 1000);
+    
+    let html = '';
+    if (millimes === 0) {
+      html = `💰 <strong>${dinar} دينار تونسي</strong>`;
+    } else {
+      html = `💰 <strong>${dinar} دينار و ${millimes} مليم</strong> (${val.toFixed(3)} د.ت)`;
+    }
+
+    const unitVal = (document.getElementById('unit')?.value || '').toLowerCase();
+    const isSmallUnit = unitVal === 'kg' || unitVal === 'liter' || unitVal === 'bottle';
+
+    if (isSmallUnit && val >= 1000) {
+      const suggestedDinar = val / 1000;
+      html += `<div class="mt-1 text-amber-700 bg-amber-50 p-1.5 rounded border border-amber-200">
+        ⚠️ هل تقصد <strong>${suggestedDinar} دينار</strong>؟ لقد أدخلت <strong>${dinar} دينار</strong> (السعر بالدينار وليس بالمليم).
+      </div>`;
+      priceHelper.className = 'mt-2 text-xs font-semibold p-2.5 rounded-xl border bg-amber-50/50 border-amber-300 text-amber-900 block';
+    } else {
+      priceHelper.className = 'mt-2 text-xs font-semibold p-2.5 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-800 block';
+    }
+
+    priceHelper.innerHTML = html;
+  }
+
+  priceInput.addEventListener('input', updatePriceHelper);
+  priceInput.addEventListener('change', updatePriceHelper);
+  if (priceInput.value) updatePriceHelper();
+}
 </script>
 @endsection

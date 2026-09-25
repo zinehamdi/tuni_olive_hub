@@ -1221,10 +1221,23 @@ document.addEventListener('alpine:init', () => {
 
             if (displayAr) {
                 // Arabic → TND
-                const tnd = amountInUsd / this.tndToUsd;
-                return tnd.toFixed(2) + ' دينار';
+                // Use original num directly if already TND to avoid floating-point drift
+                const tnd = (src === 'TND') ? num : (amountInUsd / this.tndToUsd);
+                const rounded = Math.round(tnd);
+
+                // If integer, never display .00 (no decimals)
+                if (Math.abs(tnd - rounded) < 0.0001) {
+                    return rounded + ' دينار';
+                }
+
+                // If fractional, display 3 decimal places (Tunisian millimes standard)
+                return tnd.toFixed(3) + ' دينار';
             } else {
                 // English / French → USD
+                const roundedUsd = Math.round(amountInUsd);
+                if (Math.abs(amountInUsd - roundedUsd) < 0.0001) {
+                    return '$' + roundedUsd.toLocaleString();
+                }
                 return '$' + amountInUsd.toFixed(2);
             }
         },

@@ -5,7 +5,9 @@
     $variety = $listing->product->variety ?? 'زيت زيتون تونسي';
     $qtyUnit = $listing->quantity_unit_label;
     $priceUnit = $listing->price_unit_label;
-    $priceText = $listing->price == 0 ? __('Price on request') : (number_format((float)$listing->price, 2) . ' ' . ($listing->currency ?? 'TND') . ' / ' . $priceUnit);
+    $formattedVal = fmod((float)$listing->price, 1.0) == 0.0 ? number_format((float)$listing->price, 0, '.', '') : ((($listing->currency ?? 'TND') === 'TND') ? number_format((float)$listing->price, 3, '.', '') : number_format((float)$listing->price, 2, '.', ''));
+    $currLabel = ($locale === 'ar' && ($listing->currency ?? 'TND') === 'TND') ? 'دينار' : ($listing->currency ?? 'TND');
+    $priceText = $listing->price == 0 ? __('Price on request') : ($formattedVal . ' ' . $currLabel . ' / ' . $priceUnit);
     $city = optional($listing->seller->addresses->first())->city ?? optional($listing->seller->addresses->first())->governorate ?? 'Tunisie';
 
     // Image fallback
