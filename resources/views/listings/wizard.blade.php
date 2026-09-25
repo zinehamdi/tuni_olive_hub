@@ -353,15 +353,26 @@ console.log('[wizard] Variety selection mode - no product database needed');
 
                         <div x-show="!formData.price_on_request" x-transition>
                             <label class="block text-lg font-semibold text-[#1B2A1B] mb-3">
-                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole'">سعر السانية بالكامل للتفاوض</span>
-                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton'">السعر بالطن للتفاوض</span>
-                                <span x-show="formData.sale_mode !== 'saniya'">السعر لكل <span x-text="formData.unit || 'وحدة'"></span></span>
+                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole'">سعر السانية بالكامل للتفاوض (بالدينار التونسي DT)</span>
+                                <span x-show="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton'">السعر بالطن للتفاوض (بالدينار التونسي DT)</span>
+                                <span x-show="formData.sale_mode !== 'saniya'">السعر بالدينار التونسي (DT) لكل <span x-text="unitLabel(formData.unit)"></span></span>
                             </label>
                             <div class="relative">
-                                <input type="number" x-model="formData.price" step="0.01" min="0" :required="!formData.price_on_request"
+                                <input type="number" x-model="formData.price" step="0.001" min="0" :required="!formData.price_on_request"
                                     class="w-full text-3xl font-bold rounded-xl border-2 border-gray-300 px-6 py-4 pr-24 focus:ring-4 focus:ring-[#6A8F3B] focus:border-[#6A8F3B] transition text-right"
-                                    :placeholder="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton' ? 'مثال: 800 — سعر الطن الواحد (× كمية الأطنان = إجمالي السانية)' : (formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole' ? 'مثال: 9600 — ثمن السانية كاملاً (جميع الأشجار)' : 'مثال: 2.50')">
+                                    :placeholder="formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'per_ton' ? 'مثال: 800 — سعر الطن الواحد' : (formData.sale_mode === 'saniya' && formData.saniya_price_mode === 'whole' ? 'مثال: 9600 — ثمن السانية كاملاً' : 'مثال: 18 أو 18.500')">
                                 <span class="absolute left-6 top-1/2 transform -translate-y-1/2 text-2xl font-bold text-gray-400" x-text="formData.currency"></span>
+                            </div>
+
+                            <!-- Live Price Feedback in Wizard -->
+                            <div x-show="formData.price && parseFloat(formData.price) > 0" class="mt-3 text-sm font-semibold p-4 rounded-xl border transition-all"
+                                :class="isSuspiciousPrice ? 'bg-amber-50 border-amber-300 text-amber-900 shadow-sm' : 'bg-emerald-50 border-emerald-200 text-emerald-800'">
+                                <div class="text-base font-bold" x-text="priceExplanation"></div>
+                                <div x-show="isSuspiciousPrice" class="mt-2 text-sm text-amber-900 bg-amber-100/90 p-3 rounded-lg border border-amber-300">
+                                    ⚠️ <strong>تنبيه هام:</strong> لقد أدخلت <span class="underline font-bold" x-text="Math.floor(parseFloat(formData.price))"></span> دينار للـ <span x-text="unitLabel(formData.unit)"></span> الواحد!
+                                    <br>هل تقصد <strong class="text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded text-base" x-text="(parseFloat(formData.price) / 1000)"></strong> دينار؟
+                                    <br><span class="text-xs text-amber-800 mt-1 block">📌 ملاحظة: السعر في الموقع يُكتب بالدينار وليس بالمليم (مثال: إذا كان السعر 12 ألف مليم، اكتب 12 فقط).</span>
+                                </div>
                             </div>
                         </div>
 
@@ -703,7 +714,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
                         </div>
                         <div class="flex justify-between items-center py-3 border-b border-gray-300">
                             <span class="text-gray-600">السعر</span>
-                            <span class="font-bold text-2xl text-[#6A8F3B]"><span x-text="formData.price"></span> <span x-text="formData.currency"></span></span>
+                            <span class="font-bold text-2xl text-[#6A8F3B]" x-text="reviewPriceFormatted"></span>
                         </div>
                         <div x-show="formData.min_order" class="flex justify-between items-center py-3 border-b border-gray-300">
                             <span class="text-gray-600">الحد الأدنى للطلب</span>
@@ -764,7 +775,17 @@ console.log('[wizard] Variety selection mode - no product database needed');
                             else if (currentStep === 2 && !formData.variety) { showToast('الرجاء اختيار الصنف', 'error'); valid = false; }
                             else if (currentStep === 3 && (!formData.quantity || formData.quantity <= 0)) { showToast('الرجاء إدخال الكمية', 'error'); valid = false; }
                             else if (currentStep === 3 && !formData.unit) { showToast('الرجاء اختيار الوحدة', 'error'); valid = false; }
-                            else if (currentStep === 4 && (!formData.price || formData.price <= 0)) { showToast('الرجاء إدخال السعر', 'error'); valid = false; }
+                            else if (currentStep === 4 && (!formData.price_on_request && (!formData.price || formData.price <= 0))) { showToast('الرجاء إدخال السعر أو اختيار السعر عند الطلب', 'error'); valid = false; }
+                            else if (currentStep === 4 && isSuspiciousPrice && !confirmedSuspiciousPrice) {
+                                const entered = Math.floor(parseFloat(formData.price));
+                                const suggested = parseFloat(formData.price) / 1000;
+                                const unitName = unitLabel(formData.unit);
+                                if (!confirm('⚠️ تنبيه هام حول السعر:\n\nلقد أدخلت ' + entered + ' دينار للـ ' + unitName + ' الواحد!\n\nهل تقصد ' + suggested + ' دينار (' + entered + ' مليم)؟\n\n• اضغط \"إلغاء\" (Cancel) لتصحيح السعر إلى ' + suggested + ' دينار.\n• اضغط \"موافق\" (OK) إذا كان السعر فعلاً ' + entered + ' دينار.')) {
+                                    valid = false;
+                                } else {
+                                    confirmedSuspiciousPrice = true;
+                                }
+                            }
                             else if (currentStep === 4 && formData.min_order && parseFloat(formData.min_order) > parseFloat(formData.quantity)) { showToast('أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج (' + parseFloat(formData.quantity) + ' ' + (formData.unit || '') + ')', 'error'); valid = false; }
                             else if (currentStep === 5 && formData.payment_methods.length === 0) { showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error'); valid = false; }
                             else if (currentStep === 6 && formData.delivery_options.length === 0) { showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error'); valid = false; }
@@ -841,6 +862,45 @@ document.addEventListener('alpine:init', () => {
             sale_mode: '',
             tree_count: '',
             saniya_price_mode: 'per_ton'
+        },
+        confirmedSuspiciousPrice: false,
+        unitLabel(u) {
+            const map = {
+                'kg': 'كغ',
+                'ton': 'طن',
+                'liter': 'لتر',
+                'bottle': 'قارورة'
+            };
+            return map[u] || u || 'وحدة';
+        },
+        get isSuspiciousPrice() {
+            if (!this.formData.price || this.formData.price_on_request) return false;
+            const p = parseFloat(this.formData.price);
+            if (isNaN(p) || p < 1000) return false;
+            if (this.formData.currency !== 'TND') return false;
+            if (this.formData.sale_mode === 'saniya') return false;
+            const u = (this.formData.unit || '').toLowerCase();
+            return u === 'kg' || u === 'liter' || u === 'bottle' || u === 'لتر' || u === 'كغ' || u === 'قارورة';
+        },
+        get priceExplanation() {
+            if (!this.formData.price || this.formData.price_on_request) return '';
+            const p = parseFloat(this.formData.price);
+            if (isNaN(p) || p <= 0) return '';
+            const dinar = Math.floor(p);
+            const millimes = Math.round((p - dinar) * 1000);
+            const u = this.unitLabel(this.formData.unit);
+            if (millimes === 0) {
+                return `💰 ${dinar} دينار تونسي لكل ${u}`;
+            }
+            return `💰 ${dinar} دينار و ${millimes} مليم (${p.toFixed(3)} د.ت) لكل ${u}`;
+        },
+        get reviewPriceFormatted() {
+            if (this.formData.price_on_request) return 'السعر عند الطلب';
+            const p = parseFloat(this.formData.price);
+            if (isNaN(p) || p <= 0) return '';
+            const val = (p % 1 === 0) ? Math.floor(p).toString() : p.toFixed(3);
+            const curr = (this.formData.currency === 'TND') ? 'دينار' : this.formData.currency;
+            return `${val} ${curr} / ${this.unitLabel(this.formData.unit)}`;
         },
         locationError: '',
         locationSuccess: false,
@@ -1148,6 +1208,15 @@ document.addEventListener('alpine:init', () => {
                     if (!this.formData.price_on_request && (!this.formData.price || this.formData.price <= 0)) {
                         showToast(@js(__('الرجاء إدخال السعر أو اختيار "السعر عند الطلب"')), 'error');
                         return false;
+                    }
+                    if (this.isSuspiciousPrice && !this.confirmedSuspiciousPrice) {
+                        const entered = Math.floor(parseFloat(this.formData.price));
+                        const suggested = parseFloat(this.formData.price) / 1000;
+                        const unitName = this.unitLabel(this.formData.unit);
+                        if (!confirm('⚠️ تنبيه هام حول السعر:\n\nلقد أدخلت ' + entered + ' دينار للـ ' + unitName + ' الواحد!\n\nهل تقصد ' + suggested + ' دينار (' + entered + ' مليم)؟\n\n• اضغط "إلغاء" (Cancel) لتصحيح السعر إلى ' + suggested + ' دينار.\n• اضغط "موافق" (OK) إذا كان السعر فعلاً ' + entered + ' دينار.')) {
+                            return false;
+                        }
+                        this.confirmedSuspiciousPrice = true;
                     }
                     break;
                 case 5:
