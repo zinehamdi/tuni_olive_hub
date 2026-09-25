@@ -769,29 +769,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
 
                     <!-- Next Button (Steps 1-8) -->
                     <button type="button" 
-                        @click="
-                            let valid = true;
-                            if (currentStep === 1 && !formData.category) { showToast('الرجاء اختيار نوع المنتج', 'error'); valid = false; }
-                            else if (currentStep === 2 && !formData.variety) { showToast('الرجاء اختيار الصنف', 'error'); valid = false; }
-                            else if (currentStep === 3 && (!formData.quantity || formData.quantity <= 0)) { showToast('الرجاء إدخال الكمية', 'error'); valid = false; }
-                            else if (currentStep === 3 && !formData.unit) { showToast('الرجاء اختيار الوحدة', 'error'); valid = false; }
-                            else if (currentStep === 4 && (!formData.price_on_request && (!formData.price || formData.price <= 0))) { showToast('الرجاء إدخال السعر أو اختيار السعر عند الطلب', 'error'); valid = false; }
-                            else if (currentStep === 4 && isSuspiciousPrice && !confirmedSuspiciousPrice) {
-                                const entered = Math.floor(parseFloat(formData.price));
-                                const suggested = parseFloat(formData.price) / 1000;
-                                const unitName = unitLabel(formData.unit);
-                                if (!confirm('⚠️ تنبيه هام حول السعر:\n\nلقد أدخلت ' + entered + ' دينار للـ ' + unitName + ' الواحد!\n\nهل تقصد ' + suggested + ' دينار (' + entered + ' مليم)؟\n\n• اضغط \"إلغاء\" (Cancel) لتصحيح السعر إلى ' + suggested + ' دينار.\n• اضغط \"موافق\" (OK) إذا كان السعر فعلاً ' + entered + ' دينار.')) {
-                                    valid = false;
-                                } else {
-                                    confirmedSuspiciousPrice = true;
-                                }
-                            }
-                            else if (currentStep === 4 && formData.min_order && parseFloat(formData.min_order) > parseFloat(formData.quantity)) { showToast('أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج (' + parseFloat(formData.quantity) + ' ' + (formData.unit || '') + ')', 'error'); valid = false; }
-                            else if (currentStep === 5 && formData.payment_methods.length === 0) { showToast('الرجاء اختيار طريقة دفع واحدة على الأقل', 'error'); valid = false; }
-                            else if (currentStep === 6 && formData.delivery_options.length === 0) { showToast('الرجاء اختيار خيار تسليم واحد على الأقل', 'error'); valid = false; }
-                            else if (currentStep === 7 && !formData.governorate && !formData.location_text) { showToast('الرجاء إدخال الموقع أو اختيار الولاية', 'error'); valid = false; }
-                            if (valid && currentStep < 9) { currentStep++; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-                        " 
+                        @click="nextStep()" 
                         x-show="currentStep < 9"
                         class="px-8 py-4 bg-gradient-to-r from-[#6A8F3B] to-[#5a7a2f] text-white rounded-xl hover:shadow-xl transition font-bold text-lg flex items-center">
                         التالي
@@ -833,7 +811,7 @@ console.log('[wizard] Variety selection mode - no product database needed');
 document.addEventListener('alpine:init', () => {
     Alpine.data('wizardForm', () => ({
         currentStep: 1,
-        totalSteps: 8,
+        totalSteps: 9,
         isSubmitting: false,
         uploadProgress: 0,          // 0-100 real upload percentage
         uploadPhase: '',             // 'compressing' | 'uploading' | 'processing'
@@ -914,7 +892,8 @@ document.addEventListener('alpine:init', () => {
                 5: 'الخطوة 5: طرق الدفع',
                 6: 'الخطوة 6: التسليم',
                 7: 'الخطوة 7: الموقع',
-                8: 'الخطوة 8: المراجعة النهائية'
+                8: 'الخطوة 8: صور المنتج',
+                9: 'الخطوة 9: المراجعة النهائية'
             };
             return titles[this.currentStep] || '';
         },
@@ -1162,7 +1141,7 @@ document.addEventListener('alpine:init', () => {
         
         nextStep() {
             if (this.validateStep()) {
-                if (this.currentStep < this.totalSteps) {
+                if (this.currentStep < 9) {
                     this.currentStep++;
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
@@ -1207,6 +1186,10 @@ document.addEventListener('alpine:init', () => {
                 case 4:
                     if (!this.formData.price_on_request && (!this.formData.price || this.formData.price <= 0)) {
                         showToast(@js(__('الرجاء إدخال السعر أو اختيار "السعر عند الطلب"')), 'error');
+                        return false;
+                    }
+                    if (this.formData.min_order && parseFloat(this.formData.min_order) > parseFloat(this.formData.quantity)) {
+                        showToast('أدنى كمية للطلب لا يمكن أن تكون أكبر من الكمية الإجمالية للمنتج (' + parseFloat(this.formData.quantity) + ' ' + this.unitLabel(this.formData.unit) + ')', 'error');
                         return false;
                     }
                     if (this.isSuspiciousPrice && !this.confirmedSuspiciousPrice) {
