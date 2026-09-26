@@ -168,9 +168,18 @@
                         }
                     },
                     handleCoverChange(event) {
-                        const files = Array.from(event.target.files);
+                        let files = Array.from(event.target.files);
+                        if (files.length > 5) {
+                            alert("{{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }}");
+                            files = files.slice(0, 5);
+                            try {
+                                const dt = new DataTransfer();
+                                files.forEach(file => dt.items.add(file));
+                                event.target.files = dt.files;
+                            } catch (e) {}
+                        }
                         this.coverPreviews = [];
-                        files.slice(0, 5).forEach(file => {
+                        files.forEach(file => {
                             const reader = new FileReader();
                             reader.onload = (e) => {
                                 this.coverPreviews.push(e.target.result);

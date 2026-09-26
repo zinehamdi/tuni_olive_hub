@@ -89,7 +89,15 @@ class RegisteredUserController extends Controller
             $rules['mill_name'] = ['required', 'string', 'max:255'];
         }
 
-        $validated = $request->validate($rules);
+        // Gracefully clamp cover photos to 5 if user uploaded more from their mobile gallery
+        if ($request->hasFile('cover_photos') && is_array($request->file('cover_photos')) && count($request->file('cover_photos')) > 5) {
+            $files = array_slice($request->file('cover_photos'), 0, 5);
+            $request->files->set('cover_photos', $files);
+        }
+
+        $validated = $request->validate($rules, [
+            'cover_photos.max' => __('You can choose up to 5 photos. Any image, any size - will be optimized automatically'),
+        ]);
 
         $user = new User();
         $user->name = $validated['name'];
