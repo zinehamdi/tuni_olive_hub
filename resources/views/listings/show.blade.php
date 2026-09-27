@@ -63,10 +63,10 @@
         default => ($listing->unit ?: match($curLocale) { 'fr' => 'kg', 'ar' => 'كغ', default => 'kg' })
     };
     
+    $curr = $listing->currency ?? 'TND';
     $priceFormatted = fmod((float)$listing->price, 1.0) == 0.0
         ? number_format($listing->price, 0, '.', '')
         : (($curr === 'TND') ? number_format($listing->price, 3, '.', '') : number_format($listing->price, 2, '.', ''));
-    $curr = $listing->currency ?? 'TND';
     $priceText = $listing->price == 0 
         ? match($curLocale) { 'fr' => 'Prix sur demande', 'ar' => 'السعر عند الطلب', default => 'Price upon request' }
         : "$priceFormatted $curr / $unit";

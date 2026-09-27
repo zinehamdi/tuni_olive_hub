@@ -151,4 +151,22 @@ class ListingDelayReviewTest extends TestCase
         $approvalMsg = Message::where('body', 'like', '%تهانينا%')->first();
         $this->assertNotNull($approvalMsg);
     }
+
+    public function test_listing_show_renders_with_decimal_prices_without_error()
+    {
+        $seller = User::factory()->create(['role' => 'farmer']);
+        $product = Product::factory()->create(['variety' => 'شملالي']);
+        $listing = Listing::factory()->create([
+            'seller_id' => $seller->id,
+            'product_id' => $product->id,
+            'status' => 'active',
+            'price' => 18.750,
+            'currency' => 'TND',
+            'unit' => 'liter',
+        ]);
+
+        $response = $this->get(route('listings.show', ['listing' => $listing->id]));
+        $response->assertStatus(200);
+        $response->assertSee('18.750');
+    }
 }
