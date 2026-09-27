@@ -94,5 +94,55 @@
             </div>
         </div>
         @include("components.cookie-consent")
+        <script>
+        function profileImagesHandler() {
+            return {
+                profilePreview: null,
+                coverPreviews: [],
+                handleProfileChange(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.profilePreview = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                handleCoverChange(event) {
+                    let files = Array.from(event.target.files);
+                    if (files.length > 5) {
+                        alert(@json(__('You can choose up to 5 photos. Any image, any size - will be optimized automatically')));
+                        files = files.slice(0, 5);
+                        try {
+                            const dt = new DataTransfer();
+                            files.forEach(file => dt.items.add(file));
+                            event.target.files = dt.files;
+                        } catch (e) {}
+                    }
+                    this.coverPreviews = [];
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.coverPreviews.push(e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                },
+                removeCover(index) {
+                    this.coverPreviews.splice(index, 1);
+                    const input = document.getElementById('cover_photos');
+                    if (input) {
+                        const dt = new DataTransfer();
+                        const files = Array.from(input.files);
+                        files.forEach((file, i) => {
+                            if (i !== index) dt.items.add(file);
+                        });
+                        input.files = dt.files;
+                    }
+                }
+            };
+        }
+        </script>
 </body>
 </html>

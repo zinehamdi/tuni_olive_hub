@@ -149,50 +149,7 @@
                 </div>
 
                 <!-- Profile Images Section -->
-                <div x-data="{ 
-                    profilePreview: null, 
-                    coverPreviews: [],
-                    handleProfileChange(event) {
-                        const file = event.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.profilePreview = e.target.result;
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    },
-                    handleCoverChange(event) {
-                        let files = Array.from(event.target.files);
-                        if (files.length > 5) {
-                            alert("{{ __('You can choose up to 5 photos. Any image, any size - will be optimized automatically') }}");
-                            files = files.slice(0, 5);
-                            try {
-                                const dt = new DataTransfer();
-                                files.forEach(file => dt.items.add(file));
-                                event.target.files = dt.files;
-                            } catch (e) {}
-                        }
-                        this.coverPreviews = [];
-                        files.forEach(file => {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.coverPreviews.push(e.target.result);
-                            };
-                            reader.readAsDataURL(file);
-                        });
-                    },
-                    removeCover(index) {
-                        this.coverPreviews.splice(index, 1);
-                        const input = document.getElementById('cover_photos');
-                        const dt = new DataTransfer();
-                        const files = Array.from(input.files);
-                        files.forEach((file, i) => {
-                            if (i !== index) dt.items.add(file);
-                        });
-                        input.files = dt.files;
-                    }
-                }">
+                <div x-data="profileImagesHandler()">
                     <h3 class="text-lg font-bold text-[#3B82F6] mb-4 flex items-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
