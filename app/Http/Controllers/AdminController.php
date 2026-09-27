@@ -332,7 +332,53 @@ class AdminController extends Controller
             abort(403, 'Unauthorized access');
         }
 
+        $wasPending = ($listing->status === 'pending');
         $listing->update(['status' => 'active']);
+        \Illuminate\Support\Facades\Cache::forget('home_featured_listings');
+
+        if ($wasPending) {
+            $seller = $listing->seller;
+            if ($seller) {
+                $admin = auth()->user();
+                $locale = $seller->locale ?? 'ar';
+                $variety = $listing->product?->variety ?? ($locale === 'fr' ? 'Huile d\'olive' : 'زيت زيتون');
+                $listingUrl = url('/' . $locale . '/listings/' . $listing->id);
+
+                if (!empty($seller->email)) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::error("AdminController approveListing: Failed sending approval email: " . $e->getMessage());
+                    }
+                }
+
+                try {
+                    $thread = \App\Services\Chat::ensureThread('direct_message', 0, [$admin->id, $seller->id]);
+                    $body = match ($locale) {
+                        'fr' => "🎉 **Félicitations !** Votre annonce pour **{$variety}** a été vérifiée et approuvée par l'administrateur. Elle est désormais active et visible pour tous les acheteurs sur ZinToop !\n\n👉 [Voir mon annonce sur le marché]({$listingUrl})",
+                        'en' => "🎉 **Congratulations!** Your listing for **{$variety}** has been reviewed and approved by the admin. It is now live and visible to all buyers on ZinToop!\n\n👉 [View my listing on the marketplace]({$listingUrl})",
+                        default => "🎉 **تهانينا!** تمت مراجعة وقبول عرضك لـ **{$variety}** من قِبل الإدارة. عرضك الآن نشط ومرئي لجميع المشترين في منصة زينتوب!\n\n👉 [مشاهدة العرض في السوق]({$listingUrl})",
+                    };
+
+                    $message = \App\Models\Message::create([
+                        'thread_id' => $thread->id,
+                        'sender_id' => $admin->id,
+                        'body' => $body,
+                        'attachments' => [
+                            'is_system' => true,
+                            'type' => 'listing_approved',
+                            'listing_id' => $listing->id,
+                        ],
+                        'is_flagged' => false,
+                        'is_deleted' => false,
+                    ]);
+
+                    \App\Jobs\SendUnreadMessageEmailJob::dispatch($message->id, $admin->id, $seller->id)->delay(now()->addMinutes(5));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error("AdminController approveListing: Failed creating chat message: " . $e->getMessage());
+                }
+            }
+        }
 
         return redirect()->back()->with('success', __('Listing approved successfully'));
     }

@@ -187,8 +187,12 @@ class ListingController extends Controller
                 'type' => $product->type
             ]);
             
-            // Set status to active by default
-            $validated['status'] = $validated['status'] ?? 'active';
+            // Set status to pending (under 10-minute review) for non-admins; admins can create immediately active listings
+            if (Auth::user()?->role === 'admin') {
+                $validated['status'] = $validated['status'] ?? 'active';
+            } else {
+                $validated['status'] = 'pending';
+            }
             
             // Add product_id to validated data
             $validated['product_id'] = $product->id;
@@ -315,30 +319,75 @@ class ListingController extends Controller
                 'status' => $listing->status
             ]);
 
-            // Send emails asynchronously after response to avoid blocking HTTP request
+            // Dispatch notifications & background jobs asynchronously after response
             dispatch(function () use ($listing) {
                 try {
-                    if ($listing->seller && $listing->seller->email) {
-                        \Illuminate\Support\Facades\Mail::to($listing->seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+                    $isPending = ($listing->status === 'pending');
+                    $seller = $listing->seller;
+
+                    // 1. Email notifications
+                    if ($seller && $seller->email) {
+                        if ($isPending) {
+                            \Illuminate\Support\Facades\Mail::to($seller->email)->send(new \App\Mail\ListingUnderReviewMail($listing));
+                        } else {
+                            \Illuminate\Support\Facades\Mail::to($seller->email)->send(new \App\Mail\ListingCreatedMail($listing));
+                        }
                     }
+
+                    // Admin notification
                     \Illuminate\Support\Facades\Mail::to('zinehamdi8@gmail.com')->send(new \App\Mail\NewListingNotificationMail($listing));
+
+                    // 2. In-platform system chat message & delayed auto-approval job if pending
+                    if ($isPending && $seller) {
+                        $admin = \App\Models\User::where('role', 'admin')->first() ?? \App\Models\User::find(1);
+                        if ($admin) {
+                            $thread = \App\Services\Chat::ensureThread('direct_message', 0, [$admin->id, $seller->id]);
+                            $locale = $seller->locale ?? app()->getLocale();
+                            $variety = $listing->product?->variety ?? ($locale === 'fr' ? 'Huile d\'olive' : 'زيت زيتون');
+                            $reviewText = match ($locale) {
+                                'fr' => "⏳ **Annonce en cours de révision** : Votre annonce pour **{$variety}** a bien été reçue. Notre équipe effectue une vérification rapide (10 minutes). Dès validation, elle sera publiée automatiquement et vous recevrez un message de confirmation.",
+                                'en' => "⏳ **Listing Under Review**: Your listing for **{$variety}** has been received. Our team performs a quick 10-minute review. Once approved, it will be published and you will be notified.",
+                                default => "⏳ **عرضك قيد المراجعة** : تم استلام عرضك لـ **{$variety}** بنجاح. يخضع العرض لمراجعة سريعة (10 دقائق) لضمان جودة المحتوى، وسيتم نشره للعموم تلقائياً وسنوافيك بإشعار القبول فور اكتمال المراجعة.",
+                            };
+
+                            \App\Models\Message::create([
+                                'thread_id' => $thread->id,
+                                'sender_id' => $admin->id,
+                                'body' => $reviewText,
+                                'attachments' => [
+                                    'is_system' => true,
+                                    'type' => 'listing_under_review',
+                                    'listing_id' => $listing->id,
+                                ],
+                                'is_flagged' => false,
+                                'is_deleted' => false,
+                            ]);
+                        }
+
+                        // Schedule auto-approval after 10 minutes
+                        \App\Jobs\AutoApproveListingJob::dispatch($listing->id)->delay(now()->addMinutes(10));
+                    }
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to send listing creation email: ' . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::error('Failed to dispatch listing notifications: ' . $e->getMessage());
                 }
             })->afterResponse();
+
+            $successMsg = ($listing->status === 'pending')
+                ? __('Your listing has been submitted and is currently under review. It will be published automatically within 10 minutes! ⏳')
+                : __('Listing published successfully! 🎉');
 
             // Response for AJAX/XHR requests (Wizard)
             if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'redirect' => route('home', ['locale' => app()->getLocale()]),
-                    'message' => __('Listing published successfully! 🎉'),
+                    'redirect' => route('dashboard', ['locale' => app()->getLocale()]),
+                    'message' => $successMsg,
                     'listing_id' => $listing->id,
                 ], 200);
             }
 
-            // Redirect to homepage with success message and new_listing_id for #1 ranking spot
-            return Redirect::route('home')->with('success', __('Listing published successfully! 🎉'))->with('new_listing_id', $listing->id);
+            // Redirect to dashboard with success message
+            return Redirect::route('dashboard')->with('success', $successMsg)->with('new_listing_id', $listing->id);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('❌ Validation Error:', [
@@ -389,6 +438,15 @@ class ListingController extends Controller
      */
     public function show(Listing $listing)
     {
+        // If listing is not active, only seller and admin can view it
+        if ($listing->status !== 'active') {
+            $user = Auth::user();
+            $canView = $user && ($user->id === $listing->seller_id || $user->role === 'admin');
+            if (!$canView) {
+                abort(404);
+            }
+        }
+
         // Load relationships
         // تحميل العلاقات
         $listing->load(['product', 'seller.addresses']);

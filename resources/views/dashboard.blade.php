@@ -1419,7 +1419,7 @@
                                 @endif
                                 <div class="absolute top-2 right-2">
                                     @if($listing->status==='active')<span class="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-bold shadow">✓ {{ __('Active') }}</span>
-                                    @elseif($listing->status==='pending')<span class="bg-amber-500 text-white px-2 py-0.5 rounded-full text-xs font-bold shadow">⏳ {{ __('Pending') }}</span>
+                                    @elseif($listing->status==='pending')<span class="bg-amber-500 text-white px-2 py-0.5 rounded-full text-xs font-bold shadow animate-pulse" title="{{ __('This listing is currently under review') }}">⏳ {{ __('Under Review') }} (10 min)</span>
                                     @elseif($listing->status==='sold')<span class="bg-gray-600 text-white px-2 py-0.5 rounded-full text-xs font-bold shadow">✓ {{ __('Sold') }}</span>
                                     @else<span class="bg-red-500 text-white px-2 py-0.5 rounded-full text-xs font-bold shadow">✕ {{ __('Inactive') }}</span>@endif
                                 </div>

@@ -219,6 +219,23 @@
             {{ __('Back to Products') }}
         </a>
 
+        @if($listing->status === 'pending')
+            <div class="mb-6 p-4 bg-amber-50 border-2 border-amber-400 rounded-2xl flex items-center justify-between gap-4 text-amber-900 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-200 flex items-center justify-center text-xl flex-shrink-0">
+                        ⏳
+                    </div>
+                    <div>
+                        <h4 class="font-black text-sm md:text-base">{{ __('This listing is currently under review') }}</h4>
+                        <p class="text-xs md:text-sm text-amber-800">{{ __('It is currently visible only to you and administrators. It will be automatically approved and published publicly in 10 minutes.') }}</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 bg-amber-500 text-white rounded-full text-xs font-bold whitespace-nowrap shadow-sm">
+                    {{ __('Under Review') }} (10 min)
+                </span>
+            </div>
+        @endif
+
         <div class="grid lg:grid-cols-2 gap-8">
             <!-- Product Image Section -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
