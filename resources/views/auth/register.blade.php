@@ -34,6 +34,12 @@
         @endphp
         <div class="bg-white rounded-2xl shadow-2xl p-5 border border-gray-100">
             <form method="GET" action="{{ route('register.role') }}" class="space-y-4" x-data="{ role: '{{ $isInternational ? 'normal' : '' }}' }">
+                @if(request('intended') || session('url.intended'))
+                    <input type="hidden" name="intended" value="{{ request('intended') ?: session('url.intended') }}">
+                @endif
+                @if(request('action') || session('intended_action'))
+                    <input type="hidden" name="action" value="{{ request('action') ?: session('intended_action') }}">
+                @endif
                 <h2 class="text-xl font-bold text-center mb-4 text-[#6A8F3B]">{{ __('Select your role') }}</h2>
                 
                 <!-- Role Selection with Icons -->
@@ -173,7 +179,7 @@
                 <!-- Login Link -->
                 <div class="text-center pt-4 border-t">
                     <span class="text-gray-600">{{ __('Already have an account?') }}</span>
-                    <a href="{{ route('login') }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
+                    <a href="{{ route('login', array_filter(['intended' => request('intended') ?: session('url.intended'), 'action' => request('action') ?: session('intended_action')])) }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
                         {{ __('Log in') }}
                     </a>
                 </div>

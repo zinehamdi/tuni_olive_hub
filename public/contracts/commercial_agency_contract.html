@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop - عقد التمثيل التجاري والتوكيلات القانونية | Commercial Representation Contract & Powers of Attorney</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-light: #2c422c;
+            --accent-gold: #C8A356;
+            --accent-gold-dark: #a17f35;
+            --accent-green: #6A8F3B;
+            --text-dark: #1f2937;
+            --text-muted: #4b5563;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', 'Amiri', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+            line-height: 1.8;
+            font-size: 15px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Top Action Bar - Hidden in Print */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #2c422c 100%);
+            color: white;
+            padding: 12px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .bar-brand span {
+            color: var(--accent-gold);
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-gold {
+            background-color: var(--accent-gold);
+            color: #1B2A1B;
+        }
+        .btn-gold:hover {
+            background-color: #dbb360;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.25);
+            color: white;
+        }
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.18);
+        }
+
+        .btn-active {
+            background-color: white !important;
+            color: var(--primary) !important;
+            border-color: white !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Container & Document Layout */
+        .document-wrapper {
+            max-width: 960px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .contract-page {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            padding: 50px 60px;
+            margin-bottom: 40px;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Watermark with official logo */
+        .contract-page::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 480px;
+            height: 480px;
+            transform: translate(-50%, -50%);
+            background-image: url('/images/zintoop-logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .official-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .official-logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .official-logo-img {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 3px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .bar-logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title-ar {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .brand-title-en {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent-gold-dark);
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            margin-top: 2px;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .header-meta {
+            text-align: end;
+            font-size: 11.5px;
+            color: #374151;
+            line-height: 1.6;
+            background: #fafaf9;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #e7e5e4;
+        }
+
+        [dir="ltr"] .header-meta {
+            text-align: start;
+        }
+
+        .header-meta strong {
+            color: var(--primary);
+        }
+
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        .doc-title-block {
+            text-align: center;
+            margin: 25px 0 35px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .doc-tag {
+            display: inline-block;
+            background: #fdf8ed;
+            color: var(--accent-gold-dark);
+            border: 1px solid var(--accent-gold);
+            padding: 3px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .doc-main-title {
+            font-size: 23px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .doc-date {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        /* Party Cards */
+        .parties-box {
+            background-color: #fafbfc;
+            border: 1px solid #e5e7eb;
+            border-right: 4px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 22px;
+            margin: 25px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        [dir="ltr"] .parties-box {
+            border-right: 1px solid #e5e7eb;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .party-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .party-desc {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.8;
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .party-desc:last-child {
+            margin-bottom: 0;
+        }
+
+        .preamble {
+            background: #f4f6f4;
+            border-radius: 6px;
+            padding: 12px 18px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 20px 0 30px;
+            font-size: 14px;
+            border: 1px dashed rgba(106, 143, 59, 0.4);
+        }
+
+        /* Articles & Sections */
+        .article-block {
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .article-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            background: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-inline-start: 4px solid var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-body {
+            font-size: 14.5px;
+            color: #2d3748;
+            line-height: 1.85;
+            text-align: justify;
+            padding: 0 4px;
+        }
+
+        .article-body p {
+            margin-bottom: 10px;
+        }
+
+        .article-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 15px;
+        }
+
+        .article-body ul li {
+            position: relative;
+            padding-inline-start: 22px;
+            margin-bottom: 6px;
+            line-height: 1.7;
+        }
+
+        .article-body ul li::before {
+            content: "•";
+            color: var(--accent-gold-dark);
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            inset-inline-start: 6px;
+            top: -2px;
+        }
+
+        .highlight-quote {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-inline-start: 4px solid var(--accent-gold);
+            padding: 12px 18px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: #92400e;
+            margin: 12px 0;
+            font-style: normal;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 14px;
+        }
+
+        .table-custom th, .table-custom td {
+            border: 1px solid #d1d5db;
+            padding: 10px 14px;
+            text-align: start;
+        }
+
+        .table-custom th {
+            background-color: #f3f4f6;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .table-custom tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Signatures Section */
+        .signatures-area {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            page-break-inside: avoid;
+            position: relative;
+            z-index: 2;
+        }
+
+        .signature-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+            background: #ffffff;
+        }
+
+        .sig-header {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .sig-details {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .sig-line {
+            border-bottom: 1px dashed #a0aec0;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            color: #718096;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stamp-box {
+            height: 90px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background-color: #fafbfc;
+        }
+
+        /* Official Footer */
+        .official-footer {
+            margin-top: 35px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        /* Language Switch Visibility */
+        body.lang-ar .content-en { display: none !important; }
+        body.lang-en .content-ar { display: none !important; }
+
+        body.lang-en {
+            direction: ltr;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body.lang-en .article-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        body.view-side-by-side .contract-page {
+            max-width: 1200px;
+        }
+
+        body.view-side-by-side .content-ar,
+        body.view-side-by-side .content-en {
+            display: block !important;
+        }
+
+        body.view-side-by-side .bilingual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        body.view-side-by-side .col-ar {
+            direction: rtl;
+            text-align: right;
+            border-inline-end: 1px solid #e5e7eb;
+            padding-inline-end: 18px;
+        }
+
+        body.view-side-by-side .col-en {
+            direction: ltr;
+            text-align: left;
+            padding-inline-start: 18px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                font-size: 12pt;
+                line-height: 1.6;
+            }
+
+            .no-print-bar {
+                display: none !important;
+            }
+
+            .document-wrapper {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .contract-page {
+                border: none;
+                box-shadow: none;
+                padding: 20mm 15mm;
+                margin-bottom: 0;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .official-header {
+                border-bottom: 2pt solid #000;
+            }
+
+            .signatures-area {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="lang-ar">
+
+    <!-- Top Action Bar (Hidden in Print) -->
+    <header class="no-print-bar">
+        <div class="bar-brand">
+            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo" class="bar-logo-img">
+            <div>ZINTOOP <span>LEGAL HUB</span> | منصة الزين للوثائق الرسمية</div>
+        </div>
+
+        <div class="bar-actions">
+            <!-- Language Controls -->
+            <button class="btn btn-outline" id="btnAr" onclick="setLanguage('ar')">العربية (Arabic)</button>
+            <button class="btn btn-outline" id="btnEn" onclick="setLanguage('en')">English (الإنجليزية)</button>
+            <button class="btn btn-outline" id="btnBoth" onclick="setLanguage('both')">عرض اللغتين جنباً إلى جنب (Bilingual)</button>
+
+            <!-- Navigation Jump Links -->
+            <select class="btn btn-outline" onchange="jumpTo(this.value)" style="padding: 8px 10px;">
+                <option value="section-contract">1. العقد الأساسي (Main Contract)</option>
+                <option value="section-innorpi">2. توكيل INNORPI (INNORPI Proxy)</option>
+                <option value="section-purchase">3. توكيل الشراء (Purchase Proxy)</option>
+                <option value="section-annex">4. الملحق المالي (Financial Annex)</option>
+            </select>
+
+            <!-- Print Button -->
+            <button class="btn btn-gold" onclick="window.print()">
+                <span>🖨️</span>
+                <span>طباعة / حفظ PDF (Print Document)</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="document-wrapper">
+
+        <!-- ============================================================ -->
+        <!-- DOCUMENT 1: MAIN COMMERCIAL REPRESENTATION CONTRACT          -->
+        <!-- ============================================================ -->
+        <article class="contract-page" id="section-contract">
+            <!-- Official Header -->
+            <div class="official-header">
+                <div class="official-logo">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                    <div class="logo-text">
+                        <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                        <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                        <div class="brand-sub">National Business Register • السجل الوطني للمؤسسات • Code: 748 / 5262</div>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div><strong>المعرف الجبائي (Matricule Fiscal):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>المعرف الوحيد (RNE Unique ID):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>عدد التصرف (Registry File N°):</strong> <span class="font-mono">B5094322026</span></div>
+                    <div><strong>المقر:</strong> حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية، تونس</div>
+                    <div><strong>الاتصال:</strong> contact@zintoop.com • +216 25 777 926</div>
+                </div>
+            </div>
+
+            <!-- Title Block -->
+            <div class="doc-title-block">
+                <span class="doc-tag">وثيقة قانونية رسمية • Official Legal Agreement</span>
+                <div class="content-ar">
+                    <h2 class="doc-main-title">عقد تقديم خدمات التمثيل التجاري والإشراف على التوريد والملكية الصناعية</h2>
+                    <div class="doc-date">تاريخ الإبرام: ....../....../2026</div>
+                </div>
+                <div class="content-en">
+                    <h2 class="doc-main-title">Commercial Representation, Sourcing Supervision & Industrial Property Services Agreement</h2>
+                    <div class="doc-date">Date of Execution: ....../....../2026</div>
+                </div>
+            </div>
+
+            <!-- Parties Section -->
+            <div class="parties-box">
+                <div class="content-ar">
+                    <div class="party-title">بين كل من:</div>
+                    
+                    <div class="party-desc">
+                        <strong>الطرف الأول: مقدم الخدمات والوكيل</strong><br>
+                        شركة منصة الزين لزيت الزيتون التونسي <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>، شركة ذات مسؤولية محدودة شخص واحد، مسجلة بالسجل الوطني للمؤسسات بالجمهورية التونسية تحت المعرف الوحيد <strong>RNE: 1969552S</strong>، والمعرف الجبائي (Matricule Fiscal / Code TVA): <strong>1969552S</strong>، ورقم ملف السجل التجاري (N° Gestion): <strong>B5094322026</strong>، ومقرها الاجتماعي بالقيروان (حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية – الجمهورية التونسية)، يمثلها السيد <strong>حمدي الزين Hamdi Ezzine</strong>، بصفته المدير والمؤسس والممثل القانوني.<br>
+                        <em>ويشار إليها في هذا العقد بـ "الطرف الأول" أو "ZinToop" أو "الوكيل".</em>
+                    </div>
+
+                    <div class="party-desc">
+                        <strong>الطرف الثاني: الموكل</strong><br>
+                        شركة القيروان للتجارة العامة – ذ.م.م<br>
+                        <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                        شركة مسجلة بأبوظبي – الإمارات العربية المتحدة، بموجب الرخصة التجارية رقم <strong>CN-6794200</strong>، والرقم الموحد <strong>101-2026-200128646</strong>، ويمثلها قانوناً السيد <strong>محمد بن عامر الرمضاني</strong> بصفته شريكاً، و/أو السيد <strong>علي حسين عوض صالح المصعبي</strong> بصفته مديراً ومفوضاً بالتوقيع، وفقاً للوثائق الرسمية وصلاحيات التوقيع المعتمدة للشركة.<br>
+                        <em>ويشار إليها في هذا العقد بـ "الطرف الثاني" أو "الموكل" أو "الشركة الموكلة".</em>
+                    </div>
+                </div>
+
+                <div class="content-en">
+                    <div class="party-title">By and Between:</div>
+                    
+                    <div class="party-desc">
+                        <strong>The First Party: Service Provider and Agent</strong><br>
+                        <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>, a single-member limited liability company registered in the National Business Register of the Republic of Tunisia under Unique Business ID (RNE): <strong>1969552S</strong>, Tax Identification / Matricule Fiscal: <strong>1969552S</strong>, and Commercial Registry File No. <strong>B5094322026</strong>, having its registered head office in Kairouan (Les Jardins Khadhraoui, Cité Ibn Eljazzar, Dar Amen, 3140 Kairouan Nord – Republic of Tunisia), represented by Mr. <strong>Hamdi Ezzine</strong>, in his capacity as Managing Director, Founder, and Legal Representative.<br>
+                        <em>Hereinafter referred to in this Contract as the "First Party", "ZinToop", or "Agent".</em>
+                    </div>
+
+                    <div class="party-desc">
+                        <strong>The Second Party: The Principal</strong><br>
+                        <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                        A company registered in Abu Dhabi – United Arab Emirates, under Commercial License No. <strong>CN-6794200</strong>, and Unified Identification No. <strong>101-2026-200128646</strong>, legally represented by Mr. <strong>Mohammed Bin Amer Al-Ramadhani</strong> in his capacity as Partner, and/or Mr. <strong>Ali Hussein Awadh Saleh Al-Musabi</strong> in his capacity as Director and Authorized Signatory, pursuant to the official company records and authorized signing powers.<br>
+                        <em>Hereinafter referred to in this Contract as the "Second Party", "Principal", or "Principal Company".</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preamble -->
+            <div class="preamble">
+                <span class="content-ar">وقد اتفق الطرفان، وهما بكامل أهليتهما القانونية، على ما يلي:</span>
+                <span class="content-en">The Parties, having full legal and contractual capacity, have agreed as follows:</span>
+            </div>
+
+            <!-- Articles 1 to 32 -->
+            <!-- Article 1 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الأول – موضوع العقد</div>
+                    <div class="article-body">
+                        <p>يسند الطرف الثاني إلى الطرف الأول مهمة التمثيل التجاري والتفاوض والمتابعة والإشراف والتنسيق داخل الجمهورية التونسية، في إطار مشروع شراء وتعبئة وتصدير كمية قدرها:</p>
+                        <p><strong>10,000 لتر من زيت الزيتون البكر الممتاز (EVOO)</strong></p>
+                        <p>وتعبئتها في:</p>
+                        <p><strong>2,000 صفيحة معدنية غذائية، سعة كل منها 5 لترات،</strong></p>
+                        <p>وفق المواصفات التي يعتمدها الطرف الثاني والمورد والجهات المختصة.</p>
+                        <p>كما تشمل المهمة إعداد ومتابعة ملف تسجيل العلامة التجارية الخاصة بالطرف الثاني لدى المعهد الوطني للمواصفات والملكية الصناعية INNORPI، وفق التوكيل الخاص المستقل المرفق بهذا العقد.</p>
+                        <p>ولا يعتبر الطرف الأول، في أي مرحلة، مالكاً للبضاعة أو مشترياً أصلياً لها أو بائعاً لها لحسابه الخاص.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 1 – Subject Matter of the Contract</div>
+                    <div class="article-body">
+                        <p>The Second Party assigns to the First Party the assignment of commercial representation, negotiation, monitoring, supervision, and coordination within the Republic of Tunisia, in the context of the project to purchase, package, and export a quantity of:</p>
+                        <p><strong>10,000 Liters of Extra Virgin Olive Oil (EVOO)</strong></p>
+                        <p>Packaged into:</p>
+                        <p><strong>2,000 food-grade metal tins, with a capacity of 5 liters each,</strong></p>
+                        <p>In accordance with the specifications approved by the Second Party, the supplier, and competent authorities.</p>
+                        <p>The assignment also encompasses preparing and monitoring the trademark registration file of the Second Party with the National Institute for Standardization and Industrial Property (INNORPI), pursuant to the independent special power of attorney annexed hereto.</p>
+                        <p>The First Party shall not, at any stage whatsoever, be deemed the owner of the goods, their original buyer, or a seller thereof for its own account.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 2 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثاني – طبيعة مهمة الطرف الأول</div>
+                    <div class="article-body">
+                        <p>تتمثل مهام الطرف الأول في:</p>
+                        <ul>
+                            <li>البحث والتواصل مع وحدات التعليب والمعاصر والموردين المحتملين في تونس.</li>
+                            <li>طلب عروض الأسعار والتفاوض بشأنها.</li>
+                            <li>دراسة العروض التجارية وتقديمها إلى الطرف الثاني.</li>
+                            <li>التفاوض حول السعر والكمية والمواصفات والتعبئة وشروط الشراء.</li>
+                            <li>التنسيق مع المورد الذي يختاره الطرف الثاني.</li>
+                            <li>متابعة وإدارة الإجراءات اللازمة لإبرام عقد الشراء.</li>
+                            <li>الإشراف والمتابعة الميدانية المعقولة لعملية التعبئة.</li>
+                            <li>التنسيق بشأن التحاليل المخبرية المطلوبة.</li>
+                            <li>استلام نسخ من نتائج التحاليل والشهادات والمستندات ذات الصلة وتوثيقها وإرسالها إلى الطرف الثاني.</li>
+                            <li>متابعة وثائق التصدير التي تتولى إعدادها الجهات المختصة أو وحدة التعليب.</li>
+                            <li>متابعة إجراءات الشحن إلى غاية المرحلة المتفق عليها.</li>
+                            <li>متابعة ملف تسجيل العلامة التجارية لدى INNORPI وفق التوكيل الخاص.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 2 – Nature of the First Party's Assignment</div>
+                    <div class="article-body">
+                        <p>The duties and tasks of the First Party consist of:</p>
+                        <ul>
+                            <li>Searching and contacting prospective packaging units, oil mills, and suppliers in Tunisia.</li>
+                            <li>Requesting price quotations and conducting negotiations regarding them.</li>
+                            <li>Examining commercial offers and presenting them to the Second Party.</li>
+                            <li>Negotiating price, quantity, specifications, packaging, and purchase terms.</li>
+                            <li>Coordinating with the supplier selected by the Second Party.</li>
+                            <li>Monitoring and managing the procedures required to conclude the purchase contract.</li>
+                            <li>Providing reasonable field supervision and monitoring of the packaging process.</li>
+                            <li>Coordinating regarding required laboratory analyses.</li>
+                            <li>Receiving copies of analysis results, certificates, and relevant documents, archiving them, and transmitting them to the Second Party.</li>
+                            <li>Monitoring export documentation prepared by competent authorities or the packaging unit.</li>
+                            <li>Monitoring shipping and forwarding procedures up to the agreed-upon stage.</li>
+                            <li>Monitoring the trademark registration file with INNORPI pursuant to the special power of attorney.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 3 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثالث – العرض التجاري وسعر الصفقة</div>
+                    <div class="article-body">
+                        <p>يتفق الطرفان على أن السعر الذي تقدمه وحدة التعليب أو المورد المختار للطرف الثاني هو السعر التجاري المعتمد للصفقة وفق العرض أو العقد التجاري النهائي.</p>
+                        <p>ولا يكون الطرف الأول مسؤولاً عن تفصيل مكونات السعر الداخلي للمورد أو وحدة التعليب، متى كان المورد قد قدم للطرف الثاني سعراً تجارياً شاملاً وفق العرض المعتمد.</p>
+                        <p>ويكون دور الطرف الأول في هذا الجانب هو التفاوض والحصول على العرض ونقله إلى الطرف الثاني ومتابعة تنفيذه.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 3 – Commercial Offer and Transaction Price</div>
+                    <div class="article-body">
+                        <p>The Parties agree that the price offered by the selected packaging unit or supplier to the Second Party represents the approved commercial price of the transaction, pursuant to the final commercial offer or contract.</p>
+                        <p>The First Party shall not be liable for detailing the internal cost breakdown of the supplier or packaging facility, provided the supplier has submitted a comprehensive commercial price to the Second Party in accordance with the approved offer.</p>
+                        <p>The First Party’s role in this regard is confined to negotiating, obtaining the offer, conveying it to the Second Party, and monitoring its execution.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 4 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الرابع – الموافقة المسبقة على السعر وإبرام عقد الشراء</div>
+                    <div class="article-body">
+                        <p>لا يحق للطرف الأول إبرام عقد شراء نهائي أو ترتيب أي التزام مالي على الطرف الثاني قبل الحصول على موافقة كتابية مسبقة من الطرف الثاني على السعر والشروط الأساسية للصفقة.</p>
+                        <p>ويجب أن تتضمن الموافقة، بحسب طبيعة الصفقة:</p>
+                        <ul>
+                            <li>اسم المورد أو وحدة التعليب.</li>
+                            <li>الكمية.</li>
+                            <li>السعر.</li>
+                            <li>نوع ومواصفات الزيت.</li>
+                            <li>التعبئة.</li>
+                            <li>شروط الدفع.</li>
+                            <li>شروط الفحص والتحليل.</li>
+                            <li>شروط التسليم.</li>
+                            <li>شروط الشحن والتصدير.</li>
+                            <li>أي شروط تجارية جوهرية أخرى.</li>
+                        </ul>
+                        <p>وتعتبر الموافقة الصادرة عن البريد الإلكتروني الرسمي للطرف الثاني أو أي وسيلة إلكترونية متفق عليها بين الطرفين موافقة كتابية، متى كان القانون لا يشترط شكلاً خاصاً.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 4 – Prior Approval of Price and Execution of Purchase Contract</div>
+                    <div class="article-body">
+                        <p>The First Party shall not be entitled to conclude a final purchase contract or establish any financial liability upon the Second Party prior to obtaining prior written approval from the Second Party concerning the price and essential transaction terms.</p>
+                        <p>Such approval must include, depending on the transaction nature:</p>
+                        <ul>
+                            <li>Name of supplier or packaging facility.</li>
+                            <li>Quantity.</li>
+                            <li>Price.</li>
+                            <li>Grade and technical specifications of the oil.</li>
+                            <li>Packaging details.</li>
+                            <li>Payment terms.</li>
+                            <li>Inspection and analysis conditions.</li>
+                            <li>Delivery terms.</li>
+                            <li>Shipping and export terms.</li>
+                            <li>Any other material commercial conditions.</li>
+                        </ul>
+                        <p>Approval transmitted via the official email of the Second Party, or any electronic medium mutually agreed upon between the Parties, shall be deemed valid written approval whenever the law does not require a specific form.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 5 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الخامس – التوكيل التجاري</div>
+                    <div class="article-body">
+                        <p>يصدر الطرف الثاني للطرف الأول توكيل تجاري خاص ومستقل للتفاوض وإبرام عقد الشراء نيابة عن الطرف الثاني، وفقاً لنص التوكيل المرفق بهذا العقد.</p>
+                        <p>ولا يجوز للطرف الأول استعمال هذا التوكيل خارج موضوع الصفقة أو خارج حدود الموافقة الكتابية الصادرة عن الطرف الثاني.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 5 – Commercial Power of Attorney</div>
+                    <div class="article-body">
+                        <p>The Second Party shall issue to the First Party an independent and specific commercial power of attorney to negotiate and execute the purchase contract on behalf of the Second Party, pursuant to the text annexed hereto.</p>
+                        <p>The First Party may not utilize this power of attorney outside the scope of the transaction or beyond the boundaries of the written approval issued by the Second Party.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 6 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السادس – طريقة توقيع عقد الشراء</div>
+                    <div class="article-body">
+                        <p>عند إبرام عقد الشراء، يلتزم الطرف الأول بالتوقيع بصفته وكيلاً عن الطرف الثاني، ويجب أن يظهر في العقد ما يفيد صراحة أن:</p>
+                        <div class="highlight-quote">
+                            "شركة القيروان للتجارة العامة – ذ.م.م هي المشتري الأصلي، والسيد حمدي الزين يوقع بالنيابة ولحسابها بصفته وكيلاً مفوضاً."
+                        </div>
+                        <p>ولا يجوز أن يظهر الطرف الأول أو السيد حمدي الزين باعتباره المشتري الشخصي للبضاعة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 6 – Method of Executing the Purchase Contract</div>
+                    <div class="article-body">
+                        <p>Upon executing the purchase contract, the First Party commits to sign strictly in its capacity as Agent on behalf of the Second Party, and the contract must explicitly state that:</p>
+                        <div class="highlight-quote">
+                            "ALQAYRWAN FOR GENERAL TRADING – L.L.C is the original Buyer, and Mr. Hamdi Ezzine signs on its behalf and for its account as Authorized Agent."
+                        </div>
+                        <p>Neither the First Party nor Mr. Hamdi Ezzine may appear as the personal purchaser of the goods.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 7 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السابع – عدم تحمل الطرف الأول لثمن البضاعة</div>
+                    <div class="article-body">
+                        <p>لا يكون الطرف الأول مسؤولاً شخصياً عن دفع ثمن الزيت أو أي التزام مالي ناشئ عن عقد الشراء المبرم بين الطرف الثاني والمورد.</p>
+                        <p>ولا تعتبر أتعاب الطرف الأول أو عمولته قرضاً أو سلفة أو ضماناً أو تمويلاً لعملية الشراء.</p>
+                        <p>ولا يجوز للمورد أو أي طرف ثالث مطالبة الطرف الأول شخصياً بثمن البضاعة، متى تصرف الطرف الأول في حدود التفويض الممنوح له.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 7 – Non-Liability of the First Party for the Price of Goods</div>
+                    <div class="article-body">
+                        <p>The First Party shall not be personally liable for paying the price of the olive oil or any financial commitment arising from the purchase contract executed between the Second Party and the supplier.</p>
+                        <p>The fees or commission of the First Party shall not be deemed a loan, advance, guarantee, or financing for the purchase transaction.</p>
+                        <p>Neither the supplier nor any third party may demand from the First Party personally the price of the goods, provided the First Party acted within the limits of the authority delegated to it.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 8 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثامن – المصاريف الداخلة في السعر التجاري</div>
+                    <div class="article-body">
+                        <p>بما أن وحدة التعليب تقدم عرضاً تجارياً للصفقة، فإن المصاريف التي تدخل في السعر التجاري المتفق عليه تكون وفق العرض والعقد النهائي المبرم مع المورد.</p>
+                        <p>ولا يتحمل الطرف الأول أي مبالغ إضافية تخص مكونات السعر التجاري للمورد من أتعابه الخاصة.</p>
+                        <p>أما أي خدمة أو مصروف إضافي خارج السعر التجاري المتفق عليه، فيكون على الطرف الذي ينص عليه العقد التجاري أو وفق اتفاق كتابي بين الطرفين.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 8 – Expenses Included in the Commercial Price</div>
+                    <div class="article-body">
+                        <p>Since the packaging facility provides a commercial quotation for the transaction, the expenses incorporated into the agreed commercial price shall be determined according to the offer and final contract concluded with the supplier.</p>
+                        <p>The First Party shall not bear any additional sums related to the supplier's commercial price components from its own private fees.</p>
+                        <p>Any additional service or expenditure outside the agreed commercial price shall be borne by the party stipulated in the commercial contract or pursuant to written agreement between the Parties.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 9 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل التاسع – مصاريف الشحن والعبور من المملكة العربية السعودية إلى أبوظبي</div>
+                    <div class="article-body">
+                        <p>تكون الصفقة وسعر التوريد المتفق عليه شاملاً لكافة تكاليف ومصاريف الشحن والنقل البري والترانزيت من المملكة العربية السعودية وصولاً إلى مقر الموكل والوجهة النهائية في <strong>أبوظبي – الإمارات العربية المتحدة</strong>، دون أن يتحمل الطرف الثاني (الموكل) أي مصاريف شحن أو أعباء مالية إضافية لهذا المسار خارج إطار الصفقة الشاملة المتفق عليها.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 9 – Freight & Transit Expenses from Saudi Arabia to Abu Dhabi</div>
+                    <div class="article-body">
+                        <p>The transaction and agreed supply price shall be all-inclusive of all freight, overland transportation, transit, and border-crossing expenses from the Kingdom of Saudi Arabia through to the final destination and premises of the Principal in <strong>Abu Dhabi – United Arab Emirates</strong>, without the Second Party (Principal) bearing any additional shipping costs or financial burdens for this route beyond the agreed all-inclusive deal price.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 10 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل العاشر – وجهة التصدير والمسار اللوجستي</div>
+                    <div class="article-body">
+                        <p>تكون الوجهة النهائية المعتمدة لتصدير وتسليم الشحنة هي <strong>أبوظبي – الإمارات العربية المتحدة</strong>، وذلك عبر مسار الترانزيت والعبور من خلال المملكة العربية السعودية.</p>
+                        <p>تكون الصفقة شاملة لكامل تكاليف الشحن من تونس وعبر السعودية حتى التسليم النهائي في أبوظبي وفق الشروط والوثائق التجارية واللوجستية المعتمدة.</p>
+                        <p>وتظل عمليات النقل والشحن خاضعة لشروط شركات النقل والجهات المختصة والظروف التشغيلية والملاحية والقوة القاهرة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 10 – Export Destination and Logistics Route</div>
+                    <div class="article-body">
+                        <p>The designated final export and delivery destination for the shipment is <strong>Abu Dhabi – United Arab Emirates</strong>, via the transit and overland crossing route through the Kingdom of Saudi Arabia.</p>
+                        <p>The transaction price shall be all-inclusive of all freight and transportation costs from Tunisia through Saudi Arabia up to final delivery in Abu Dhabi in accordance with approved commercial and logistics instruments.</p>
+                        <p>Transport and freight operations remain governed by the conditions of shipping lines, competent authorities, operational and navigational conditions, and force majeure events.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 11 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الحادي عشر – التحاليل وجودة الزيت</div>
+                    <div class="article-body">
+                        <p>يتفق الطرفان على أن التحقق الفني من جودة الزيت ومطابقته للمواصفات المتفق عليها يتم بواسطة التحاليل المخبرية الرسمية أو المختبر المستقل المعتمد المتفق عليه.</p>
+                        <p>ويتولى الطرف الأول:</p>
+                        <ul>
+                            <li>تنسيق إجراء التحليل.</li>
+                            <li>متابعة المختبر.</li>
+                            <li>استلام أو الحصول على نسخة من النتائج.</li>
+                            <li>توثيقها.</li>
+                            <li>إرسالها إلى الطرف الثاني.</li>
+                        </ul>
+                        <p>ولا يعتبر الطرف الأول مصدراً لشهادة جودة مستقلة ولا ضامناً شخصياً للنتيجة الفنية.</p>
+                        <p>وتكون النتيجة الفنية المعتمدة هي النتيجة الصادرة عن المختبر أو الجهة المختصة.</p>
+                        <p>ولا يكون الطرف الأول مسؤولاً عن نتيجة التحليل أو جودة المنتج متى لم يكن عدم المطابقة ناتجاً عن غش أو خطأ جسيم ثابت من جانبه.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 11 – Laboratory Analysis and Olive Oil Quality</div>
+                    <div class="article-body">
+                        <p>The Parties agree that technical verification of oil quality and compliance with agreed specifications shall be executed via official laboratory analyses or an agreed accredited independent laboratory.</p>
+                        <p>The First Party shall undertake:</p>
+                        <ul>
+                            <li>Coordinating the execution of analyses.</li>
+                            <li>Following up with the laboratory.</li>
+                            <li>Receiving or obtaining a copy of the results.</li>
+                            <li>Documenting and archiving them.</li>
+                            <li>Transmitting them to the Second Party.</li>
+                        </ul>
+                        <p>The First Party shall not be deemed the issuer of an independent quality certificate, nor a personal guarantor of the technical outcome.</p>
+                        <p>The certified technical result is the finding issued by the accredited laboratory or competent entity.</p>
+                        <p>The First Party shall not be held liable for analysis results or product quality unless non-compliance results from proven fraud or gross misconduct on its part.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 12 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثاني عشر – الشهادات والوثائق</div>
+                    <div class="article-body">
+                        <p>يتولى الطرف الأول متابعة وتنسيق الحصول على الوثائق والشهادات التي تكون من اختصاص المورد أو وحدة التعليب أو المختبر أو الجهات الرسمية.</p>
+                        <p>ويقوم بإرسال نسخ الوثائق التي يحصل عليها إلى الطرف الثاني.</p>
+                        <p>ولا يضمن الطرف الأول صدور وثيقة من جهة مستقلة أو حكومية إذا كانت صلاحية إصدارها تعود حصراً إلى تلك الجهة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 12 – Certificates and Documentation</div>
+                    <div class="article-body">
+                        <p>The First Party shall monitor and coordinate the acquisition of documents and certificates falling within the remit of the supplier, packaging facility, laboratory, or official authorities.</p>
+                        <p>It shall send copies of all documents obtained to the Second Party.</p>
+                        <p>The First Party does not guarantee the issuance of a document by an independent or governmental entity if the issuance authority lies exclusively with that entity.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 13 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثالث عشر – تسجيل العلامة التجارية</div>
+                    <div class="article-body">
+                        <p>يتولى الطرف الأول إعداد وإيداع ومتابعة ملف تسجيل العلامة التجارية الخاصة بالطرف الثاني لدى INNORPI، وفق الصنف وقائمة المنتجات التي يعتمدها الطرف الثاني.</p>
+                        <p>وتشمل المهمة:</p>
+                        <ul>
+                            <li>إعداد ملف الإيداع.</li>
+                            <li>إعداد وتنسيق التصاميم.</li>
+                            <li>إيداع الملف.</li>
+                            <li>متابعة إجراءات المعهد.</li>
+                            <li>استلام الإشعارات والمراسلات.</li>
+                            <li>متابعة التصحيحات الشكلية عند الحاجة.</li>
+                            <li>متابعة شهادة الإيداع.</li>
+                            <li>متابعة الإجراءات الإدارية المعتادة حتى انتهاء المرحلة المسندة إليه.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 13 – Trademark Registration</div>
+                    <div class="article-body">
+                        <p>The First Party shall prepare, file, and follow up the trademark registration file of the Second Party with INNORPI, according to the class and list of goods approved by the Second Party.</p>
+                        <p>The assignment includes:</p>
+                        <ul>
+                            <li>Preparing the filing docket.</li>
+                            <li>Preparing and coordinating graphic designs.</li>
+                            <li>Filing the application.</li>
+                            <li>Monitoring institute procedures.</li>
+                            <li>Receiving notices and correspondence.</li>
+                            <li>Addressing formal corrections when required.</li>
+                            <li>Tracking the filing certificate.</li>
+                            <li>Following customary administrative procedures until completion of the assigned phase.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 14 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الرابع عشر – عدم ضمان تسجيل العلامة</div>
+                    <div class="article-body">
+                        <p>يقر الطرف الثاني بأن تسجيل العلامة التجارية يخضع لسلطة واختصاص INNORPI وللإجراءات القانونية والفحص وإمكانية اعتراض الغير.</p>
+                        <p>وعليه، لا يضمن الطرف الأول:</p>
+                        <ul>
+                            <li>قبول العلامة.</li>
+                            <li>تسجيلها نهائياً.</li>
+                            <li>عدم وجود اعتراض.</li>
+                            <li>عدم وجود مانع قانوني أو إداري.</li>
+                        </ul>
+                        <p>ويقتصر التزام الطرف الأول على بذل العناية المهنية المعقولة ومتابعة الملف وإبلاغ الطرف الثاني بالمراسلات والإجراءات المطلوبة.</p>
+                        <p>ولا يتحمل الطرف الأول نتيجة رفض أو اعتراض أو قرار صادر عن INNORPI، ما لم يثبت أن الرفض أو الضرر ناتج مباشرة عن غش أو خطأ مهني جسيم من جانبه.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 14 – Non-Guarantee of Trademark Registration</div>
+                    <div class="article-body">
+                        <p>The Second Party acknowledges that trademark registration is subject to the sole jurisdiction of INNORPI, statutory examination procedures, and potential third-party oppositions.</p>
+                        <p>Accordingly, the First Party does not guarantee:</p>
+                        <ul>
+                            <li>Acceptance of the trademark.</li>
+                            <li>Its final definitive registration.</li>
+                            <li>Absence of oppositions.</li>
+                            <li>Absence of legal or administrative impediments.</li>
+                        </ul>
+                        <p>The First Party’s obligation is confined to exerting reasonable professional due care, tracking the docket, and apprising the Second Party of notifications and required actions.</p>
+                        <p>The First Party shall not bear the outcome of any rejection, opposition, or decision rendered by INNORPI, unless it is proven that the rejection or damage resulted directly from fraud or gross professional negligence on its part.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 15 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الخامس عشر – المصاريف الإضافية المتعلقة بالعلامة</div>
+                    <div class="article-body">
+                        <p>تكون رسوم INNORPI والمصاريف الرسمية المتعلقة بالعلامة منفصلة تماماً عن أتعاب الطرف الأول.</p>
+                        <p>وأي مصاريف إضافية قد تطلبها الجهات المختصة، بما في ذلك:</p>
+                        <ul>
+                            <li>رسوم إضافية.</li>
+                            <li>تصحيحات.</li>
+                            <li>تعديلات.</li>
+                            <li>إعادة إيداع.</li>
+                            <li>اعتراضات.</li>
+                            <li>إجراءات إضافية.</li>
+                            <li>وثائق أو مستندات جديدة.</li>
+                            <li>نشر أو استخراج وثائق إضافية.</li>
+                        </ul>
+                        <p>لا تدخل ضمن الأتعاب الثابتة. ويتحمل الطرف الثاني هذه المصاريف. ولا يكون الطرف الأول ملزماً بدفعها من أتعابه.</p>
+                        <p>وإذا استوجب الأمر أن يقوم الطرف الأول بالدفع نيابة عن الطرف الثاني، فيجب توفير المبلغ له مسبقاً.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 15 – Ancillary Trademark Expenses</div>
+                    <div class="article-body">
+                        <p>Official INNORPI fees and statutory expenses related to the trademark are entirely separate from the First Party's professional fees.</p>
+                        <p>Any supplementary disbursements required by competent authorities, including:</p>
+                        <ul>
+                            <li>Additional fees.</li>
+                            <li>Corrections.</li>
+                            <li>Amendments.</li>
+                            <li>Re-filings.</li>
+                            <li>Oppositions.</li>
+                            <li>Supplementary proceedings.</li>
+                            <li>New certificates or supporting documents.</li>
+                            <li>Gazette publication or retrieval of additional documents.</li>
+                        </ul>
+                        <p>Shall not be part of the fixed fees. The Second Party shall bear these expenses. The First Party is not obligated to pay them from its fees.</p>
+                        <p>Should the First Party be required to disburse funds on behalf of the Second Party, the requisite amount must be provided to it in advance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 16 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السادس عشر – ملكية العلامة</div>
+                    <div class="article-body">
+                        <p>تكون ملكية العلامة التجارية موضوع الإيداع والتسجيل للطرف الثاني وحده.</p>
+                        <p>ولا يكتسب الطرف الأول أي حق ملكية أو استغلال مستقل عليها.</p>
+                        <p>ويقتصر استعمال الطرف الأول للعلامة والتصاميم والملفات على ما يلزم لتنفيذ مهامه.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 16 – Ownership of Trademark</div>
+                    <div class="article-body">
+                        <p>All proprietary rights, title, and interest in the trademark subject to filing and registration shall vest exclusively in the Second Party.</p>
+                        <p>The First Party shall acquire no independent ownership or exploitation rights over the mark.</p>
+                        <p>The First Party’s use of the mark, designs, and artwork is strictly restricted to what is strictly necessary to discharge its contractual duties.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 17 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السابع عشر – الأتعاب الثابتة</div>
+                    <div class="article-body">
+                        <p>اتفق الطرفان على الأتعاب التالية:</p>
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>البيان والخدمة</th>
+                                    <th>المبلغ قبل TVA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1. إدارة ملف العلامة والتصاميم</td>
+                                    <td><strong>600 دينار تونسي</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>2. التمثيل القانوني والإشراف والمعاينة الميدانية ومتابعة العقود</td>
+                                    <td><strong>1,000 دينار تونسي</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>إجمالي الأتعاب الثابتة (Total Fixed Fees)</strong></td>
+                                    <td><strong>1,600 دينار تونسي قبل الأداءات</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>وتطبق على هذه الأتعاب TVA بنسبة 19% وفق النظام الجبائي المعتمد للطرف الأول، ما لم تفرض القوانين أو السلطات الجبائية نسبة أخرى واجبة التطبيق.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 17 – Fixed Fees</div>
+                    <div class="article-body">
+                        <p>The Parties have agreed on the following fixed fees:</p>
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Service Description</th>
+                                    <th>Amount before VAT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1. Management of trademark file and graphic designs</td>
+                                    <td><strong>600 TND</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>2. Legal representation, supervision, field inspection, and contract monitoring</td>
+                                    <td><strong>1,000 TND</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Fixed Professional Fees</strong></td>
+                                    <td><strong>1,600 TND before taxes</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>A Value Added Tax (TVA/VAT) of 19% applies to these fees in accordance with the First Party's applicable tax status, unless tax authorities mandate another statutory rate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 18 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثامن عشر – عمولة الشراء والتمثيل</div>
+                    <div class="article-body">
+                        <p>يستحق الطرف الأول عمولة قدرها:</p>
+                        <div class="highlight-quote">
+                            1% من القيمة الإجمالية للصفقة المبينة في الفاتورة التجارية/فاتورة التصدير النهائية.
+                        </div>
+                        <p>وتضاف إلى هذه العمولة TVA بنسبة 19% وفق النظام الجبائي المعتمد للطرف الأول.</p>
+                        <p>ويقصد بالقيمة الإجمالية للصفقة القيمة الإجمالية المثبتة في الفاتورة التجارية/فاتورة التصدير الخاصة بالصفقة محل هذا العقد.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 18 – Purchasing & Representation Commission</div>
+                    <div class="article-body">
+                        <p>The First Party is entitled to a success commission of:</p>
+                        <div class="highlight-quote">
+                            1% of the total aggregate transaction value stated in the final commercial invoice / export invoice.
+                        </div>
+                        <p>A VAT (TVA) of 19% is added to this commission pursuant to the First Party's tax framework.</p>
+                        <p>Total transaction value denotes the gross total amount verified in the commercial/export invoice issued for the transaction governed by this Contract.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 19 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل التاسع عشر – الفواتير</div>
+                    <div class="article-body">
+                        <p>يصدر الطرف الأول فاتورة مستقلة لكل خدمة، على النحو التالي:</p>
+                        <ul>
+                            <li>فاتورة أتعاب إدارة ملف العلامة والتصاميم.</li>
+                            <li>فاتورة أتعاب التمثيل القانوني والإشراف والمعاينة.</li>
+                            <li>فاتورة عمولة الشراء والتمثيل بنسبة 1%.</li>
+                        </ul>
+                        <p>وتضاف TVA بنسبة 19% إلى كل فاتورة وفق الأحكام الجبائية المعمول بها.</p>
+                        <p>ولا تشمل هذه الفواتير الرسوم الرسمية أو المصاريف التي يدفعها الطرف الأول لحساب الطرف الثاني، والتي تثبت بمستندات مستقلة عند الاقتضاء.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 19 – Invoicing</div>
+                    <div class="article-body">
+                        <p>The First Party shall issue a separate invoice for each distinct service, as follows:</p>
+                        <ul>
+                            <li>Invoice for managing the trademark docket and graphic designs.</li>
+                            <li>Invoice for legal representation, supervision, and field inspection.</li>
+                            <li>Invoice for the 1% purchase and representation commission.</li>
+                        </ul>
+                        <p>VAT of 19% shall be added to each invoice pursuant to prevailing tax enactments.</p>
+                        <p>These invoices exclude statutory official fees or disbursements advanced by the First Party for the account of the Second Party, which shall be substantiated by separate receipts where applicable.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 20 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل العشرون – جدول الدفع</div>
+                    <div class="article-body">
+                        <p><strong>الدفعة الأولى</strong><br>
+                        عند توقيع العقد:<br>
+                        • 50% من الأتعاب الثابتة.</p>
+
+                        <p><strong>الدفعة الثانية</strong><br>
+                        عند صدور شهادة إيداع العلامة وتوقيع عقد الشراء مع المورد:<br>
+                        • 50% المتبقية من الأتعاب الثابتة.<br>
+                        • 50% من عمولة الشراء.</p>
+
+                        <p><strong>الدفعة الثالثة</strong><br>
+                        عند استكمال التحاليل النهائية وتحميل الحاوية/الشحنة وفق المرحلة المتفق عليها:<br>
+                        • 50% المتبقية من عمولة الشراء.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 20 – Payment Schedule</div>
+                    <div class="article-body">
+                        <p><strong>First Installment:</strong><br>
+                        Upon execution of this Contract:<br>
+                        • 50% of the fixed professional fees.</p>
+
+                        <p><strong>Second Installment:</strong><br>
+                        Upon issuance of the trademark filing certificate and execution of the purchase contract with the supplier:<br>
+                        • The remaining 50% of fixed fees.<br>
+                        • 50% of the purchasing commission.</p>
+
+                        <p><strong>Third Installment:</strong><br>
+                        Upon completion of final laboratory testing and loading of the container/cargo according to the agreed stage:<br>
+                        • The remaining 50% of the purchasing commission.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 21 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الحادي والعشرون – عدم الالتفاف</div>
+                    <div class="article-body">
+                        <p>يتعهد الطرف الثاني بعدم الالتفاف على الطرف الأول أو تجاوزه بقصد تجنب دفع أتعابه أو عمولته.</p>
+                        <p>وفي حال إبرام الطرف الثاني، مباشرة أو بواسطة طرف مرتبط به، صفقة مع مورد أو وحدة تعليب أو جهة تجارية قام الطرف الأول بتقديمها أو التفاوض معها لحساب الطرف الثاني، وكانت الصفقة نتيجة مباشرة لأعمال الطرف الأول، فإن حق الطرف الأول في العمولة يبقى قائماً.</p>
+                        <p>ويطبق هذا الالتزام خلال مدة العقد ولمدة 12 شهراً من تاريخ انتهائه.</p>
+                        <p>ولا يشمل ذلك الموردين الذين يثبت الطرف الثاني وجود علاقة تجارية سابقة معهم قبل تدخل الطرف الأول.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 21 – Non-Circumvention</div>
+                    <div class="article-body">
+                        <p>The Second Party undertakes not to circumvent or bypass the First Party with the intention of avoiding payment of its fees or commission.</p>
+                        <p>In the event the Second Party concludes, directly or through an affiliated entity, a transaction with a supplier, packaging facility, or commercial party introduced or negotiated with by the First Party for the account of the Second Party, and where such transaction is a direct consequence of the First Party’s endeavors, the First Party’s entitlement to commission shall remain fully enforceable.</p>
+                        <p>This covenant applies throughout the term of this Contract and for a period of 12 months following its termination.</p>
+                        <p>This does not include suppliers with whom the Second Party establishes a pre-existing commercial relationship prior to the First Party’s intervention.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 22 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثاني والعشرون – إلغاء الصفقة بعد إنجاز العمل</div>
+                    <div class="article-body">
+                        <p>إذا أتم الطرف الأول المفاوضات وأوصل الطرف الثاني إلى اتفاق تجاري أو عقد شراء، ثم قرر الطرف الثاني إلغاء الصفقة لأسباب تعود إليه، فإن إلغاء الصفقة لا يؤدي بذاته إلى إسقاط الأتعاب المستحقة عن الأعمال المنجزة.</p>
+                        <p>وإذا كانت الصفقة قد أصبحت ملزمة للطرف الثاني نتيجة أعمال الطرف الأول، تستحق العمولة وفق شروط هذا العقد، ما لم يكن عدم التنفيذ راجعاً إلى قوة قاهرة أو إخلال ثابت من المورد أو سبب قانوني خارج عن إرادة الطرف الثاني.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 22 – Cancellation of Transaction After Performance</div>
+                    <div class="article-body">
+                        <p>If the First Party concludes negotiations and leads the Second Party to a commercial agreement or purchase contract, and the Second Party subsequently elects to abort the transaction for reasons attributable to it, such cancellation shall not forfeit the fees accrued for services performed.</p>
+                        <p>Where the deal has become binding upon the Second Party as a result of the First Party’s efforts, the commission shall mature pursuant to this Contract, unless non-performance arises from force majeure, proven supplier default, or a lawful cause beyond the Second Party's control.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 23 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثالث والعشرون – المسؤولية</div>
+                    <div class="article-body">
+                        <p>لا يتحمل الطرف الأول المسؤولية عن:</p>
+                        <ul>
+                            <li>قرار INNORPI.</li>
+                            <li>اعتراض الغير على العلامة.</li>
+                            <li>نتائج المختبر.</li>
+                            <li>جودة الزيت إذا لم تكن نتيجة خطأ جسيم أو غش من جانبه.</li>
+                            <li>تصرفات المورد.</li>
+                            <li>تأخر المورد.</li>
+                            <li>قرارات الجمارك.</li>
+                            <li>تأخر الموانئ.</li>
+                            <li>تأخر شركات النقل.</li>
+                            <li>الظروف الملاحية أو الأمنية أو السياسية.</li>
+                            <li>القوة القاهرة.</li>
+                        </ul>
+                        <p>وتقتصر مسؤولية الطرف الأول على الأخطاء الشخصية الثابتة التي ارتكبها أثناء تنفيذ المهام المسندة إليه وفي حدود التفويض.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 23 – Limitation of Liability</div>
+                    <div class="article-body">
+                        <p>The First Party bears no liability for:</p>
+                        <ul>
+                            <li>Decisions rendered by INNORPI.</li>
+                            <li>Third-party oppositions to the trademark.</li>
+                            <li>Laboratory testing results.</li>
+                            <li>Olive oil quality, provided it is not the direct result of proven fraud or gross misconduct on its part.</li>
+                            <li>Acts or defaults of the supplier.</li>
+                            <li>Supplier delays.</li>
+                            <li>Customs authority determinations.</li>
+                            <li>Port congestion or delays.</li>
+                            <li>Freight and shipping carrier delays.</li>
+                            <li>Navigational, security, or geopolitical circumstances.</li>
+                            <li>Force majeure events.</li>
+                        </ul>
+                        <p>The First Party’s liability is strictly confined to proven personal errors committed in discharging delegated tasks within the limits of its mandate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 24 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الرابع والعشرون – السرية</div>
+                    <div class="article-body">
+                        <p>يلتزم الطرفان بالحفاظ على سرية المعلومات التجارية والفنية والمالية والأسعار والموردين والتصاميم والوثائق والمراسلات المتبادلة بمناسبة تنفيذ العقد.</p>
+                        <p>ويستمر الالتزام بالسرية لمدة ثلاث سنوات من تاريخ انتهاء العقد.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 24 – Confidentiality</div>
+                    <div class="article-body">
+                        <p>The Parties commit to maintaining the strict confidentiality of all commercial, technical, and financial information, pricing, supplier lists, artwork, documents, and correspondence exchanged in executing this Contract.</p>
+                        <p>This confidentiality covenant remains binding for a period of three (3) years following the termination of this Contract.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 25 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الخامس والعشرون – القوة القاهرة</div>
+                    <div class="article-body">
+                        <p>لا يكون أي طرف مسؤولاً عن التأخير أو عدم التنفيذ الناتج عن قوة قاهرة أو ظرف استثنائي خارج عن سيطرته المعقولة، بما في ذلك الحروب والاضطرابات والكوارث الطبيعية والقرارات الحكومية وإغلاق الموانئ وتعطل النقل والقيود التجارية والأمنية والأوبئة وغيرها من الظروف المماثلة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 25 – Force Majeure</div>
+                    <div class="article-body">
+                        <p>Neither Party shall be held liable for failure or delay in performance caused by force majeure or extraordinary events beyond reasonable control, including wars, civil unrest, natural catastrophes, sovereign decrees, port shutdowns, transportation blockages, trade and security embargoes, epidemics, or analogous circumstances.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 26 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السادس والعشرون – المراسلات الإلكترونية</div>
+                    <div class="article-body">
+                        <p>يجوز للطرفين اعتماد البريد الإلكتروني والوسائل الإلكترونية المتفق عليها في:</p>
+                        <ul>
+                            <li>الموافقات.</li>
+                            <li>عروض الأسعار.</li>
+                            <li>التعليمات.</li>
+                            <li>التصاميم.</li>
+                            <li>الوثائق.</li>
+                            <li>المراسلات التجارية.</li>
+                        </ul>
+                        <p>وتعتبر هذه المراسلات حجة بين الطرفين في حدود ما يسمح به القانون.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 26 – Electronic Communications</div>
+                    <div class="article-body">
+                        <p>The Parties may utilize email and agreed electronic channels for:</p>
+                        <ul>
+                            <li>Approvals and authorizations.</li>
+                            <li>Price quotations.</li>
+                            <li>Instructions and notices.</li>
+                            <li>Graphic designs and packaging layouts.</li>
+                            <li>Commercial documentation.</li>
+                            <li>Trade correspondence.</li>
+                        </ul>
+                        <p>Such electronic communications constitute admissible evidence between the Parties to the fullest extent permitted by law.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 27 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل السابع والعشرون – مدة العقد</div>
+                    <div class="article-body">
+                        <p>يسري هذا العقد من تاريخ توقيعه إلى غاية استكمال المهام موضوعه، ما لم يتم إنهاؤه وفق أحكام هذا العقد.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 27 – Term of Contract</div>
+                    <div class="article-body">
+                        <p>This Contract takes effect as of the date of execution and remains valid until full completion of the underlying tasks, unless terminated earlier pursuant to its provisions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 28 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثامن والعشرون – إنهاء العقد</div>
+                    <div class="article-body">
+                        <p>يجوز لأي طرف إنهاء العقد بإشعار كتابي.</p>
+                        <p>ولا يؤثر الإنهاء على:</p>
+                        <ul>
+                            <li>الأتعاب المستحقة عن الأعمال المنجزة.</li>
+                            <li>المصاريف التي التزم بها الطرف الثاني.</li>
+                            <li>العمولة المستحقة عن الصفقة الناتجة عن أعمال الطرف الأول.</li>
+                            <li>السرية.</li>
+                            <li>عدم الالتفاف.</li>
+                            <li>الحقوق التي نشأت قبل الإنهاء.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 28 – Termination</div>
+                    <div class="article-body">
+                        <p>Either Party may terminate this Contract by serving written notice.</p>
+                        <p>Termination shall not impair or affect:</p>
+                        <ul>
+                            <li>Professional fees accrued for executed milestones.</li>
+                            <li>Expenses committed by the Second Party.</li>
+                            <li>Commissions matured on transactions resulting from the First Party’s work.</li>
+                            <li>Confidentiality obligations.</li>
+                            <li>Non-circumvention commitments.</li>
+                            <li>Vested rights accrued prior to termination.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 29 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل التاسع والعشرون – القانون الواجب التطبيق</div>
+                    <div class="article-body">
+                        <p>يخضع هذا العقد للقانون التونسي، وتفسر أحكامه وفق التشريع التونسي الجاري به العمل، دون الإخلال بالقواعد الآمرة التي قد تنطبق على بعض مراحل تنفيذ الصفقة خارج تونس.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 29 – Governing Law</div>
+                    <div class="article-body">
+                        <p>This Contract shall be governed by and construed in accordance with the laws of the Republic of Tunisia, without prejudice to any mandatory public policy rules applicable to specific extraterritorial performance stages outside Tunisia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 30 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثلاثون – تسوية النزاعات</div>
+                    <div class="article-body">
+                        <p>يسعى الطرفان أولاً إلى حل أي نزاع ودياً خلال مدة ثلاثين يوماً من تاريخ توجيه إشعار كتابي بالنزاع.</p>
+                        <p>وفي حالة عدم التوصل إلى تسوية ودية، تختص المحاكم التونسية المختصة قانوناً بالنظر في النزاع، مع الاتفاق، في حدود ما يسمح به القانون، على اختصاص المحاكم المختصة بتونس العاصمة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 30 – Dispute Resolution</div>
+                    <div class="article-body">
+                        <p>The Parties shall initially endeavor to resolve any dispute amicably within thirty (30) days from written notice of the dispute.</p>
+                        <p>Failing amicable settlement, the competent Tunisian Courts shall have jurisdiction over the dispute, with mutual agreement—to the fullest extent allowed by law—conferring jurisdiction upon the competent courts of Tunis Capital.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 31 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الحادي والثلاثون – كامل الاتفاق</div>
+                    <div class="article-body">
+                        <p>يشكل هذا العقد والتوكيلات والملحقات المرفقة به كامل الاتفاق بين الطرفين.</p>
+                        <p>ولا يجوز تعديل أي حكم منه إلا بموجب اتفاق كتابي موقع من الطرفين.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 31 – Entire Agreement</div>
+                    <div class="article-body">
+                        <p>This Contract, together with the annexed powers of attorney and financial schedule, constitutes the entire and comprehensive agreement between the Parties.</p>
+                        <p>No amendment or modification shall be valid unless executed in writing and signed by both Parties.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article 32 -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">الفصل الثاني والثلاثون – النسخ</div>
+                    <div class="article-body">
+                        <p>حرر هذا العقد من نسختين أصليتين، تسلم كل طرف نسخة للعمل بموجبها.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 32 – Counterparts</div>
+                    <div class="article-body">
+                        <p>Done and executed in two (2) original counterparts, each Party acknowledging receipt of one original for implementation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signatures Section of Contract -->
+            <div class="signatures-area">
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">الطرف الأول (First Party)</div>
+                        <div class="sig-details">
+                            <strong>شركة منصة الزين لزيت الزيتون التونسي</strong><br>
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                            الاسم: <strong>حمدي الزين Hamdi Ezzine</strong><br>
+                            الصفة: المدير والمؤسس والممثل القانوني<br>
+                            المعرف الجبائي (MF): <span class="font-mono">1969552S</span> (سجل: B5094322026)<br>
+                            القيروان – الجمهورية التونسية
+                        </div>
+                        <div class="sig-line"><span>التوقيع:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الشركة (Company Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">The First Party</div>
+                        <div class="sig-details">
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM</strong><br>
+                            <strong>ZinToop SUARL</strong><br>
+                            Name: <strong>Hamdi Ezzine</strong><br>
+                            Title: Managing Director, Founder & Legal Representative<br>
+                            Tax ID / RNE: <span class="font-mono">1969552S</span> (Reg: B5094322026)<br>
+                            Kairouan – Republic of Tunisia
+                        </div>
+                        <div class="sig-line"><span>Signature:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Company Seal / Stamp</div>
+                    </div>
+                </div>
+
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">الطرف الثاني (Second Party)</div>
+                        <div class="sig-details">
+                            <strong>شركة القيروان للتجارة العامة – ذ.م.م</strong><br>
+                            <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                            الاسم: <strong>محمد بن عامر الرمضاني</strong> (الصفة: شريك)<br>
+                            و/أو الاسم: <strong>علي حسين عوض صالح المصعبي</strong> (الصفة: مدير ومفوض بالتوقيع)<br>
+                            رخصة: CN-6794200 – أبوظبي، الإمارات
+                        </div>
+                        <div class="sig-line"><span>توقيع 1:</span> <span>....................................................</span></div>
+                        <div class="sig-line"><span>توقيع 2:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الشركة (Company Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">The Second Party</div>
+                        <div class="sig-details">
+                            <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                            Name: <strong>Mohammed Bin Amer Al-Ramadhani</strong> (Title: Partner)<br>
+                            and/or Name: <strong>Ali Hussein Awadh Saleh Al-Musabi</strong> (Title: Director & Authorized Signatory)<br>
+                            License: CN-6794200 – Abu Dhabi, UAE
+                        </div>
+                        <div class="sig-line"><span>Signature 1:</span> <span>....................................................</span></div>
+                        <div class="sig-line"><span>Signature 2:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Company Seal / Stamp</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="official-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF / RNE: 1969552S • Kairouan, Tunisia</div>
+                <div>عقد التمثيل التجاري والخدمات الصناعية • Page 1 of 4</div>
+            </div>
+        </article>
+
+
+        <!-- ============================================================ -->
+        <!-- DOCUMENT 2: SPECIAL POWER OF ATTORNEY FOR INNORPI            -->
+        <!-- ============================================================ -->
+        <article class="contract-page" id="section-innorpi">
+            <div class="official-header">
+                <div class="official-logo">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                    <div class="logo-text">
+                        <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                        <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                        <div class="brand-sub">Industrial Property Unit • قسم الملكية الصناعية • Code: 748 / 5262</div>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div><strong>المعرف الجبائي (Matricule Fiscal):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>المعرف الوحيد (RNE Unique ID):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>عدد التصرف (Registry File N°):</strong> <span class="font-mono">B5094322026</span></div>
+                    <div><strong>المقر:</strong> حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية، تونس</div>
+                    <div><strong>الملحق رقم 1:</strong> توكيل خاص INNORPI • Special POA</div>
+                </div>
+            </div>
+
+            <div class="doc-title-block">
+                <span class="doc-tag">توكيل خاص رسمي • Special Power of Attorney</span>
+                <div class="content-ar">
+                    <h2 class="doc-main-title">توكيل خاص لتسجيل ومتابعة علامة تجارية لدى INNORPI</h2>
+                </div>
+                <div class="content-en">
+                    <h2 class="doc-main-title">Special Power of Attorney for Trademark Registration & Prosecution before INNORPI</h2>
+                </div>
+            </div>
+
+            <div class="parties-box">
+                <div class="content-ar">
+                    <p>نحن الموقعون أدناه:</p>
+                    <p><strong>شركة القيروان للتجارة العامة – ذ.م.م<br>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                    شركة مسجلة بأبوظبي – الإمارات العربية المتحدة بموجب الرخصة التجارية رقم <strong>CN-6794200</strong> والرقم الموحد <strong>101-2026-200128646</strong>.<br>
+                    ويمثلها قانوناً السيد <strong>محمد بن عامر الرمضاني</strong> بصفته شريكاً، و/أو السيد <strong>علي حسين عوض صالح المصعبي</strong> بصفته مديراً ومفوضاً بالتوقيع، وفقاً للوثائق الرسمية للشركة.</p>
+                    <p style="margin-top: 10px;"><strong>نمنح بموجب هذا التوكيل توكيلاً خاصاً ومحدداً إلى:</strong><br>
+                    السيد <strong>حمدي الزين – Hamdi Ezzine</strong>، تونسي الجنسية، بصفته المدير والمؤسس والممثل القانوني لشركة منصة الزين لزيت الزيتون التونسي <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>، شركة ذات مسؤولية محدودة شخص واحد، مسجلة بالسجل الوطني للمؤسسات بالجمهورية التونسية تحت المعرف الوحيد <strong>RNE: 1969552S</strong>، والمعرف الجبائي (Matricule Fiscal): <strong>1969552S</strong>، ورقم ملف السجل التجاري: <strong>B5094322026</strong>، ومقرها الاجتماعي: حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية – الجمهورية التونسية.</p>
+                </div>
+                <div class="content-en">
+                    <p>We, the undersigned:</p>
+                    <p><strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                    A company registered in Abu Dhabi – United Arab Emirates under Commercial License No. <strong>CN-6794200</strong>, and Unified Number <strong>101-2026-200128646</strong>.<br>
+                    Legally represented by Mr. <strong>Mohammed Bin Amer Al-Ramadhani</strong> in his capacity as Partner, and/or Mr. <strong>Ali Hussein Awadh Saleh Al-Musabi</strong> in his capacity as Director and Authorized Signatory, according to official company documentation.</p>
+                    <p style="margin-top: 10px;"><strong>Do hereby grant, by virtue hereof, a special and specific power of attorney unto:</strong><br>
+                    Mr. <strong>Hamdi Ezzine</strong>, a Tunisian national, in his capacity as Managing Director, Founder, and Legal Representative of <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>, a single-member limited liability company registered in the National Business Register of Tunisia under Unique ID (RNE): <strong>1969552S</strong>, Tax Identification (Matricule Fiscal): <strong>1969552S</strong>, and Commercial Registry File No. <strong>B5094322026</strong>, having its registered office at Les Jardins Khadhraoui, Cité Ibn Eljazzar, Dar Amen, 3140 Kairouan Nord – Republic of Tunisia.</p>
+                </div>
+            </div>
+
+            <!-- Articles of INNORPI POA -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الأولى – موضوع التوكيل</div>
+                    <div class="article-body">
+                        <p>يخول الموكل الوكيل القيام نيابة عنه بالإجراءات اللازمة لإيداع ومتابعة ملف تسجيل العلامة التجارية الخاصة بالموكل لدى المعهد الوطني للمواصفات والملكية الصناعية INNORPI بالجمهورية التونسية.</p>
+                        <p>ويكون التسجيل ضمن الصنف المتفق عليه وقائمة المنتجات التي يعتمدها الموكل.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 1 – Scope of Power of Attorney</div>
+                    <div class="article-body">
+                        <p>The Principal authorizes the Attorney-in-Fact to undertake on its behalf all necessary procedures to file and prosecute the trademark registration application of the Principal before the National Institute for Standardization and Industrial Property (INNORPI) in the Republic of Tunisia.</p>
+                        <p>Registration shall be in respect of the agreed-upon class and specification of goods approved by the Principal.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الثانية – الصلاحيات</div>
+                    <div class="article-body">
+                        <p>يخول الوكيل:</p>
+                        <ul>
+                            <li>إعداد وتقديم طلب تسجيل العلامة.</li>
+                            <li>إيداع نموذج وتصميم العلامة.</li>
+                            <li>تقديم قائمة المنتجات التي يعتمدها الموكل.</li>
+                            <li>توقيع استمارات الإيداع والوثائق اللازمة.</li>
+                            <li>متابعة الملف لدى INNORPI.</li>
+                            <li>دفع الرسوم الرسمية متى وفر الموكل مبالغها مسبقاً.</li>
+                            <li>استلام وصل أو شهادة الإيداع.</li>
+                            <li>استلام المراسلات والإشعارات.</li>
+                            <li>الرد على المطالب الشكلية والإدارية.</li>
+                            <li>تقديم التصحيحات والوثائق الإضافية المطلوبة.</li>
+                            <li>استلام الشهادات والوثائق الصادرة عن المعهد.</li>
+                            <li>متابعة الإجراءات الإدارية إلى غاية انتهاء المرحلة المسندة إليه.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 2 – Delegated Powers</div>
+                    <div class="article-body">
+                        <p>The Attorney-in-Fact is empowered to:</p>
+                        <ul>
+                            <li>Prepare and file the trademark registration application.</li>
+                            <li>Deposit the trademark specimen, logo, and artwork.</li>
+                            <li>Submit the specification of goods approved by the Principal.</li>
+                            <li>Sign statutory application forms and required instruments.</li>
+                            <li>Prosecute and follow up the file before INNORPI.</li>
+                            <li>Pay official statutory fees, provided the Principal has advanced the necessary funds.</li>
+                            <li>Receive filing receipts and filing certificates.</li>
+                            <li>Receive official notifications, summons, and correspondence.</li>
+                            <li>Respond to formal, procedural, and administrative requirements.</li>
+                            <li>Submit amendments, corrections, and requested supplementary documents.</li>
+                            <li>Receive official certificates and registration documents issued by the Institute.</li>
+                            <li>Carry out customary administrative proceedings until completion of the assigned phase.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الثالثة – حدود التوكيل</div>
+                    <div class="article-body">
+                        <p>هذا التوكيل خاص ومحدد.</p>
+                        <p>ولا يخول الوكيل:</p>
+                        <ul>
+                            <li>بيع العلامة.</li>
+                            <li>التنازل عنها.</li>
+                            <li>رهنها.</li>
+                            <li>الترخيص باستغلالها.</li>
+                            <li>نقل ملكيتها.</li>
+                            <li>التنازل عن حقوق الموكل فيها.</li>
+                            <li>سحبها بصورة نهائية.</li>
+                            <li>إبرام أي تصرف ناقل للملكية.</li>
+                        </ul>
+                        <p>ولا يجوز القيام بأي من هذه التصرفات إلا بموجب توكيل خاص ومستقل.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 3 – Limitations of Authority</div>
+                    <div class="article-body">
+                        <p>This power of attorney is strictly limited and specific.</p>
+                        <p>It does NOT empower the Attorney-in-Fact to:</p>
+                        <ul>
+                            <li>Sell the trademark.</li>
+                            <li>Assign or surrender the mark.</li>
+                            <li>Pledge or encumber the mark.</li>
+                            <li>Grant licensing or exploitation rights.</li>
+                            <li>Transfer ownership thereof.</li>
+                            <li>Waive the Principal’s rights therein.</li>
+                            <li>Withdraw the application definitively.</li>
+                            <li>Enter into any title-transferring disposition.</li>
+                        </ul>
+                        <p>None of the aforesaid acts may be undertaken except pursuant to an express, distinct, and specific power of attorney.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الرابعة – المصاريف</div>
+                    <div class="article-body">
+                        <p>يتحمل الموكل الرسوم والمصاريف الرسمية المتعلقة بملف العلامة.</p>
+                        <p>ولا يلتزم الوكيل بدفعها من أتعابه الخاصة.</p>
+                        <p>وفي حال استوجب الأمر دفع أي مبلغ إضافي، يقوم الموكل بتوفيره مسبقاً.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 4 – Official Expenses and Fees</div>
+                    <div class="article-body">
+                        <p>The Principal shall bear all statutory fees and official disbursements pertaining to the trademark docket.</p>
+                        <p>The Attorney-in-Fact is under no obligation to advance them from its professional fees.</p>
+                        <p>Should any supplementary statutory fee arise, the Principal shall provide such amount in advance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الخامسة – عدم ضمان النتيجة</div>
+                    <div class="article-body">
+                        <p>يعلم الموكل أن قبول أو تسجيل العلامة يخضع لسلطة واختصاص INNORPI وللفحص والإجراءات القانونية والاعتراضات المحتملة.</p>
+                        <p>ولا يعتبر الوكيل ضامناً لقبول أو تسجيل العلامة.</p>
+                        <p>ويقتصر التزامه على المتابعة وبذل العناية المهنية المعقولة.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 5 – No Warranty of Outcome</div>
+                    <div class="article-body">
+                        <p>The Principal acknowledges that the acceptance or final registration of the trademark falls within the statutory discretion and authority of INNORPI and is subject to substantive examination, legal proceedings, and potential third-party oppositions.</p>
+                        <p>The Attorney-in-Fact shall not be deemed a guarantor of trademark acceptance or registration.</p>
+                        <p>Its commitment is strictly limited to rigorous monitoring and the exercise of reasonable professional due care.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة السادسة – الملكية</div>
+                    <div class="article-body">
+                        <p>تبقى جميع حقوق الملكية في العلامة للموكل.</p>
+                        <p>ولا يكتسب الوكيل أي حق ملكية فيها نتيجة هذا التوكيل.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 6 – Proprietary Rights</div>
+                    <div class="article-body">
+                        <p>All trademark rights, title, goodwill, and ownership remain vested solely in the Principal.</p>
+                        <p>The Attorney-in-Fact acquires no proprietary right or interest in the trademark by virtue of this power of attorney.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة السابعة – المدة</div>
+                    <div class="article-body">
+                        <p>يسري هذا التوكيل من تاريخ توقيعه إلى غاية انتهاء الإجراءات المتعلقة بملف العلامة، ما لم يتم سحبه أو إنهاؤه كتابةً.</p>
+                        <p style="margin-top: 20px;"><strong>حرر بأبوظبي بتاريخ: ....../....../2026</strong></p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 7 – Term of Power of Attorney</div>
+                    <div class="article-body">
+                        <p>This power of attorney takes effect from its date of signing until the final conclusion of trademark registration procedures, unless revoked or terminated earlier in writing.</p>
+                        <p style="margin-top: 20px;"><strong>Executed in Abu Dhabi on: ....../....../2026</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INNORPI Signatures -->
+            <div class="signatures-area">
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">عن الموكل (For the Principal)</div>
+                        <div class="sig-details">
+                            <strong>شركة القيروان للتجارة العامة – ذ.م.م</strong><br>
+                            الاسم: ....................................................<br>
+                            الصفة: ....................................................
+                        </div>
+                        <div class="sig-line"><span>التوقيع:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الشركة (Company Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">For the Principal</div>
+                        <div class="sig-details">
+                            <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                            Name: ....................................................<br>
+                            Title: ....................................................
+                        </div>
+                        <div class="sig-line"><span>Signature:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Company Seal / Stamp</div>
+                    </div>
+                </div>
+
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">قبول الوكالة (Attorney-in-Fact Acceptance)</div>
+                        <div class="sig-details">
+                            <strong>السيد حمدي الزين Hamdi Ezzine</strong><br>
+                            المدير والممثل القانوني لشركة منصة الزين لزيت الزيتون التونسي<br>
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                            المعرف الجبائي (MF): <span class="font-mono">1969552S</span> • RNE: <span class="font-mono">1969552S</span><br>
+                            سجل تجاري: B5094322026 • القيروان – تونس
+                        </div>
+                        <div class="sig-line"><span>التوقيع:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الوكيل (Agent Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">Acceptance of Power of Attorney</div>
+                        <div class="sig-details">
+                            <strong>Mr. Hamdi Ezzine</strong><br>
+                            Managing Director & Legal Representative of<br>
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                            Tax ID (Matricule Fiscal): <span class="font-mono">1969552S</span> • RNE: <span class="font-mono">1969552S</span><br>
+                            Commercial Reg: B5094322026 • Kairouan – Tunisia
+                        </div>
+                        <div class="sig-line"><span>Signature:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Agent Seal / Stamp</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="official-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF / RNE: 1969552S • Special POA (INNORPI)</div>
+                <div>الملحق رقم 1 • توكيل خاص INNORPI • Page 2 of 4</div>
+            </div>
+        </article>
+
+
+        <!-- ============================================================ -->
+        <!-- DOCUMENT 3: COMMERCIAL PURCHASE POWER OF ATTORNEY            -->
+        <!-- ============================================================ -->
+        <article class="contract-page" id="section-purchase">
+            <div class="official-header">
+                <div class="official-logo">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                    <div class="logo-text">
+                        <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                        <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                        <div class="brand-sub">Commercial Procurement & Sourcing Unit • قسم المشتريات والتفاوض • Code: 748 / 5262</div>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div><strong>المعرف الجبائي (Matricule Fiscal):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>المعرف الوحيد (RNE Unique ID):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>عدد التصرف (Registry File N°):</strong> <span class="font-mono">B5094322026</span></div>
+                    <div><strong>المقر:</strong> حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية، تونس</div>
+                    <div><strong>الملحق رقم 2:</strong> توكيل شراء تجاري • Commercial Purchase POA</div>
+                </div>
+            </div>
+
+            <div class="doc-title-block">
+                <span class="doc-tag">توكيل تجاري خاص • Special Commercial Power of Attorney</span>
+                <div class="content-ar">
+                    <h2 class="doc-main-title">توكيل تجاري خاص للتفاوض وإبرام عقد شراء زيت الزيتون</h2>
+                </div>
+                <div class="content-en">
+                    <h2 class="doc-main-title">Special Commercial Power of Attorney to Negotiate & Conclude Olive Oil Purchase Agreement</h2>
+                </div>
+            </div>
+
+            <div class="parties-box">
+                <div class="content-ar">
+                    <p>نحن:</p>
+                    <p><strong>شركة القيروان للتجارة العامة – ذ.م.م<br>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                    أبوظبي – الإمارات العربية المتحدة<br>
+                    الرخصة التجارية رقم: <strong>CN-6794200</strong><br>
+                    الرقم الموحد: <strong>101-2026-200128646</strong><br>
+                    ويمثلها قانوناً السيد <strong>محمد بن عامر الرمضاني</strong> بصفته شريكاً، و/أو السيد <strong>علي حسين عوض صالح المصعبي</strong> بصفته مديراً ومفوضاً بالتوقيع.</p>
+                    <p style="margin-top: 10px;"><strong>نعين بموجب هذا التوكيل:</strong><br>
+                    السيد <strong>حمدي الزين – Hamdi Ezzine</strong>، بصفته المدير والمؤسس والممثل القانوني لشركة منصة الزين لزيت الزيتون التونسي <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>، شركة ذات مسؤولية محدودة شخص واحد، مسجلة بالسجل الوطني للمؤسسات تحت المعرف الوحيد <strong>RNE: 1969552S</strong>، والمعرف الجبائي (Matricule Fiscal): <strong>1969552S</strong>، ورقم ملف السجل التجاري: <strong>B5094322026</strong>، ومقرها الاجتماعي: حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية – الجمهورية التونسية.</p>
+                </div>
+                <div class="content-en">
+                    <p>We:</p>
+                    <p><strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                    Abu Dhabi – United Arab Emirates<br>
+                    Commercial License No.: <strong>CN-6794200</strong><br>
+                    Unified Identification No.: <strong>101-2026-200128646</strong><br>
+                    Legally represented by Mr. <strong>Mohammed Bin Amer Al-Ramadhani</strong> in his capacity as Partner, and/or Mr. <strong>Ali Hussein Awadh Saleh Al-Musabi</strong> in his capacity as Director and Authorized Signatory.</p>
+                    <p style="margin-top: 10px;"><strong>Do hereby appoint and constitute by virtue of this Power of Attorney:</strong><br>
+                    Mr. <strong>Hamdi Ezzine</strong>, in his capacity as Managing Director, Founder, and Legal Representative of <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong>, a single-member limited liability company registered in the National Business Register of Tunisia under Unique ID (RNE): <strong>1969552S</strong>, Tax Identification (Matricule Fiscal): <strong>1969552S</strong>, and Commercial Registry File No. <strong>B5094322026</strong>, having its registered office at Les Jardins Khadhraoui, Cité Ibn Eljazzar, Dar Amen, 3140 Kairouan Nord – Republic of Tunisia.</p>
+                </div>
+            </div>
+
+            <!-- Articles of Purchase POA -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الأولى – موضوع التوكيل</div>
+                    <div class="article-body">
+                        <p>يخول الموكل الوكيل التفاوض مع المعاصر ووحدات التعليب والموردين في الجمهورية التونسية بشأن شراء:</p>
+                        <p><strong>10,000 لتر من زيت الزيتون البكر الممتاز EVOO</strong></p>
+                        <p>وتعبئتها في:</p>
+                        <p><strong>2,000 صفيحة معدنية غذائية سعة 5 لترات</strong></p>
+                        <p>وتصديرها إلى <strong>أبوظبي (الإمارات العربية المتحدة)</strong> عبر مسار الترانزيت والعبور من المملكة العربية السعودية، على أن تكون الصفقة شاملة لكامل تكاليف الشحن حتى التسليم في أبوظبي.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 1 – Scope of Purchase Authority</div>
+                    <div class="article-body">
+                        <p>The Principal authorizes the Attorney-in-Fact to negotiate with mills, packaging facilities, and suppliers in the Republic of Tunisia regarding the purchase of:</p>
+                        <p><strong>10,000 Liters of Extra Virgin Olive Oil (EVOO)</strong></p>
+                        <p>Packaged into:</p>
+                        <p><strong>2,000 food-grade metal tins of 5 liters capacity each</strong></p>
+                        <p>And exporting the same to <strong>Abu Dhabi (United Arab Emirates)</strong> via transit through the Kingdom of Saudi Arabia, with the transaction being all-inclusive of freight and transport expenses up to delivery in Abu Dhabi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الثانية – صلاحيات التفاوض</div>
+                    <div class="article-body">
+                        <p>يجوز للوكيل:</p>
+                        <ul>
+                            <li>طلب عروض الأسعار.</li>
+                            <li>التفاوض مع الموردين.</li>
+                            <li>مقارنة العروض.</li>
+                            <li>التفاوض على السعر.</li>
+                            <li>التفاوض على الكمية.</li>
+                            <li>التفاوض على المواصفات.</li>
+                            <li>التفاوض على التعبئة.</li>
+                            <li>التفاوض على شروط الدفع.</li>
+                            <li>التفاوض على شروط التحليل والفحص.</li>
+                            <li>التفاوض على شروط التصدير والشحن.</li>
+                            <li>رفع العرض النهائي إلى الموكل للموافقة.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 2 – Negotiation Powers</div>
+                    <div class="article-body">
+                        <p>The Attorney-in-Fact is empowered to:</p>
+                        <ul>
+                            <li>Solicit price quotations.</li>
+                            <li>Conduct negotiations with suppliers.</li>
+                            <li>Compare commercial bids.</li>
+                            <li>Negotiate prices.</li>
+                            <li>Negotiate quantities.</li>
+                            <li>Negotiate technical specifications.</li>
+                            <li>Negotiate packaging standards.</li>
+                            <li>Negotiate payment terms.</li>
+                            <li>Negotiate inspection and laboratory testing protocols.</li>
+                            <li>Negotiate export and shipping terms.</li>
+                            <li>Submit the final negotiated offer to the Principal for formal approval.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الثالثة – الموافقة الكتابية المسبقة</div>
+                    <div class="article-body">
+                        <p>لا يجوز للوكيل إبرام عقد الشراء النهائي إلا بعد حصوله على موافقة كتابية مسبقة من الموكل على السعر والشروط التجارية الأساسية.</p>
+                        <p>ويعتبر قبول الموكل للعرض التجاري عبر البريد الإلكتروني الرسمي أو وسيلة إلكترونية متفق عليها موافقة كتابية، ما لم يتطلب القانون شكلاً خاصاً.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 3 – Prior Written Approval</div>
+                    <div class="article-body">
+                        <p>The Attorney-in-Fact may not conclude the final purchase contract except after securing prior written approval from the Principal concerning price and essential commercial conditions.</p>
+                        <p>Acceptance by the Principal of the commercial quotation transmitted via official email or an agreed electronic channel shall be deemed written approval, unless statutory enactments mandate a specific formal instrument.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الرابعة – التوقيع</div>
+                    <div class="article-body">
+                        <p>بعد صدور الموافقة الكتابية، يجوز للوكيل توقيع عقد الشراء:</p>
+                        <div class="highlight-quote">
+                            "بالنيابة ولحساب شركة القيروان للتجارة العامة – ذ.م.م، بصفته وكيلاً مفوضاً."
+                        </div>
+                        <p>ويجب أن يظهر الطرف الثاني في عقد الشراء باعتباره المشتري الأصلي.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 4 – Signature Execution</div>
+                    <div class="article-body">
+                        <p>Upon issuance of written approval, the Attorney-in-Fact is authorized to execute the purchase contract:</p>
+                        <div class="highlight-quote">
+                            "On behalf and for the account of ALQAYRWAN FOR GENERAL TRADING – L.L.C, in his capacity as Authorized Agent."
+                        </div>
+                        <p>The Second Party must explicitly appear in the purchase contract as the original Principal Buyer.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الخامسة – عدم تحمل الوكيل لثمن البضاعة</div>
+                    <div class="article-body">
+                        <p>لا يكون الوكيل مديناً بثمن الزيت أو التعبئة أو البضاعة.</p>
+                        <p>ولا يلتزم بدفع ثمن الشراء من ماله الخاص أو من أتعابه.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 5 – Agent Non-Liability for Purchase Price</div>
+                    <div class="article-body">
+                        <p>The Attorney-in-Fact shall not be indebted for the price of oil, packaging, or goods.</p>
+                        <p>It shall not be obligated to pay the purchase price from its private funds or professional fees.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة السادسة – حدود التوكيل</div>
+                    <div class="article-body">
+                        <p>لا يجوز للوكيل:</p>
+                        <ul>
+                            <li>الاقتراض باسم الموكل.</li>
+                            <li>إصدار ضمانات.</li>
+                            <li>تقديم كفالات.</li>
+                            <li>فتح حسابات مصرفية باسم الموكل.</li>
+                            <li>رهن أموال الموكل.</li>
+                            <li>إصدار سندات أو كمبيالات.</li>
+                            <li>تعديل السعر الموافق عليه.</li>
+                            <li>زيادة الكمية أو قيمة الصفقة دون موافقة كتابية.</li>
+                            <li>إبرام صفقة خارج موضوع هذا التوكيل.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 6 – Ultra Vires Restrictions</div>
+                    <div class="article-body">
+                        <p>The Attorney-in-Fact is strictly prohibited from:</p>
+                        <ul>
+                            <li>Borrowing or taking loans in the Principal’s name.</li>
+                            <li>Issuing guarantees.</li>
+                            <li>Providing indemnities or sureties.</li>
+                            <li>Opening bank accounts in the Principal’s name.</li>
+                            <li>Pledging or mortgaging the Principal’s assets.</li>
+                            <li>Issuing promissory notes or bills of exchange.</li>
+                            <li>Modifying the approved purchase price.</li>
+                            <li>Increasing quantity or transaction value without written consent.</li>
+                            <li>Concluding any transaction outside the scope of this authorization.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة السابعة – المسؤولية عن جودة المنتج</div>
+                    <div class="article-body">
+                        <p>يعلم الموكل أن الجودة والمطابقة الفنية للزيت يتم التحقق منها بواسطة المختبر أو الجهة الفنية المختصة.</p>
+                        <p>ويقتصر دور الوكيل على تنسيق التحليل ومتابعته واستلام نتائجه وإرسالها إلى الموكل.</p>
+                        <p>ولا يعتبر الوكيل ضامناً شخصياً للنتائج المخبرية أو لجودة المنتج، ما لم يثبت غش أو خطأ جسيم صادر عنه شخصياً.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 7 – Liability Regarding Product Quality</div>
+                    <div class="article-body">
+                        <p>The Principal acknowledges that the quality and technical conformity of olive oil are verified by accredited laboratories or competent technical bodies.</p>
+                        <p>The Attorney-in-Fact’s role is confined to coordinating testing, monitoring lab progress, receiving results, and transmitting them to the Principal.</p>
+                        <p>The Agent is not a personal guarantor of laboratory results or product quality, absent proven fraud or gross misconduct committed by it personally.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة الثامنة – التصدير إلى أبوظبي عبر السعودية</div>
+                    <div class="article-body">
+                        <p>تكون <strong>أبوظبي – الإمارات العربية المتحدة</strong> هي وجهة التصدير والتسليم النهائية، وذلك عبر مسار الترانزيت والعبور البري من المملكة العربية السعودية.</p>
+                        <p>وتتم عمليات النقل والترانزيت والعبور وفق العقود والمستندات اللوجستية المعتمدة.</p>
+                        <p>وتكون الصفقة المبرمة وسعر التوريد شاملاً لكافة تكاليف الشحن والترانزيت من المملكة العربية السعودية حتى الوصول والتسليم في أبوظبي وفق ما تم الاتفاق عليه في عقد الخدمات الأساسي.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 8 – Export to Abu Dhabi via Saudi Arabia</div>
+                    <div class="article-body">
+                        <p><strong>Abu Dhabi – United Arab Emirates</strong> is the designated final export and delivery destination, via overland transit through the Kingdom of Saudi Arabia.</p>
+                        <p>Freight, transit, and overland crossing operations proceed in accordance with approved contracts and logistics instruments.</p>
+                        <p>The executed transaction and supply pricing shall be all-inclusive of all freight, transit, and transport costs from the Kingdom of Saudi Arabia through to arrival and delivery in Abu Dhabi in accordance with the primary Services Agreement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">المادة التاسعة – مدة التوكيل</div>
+                    <div class="article-body">
+                        <p>يسري هذا التوكيل على الصفقة موضوعه إلى غاية إتمام الإجراءات المتعلقة بها، ما لم يتم سحبه أو إنهاؤه كتابةً.</p>
+                        <p style="margin-top: 20px;"><strong>حرر بأبوظبي بتاريخ: ....../....../2026</strong></p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Article 9 – Term of Purchase Authority</div>
+                    <div class="article-body">
+                        <p>This power of attorney applies to the underlying transaction until the final completion of all proceedings relating thereto, unless revoked or terminated in writing.</p>
+                        <p style="margin-top: 20px;"><strong>Executed in Abu Dhabi on: ....../....../2026</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signatures Purchase POA -->
+            <div class="signatures-area">
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">عن الموكل (For the Principal)</div>
+                        <div class="sig-details">
+                            <strong>شركة القيروان للتجارة العامة – ذ.م.م</strong><br>
+                            الاسم: ....................................................<br>
+                            الصفة: ....................................................
+                        </div>
+                        <div class="sig-line"><span>التوقيع:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الشركة (Company Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">For the Principal</div>
+                        <div class="sig-details">
+                            <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                            Name: ....................................................<br>
+                            Title: ....................................................
+                        </div>
+                        <div class="sig-line"><span>Signature:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Company Seal / Stamp</div>
+                    </div>
+                </div>
+
+                <div class="signature-card">
+                    <div class="content-ar">
+                        <div class="sig-header">قبول الوكالة (Agent Acceptance)</div>
+                        <div class="sig-details">
+                            <strong>السيد حمدي الزين Hamdi Ezzine</strong><br>
+                            المدير والممثل القانوني لشركة منصة الزين لزيت الزيتون التونسي<br>
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                            المعرف الجبائي (MF): <span class="font-mono">1969552S</span> • RNE: <span class="font-mono">1969552S</span><br>
+                            سجل تجاري: B5094322026 • القيروان – تونس
+                        </div>
+                        <div class="sig-line"><span>التوقيع:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">ختم الوكيل (Agent Stamp)</div>
+                    </div>
+                    <div class="content-en">
+                        <div class="sig-header">Acceptance of Agency</div>
+                        <div class="sig-details">
+                            <strong>Mr. Hamdi Ezzine</strong><br>
+                            Managing Director & Legal Representative of<br>
+                            <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                            Tax ID (Matricule Fiscal): <span class="font-mono">1969552S</span> • RNE: <span class="font-mono">1969552S</span><br>
+                            Commercial Reg: B5094322026 • Kairouan – Tunisia
+                        </div>
+                        <div class="sig-line"><span>Signature:</span> <span>....................................................</span></div>
+                        <div class="stamp-box">Agent Seal / Stamp</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="official-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF / RNE: 1969552S • Commercial Purchase POA</div>
+                <div>الملحق رقم 2 • توكيل شراء تجاري • Page 3 of 4</div>
+            </div>
+        </article>
+
+
+        <!-- ============================================================ -->
+        <!-- DOCUMENT 4: FINANCIAL ANNEX                                  -->
+        <!-- ============================================================ -->
+        <article class="contract-page" id="section-annex">
+            <div class="official-header">
+                <div class="official-logo">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                    <div class="logo-text">
+                        <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                        <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                        <div class="brand-sub">Finance & Billing Unit • قسم الشؤون المالية والفوترة • Code: 748 / 5262</div>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <div><strong>المعرف الجبائي (Matricule Fiscal):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>المعرف الوحيد (RNE Unique ID):</strong> <span class="font-mono">1969552S</span></div>
+                    <div><strong>عدد التصرف (Registry File N°):</strong> <span class="font-mono">B5094322026</span></div>
+                    <div><strong>المقر:</strong> حدائق الخضراوي، حي ابن الجزار، دار أمان، 3140 القيروان الشمالية، تونس</div>
+                    <div><strong>الملحق رقم 3:</strong> الملحق المالي (الأتعاب والعمولة) • Financial Annex</div>
+                </div>
+            </div>
+
+            <div class="doc-title-block">
+                <span class="doc-tag">الملحق المالي الرسمي • Official Financial Annex</span>
+                <div class="content-ar">
+                    <h2 class="doc-main-title">الملحق المالي – الأتعاب والعمولة والمصاريف</h2>
+                    <p style="font-weight: 700; color: #4b5563; margin-top: 5px;">يعتبر هذا الملحق جزءاً لا يتجزأ من عقد تقديم خدمات التمثيل التجاري والإشراف على التوريد والملكية الصناعية.</p>
+                </div>
+                <div class="content-en">
+                    <h2 class="doc-main-title">Financial Annex – Professional Fees, Commission & Expenses</h2>
+                    <p style="font-weight: 700; color: #4b5563; margin-top: 5px;">This Annex forms an integral, legally binding part of the Commercial Representation, Sourcing Supervision & Industrial Property Services Agreement.</p>
+                </div>
+            </div>
+
+            <!-- Financial Items -->
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">أولاً – الأتعاب الثابتة</div>
+                    <div class="article-body">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>الخدمة</th>
+                                    <th>الأتعاب قبل TVA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>إدارة ملف العلامة والتصاميم</td>
+                                    <td><strong>600 د.ت</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>التمثيل القانوني والإشراف والمعاينة</td>
+                                    <td><strong>1,000 د.ت</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الإجمالي (Total)</strong></td>
+                                    <td><strong>1,600 د.ت</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>تضاف TVA بنسبة 19% وفق النظام الجبائي المعتمد للطرف الأول.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 1 – Fixed Professional Fees</div>
+                    <div class="article-body">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Fee before VAT (TND)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Trademark file and artwork management</td>
+                                    <td><strong>600 TND</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Legal representation, supervision, and inspection</td>
+                                    <td><strong>1,000 TND</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td><strong>1,600 TND</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>VAT of 19% applies in accordance with the First Party’s established tax regime.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">ثانياً – الرسوم الرسمية للعلامة</div>
+                    <div class="article-body">
+                        <p>رسوم INNORPI وأي رسوم رسمية أخرى:</p>
+                        <ul>
+                            <li>ليست جزءاً من أتعاب ZinToop.</li>
+                            <li>وتدفع من الطرف الثاني أو توفر مسبقاً للطرف الأول عند الحاجة إلى الدفع نيابة عنه.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 2 – Official Trademark Fees</div>
+                    <div class="article-body">
+                        <p>INNORPI official fees and any statutory disbursements:</p>
+                        <ul>
+                            <li>Do not form part of ZinToop's professional fees.</li>
+                            <li>Shall be paid by the Second Party or provided in advance to the First Party whenever payment is required on its behalf.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">ثالثاً – العمولة</div>
+                    <div class="article-body">
+                        <p>تستحق ZinToop عمولة قدرها:</p>
+                        <div class="highlight-quote">
+                            1% من القيمة الإجمالية للصفقة المبينة في الفاتورة التجارية/فاتورة التصدير النهائية.
+                        </div>
+                        <p>وتضاف TVA بنسبة 19%.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 3 – Success Commission</div>
+                    <div class="article-body">
+                        <p>ZinToop is entitled to a representation commission of:</p>
+                        <div class="highlight-quote">
+                            1% of the total aggregate transaction value stated in the final commercial/export invoice.
+                        </div>
+                        <p>Plus 19% statutory VAT (TVA).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">رابعاً – الفوترة</div>
+                    <div class="article-body">
+                        <p>يتم إصدار فاتورة مستقلة لكل خدمة:</p>
+                        <ul>
+                            <li>فاتورة إدارة ملف العلامة والتصاميم.</li>
+                            <li>فاتورة التمثيل القانوني والإشراف.</li>
+                            <li>فاتورة عمولة الشراء والتمثيل.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 4 – Invoicing Modalities</div>
+                    <div class="article-body">
+                        <p>An independent invoice shall be issued for each service category:</p>
+                        <ul>
+                            <li>Invoice for managing the trademark docket and designs.</li>
+                            <li>Invoice for legal representation and inspection.</li>
+                            <li>Invoice for purchasing and representation commission.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">خامساً – عدم تمويل الصفقة</div>
+                    <div class="article-body">
+                        <p>لا تعتبر أتعاب ZinToop أو عمولتها تمويلاً لشراء الزيت أو للتكاليف التجارية للمورد.</p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 5 – Non-Financing Provision</div>
+                    <div class="article-body">
+                        <p>ZinToop’s professional fees and commission shall not be construed as financing for the purchase of olive oil or for the supplier’s commercial operating costs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-block">
+                <div class="content-ar">
+                    <div class="article-title">سادساً – الضرائب</div>
+                    <div class="article-body">
+                        <p>تضاف إلى كل أتعاب أو عمولة الضرائب والأداءات المستوجبة، وقد تم الاتفاق تجارياً بين الطرفين على احتساب TVA بنسبة 19%، مع خضوع الفوترة للتشريع الجبائي التونسي النافذ.</p>
+                        <p style="margin-top: 25px;"><strong>حرر في: ....../....../2026</strong></p>
+                    </div>
+                </div>
+                <div class="content-en">
+                    <div class="article-title">Section 6 – Taxes and Fiscal Levies</div>
+                    <div class="article-body">
+                        <p>Applicable statutory taxes and levies shall be added to each fee or commission. It has been commercially agreed between the Parties to calculate VAT (TVA) at the rate of 19%, subject to applicable Tunisian tax legislation.</p>
+                        <p style="margin-top: 25px;"><strong>Executed on: ....../....../2026</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signatures Financial Annex -->
+            <div class="signatures-area">
+                <div class="signature-card">
+                    <div class="sig-header">الطرف الأول (First Party)</div>
+                    <div class="sig-details">
+                        <strong>شركة منصة الزين لزيت الزيتون التونسي</strong><br>
+                        <strong>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</strong><br>
+                        المعرف الجبائي (MF): <span class="font-mono">1969552S</span> • RNE: <span class="font-mono">1969552S</span><br>
+                        سجل تجاري: B5094322026<br>
+                        حمدي الزين Hamdi Ezzine – المدير والممثل القانوني
+                    </div>
+                    <div class="sig-line"><span>التوقيع والختم:</span> <span>____________________</span></div>
+                    <div class="stamp-box">ختم الشركة (Company Seal)</div>
+                </div>
+
+                <div class="signature-card">
+                    <div class="sig-header">الطرف الثاني (Second Party)</div>
+                    <div class="sig-details">
+                        <strong>شركة القيروان للتجارة العامة – ذ.م.م</strong><br>
+                        <strong>ALQAYRWAN FOR GENERAL TRADING – L.L.C</strong><br>
+                        الممثل المفوض بالتوقيع
+                    </div>
+                    <div class="sig-line"><span>التوقيع والختم:</span> <span>____________________</span></div>
+                    <div class="stamp-box">ختم الشركة (Company Seal)</div>
+                </div>
+            </div>
+
+            <div class="official-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF / RNE: 1969552S • Financial Annex</div>
+                <div>الملحق المالي رقم 3 • Financial Annex • Page 4 of 4</div>
+            </div>
+        </article>
+
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            const body = document.body;
+            const btnAr = document.getElementById('btnAr');
+            const btnEn = document.getElementById('btnEn');
+            const btnBoth = document.getElementById('btnBoth');
+
+            btnAr.classList.remove('btn-active');
+            btnEn.classList.remove('btn-active');
+            btnBoth.classList.remove('btn-active');
+
+            if (lang === 'ar') {
+                body.className = 'lang-ar';
+                body.setAttribute('dir', 'rtl');
+                btnAr.classList.add('btn-active');
+            } else if (lang === 'en') {
+                body.className = 'lang-en';
+                body.setAttribute('dir', 'ltr');
+                btnEn.classList.add('btn-active');
+            } else if (lang === 'both') {
+                body.className = 'lang-ar view-side-by-side';
+                body.setAttribute('dir', 'rtl');
+                btnBoth.classList.add('btn-active');
+            }
+        }
+
+        function jumpTo(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Initialize with Arabic default
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('ar');
+        });
+    </script>
+</body>
+</html>

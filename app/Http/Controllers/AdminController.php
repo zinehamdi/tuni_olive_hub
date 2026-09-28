@@ -507,4 +507,84 @@ class AdminController extends Controller
 
         return view('admin.social_studio');
     }
+
+    /**
+     * List carrier verification requests
+     * عرض ومراجعة طلبات توثيق الناقلين والوثائق المرفوعة
+     */
+    public function carrierVerifications()
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $carriers = User::where('role', 'carrier')
+            ->whereNotNull('meta_data->carrier_verification')
+            ->latest('id')
+            ->paginate(20);
+
+        return view('admin.carrier_verifications', compact('carriers'));
+    }
+
+    /**
+     * Approve carrier verification documents and grant verified badge
+     */
+    public function approveCarrierVerification(User $user)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $meta = $user->meta_data ?? [];
+        if (isset($meta['carrier_verification'])) {
+            $meta['carrier_verification']['status'] = 'approved';
+            $meta['carrier_verification']['approved_at'] = now()->toIso8601String();
+            $meta['carrier_verification']['approved_by'] = auth()->id();
+        }
+
+        $user->is_verified = true;
+        $user->meta_data = $meta;
+        $user->save();
+
+        // Notify carrier
+        try {
+            $user->notify(new \App\Notifications\CarrierVerificationStatusNotification('approved'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to notify carrier of verification approval: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', __('تم توثيق حساب الناقل (:name) بنجاح ومنحه شارة ناقل موثق 🛡️.', ['name' => $user->name]));
+    }
+
+    /**
+     * Reject carrier verification documents with optional feedback
+     */
+    public function rejectCarrierVerification(Request $request, User $user)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $reason = $request->input('reason');
+        $meta = $user->meta_data ?? [];
+        if (isset($meta['carrier_verification'])) {
+            $meta['carrier_verification']['status'] = 'rejected';
+            $meta['carrier_verification']['rejected_at'] = now()->toIso8601String();
+            $meta['carrier_verification']['rejection_reason'] = $reason;
+            $meta['carrier_verification']['rejected_by'] = auth()->id();
+        }
+
+        $user->is_verified = false;
+        $user->meta_data = $meta;
+        $user->save();
+
+        // Notify carrier
+        try {
+            $user->notify(new \App\Notifications\CarrierVerificationStatusNotification('rejected', $reason));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to notify carrier of verification rejection: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', __('تم رفض وثائق التوثيق وإشعار الناقل بالسبب.'));
+    }
 }

@@ -211,8 +211,8 @@
         }
     @endphp
     <div class="max-w-6xl mx-auto px-4">
-        <!-- Back Button -->
-        <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-[#6A8F3B] hover:text-[#5a7a2f] mb-6 font-bold">
+        <!-- Back Button with History & Scroll Restoration -->
+        <a href="javascript:void(0)" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '{{ url('/') }}#products'; }" class="inline-flex items-center gap-2 text-[#6A8F3B] hover:text-[#5a7a2f] mb-6 font-bold cursor-pointer transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -911,7 +911,7 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                             </div>
                             @endif
                         @else
-                            <a href="{{ route('login') }}" class="flex-1 text-center px-6 py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-lg shadow-lg">
+                            <a href="{{ route('login', ['intended' => url()->current(), 'action' => 'open_contact']) }}" class="flex-1 text-center px-6 py-4 bg-[#6A8F3B] text-white rounded-xl hover:bg-[#5a7a2f] transition font-bold text-lg shadow-lg">
                                 {{ __('Login to Contact') }}
                             </a>
                         @endauth
@@ -1025,6 +1025,15 @@ document.addEventListener('alpine:init', () => {
         distance: null,
         
         init() {
+            // Auto open contact or deal modal if returning from login with intended action
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetAction = urlParams.get('action');
+            if (targetAction === 'open_contact' || targetAction === 'contact') {
+                this.showContactModal = true;
+            } else if (targetAction === 'open_deal' || targetAction === 'make_deal' || targetAction === 'deal') {
+                this.showDealModal = true;
+            }
+
             // Check if listing is favorited
             const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
             this.isFavorite = favorites.includes({{ $listing->id }});

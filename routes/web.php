@@ -196,6 +196,8 @@ Route::middleware(['web', 'set.locale'])->group(function () {
     Route::view('/how-it-works', 'public.how_it_works')->name('how-it-works');
     Route::view('/pricing', 'public.pricing')->name('pricing');
     Route::get('/servicehub', [\App\Http\Controllers\ServiceProviderController::class, 'index'])->name('services.index');
+    Route::get('/carriers/search', [\App\Http\Controllers\LoadController::class, 'searchCarriers'])->name('carriers.search');
+    Route::get('/transporter-requests/estimate', [\App\Http\Controllers\TransporterRequestController::class, 'estimate'])->name('transporter_requests.estimate');
     Route::view('/services/pricing', 'public.services_pricing')->name('services.pricing');
     Route::get('/services/register', [\App\Http\Controllers\Auth\ServiceProviderRegisterController::class, 'create'])->name('services.register')->middleware('guest');
     Route::post('/services/register', [\App\Http\Controllers\Auth\ServiceProviderRegisterController::class, 'store'])->name('services.register.store')->middleware(['guest', 'throttle:30,1']);
@@ -294,6 +296,17 @@ Route::middleware(['auth', 'set.locale'])->group(function () {
 
     // Load / Transport routes
     Route::post('/loads/summon', [\App\Http\Controllers\LoadController::class, 'summon'])->name('loads.summon');
+    Route::post('/transport/loads/{load}/accept', [\App\Http\Controllers\LoadController::class, 'accept'])->name('transport.loads.accept');
+    Route::post('/transport/loads/{load}/deny', [\App\Http\Controllers\LoadController::class, 'deny'])->name('transport.loads.deny');
+    Route::post('/carrier/verification/upload', [\App\Http\Controllers\CarrierVerificationController::class, 'upload'])->name('carrier.verification.upload');
+
+    // Transporter Requests (Direct Mission Dispatch & Confirmation)
+    Route::post('/transporter-requests', [\App\Http\Controllers\TransporterRequestController::class, 'store'])->name('transporter_requests.store');
+    Route::get('/transporter-requests/active-status', [\App\Http\Controllers\TransporterRequestController::class, 'status'])->name('transporter_requests.status');
+    Route::post('/transporter-requests/cancel', [\App\Http\Controllers\TransporterRequestController::class, 'cancel'])->name('transporter_requests.cancel');
+    Route::post('/transporter-requests/{transporterRequest}/cancel', [\App\Http\Controllers\TransporterRequestController::class, 'cancel'])->name('transporter_requests.cancel_specific');
+    Route::post('/transporter-requests/{transporterRequest}/accept', [\App\Http\Controllers\TransporterRequestController::class, 'accept'])->name('transporter_requests.accept');
+    Route::post('/transporter-requests/{transporterRequest}/decline', [\App\Http\Controllers\TransporterRequestController::class, 'decline'])->name('transporter_requests.decline');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -429,6 +442,11 @@ Route::middleware(['auth', 'role:admin', 'set.locale', 'throttle:60,1'])->prefix
     Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'banUser'])->name('users.ban');
     Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
 
+    // Carrier Verification Moderation
+    Route::get('/carrier-verifications', [\App\Http\Controllers\AdminController::class, 'carrierVerifications'])->name('carrier_verifications');
+    Route::post('/carrier-verifications/{user}/approve', [\App\Http\Controllers\AdminController::class, 'approveCarrierVerification'])->name('carrier_verifications.approve');
+    Route::post('/carrier-verifications/{user}/reject', [\App\Http\Controllers\AdminController::class, 'rejectCarrierVerification'])->name('carrier_verifications.reject');
+
     // Hero Slideshow Management
     Route::post('hero-slides/catalog-bg', [\App\Http\Controllers\Admin\HeroSlideController::class, 'updateCatalogBg'])->name('hero-slides.catalog-bg');
     Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except(['show']);
@@ -466,6 +484,13 @@ Route::group([], function(){
     // Google Shopping product feed — all active marketplace listings with correct images
     Route::get('google-merchant-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed'])->name('google.merchant.feed');
     Route::get('shopping-feed.xml', [\App\Http\Controllers\GoogleMerchantFeedController::class, 'feed']);
+
+    // Direct shipment tracking fallback
+    Route::get('track/{token}', function(string $token) {
+        $locale = app()->getLocale() ?: 'ar';
+        return redirect()->route('trip.publicTrack', ['locale' => $locale, 'token' => $token]);
+    });
+    Route::get('api/track/{token}/live', [\App\Http\Controllers\TripPublicTrackingController::class, 'liveLocation'])->name('trip.publicTrack.live');
 });
 
 // Gulf storefront (locale-prefixed — user-facing pages)
@@ -527,8 +552,14 @@ Route::middleware('set.locale')->group(function(){
         ]);
     })->name('orders.requestAoula');
 
-    // Carrier mobile UI
+    // Public Live Shipment Tracking (Read-only, for buyers/sellers)
+    Route::get('track/{token}', [\App\Http\Controllers\TripPublicTrackingController::class, 'show'])->name('trip.publicTrack');
+
+    // Carrier mobile UI (Driver dashboard - requires login)
     Route::get('mobile/trip', function(){
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('info', __('Please sign in to access your carrier dashboard.'));
+        }
         return view('public.mobile.trip');
     })->name('mobile.trip');
 
@@ -539,11 +570,17 @@ Route::middleware('set.locale')->group(function(){
     Route::post('/api/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
     // Localized auth views (no names, to avoid conflict with auth.php)
     Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create']);
-    Route::get('register', function () { return view('auth.register'); });
+    Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create']);
     Route::get('register/role', function (\Illuminate\Http\Request $request) {
         $role = $request->query('role');
         if (!in_array($role, ['farmer','carrier','mill','packer','normal'])) {
             return redirect('/' . app()->getLocale() . '/register');
+        }
+        if ($request->filled('intended')) {
+            $request->session()->put('url.intended', $request->query('intended'));
+        }
+        if ($request->filled('action')) {
+            $request->session()->put('intended_action', $request->query('action'));
         }
         return view('auth.register_' . $role, compact('role'));
     })->name('register.role');

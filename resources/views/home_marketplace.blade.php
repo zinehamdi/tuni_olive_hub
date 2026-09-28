@@ -178,6 +178,7 @@
                         </div>
                     </button>
 
+
                     <!-- Olive Varieties Article Shortcut -->
                     <a href="{{ route('article.varieties') }}" 
                        class="group flex items-center gap-3 px-6 py-3 bg-[#6A8F3B] text-white rounded-full border-2 border-white/20 hover:bg-[#5a7a2f] transition-all shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(106,143,59,0.5)] transform hover:-translate-y-1 active:scale-95">
@@ -726,7 +727,7 @@
                 <!-- Products Grid View -->
                 <div x-show="viewMode === 'grid'" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <template x-for="listing in visibleListings" :key="listing.id">
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 listing-card-item" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
+                        <div :id="'listing-item-' + listing.id" class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 listing-card-item" data-bot-explain="{{ __('Click View Details to learn more about this product and how to buy') }}">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="h-48 flex items-center justify-center relative overflow-hidden">
                                 <template x-if="listing.media && listing.media.length > 0">
@@ -846,7 +847,7 @@
                                 </div>
 
                                 <div class="flex gap-2">
-                                    <a :href="'/listings/' + listing.id" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
+                                    <a :href="'/listings/' + listing.id" @click="saveBrowseState(listing)" class="flex-1 text-center px-4 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold">
                                         {{ __('View Details') }}
                                     </a>
                                     <button class="px-4 py-2 bg-[#C8A356] text-white rounded-lg hover:bg-[#b08a3c] transition">
@@ -863,7 +864,7 @@
                 <!-- Products List View -->
                 <div x-show="viewMode === 'list'" class="space-y-4">
                     <template x-for="listing in visibleListings" :key="listing.id">
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row listing-card-item">
+                        <div :id="'listing-item-list-' + listing.id" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row listing-card-item">
                             <!-- Product Image / Seller Logo / Initial Badge -->
                             <div class="w-full md:w-48 h-48 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                                 <template x-if="listing.media && listing.media.length > 0">
@@ -979,7 +980,7 @@
                                         </template>
                                     </div>
                                     <div class="flex gap-2">
-                                        <a :href="'/listings/' + listing.id" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold whitespace-nowrap">
+                                        <a :href="'/listings/' + listing.id" @click="saveBrowseState(listing)" class="px-6 py-2 bg-[#6A8F3B] text-white rounded-lg hover:bg-[#5a7a2f] transition font-bold whitespace-nowrap">
                                             {{ __('View Details') }}
                                         </a>
                                     </div>
@@ -1072,6 +1073,463 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Nearest Transporter Finder Modal -->
+    <div x-show="transporterModalOpen" 
+         x-cloak
+         class="fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6"
+         role="dialog"
+         aria-modal="true">
+        <!-- Backdrop -->
+        <div x-show="transporterModalOpen"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+             @click="transporterModalOpen = false"></div>
+
+        <!-- Modal Dialog -->
+        <div x-show="transporterModalOpen"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+             class="relative w-full max-w-2xl bg-white rounded-3xl sm:rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden max-h-[90vh] flex flex-col min-h-0 z-10 border border-blue-100 my-auto">
+            
+            <!-- Modal Header (Dynamic Step title) -->
+            <div class="px-3.5 py-2.5 sm:px-6 sm:py-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white flex items-center justify-between flex-shrink-0">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base sm:text-xl">🚚</span>
+                    <div class="min-w-0 text-start">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xs sm:text-base font-black text-white leading-tight truncate" 
+                                x-text="transporterStep === 1 ? '{{ __('1. تحديد مسار الكورسة والحمولة 📋') }}' : '{{ __('2. اختيار الناقل وإرسال الطلب 🚚') }}'">
+                            </h3>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-white/20 text-white flex-shrink-0" 
+                                  x-text="transporterStep + '/2'"></span>
+                        </div>
+                        <p class="text-[11px] text-white/80 hidden sm:block truncate" 
+                           x-text="transporterStep === 1 ? '{{ __('حدد مكان التحميل ومكان التفريغ والوزن لحساب السعر بدقة') }}' : '{{ __('اختر من بين أقرب الشاحنات المتوفرة لمسارك المحدد') }}'">
+                        </p>
+                    </div>
+                </div>
+                <button @click="transporterModalOpen = false" class="w-7 h-7 sm:w-8 sm:h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition active:scale-95 flex-shrink-0 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- STEP 1: DEFINE COURSE PARAMETERS FORM -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div x-show="transporterStep === 1" class="p-3.5 sm:p-6 overflow-y-auto flex-1 min-h-0 space-y-4">
+                <!-- Validation Error Alert -->
+                <div x-show="transporterValidationError" x-cloak class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700 flex items-center gap-2">
+                    <span class="text-base">⚠️</span>
+                    <span x-text="transporterValidationError"></span>
+                </div>
+
+                <div class="space-y-3.5">
+                    <!-- 1. Pickup (Origin: Governorate + Delegation on same line) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-black text-gray-800 flex items-center gap-1">
+                                <span>🟢</span>
+                                <span>{{ __('مكان التحميل (الانطلاق)') }}</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <button type="button" 
+                                    @click="locateTransporterGps()" 
+                                    :disabled="locatingTransporterGps"
+                                    class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition active:scale-95 cursor-pointer">
+                                <span x-show="!locatingTransporterGps">📍 {{ __('موقعي بالـ GPS') }}</span>
+                                <span x-show="locatingTransporterGps" class="flex items-center gap-1">
+                                    <svg class="w-3 h-3 animate-spin text-emerald-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    {{ __('جاري التحديد...') }}
+                                </span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <!-- Pickup Governorate -->
+                            <select x-model="transporterPickupGov" 
+                                    @change="transporterPickupDel = ''; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                                <option value="">-- {{ __('الولاية') }} --</option>
+                                @foreach(['صفاقس', 'تونس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
+                                    <option value="{{ $g }}">{{ $g }}</option>
+                                @endforeach
+                            </select>
+
+                            <!-- Pickup Delegation (same line!) -->
+                            <select x-model="transporterPickupDel" 
+                                    :disabled="!transporterPickupGov"
+                                    @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    :class="!transporterPickupGov ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-900 border-gray-300 focus:bg-white'">
+                                <option value="">-- {{ __('المعتمدية') }} --</option>
+                                <template x-for="del in (tunisianDelegations[transporterPickupGov] || [])" :key="del">
+                                    <option :value="del" x-text="del"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 2. Dropoff (Target: Governorate + Delegation on same line) -->
+                    <div>
+                        <label class="block text-xs font-black text-gray-800 mb-1">
+                            <span>🚩</span>
+                            <span>{{ __('مكان التفريغ (الوجهة)') }}</span>
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <!-- Dropoff Governorate -->
+                            <select x-model="transporterDropoffGov" 
+                                    @change="transporterDropoffDel = ''; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                                <option value="">-- {{ __('الولاية') }} --</option>
+                                @foreach(['تونس', 'صفاقس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
+                                    <option value="{{ $g }}">{{ $g }}</option>
+                                @endforeach
+                            </select>
+
+                            <!-- Dropoff Delegation (same line!) -->
+                            <select x-model="transporterDropoffDel" 
+                                    :disabled="!transporterDropoffGov"
+                                    @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    :class="!transporterDropoffGov ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-900 border-gray-300 focus:bg-white'">
+                                <option value="">-- {{ __('المعتمدية') }} --</option>
+                                <template x-for="del in (tunisianDelegations[transporterDropoffGov] || [])" :key="del">
+                                    <option :value="del" x-text="del"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 3. Cargo Weight & Vehicle Classification -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-black text-gray-800 flex items-center gap-1">
+                                <span>⚖️</span>
+                                <span>{{ __('وزن الحمولة ووسيلة النقل') }}</span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg" x-text="getVehicleCategoryLabel(transporterWeight)"></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 relative flex items-center bg-gray-50 border border-gray-300 focus-within:border-blue-500 focus-within:bg-white rounded-xl px-3 py-2 shadow-2xs">
+                                <input type="number" step="0.25" min="0.25" max="50" 
+                                       x-model.number="transporterWeight" 
+                                       @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                       class="w-full text-sm font-black text-gray-900 outline-none bg-transparent" 
+                                       placeholder="1">
+                                <span class="text-xs font-black text-gray-500 ms-1">{{ __('طن') }}</span>
+                            </div>
+                        </div>
+                        <!-- Quick Weight Presets including Fourgonnettes and Light Commercial -->
+                        <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                            <span class="text-[10px] text-gray-400 font-bold">{{ __('خيارات سريعة:') }}</span>
+                            <button type="button" 
+                                    @click="transporterWeight = 0.5; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 0.5 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🚐</span>
+                                <span>500 كغ</span>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterWeight = 1.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 1.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🚐</span>
+                                <span>1 طن (بارتنر/كادي)</span>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterWeight = 2.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 2.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🛻</span>
+                                <span>2 طن (شاحنة خفيفة/ستافات)</span>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterWeight = 5.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 5.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🚚</span>
+                                <span>5 طن (شاحنة متوسطة)</span>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterWeight = 10.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 10.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🚛</span>
+                                <span>10 طن</span>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterWeight = 25.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
+                                    :class="transporterWeight == 25.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
+                                    class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
+                                <span>🛢️</span>
+                                <span>25 طن (صهريج)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Estimation Box (Appears when both locations are chosen) -->
+                    <div x-show="transporterPickupGov && transporterDropoffGov" x-transition class="p-3 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                                🛣️
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-xs font-black text-blue-950 truncate">
+                                    <span x-text="transporterPickupGov + (transporterPickupDel ? ' (' + transporterPickupDel + ')' : '')"></span> ➔ <span x-text="transporterDropoffGov + (transporterDropoffDel ? ' (' + transporterDropoffDel + ')' : '')"></span>
+                                </div>
+                                <div class="text-[11px] text-gray-600 font-bold">
+                                    المسافة المقدرة: ~<span x-text="transporterCourseDistance"></span> كم
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end flex-shrink-0">
+                            <span class="text-[10px] font-bold text-emerald-700 block">السعر التقديري العادل</span>
+                            <span class="text-base font-black text-emerald-900 leading-tight">~<span x-text="transporterCourseCost"></span> د.ت</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Step Button -->
+                <div class="pt-2">
+                    <button type="button" 
+                            @click="proceedToTransportersList()" 
+                            class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 active:scale-98 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                        <span>🔍 {{ __('البحث عن أقرب الناقلين المناسبين') }}</span>
+                        <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- STEP 2: TRANSPORTERS LIST AREA -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- Step 2 Course Summary & Edit Bar -->
+            <div x-show="transporterStep === 2" class="p-2 sm:p-3 bg-slate-50 border-b border-gray-200 flex-shrink-0 flex items-center justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5 text-xs font-black text-gray-900 truncate">
+                        <span>🟢 <span x-text="transporterPickupGov + (transporterPickupDel ? ' (' + transporterPickupDel + ')' : '')"></span></span>
+                        <span>➔</span>
+                        <span>🚩 <span x-text="transporterDropoffGov + (transporterDropoffDel ? ' (' + transporterDropoffDel + ')' : '')"></span></span>
+                        <span class="text-gray-300">|</span>
+                        <span>⚖️ <span x-text="transporterWeight"></span> {{ __('طن') }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-gray-500 font-bold mt-0.5">
+                        <span>🛣️ ~<span x-text="transporterCourseDistance"></span> {{ __('km') }}</span>
+                        <span>•</span>
+                        <span class="text-emerald-700 font-black">💰 ~<span x-text="transporterCourseCost"></span> {{ __('TND') }}</span>
+                        <span>•</span>
+                        <span class="text-blue-700 font-black">⏳ {{ __('الكوتا:') }} <span x-text="remainingTransporterQuota + '/3'"></span></span>
+                    </div>
+                </div>
+                <button type="button" 
+                        @click="backToCourseParameters()" 
+                        class="px-2.5 py-1.5 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-[11px] font-bold text-gray-700 transition active:scale-95 flex items-center gap-1 flex-shrink-0 cursor-pointer shadow-2xs">
+                    <span>✏️</span>
+                    <span>{{ __('تعديل المسار') }}</span>
+                </button>
+            </div>
+
+            <!-- Transporters List (Step 2) -->
+            <div x-show="transporterStep === 2" class="p-2 sm:p-4 overflow-y-auto flex-1 min-h-0 space-y-1.5 sm:space-y-2.5 overscroll-contain" style="-webkit-overflow-scrolling: touch; max-height: calc(90vh - 180px);">
+                <!-- Accepted Transporter Celebration Alert -->
+                <div x-show="acceptedMissionData" x-cloak class="p-3 bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl text-white shadow-md flex items-center justify-between gap-2 border-2 border-emerald-400">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-2xl animate-bounce">🎉</span>
+                        <div class="min-w-0">
+                            <p class="text-xs sm:text-sm font-black truncate" x-text="'{{ __('Accepted by') }}: ' + acceptedMissionData.carrier_name + ' 🚚'"></p>
+                            <p class="text-[10px] sm:text-xs text-emerald-100 truncate">{{ __('Transporter is on the way! Open chat to send GPS.') }}</p>
+                        </div>
+                    </div>
+                    <a :href="acceptedMissionData.chat_url" class="px-3 py-1.5 bg-white text-emerald-800 rounded-lg font-black text-xs hover:bg-emerald-50 active:scale-95 shadow transition whitespace-nowrap">
+                        {{ __('Open Chat') }} 💬
+                    </a>
+                </div>
+
+                <!-- Loading State -->
+                <div x-show="loadingTransporters" class="py-12 text-center text-blue-600 text-xs font-bold flex flex-col items-center justify-center gap-2">
+                    <svg class="w-7 h-7 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span>{{ __('جاري البحث عن أقرب الشاحنات المناسبة...') }}</span>
+                </div>
+
+                <!-- Empty State -->
+                <div x-show="!loadingTransporters && transportersList.length === 0" class="text-center py-12 text-gray-500 space-y-1.5">
+                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-xl text-gray-400">🚚</div>
+                    <p class="font-bold text-xs sm:text-sm text-gray-700">{{ __('No transporters found matching your criteria.') }}</p>
+                </div>
+
+                <!-- Transporters List (Sleek Compact Horizontal Bande - Fits 4+ on Screen) -->
+                <div x-show="!loadingTransporters && transportersList.length > 0" class="space-y-1.5 sm:space-y-2.5">
+                    <template x-for="carrier in transportersList" :key="carrier.id">
+                        <div class="group relative bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-xl p-2 sm:p-3 transition-all duration-150 shadow-2xs hover:shadow-xs border-s-4 border-s-blue-600 flex items-center justify-between gap-2 sm:gap-3">
+                            <!-- Left: Identity & Badges -->
+                            <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                <!-- Avatar / Initial Circle -->
+                                <template x-if="carrier.avatar">
+                                    <img :src="carrier.avatar" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover ring-1 ring-blue-100 flex-shrink-0 shadow-2xs">
+                                </template>
+                                <template x-if="!carrier.avatar">
+                                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-black text-xs sm:text-base flex-shrink-0 shadow-2xs ring-1 ring-blue-100" x-text="carrier.name.charAt(0).toUpperCase()"></div>
+                                </template>
+
+                                <!-- Details Container -->
+                                <div class="min-w-0 flex-1 text-start">
+                                    <!-- 1. Transporter Name -->
+                                    <div class="flex items-center gap-1 min-w-0">
+                                        <h4 class="font-black text-slate-900 text-xs sm:text-base tracking-tight leading-snug group-hover:text-blue-600 transition-colors truncate" x-text="carrier.name"></h4>
+                                        <span x-show="carrier.is_verified" class="inline-flex items-center text-blue-600 flex-shrink-0 text-[10px]" title="{{ __('Verified') }}">
+                                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </span>
+                                    </div>
+
+                                    <!-- 2. Badges: Distance & Vehicle/Capacity -->
+                                    <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                        <!-- Distance in Km -->
+                                        <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 text-[10px] sm:text-[11px] font-black border border-blue-200/60">
+                                            <span>📍</span>
+                                            <span x-text="carrier.distance_km != null ? carrier.distance_km + ' {{ __('km') }}' : '{{ __('Same Governorate') }}'"></span>
+                                        </span>
+                                        <!-- Vehicle type / Capacity -->
+                                        <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-950 text-[10px] sm:text-[11px] font-black border border-emerald-200/60"
+                                              x-text="carrier.vehicle_type_label || carrier.capacity_label">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Request Action Button or Cancel Button -->
+                            <div class="flex-shrink-0">
+                                <!-- If request already sent to this carrier -->
+                                <template x-if="sentTransporterRequests.includes(carrier.id)">
+                                    <div class="flex items-center gap-1 sm:gap-1.5">
+                                        <span class="inline-flex items-center justify-center gap-1 px-2 py-1.5 sm:px-3 sm:py-2 bg-amber-50 text-amber-900 border border-amber-300 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xs whitespace-nowrap cursor-default">
+                                            <span class="text-xs">⏳</span>
+                                            <span>{{ __('قيد الانتظار') }}</span>
+                                        </span>
+                                        <!-- Cancel Request Button -->
+                                        <button type="button" 
+                                                @click="cancelTransporterRequest(carrier.id)"
+                                                :disabled="cancellingCarrierId === carrier.id"
+                                                class="px-2 py-1.5 sm:px-2.5 sm:py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-0.5 cursor-pointer shadow-2xs"
+                                                title="{{ __('إلغاء الطلب واختيار ناقل آخر') }}">
+                                            <span x-show="cancellingCarrierId !== carrier.id">❌ {{ __('إلغاء') }}</span>
+                                            <span x-show="cancellingCarrierId === carrier.id" class="flex items-center gap-1 text-[10px]">
+                                                <svg class="w-3 h-3 animate-spin text-red-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                {{ __('جاري...') }}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </template>
+
+                                <!-- If not yet sent -->
+                                <template x-if="!sentTransporterRequests.includes(carrier.id)">
+                                    <button type="button" 
+                                            @click="sendTransporterRequest(carrier.id)"
+                                            :disabled="requestingCarrierId === carrier.id || remainingTransporterQuota <= 0"
+                                            :class="remainingTransporterQuota <= 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300 shadow-none' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 text-white shadow-2xs hover:shadow-xs cursor-pointer'"
+                                            class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black transition-all whitespace-nowrap">
+                                        <template x-if="requestingCarrierId === carrier.id">
+                                            <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        </template>
+                                        <template x-if="requestingCarrierId !== carrier.id">
+                                            <span class="text-xs">🚚</span>
+                                        </template>
+                                        <span>{{ __('Send Request') }}</span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-3 sm:p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between flex-shrink-0">
+                <div>
+                    <button x-show="transporterStep === 2" 
+                            type="button"
+                            @click="backToCourseParameters()" 
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-xs font-black text-gray-700 transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                        <span>⬅️</span>
+                        <span>{{ __('تعديل المسار') }}</span>
+                    </button>
+                </div>
+                <button @click="transporterModalOpen = false" class="px-5 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition shadow-2xs cursor-pointer">
+                    {{ __('Close') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SMART FLOATING ACTION BUTTON (FAB) FOR TRANSPORTER -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div class="fixed top-32 left-3 sm:top-36 sm:left-6 z-40 transition-all duration-300"
+         :class="isScrolled ? 'opacity-40 hover:opacity-100 focus-within:opacity-100' : 'opacity-95 hover:opacity-100'">
+        <!-- 1. Accepted State (Glowing Emerald Button) -->
+        <template x-if="acceptedMissionData">
+            <a :href="acceptedMissionData.chat_url"
+               class="group inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-full shadow-lg border border-emerald-300/60 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer animate-pulse"
+               title="{{ __('وافق الناقل - اضغط للمحادثة') }}">
+                <span class="text-sm sm:text-base">🎉</span>
+                <div class="text-start leading-tight">
+                    <div class="text-[11px] sm:text-xs font-black flex items-center gap-1">
+                        <span class="hidden sm:inline">{{ __('وافق الناقل:') }}</span>
+                        <span x-text="acceptedMissionData.carrier_name"></span>
+                    </div>
+                    <div class="text-[9px] text-emerald-100 font-bold">
+                        {{ __('فتح المحادثة') }} 💬
+                    </div>
+                </div>
+            </a>
+        </template>
+
+        <!-- 2. Waiting in Progress State (Pulsing Amber Button) -->
+        <template x-if="!acceptedMissionData && sentTransporterRequests.length > 0">
+            <button @click="openTransporterFinder()"
+                    class="group inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-amber-500/90 hover:bg-amber-500 text-white rounded-full shadow-lg border border-amber-300/60 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    title="{{ __('عرض طلبات النقل قيد الانتظار أو الإلغاء') }}">
+                <div class="relative flex items-center justify-center">
+                    <span class="w-2 h-2 rounded-full bg-white animate-ping absolute"></span>
+                    <span class="text-xs sm:text-sm">⏳</span>
+                </div>
+                <div class="text-start leading-tight">
+                    <div class="text-[11px] sm:text-xs font-black flex items-center gap-1">
+                        <span>{{ __('بانتظار ناقل...') }}</span>
+                        <span class="px-1.5 py-0.2 bg-black/20 rounded-full text-[9px] font-mono" x-text="sentTransporterRequests.length + '/3'"></span>
+                    </div>
+                    <div class="text-[9px] text-amber-100 font-bold hidden sm:block">
+                        {{ __('اضغط للخيارات / الإلغاء') }}
+                    </div>
+                </div>
+            </button>
+        </template>
+
+        <!-- 3. Idle Default State (Sleek Blue Floating Button) -->
+        <template x-if="!acceptedMissionData && sentTransporterRequests.length === 0">
+            <button @click="openTransporterFinder()"
+                    class="group inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-blue-600/85 hover:bg-blue-600 text-white rounded-full shadow-md border border-white/30 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    title="{{ __('طلب ناقل زيتون أو معدات') }}">
+                <span class="text-sm">🚚</span>
+                <span class="text-[11px] sm:text-xs font-black tracking-wide">{{ __('طلب ناقل') }}</span>
+                <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[9px] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform">
+                    ➔
+                </span>
+            </button>
+        </template>
     </div>
 
 
@@ -1167,6 +1625,362 @@ document.addEventListener('alpine:init', () => {
         showFilters: window.innerWidth >= 1024,
         articleModalOpen: false,
         locale: '{{ app()->getLocale() }}',
+        transporterModalOpen: false,
+        transporterStep: 1,
+        transporterValidationError: '',
+        transportersList: [],
+        loadingTransporters: false,
+        transporterWeight: 1.0,
+        transporterPickupGov: '',
+        transporterPickupDel: '',
+        transporterDropoffGov: '',
+        transporterDropoffDel: '',
+        transporterCourseDistance: 0,
+        transporterCourseCost: 0,
+        sentTransporterRequests: [],
+        remainingTransporterQuota: 3,
+        requestingCarrierId: null,
+        cancellingCarrierId: null,
+        acceptedMissionData: null,
+        transporterPollTimer: null,
+        locatingTransporterGps: false,
+        transporterGpsCoords: null,
+        isScrolled: false,
+
+        tunisianDelegations: {
+            'صفاقس': ['صفاقس المدينة', 'صفاقس الغربية', 'صفاقس الجنوبية', 'ساقية الزيت', 'ساقية الدائر', 'طينة', 'عقارب', 'جبنيانة', 'العامرة', 'الحنشة', 'منزل شاكر', 'الغريبة', 'بئر علي بن خليفة', 'الصخيرة', 'المحرس', 'قرقنة'],
+            'تونس': ['المدينة', 'باب بحر', 'باب سويقة', 'العمران', 'العمران الأعلى', 'المنزه', 'الوردية', 'الكبارية', 'سيدي حسين', 'المرسى', 'الكرم', 'حلق الوادي', 'باردو', 'سيدي البشير', 'قرطاج'],
+            'أريانة': ['أريانة المدينة', 'سكرة', 'رواد', 'قلعة الأندلس', 'سيدي ثابت', 'حي التضامن', 'المنيهلة'],
+            'بن عروس': ['بن عروس', 'رادس', 'الزهراء', 'حمام الأنف', 'حمام الشط', 'بومهل البساتين', 'المروج', 'فوشانة', 'المحمدية', 'مرناق', 'مقرين'],
+            'منوبة': ['منوبة', 'الدندان', 'دوار هيشر', 'وادي الليل', 'طبربة', 'الجديدة', 'البطان', 'برج العامري'],
+            'نابل': ['نابل', 'الحمامات', 'دار شعبان الفهري', 'بني خيار', 'قربة', 'منزل تميم', 'الميدة', 'قليبية', 'الهوارية', 'تاكلسة', 'سليمان', 'قرمبالية', 'بوعرقوب', 'بني خلاد', 'منزل بوزلفة'],
+            'زغوان': ['زغوان', 'الزريبة', 'بئر مشارقة', 'الفحص', 'الناظور', 'صواف'],
+            'بنزرت': ['بنزرت الشمالية', 'بنزرت الجنوبية', 'جرزونة', 'منزل بورقيبة', 'تينجة', 'ماطر', 'غزالة', 'جومين', 'سجنان', 'رأس الجبل', 'العالية', 'غار الملح', 'أوتيك', 'ماجل بلعباس'],
+            'باجة': ['باجة الشمالية', 'باجة الجنوبية', 'عمدون', 'نفزة', 'تبرسق', 'تستور', 'قبلاط', 'مجاز الباب'],
+            'جندوبة': ['جندوبة', 'جندوبة الشمالية', 'بوسالم', 'طبرقة', 'عين دراهم', 'فرنانة', 'غار الدماء', 'وادي مليز', 'بلطة بوعوان'],
+            'الكاف': ['الكاف الشرقية', 'الكاف الغربية', 'نبر', 'الطويرف', 'ساقية سيدي يوسف', 'تاجروين', 'قلعة سنان', 'القلعة الخصبة', 'الجريصة', 'القصور', 'الدهماني'],
+            'سليانة': ['سليانة الشمالية', 'سليانة الجنوبية', 'بوعرادة', 'قعفور', 'الكريب', 'بورويس', 'مكثر', 'الروحية', 'كسرى', 'برقو', 'العروسة'],
+            'سوسة': ['سوسة المدينة', 'سوسة جوهرة', 'سوسة الرياض', 'سوسة سيدي عبد الحميد', 'حمام سوسة', 'أكودة', 'القلعة الكبرى', 'القلعة الصغرى', 'مساكن', 'سيدي بوعلي', 'كندار', 'النفيضة', 'بوفيشة', 'الزاوية القصيبة الثريات', 'سيدي الهاني'],
+            'المنستير': ['المنستير', 'الوردانين', 'الساحلين', 'زرمدين', 'بني حسان', 'جمال', 'بنبلة', 'المكنين', 'طبلبة', 'البقالطة', 'صيادة لمطة بوحجر', 'قصر هلال', 'قصيبة المديوني', 'طوزة'],
+            'المهدية': ['المهدية', 'رجيش', 'بومرداس', 'أولاد الشامخ', 'شربان', 'هبيرة', 'السواسي', 'الجم', 'الشابة', 'ملولش', 'سيدي علوان', 'قصور الساف'],
+            'القيروان': ['القيروان الشمالية', 'القيروان الجنوبية', 'الشبيكة', 'السبيخة', 'الوسلاتية', 'حفوز', 'العلا', 'نصر الله', 'بوحجلة', 'الشراردة', 'حاجب العيون', 'منزل المهيري', 'عين جلولة'],
+            'القصرين': ['القصرين الشمالية', 'القصرين الجنوبية', 'الزهور', 'سبيطلة', 'سبيبة', 'جدليان', 'العيون', 'تالة', 'حيدرة', 'فوسانة', 'فريانة', 'ماجل بلعباس', 'حاسي الفريد'],
+            'سيدي بوزيد': ['سيدي بوزيد الغربية', 'سيدي بوزيد الشرقية', 'جلمة', 'سبالة أولاد عسكر', 'بئر الحفي', 'سيدي علي بن عون', 'منزل بوزيان', 'المكناسي', 'سوق الجديد', 'المزونة', 'الرقاب', 'أولاد حفوز'],
+            'قابس': ['قابس المدينة', 'قابس الغربية', 'قابس الجنوبية', 'غنوش', 'المطوية', 'وذرف', 'الحامة', 'مطماطة', 'مطماطة الجديدة', 'مارث', 'منزل الحبيب'],
+            'مدنين': ['مدنين الشمالية', 'مدنين الجنوبية', 'بني خداش', 'بنقردان', 'جرجيس', 'حومة السوق', 'ميدون', 'أجيم', 'سيدي مخلوف'],
+            'تطاوين': ['تطاوين الشمالية', 'تطاوين الجنوبية', 'الصمار', 'البئر الأحمر', 'غمراسن', 'الذهيبة', 'رمادة'],
+            'قفصة': ['قفصة الشمالية', 'قفصة الجنوبية', 'سيدي عيش', 'القصر', 'القطار', 'بلخير', 'أم العرائس', 'الرديف', 'المتلوي', 'المظيلة', 'السند'],
+            'توزر': ['توزر', 'دقاش', 'تمغزة', 'نفطة', 'حزوة'],
+            'قبلي': ['قبلي الشمالية', 'قبلي الجنوبية', 'دوز الشمالية', 'دوز الجنوبية', 'سوق الأحد', 'الفوار', 'رجيم معتوق'],
+        },
+
+        getVehicleCategoryLabel(w) {
+            const num = parseFloat(w) || 0;
+            if (num <= 1.0) {
+                return '🚐 فورغونات (بارتنر / كادي)';
+            } else if (num <= 2.5) {
+                return '🛻 شاحنة خفيفة (ديماكس / ستافات)';
+            } else if (num <= 5.0) {
+                return '🚚 شاحنة متوسطة';
+            } else if (num <= 12.0) {
+                return '🚛 شاحنة ثقيلة';
+            } else {
+                return '🛢️ صهريج / كميون كبير';
+            }
+        },
+
+        openTransporterFinder() {
+            if (!this.currentUserId || this.currentUserId === 0) {
+                window.location.href = '{{ route('login', ['intended' => url()->current(), 'action' => 'transporter']) }}';
+                return;
+            }
+
+            this.transporterModalOpen = true;
+            this.transporterValidationError = '';
+
+            // If user already has active pending requests, open directly on Step 2 (Tracking)!
+            if (this.sentTransporterRequests.length > 0) {
+                this.transporterStep = 2;
+                this.calculateCourseEstimate();
+                this.fetchNearestTransporters();
+                this.checkTransporterStatus();
+            } else {
+                this.transporterStep = 1;
+                if (this.userLocation?.lat) {
+                    this.transporterGpsCoords = { lat: this.userLocation.lat, lng: this.userLocation.lng };
+                }
+                if (this.userLocation?.governorate && !this.transporterPickupGov) {
+                    this.transporterPickupGov = this.userLocation.governorate;
+                }
+            }
+
+            // Start polling if not already active
+            if (this.transporterPollTimer) clearInterval(this.transporterPollTimer);
+            this.transporterPollTimer = setInterval(() => {
+                if (!this.acceptedMissionData) {
+                    this.checkTransporterStatus();
+                }
+            }, 4000);
+        },
+
+        proceedToTransportersList() {
+            this.transporterValidationError = '';
+            if (!this.transporterPickupGov || !this.transporterPickupGov.trim()) {
+                this.transporterValidationError = '{{ __("يرجى اختيار ولاية التحميل (الانطلاق) أولاً.") }}';
+                return;
+            }
+            if (!this.transporterDropoffGov || !this.transporterDropoffGov.trim()) {
+                this.transporterValidationError = '{{ __("يرجى اختيار ولاية التفريغ (الوجهة) أولاً.") }}';
+                return;
+            }
+            if (!this.transporterWeight || this.transporterWeight <= 0) {
+                this.transporterValidationError = '{{ __("يرجى إدخال وزن الحمولة بالطن.") }}';
+                return;
+            }
+
+            // Step 1 is valid -> proceed to Step 2
+            this.transporterStep = 2;
+            this.calculateCourseEstimate();
+            this.fetchNearestTransporters();
+            this.checkTransporterStatus();
+
+            // Clear previous interval if any and start fresh status polling
+            if (this.transporterPollTimer) clearInterval(this.transporterPollTimer);
+            this.transporterPollTimer = setInterval(() => {
+                if (!this.acceptedMissionData) {
+                    this.checkTransporterStatus();
+                }
+            }, 4000);
+        },
+
+        backToCourseParameters() {
+            this.transporterStep = 1;
+            this.transporterValidationError = '';
+        },
+
+        locateTransporterGps() {
+            if (!navigator.geolocation) {
+                alert('{{ __("GPS is not supported on this browser.") }}');
+                return;
+            }
+            this.locatingTransporterGps = true;
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    this.transporterGpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                    this.locatingTransporterGps = false;
+                    if (this.userLocation?.governorate && !this.transporterPickupGov) {
+                        this.transporterPickupGov = this.userLocation.governorate;
+                    }
+                    if (this.transporterPickupGov && this.transporterDropoffGov) {
+                        this.calculateCourseEstimate();
+                    }
+                },
+                (err) => {
+                    this.locatingTransporterGps = false;
+                    alert('{{ __("Unable to access GPS location.") }}');
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        },
+
+        async calculateCourseEstimate() {
+            if (!this.transporterPickupGov || !this.transporterDropoffGov) return;
+
+            try {
+                const params = new URLSearchParams({
+                    weight: this.transporterWeight || 1.0,
+                    unit: 'ton',
+                    pickup_governorate: this.transporterPickupGov,
+                    dropoff_governorate: this.transporterDropoffGov,
+                });
+                if (this.transporterPickupDel) {
+                    params.append('pickup_delegation', this.transporterPickupDel);
+                }
+                if (this.transporterDropoffDel) {
+                    params.append('dropoff_delegation', this.transporterDropoffDel);
+                }
+                if (this.transporterGpsCoords?.lat) {
+                    params.append('pickup_lat', this.transporterGpsCoords.lat);
+                    params.append('pickup_lng', this.transporterGpsCoords.lng);
+                }
+                const res = await fetch(`{{ route('transporter_requests.estimate', ['locale' => app()->getLocale()]) }}?${params.toString()}`);
+                const data = await res.json();
+                if (data.success) {
+                    this.transporterCourseDistance = data.distance_km;
+                    this.transporterCourseCost = data.estimated_cost;
+                }
+            } catch (e) {
+                console.error('Course estimate error:', e);
+            }
+        },
+
+        async checkTransporterStatus() {
+            if (!this.currentUserId) return;
+            try {
+                const res = await fetch(`{{ route('transporter_requests.status', ['locale' => app()->getLocale()]) }}`);
+                const data = await res.json();
+                if (data.success) {
+                    if (data.pending_carrier_ids) {
+                        this.sentTransporterRequests = data.pending_carrier_ids;
+                    }
+                    if (typeof data.remaining_quota !== 'undefined') {
+                        this.remainingTransporterQuota = data.remaining_quota;
+                    }
+
+                    // If active route data exists and we don't have our own pickup/dropoff chosen yet, restore them!
+                    if (data.active_route && !this.transporterPickupGov) {
+                        this.transporterPickupGov = data.active_route.pickup_gov || '';
+                        this.transporterPickupDel = data.active_route.pickup_del || '';
+                        this.transporterDropoffGov = data.active_route.dropoff_gov || '';
+                        this.transporterDropoffDel = data.active_route.dropoff_del || '';
+                        if (data.active_route.weight) {
+                            this.transporterWeight = data.active_route.weight;
+                        }
+                        if (data.active_route.distance_km) {
+                            this.transporterCourseDistance = data.active_route.distance_km;
+                        }
+                        if (data.active_route.cost) {
+                            this.transporterCourseCost = data.active_route.cost;
+                        }
+                    }
+
+                    if (data.accepted === true) {
+                        this.acceptedMissionData = data;
+                        if (this.transporterPollTimer) {
+                            clearInterval(this.transporterPollTimer);
+                        }
+                        // Auto redirect to chat after 2.5 seconds if modal is open
+                        if (this.transporterModalOpen) {
+                            setTimeout(() => {
+                                if (data.chat_url) {
+                                    window.location.href = data.chat_url;
+                                }
+                            }, 2500);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Check transporter status error:', e);
+            }
+        },
+
+        async sendTransporterRequest(carrierId) {
+            if (!this.transporterPickupGov || !this.transporterDropoffGov || !this.transporterWeight || this.transporterWeight <= 0) {
+                this.transporterStep = 1;
+                this.transporterValidationError = '{{ __("يرجى ملء جميع بيانات المسار والحمولة أولاً.") }}';
+                return;
+            }
+
+            if (this.remainingTransporterQuota <= 0) {
+                alert('{{ __("You have reached the maximum limit of 3 pending requests in 10 minutes. Please wait for a carrier to respond.") }}');
+                return;
+            }
+
+            this.requestingCarrierId = carrierId;
+            try {
+                const payload = {
+                    carrier_id: carrierId,
+                    weight: this.transporterWeight,
+                    unit: 'ton',
+                    pickup_governorate: this.transporterPickupGov,
+                    pickup_delegation: this.transporterPickupDel || null,
+                    dropoff_governorate: this.transporterDropoffGov,
+                    dropoff_delegation: this.transporterDropoffDel || null,
+                };
+                if (this.transporterGpsCoords?.lat) {
+                    payload.pickup_lat = this.transporterGpsCoords.lat;
+                    payload.pickup_lng = this.transporterGpsCoords.lng;
+                }
+
+                const res = await fetch(`{{ route('transporter_requests.store', ['locale' => app()->getLocale()]) }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (!this.sentTransporterRequests.includes(carrierId)) {
+                        this.sentTransporterRequests.push(carrierId);
+                    }
+                    if (typeof data.remaining_quota !== 'undefined') {
+                        this.remainingTransporterQuota = data.remaining_quota;
+                    }
+                    // Start polling status immediately if not active
+                    if (!this.transporterPollTimer) {
+                        this.transporterPollTimer = setInterval(() => this.checkTransporterStatus(), 4000);
+                    }
+                } else {
+                    alert(data.message || '{{ __("Unable to send request.") }}');
+                }
+            } catch (e) {
+                console.error('Failed to send transporter request:', e);
+                alert('{{ __("Network error while sending request.") }}');
+            } finally {
+                this.requestingCarrierId = null;
+            }
+        },
+
+        async cancelTransporterRequest(carrierId) {
+            this.cancellingCarrierId = carrierId;
+            try {
+                const res = await fetch(`{{ route('transporter_requests.cancel', ['locale' => app()->getLocale()]) }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ carrier_id: carrierId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.sentTransporterRequests = this.sentTransporterRequests.filter(id => id !== carrierId);
+                    if (typeof data.remaining_quota !== 'undefined') {
+                        this.remainingTransporterQuota = data.remaining_quota;
+                    }
+                    this.checkTransporterStatus();
+                } else {
+                    alert(data.message || '{{ __("Unable to cancel request.") }}');
+                }
+            } catch (e) {
+                console.error('Failed to cancel transporter request:', e);
+                alert('{{ __("Network error while cancelling request.") }}');
+            } finally {
+                this.cancellingCarrierId = null;
+            }
+        },
+
+        async fetchNearestTransporters() {
+            this.loadingTransporters = true;
+            try {
+                const params = new URLSearchParams();
+                if (this.transporterGpsCoords?.lat) {
+                    params.append('lat', this.transporterGpsCoords.lat);
+                    params.append('lng', this.transporterGpsCoords.lng);
+                }
+                if (this.transporterPickupGov) {
+                    params.append('governorate', this.transporterPickupGov);
+                }
+                if (this.transporterWeight) {
+                    params.append('required_qty', this.transporterWeight);
+                    params.append('unit', 'ton');
+                }
+                const res = await fetch(`{{ route('carriers.search', ['locale' => app()->getLocale()]) }}?${params.toString()}`);
+                const data = await res.json();
+                if (data.success && data.carriers) {
+                    this.transportersList = data.carriers;
+                }
+            } catch (e) {
+                console.error('Failed to fetch nearest transporters:', e);
+            } finally {
+                this.loadingTransporters = false;
+            }
+        },
 
         /**
          * Get the preferred display/business name for a seller on listing cards
@@ -1754,9 +2568,11 @@ document.addEventListener('alpine:init', () => {
                 this.showFilters = true;
             }
 
-            // Close filters on downward scroll on mobile instantly if no input is currently focused
+            // Track scroll state for floating action button translucency
+            this.isScrolled = window.scrollY > 40;
             let lastScrollY = window.scrollY;
             const handleMobileScroll = () => {
+                this.isScrolled = window.scrollY > 40;
                 if (window.innerWidth < 1024 && this.showFilters) {
                     const currentScrollY = window.scrollY;
                     if (currentScrollY > lastScrollY + 5) {
@@ -1797,6 +2613,59 @@ document.addEventListener('alpine:init', () => {
                 console.error("Failed to parse userLocation from localStorage:", e);
                 localStorage.removeItem('userLocation');
             }
+
+            // Resume intended actions after login (e.g. ?action=transporter)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'transporter') {
+                this.openTransporterFinder();
+            } else if (this.currentUserId) {
+                // Check if user has active transporter requests or accepted missions to show on FAB
+                this.checkTransporterStatus();
+            }
+
+            // Restore scroll and pagination if user returned from viewing a product
+            const savedScrollY = sessionStorage.getItem('marketplace_scroll_y');
+            const savedCount = sessionStorage.getItem('marketplace_visible_count');
+            const savedListingId = sessionStorage.getItem('marketplace_last_listing_id');
+
+            if (savedCount) {
+                const countNum = parseInt(savedCount, 10);
+                if (countNum > this.visibleCount) {
+                    this.visibleCount = Math.min(countNum, this.listings.length);
+                }
+            }
+
+            if (savedScrollY) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: parseInt(savedScrollY, 10),
+                            behavior: 'instant'
+                        });
+                        if (savedListingId) {
+                            const card = document.getElementById('listing-item-' + savedListingId) || document.getElementById('listing-item-list-' + savedListingId);
+                            if (card) {
+                                card.classList.add('ring-4', 'ring-[#6A8F3B]', 'shadow-2xl');
+                                setTimeout(() => {
+                                    card.classList.remove('ring-4', 'ring-[#6A8F3B]', 'shadow-2xl');
+                                }, 2500);
+                            }
+                        }
+                        sessionStorage.removeItem('marketplace_scroll_y');
+                        sessionStorage.removeItem('marketplace_last_listing_id');
+                    }, 150);
+                });
+            }
+        },
+
+        saveBrowseState(listing) {
+            try {
+                sessionStorage.setItem('marketplace_scroll_y', window.scrollY);
+                sessionStorage.setItem('marketplace_visible_count', this.visibleCount);
+                if (listing && listing.id) {
+                    sessionStorage.setItem('marketplace_last_listing_id', listing.id);
+                }
+            } catch (e) {}
         },
 
         get totalListings() {

@@ -1150,6 +1150,130 @@
             </div>
             @endif
 
+            <!-- Carrier Verification Banner & Upload -->
+            @if(Auth::user()->role === 'carrier')
+            @php
+                $carrierVerif = Auth::user()->meta_data['carrier_verification'] ?? [];
+                $verifStatus = $carrierVerif['status'] ?? (Auth::user()->is_verified ? 'approved' : null);
+            @endphp
+
+            @if(Auth::user()->is_verified || $verifStatus === 'approved')
+                {{-- Verified Transporter Badge Card --}}
+                <div class="bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 rounded-3xl p-6 shadow-xl text-white flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner flex-shrink-0">
+                            🛡️
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-lg sm:text-xl font-black">{{ __('Verified Transporter Account') }}</h3>
+                                <span class="px-2 py-0.5 bg-white text-emerald-800 rounded-full text-xs font-black">✓ {{ __('Certified') }}</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-emerald-100 mt-1">{{ __('Your identity and vehicle documents have been officially authenticated. You have top priority in transport missions.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @elseif($verifStatus === 'pending')
+                {{-- Pending Verification Card --}}
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-6 shadow-xl text-white flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner flex-shrink-0 animate-pulse">
+                            ⏳
+                        </div>
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-black">{{ __('Verification Documents Under Review') }}</h3>
+                            <p class="text-xs sm:text-sm text-amber-100 mt-1">{{ __('We have received your Carte Grise, Driving License, and CIN. Our administrative team is reviewing them. You will be notified once the badge is active.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @else
+                {{-- Document Upload Card --}}
+                <div class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl text-white relative overflow-hidden mb-6" x-data="{ uploading: false }">
+                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                    @if($verifStatus === 'rejected')
+                        <div class="mb-5 p-4 bg-red-500/20 border border-red-400/40 rounded-2xl text-red-200 text-xs sm:text-sm">
+                            <strong>⚠️ {{ __('Previous verification request needed correction:') }}</strong>
+                            <p class="mt-1">{{ $carrierVerif['rejection_reason'] ?? __('Please upload clear, legible photos of your official documents.') }}</p>
+                        </div>
+                    @endif
+
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-500/30 border border-blue-400/30 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
+                                🛡️
+                            </div>
+                            <div>
+                                <h3 class="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
+                                    <span>{{ __('Verify Your Carrier Account') }}</span>
+                                    <span class="text-xs px-2.5 py-0.5 bg-blue-500/40 border border-blue-400/40 rounded-full text-blue-200">{{ __('Recommended') }}</span>
+                                </h3>
+                                <p class="text-xs sm:text-sm text-blue-200/90 mt-1">{{ __('Get the Verified Transporter badge 🛡️, higher priority on all olive oil transport orders, and increased trust from farmers and mills.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ route('carrier.verification.upload') }}" enctype="multipart/form-data" class="mt-6 space-y-5" @submit="uploading = true">
+                        @csrf
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {{-- Carte Grise --}}
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-blue-400/50 transition">
+                                <label class="block text-xs font-bold text-blue-200 mb-2 flex items-center gap-2">
+                                    <span>📄</span>
+                                    <span>{{ __('Carte Grise (البطاقة الرمادية)') }} <span class="text-red-400">*</span></span>
+                                </label>
+                                <input type="file" name="carte_grise" accept="image/*,application/pdf" required class="block w-full text-xs text-slate-300 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                <p class="text-[10px] text-slate-400 mt-1.5">{{ __('Vehicle registration document (Photo or PDF)') }}</p>
+                            </div>
+
+                            {{-- Permis de Conduire --}}
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-blue-400/50 transition">
+                                <label class="block text-xs font-bold text-blue-200 mb-2 flex items-center gap-2">
+                                    <span>🪪</span>
+                                    <span>{{ __('Driving License (رخصة السياقة)') }} <span class="text-red-400">*</span></span>
+                                </label>
+                                <input type="file" name="permis" accept="image/*,application/pdf" required class="block w-full text-xs text-slate-300 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                <p class="text-[10px] text-slate-400 mt-1.5">{{ __('Valid driving license (Front photo or PDF)') }}</p>
+                            </div>
+
+                            {{-- Carte d'Identite CIN --}}
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-blue-400/50 transition">
+                                <label class="block text-xs font-bold text-blue-200 mb-2 flex items-center gap-2">
+                                    <span>🆔</span>
+                                    <span>{{ __('National ID CIN (بطاقة التعريف)') }} <span class="text-red-400">*</span></span>
+                                </label>
+                                <input type="file" name="cin" accept="image/*,application/pdf" required class="block w-full text-xs text-slate-300 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                <p class="text-[10px] text-slate-400 mt-1.5">{{ __('National Identity Card (Front photo or PDF)') }}</p>
+                            </div>
+                        </div>
+
+                        {{-- Optional Plate & Notes --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-blue-200 mb-1.5">{{ __('Vehicle License Plate (رقم لوحة المنجمية - اختياري)') }}</label>
+                                <input type="text" name="vehicle_plate" placeholder="123 تونس 4567" class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-blue-200 mb-1.5">{{ __('Additional Notes (ملاحظات إضافية)') }}</label>
+                                <input type="text" name="notes" placeholder="{{ __('Type of truck, refrigeration, availability, etc.') }}" class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-400">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" :disabled="uploading" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 transition disabled:opacity-50">
+                                <span x-show="!uploading">🛡️ {{ __('Submit Documents for Verification') }}</span>
+                                <span x-show="uploading" class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span>{{ __('Uploading...') }}</span>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endif
+            @endif
+
             <!-- Carrier Tasks -->
             @if(Auth::user()->role === 'carrier')
             <div id="assigned-tasks" class="bg-white rounded-2xl shadow-lg overflow-hidden">

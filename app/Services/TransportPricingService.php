@@ -10,22 +10,31 @@ class TransportPricingService
      * Vehicle capacity tiers and pricing configuration for the Tunisian market (TND).
      */
     public const TIERS = [
-        'pickup' => [
-            'name_ar' => 'بيك آب / إيسوزو (حتى 2.5 طن)',
-            'name_fr' => 'Pick-up / Isuzu (Jusqu\'à 2.5T)',
-            'name_en' => 'Pick-up / Isuzu (Up to 2.5T)',
+        'fourgonnette' => [
+            'name_ar' => 'فورغونات (بارتنر / كادي حتى 1 طن)',
+            'name_fr' => 'Fourgonnette (Partner / Caddy jusqu\'à 1T)',
+            'name_en' => 'Van / Fourgonnette (Up to 1T)',
+            'max_qty' => 1000, // Liters or Kg
+            'base_fee' => 25.0, // Economic base fee for small vans
+            'rate_per_km' => 0.750, // 0.75 TND per KM
+            'icon' => '🚐'
+        ],
+        'light_commercial' => [
+            'name_ar' => 'شاحنة خفيفة (ديماكس / ستافات 1 إلى 2.5 طن)',
+            'name_fr' => 'Camionnette légère / Stafette (1T - 2.5T)',
+            'name_en' => 'Light Commercial / Stafette (1T - 2.5T)',
             'max_qty' => 2500, // Liters or Kg
-            'base_fee' => 40.0, // Fixed loading & departure fee
-            'rate_per_km' => 1.100, // TND per KM
+            'base_fee' => 40.0,
+            'rate_per_km' => 1.000, // 1.000 TND per KM
             'icon' => '🛻'
         ],
         'light_truck' => [
             'name_ar' => 'شاحنة متوسطة (2.5 إلى 5 طن)',
-            'name_fr' => 'Camionnette (2.5T - 5T)',
-            'name_en' => 'Light Truck (2.5T - 5T)',
+            'name_fr' => 'Camionnette moyenne (2.5T - 5T)',
+            'name_en' => 'Medium Truck (2.5T - 5T)',
             'max_qty' => 5000,
             'base_fee' => 70.0,
-            'rate_per_km' => 1.600,
+            'rate_per_km' => 1.500,
             'icon' => '🚛'
         ],
         'heavy_truck' => [
@@ -34,7 +43,7 @@ class TransportPricingService
             'name_en' => 'Heavy Truck (5T - 12T)',
             'max_qty' => 12000,
             'base_fee' => 120.0,
-            'rate_per_km' => 2.200,
+            'rate_per_km' => 2.000,
             'icon' => '🚚'
         ],
         'tanker' => [
@@ -42,8 +51,8 @@ class TransportPricingService
             'name_fr' => 'Citerne Alimentaire Inox (> 12T)',
             'name_en' => 'Food-grade Tanker (> 12T)',
             'max_qty' => 30000,
-            'base_fee' => 250.0, // Includes certified food-grade sterile washing
-            'rate_per_km' => 3.200,
+            'base_fee' => 220.0, // Includes certified food-grade sterile washing
+            'rate_per_km' => 2.800,
             'icon' => '🛢️'
         ]
     ];
@@ -85,8 +94,10 @@ class TransportPricingService
             return array_merge(['tier_key' => 'tanker'], self::TIERS['tanker']);
         }
 
-        if ($qty <= 2500) {
-            return array_merge(['tier_key' => 'pickup'], self::TIERS['pickup']);
+        if ($qty <= 1000) {
+            return array_merge(['tier_key' => 'fourgonnette'], self::TIERS['fourgonnette']);
+        } elseif ($qty <= 2500) {
+            return array_merge(['tier_key' => 'light_commercial'], self::TIERS['light_commercial']);
         } elseif ($qty <= 5000) {
             return array_merge(['tier_key' => 'light_truck'], self::TIERS['light_truck']);
         } elseif ($qty <= 12000) {
@@ -131,47 +142,93 @@ class TransportPricingService
      */
     public const GOVERNORATES = [
         'tunis' => ['lat' => 36.8065, 'lng' => 10.1815],
+        'تونس' => ['lat' => 36.8065, 'lng' => 10.1815],
         'ariana' => ['lat' => 36.8665, 'lng' => 10.1647],
+        'أريانة' => ['lat' => 36.8665, 'lng' => 10.1647],
+        'اريانة' => ['lat' => 36.8665, 'lng' => 10.1647],
         'ben arous' => ['lat' => 36.7533, 'lng' => 10.2222],
+        'بن عروس' => ['lat' => 36.7533, 'lng' => 10.2222],
         'manouba' => ['lat' => 36.8080, 'lng' => 10.0972],
+        'منوبة' => ['lat' => 36.8080, 'lng' => 10.0972],
         'nabeul' => ['lat' => 36.4561, 'lng' => 10.7376],
+        'نابل' => ['lat' => 36.4561, 'lng' => 10.7376],
         'zaghouan' => ['lat' => 36.4029, 'lng' => 10.1429],
+        'زغوان' => ['lat' => 36.4029, 'lng' => 10.1429],
         'bizerte' => ['lat' => 37.2744, 'lng' => 9.8739],
+        'بنزرت' => ['lat' => 37.2744, 'lng' => 9.8739],
         'beja' => ['lat' => 36.7256, 'lng' => 9.1817],
+        'باجة' => ['lat' => 36.7256, 'lng' => 9.1817],
         'jendouba' => ['lat' => 36.5011, 'lng' => 8.7802],
+        'جندوبة' => ['lat' => 36.5011, 'lng' => 8.7802],
         'kef' => ['lat' => 36.1822, 'lng' => 8.7149],
+        'الكاف' => ['lat' => 36.1822, 'lng' => 8.7149],
+        'كاف' => ['lat' => 36.1822, 'lng' => 8.7149],
         'siliana' => ['lat' => 36.0847, 'lng' => 9.3708],
+        'سليانة' => ['lat' => 36.0847, 'lng' => 9.3708],
         'sousse' => ['lat' => 35.8256, 'lng' => 10.6369],
+        'سوسة' => ['lat' => 35.8256, 'lng' => 10.6369],
         'monastir' => ['lat' => 35.7833, 'lng' => 10.8333],
+        'المنستير' => ['lat' => 35.7833, 'lng' => 10.8333],
+        'منستير' => ['lat' => 35.7833, 'lng' => 10.8333],
         'mahdia' => ['lat' => 35.5047, 'lng' => 11.0622],
+        'المهدية' => ['lat' => 35.5047, 'lng' => 11.0622],
+        'مهدية' => ['lat' => 35.5047, 'lng' => 11.0622],
         'sfax' => ['lat' => 34.7406, 'lng' => 10.7603],
+        'صفاقس' => ['lat' => 34.7406, 'lng' => 10.7603],
         'kairouan' => ['lat' => 35.6781, 'lng' => 10.0963],
+        'القيروان' => ['lat' => 35.6781, 'lng' => 10.0963],
+        'قيروان' => ['lat' => 35.6781, 'lng' => 10.0963],
         'kasserine' => ['lat' => 35.1676, 'lng' => 8.8365],
+        'القصرين' => ['lat' => 35.1676, 'lng' => 8.8365],
+        'قصرين' => ['lat' => 35.1676, 'lng' => 8.8365],
         'sidi bouzid' => ['lat' => 35.0382, 'lng' => 9.4849],
+        'سيدي بوزيد' => ['lat' => 35.0382, 'lng' => 9.4849],
         'gabes' => ['lat' => 33.8815, 'lng' => 10.0982],
+        'قابس' => ['lat' => 33.8815, 'lng' => 10.0982],
         'medenine' => ['lat' => 33.3549, 'lng' => 10.5055],
+        'مدنين' => ['lat' => 33.3549, 'lng' => 10.5055],
         'tataouine' => ['lat' => 32.9297, 'lng' => 10.4518],
+        'تطاوين' => ['lat' => 32.9297, 'lng' => 10.4518],
         'gafsa' => ['lat' => 34.4250, 'lng' => 8.7842],
+        'قفصة' => ['lat' => 34.4250, 'lng' => 8.7842],
         'tozeur' => ['lat' => 33.9197, 'lng' => 8.1335],
+        'توزر' => ['lat' => 33.9197, 'lng' => 8.1335],
         'kebili' => ['lat' => 33.7050, 'lng' => 8.9690],
+        'قبلي' => ['lat' => 33.7050, 'lng' => 8.9690],
     ];
+
+    /**
+     * Resolve GPS coordinates from governorate name or fallback to standard centroid
+     */
+    public static function resolveCoordinates(?string $gov, ?float $fallbackLat = null, ?float $fallbackLng = null): array
+    {
+        if ($fallbackLat && $fallbackLng && ($fallbackLat != 0.0 || $fallbackLng != 0.0)) {
+            return ['lat' => $fallbackLat, 'lng' => $fallbackLng];
+        }
+
+        $key = strtolower(trim((string)$gov));
+        if (isset(self::GOVERNORATES[$key])) {
+            return self::GOVERNORATES[$key];
+        }
+
+        // Search partial matches (e.g., "صفاقس - عقارب")
+        foreach (self::GOVERNORATES as $name => $coords) {
+            if (str_contains($key, $name) || str_contains($name, $key)) {
+                return $coords;
+            }
+        }
+
+        return ['lat' => 34.7406, 'lng' => 10.7603]; // Safe Tunisia center/Sfax centroid
+    }
 
     /**
      * Estimate transport cost using governorate names when GPS coords are missing.
      */
     public static function estimateCostByGovernorates(float $qty, ?string $pickupGov, ?string $dropoffGov, string $productType = 'oil'): array
     {
-        $pKey = strtolower(trim((string)$pickupGov));
-        $dKey = strtolower(trim((string)$dropoffGov));
+        $pCoords = self::resolveCoordinates($pickupGov);
+        $dCoords = self::resolveCoordinates($dropoffGov);
 
-        $pCoords = self::GOVERNORATES[$pKey] ?? null;
-        $dCoords = self::GOVERNORATES[$dKey] ?? null;
-
-        $pLat = $pCoords ? $pCoords['lat'] : 36.8065;
-        $pLng = $pCoords ? $pCoords['lng'] : 10.1815;
-        $dLat = $dCoords ? $dCoords['lat'] : 34.7406;
-        $dLng = $dCoords ? $dCoords['lng'] : 10.7603;
-
-        return self::estimateCost($qty, $pLat, $pLng, $dLat, $dLng, $productType);
+        return self::estimateCost($qty, $pCoords['lat'], $pCoords['lng'], $dCoords['lat'], $dCoords['lng'], $productType);
     }
 }

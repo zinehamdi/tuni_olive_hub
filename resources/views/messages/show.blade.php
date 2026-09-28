@@ -60,6 +60,32 @@
                 </div>
             </div>
             
+            {{-- Transporter / GPS Pin Sharing Banner --}}
+            @php
+                $isCarrierInteraction = ($user->role === 'carrier' || auth()->user()->role === 'carrier');
+            @endphp
+            @if($isCarrierInteraction)
+                <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-b border-emerald-200/80 px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between gap-2 shadow-2xs">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-xl sm:text-2xl flex-shrink-0 animate-bounce">📍</span>
+                        <div class="min-w-0">
+                            <p class="text-xs sm:text-sm font-black text-emerald-950 leading-tight truncate">
+                                {{ __('Send exact GPS location to ensure the transporter arrives directly.') }}
+                            </p>
+                            <p class="text-[10px] sm:text-[11px] text-emerald-700 hidden sm:block">
+                                {{ __('Opens directly in Google Maps for turn-by-turn driving navigation.') }}
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" 
+                            @click="window.dispatchEvent(new CustomEvent('send-gps-request'))"
+                            class="px-3 py-1.5 sm:px-3.5 sm:py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 active:scale-95 text-white rounded-xl text-xs sm:text-xs font-black shadow-xs flex items-center gap-1.5 transition whitespace-nowrap cursor-pointer flex-shrink-0">
+                        <span>📍</span>
+                        <span>{{ __('Send GPS Pin') }}</span>
+                    </button>
+                </div>
+            @endif
+
             {{-- Active Deals Section --}}
             @if(isset($pendingOrders) && $pendingOrders->count() > 0)
                 <div class="bg-amber-50 border-b border-amber-100 p-3 sm:p-4 shadow-sm relative z-0">
@@ -120,7 +146,7 @@
                                     {{-- Confirmed Deal Actions --}}
                                     @if($order->status === 'confirmed' && !$order->transportLoad)
                                         @if(in_array(auth()->id(), [$order->buyer_id, $order->seller_id]) || auth()->user()->role === 'admin')
-                                            <button @click.prevent="openTransporters({{ $order->id }})" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-xs sm:text-sm font-bold shadow hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                                            <button @click.prevent="openTransporters({{ $order->id }}, {{ (float)$order->qty }}, '{{ $order->unit }}', '{{ addslashes($order->seller?->addresses?->first()?->governorate ?? '') }}')" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-xs sm:text-sm font-bold shadow hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                                                 {{ __('Summon Transporter') }}
                                             </button>
@@ -179,6 +205,7 @@
                     @php
                         $isMine = $message->sender_id === auth()->id();
                         $isBot = ($message->attachments['is_bot'] ?? false) || str_starts_with($message->body, '🤖');
+                        $isTransportAssignment = ($message->attachments['type'] ?? null) === 'transport_assignment';
                     @endphp
 
                     @if($isBot)
@@ -199,6 +226,169 @@
                                 </div>
                             </div>
                         </div>
+                    @elseif($isTransportAssignment)
+                        @php
+                            $att = $message->attachments ?? [];
+                            $tStatus = $att['status'] ?? 'pending';
+                            $loadId = $att['load_id'] ?? null;
+                            $orderId = $att['order_id'] ?? null;
+                            $isAssignedCarrier = (int)auth()->id() === (int)($att['carrier_id'] ?? 0);
+                        @endphp
+                        {{-- Dedicated Interactive Transport Mission Assignment Card --}}
+                        <div class="w-full my-4 flex justify-center px-2">
+                            <div class="w-full max-w-lg bg-white rounded-3xl p-5 shadow-xl border-2 {{ $tStatus === 'accepted' ? 'border-emerald-300' : ($tStatus === 'denied' ? 'border-gray-200 opacity-80' : 'border-blue-300') }} text-gray-900 relative space-y-4" x-data="{ accepting: false, denying: false }">
+                                {{-- Card Header --}}
+                                <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold flex-shrink-0 shadow-sm">
+                                            🚚
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900 text-sm sm:text-base">{{ __('Transport Mission Assignment') }}</h4>
+                                            <span class="text-[11px] text-gray-400 font-mono">#LOAD-{{ $loadId }}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @if($tStatus === 'accepted')
+                                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+                                                ✓ {{ __('Accepted') }}
+                                            </span>
+                                        @elseif($tStatus === 'denied')
+                                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold">
+                                                ❌ {{ __('Declined') }}
+                                            </span>
+                                        @else
+                                            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold animate-pulse shadow-sm">
+                                                ⏳ {{ __('Pending Response') }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Route & Cargo Summary --}}
+                                <div class="grid grid-cols-2 gap-3 text-xs">
+                                    <div class="p-3 bg-blue-50/70 rounded-2xl border border-blue-100">
+                                        <span class="text-[10px] font-bold text-blue-500 uppercase block mb-1">📍 {{ __('Route') }}</span>
+                                        <p class="font-bold text-gray-800 truncate" title="{{ $att['pickup'] ?? '' }}">🟢 {{ $att['pickup'] ?? '---' }}</p>
+                                        <p class="font-bold text-gray-800 truncate mt-1" title="{{ $att['dropoff'] ?? '' }}">🚩 {{ $att['dropoff'] ?? '---' }}</p>
+                                        <span class="text-[10px] text-blue-600 font-bold block mt-1.5">~{{ $att['distance_km'] ?? '---' }} km</span>
+                                    </div>
+                                    <div class="p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100">
+                                        <span class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">💰 {{ __('Estimated Earning') }}</span>
+                                        <p class="font-black text-emerald-800 text-base">~{{ $att['estimated_cost'] ?? '---' }} <span class="text-xs font-normal">TND</span></p>
+                                        <span class="text-[10px] text-emerald-700 font-bold block mt-1.5">📦 {{ $att['qty'] ?? '' }} {{ $att['unit'] ?? '' }}</span>
+                                    </div>
+                                </div>
+
+                                {{-- Action Buttons --}}
+                                @if($tStatus === 'pending')
+                                    @if($isAssignedCarrier)
+                                        <div class="flex items-center gap-3 pt-2">
+                                            <button @click="accepting = true; acceptTransportAssignment({{ $loadId }})"
+                                                    :disabled="accepting || denying"
+                                                    class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2">
+                                                <span x-show="!accepting">✓ {{ __('Accept Mission') }}</span>
+                                                <svg x-show="accepting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            </button>
+                                            <button @click="denying = true; denyTransportAssignment({{ $loadId }})"
+                                                    :disabled="accepting || denying"
+                                                    class="py-3 px-4 bg-gray-100 hover:bg-red-50 text-gray-700 hover:text-red-700 rounded-2xl font-bold text-xs sm:text-sm transition border border-gray-200">
+                                                <span x-show="!denying">{{ __('Decline') }}</span>
+                                                <svg x-show="denying" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="text-center py-2.5 px-3 text-xs text-amber-800 font-medium bg-amber-50 rounded-2xl border border-amber-200">
+                                            ⏳ {{ __('Waiting for the transporter to confirm acceptance of this mission...') }}
+                                        </div>
+                                    @endif
+                                @elseif($tStatus === 'accepted')
+                                    @if($isAssignedCarrier)
+                                        <div class="pt-1">
+                                            <a href="{{ route('mobile.trip', ['locale' => app()->getLocale(), 'id' => $loadId]) }}" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition">
+                                                <span>📱</span>
+                                                <span>{{ __('Open Driver Trip Dashboard') }}</span>
+                                            </a>
+                                        </div>
+                                    @else
+                                        <div class="text-center py-2.5 px-3 text-xs text-emerald-800 font-bold bg-emerald-50 rounded-2xl border border-emerald-200">
+                                            ✅ {{ __('Carrier has accepted the mission! Trip is underway.') }}
+                                        </div>
+                                    @endif
+                                @endif
+
+                                <div class="text-left text-[10px] text-gray-400 pt-1">
+                                    {{ $message->created_at->translatedFormat('H:i') }}
+                                </div>
+                            </div>
+                        </div>
+                    @elseif(($message->attachments['type'] ?? null) === 'transporter_request_accepted')
+                        @php
+                            $att = $message->attachments ?? [];
+                            $isCarrier = (int)auth()->id() === (int)($att['carrier_id'] ?? 0);
+                            $customerPhone = $att['customer_phone'] ?? '';
+                            $cleanPhone = preg_replace('/[^0-9]/', '', (string)$customerPhone);
+                        @endphp
+                        {{-- Dedicated Confirmed Transport Mission Dispatch Card --}}
+                        <div class="w-full my-4 flex justify-center px-2">
+                            <div class="w-full max-w-lg bg-white rounded-3xl p-4 sm:p-5 shadow-xl border-2 border-emerald-400 text-gray-900 relative space-y-3 sm:space-y-4">
+                                {{-- Card Header --}}
+                                <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center text-xl font-bold flex-shrink-0 shadow-sm">
+                                            🚚
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-gray-900 text-sm sm:text-base">{{ __('Confirmed Transport Mission') }}</h4>
+                                            <span class="text-[11px] text-emerald-700 font-bold">✓ {{ __('Mission Accepted by Carrier') }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-black shadow-2xs">
+                                        {{ __('Active') }}
+                                    </span>
+                                </div>
+
+                                {{-- Details --}}
+                                <div class="grid grid-cols-2 gap-2 sm:gap-3 text-xs">
+                                    <div class="p-2.5 sm:p-3 bg-slate-50 rounded-2xl border border-gray-200">
+                                        <span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">📍 {{ __('Route') }}</span>
+                                        <p class="font-black text-gray-900 text-xs truncate">🟢 {{ $att['pickup'] ?? '---' }}</p>
+                                        <p class="font-black text-gray-900 text-xs truncate mt-1">🚩 {{ $att['dropoff'] ?? '---' }}</p>
+                                        <span class="text-[10px] text-blue-600 font-bold block mt-1">~{{ $att['distance_km'] ?? '---' }} km</span>
+                                    </div>
+                                    <div class="p-2.5 sm:p-3 bg-emerald-50/70 rounded-2xl border border-emerald-100">
+                                        <span class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">💰 {{ __('Fair Price') }}</span>
+                                        <p class="font-black text-emerald-800 text-sm sm:text-base">~{{ $att['estimated_cost'] ?? '---' }} <span class="text-xs font-normal">TND</span></p>
+                                        <span class="text-[10px] text-emerald-700 font-bold block mt-1">📦 {{ $att['weight'] ?? '' }} {{ $att['unit'] ?? '' }}</span>
+                                    </div>
+                                </div>
+
+                                {{-- Action Row --}}
+                                <div class="pt-1 flex flex-col sm:flex-row items-center gap-2">
+                                    @if($isCarrier)
+                                        {{-- Carrier can directly call the customer --}}
+                                        @if(!empty($cleanPhone))
+                                            <a href="tel:{{ $cleanPhone }}" class="w-full sm:flex-1 py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-95">
+                                                <span>📞</span>
+                                                <span>{{ __('Call Customer') }} ({{ $customerPhone }})</span>
+                                            </a>
+                                        @endif
+                                    @else
+                                        {{-- Customer can send GPS Drop Pin --}}
+                                        <button type="button" 
+                                                @click="window.dispatchEvent(new CustomEvent('send-gps-request'))"
+                                                class="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition active:scale-95 cursor-pointer">
+                                            <span>📍</span>
+                                            <span>{{ __('Send Exact GPS Pin to Transporter') }}</span>
+                                        </button>
+                                    @endif
+                                </div>
+
+                                <div class="text-left text-[10px] text-gray-400 pt-1">
+                                    {{ $message->created_at->translatedFormat('H:i') }}
+                                </div>
+                            </div>
+                        </div>
                     @else
                         {{-- Standard User Message --}}
                         <div class="flex {{ $isMine ? ($isRTL ? 'justify-start' : 'justify-end') : ($isRTL ? 'justify-end' : 'justify-start') }} items-end gap-2 group">
@@ -212,6 +402,23 @@
                                     ? 'bg-gradient-to-br from-[#3B5998] to-[#2d4275] text-white ' . ($isRTL ? 'rounded-t-2xl rounded-br-2xl rounded-bl-md' : 'rounded-t-2xl rounded-bl-2xl rounded-br-md')
                                     : 'bg-white border border-gray-200 text-gray-900 shadow-sm ' . ($isRTL ? 'rounded-t-2xl rounded-bl-2xl rounded-br-md' : 'rounded-t-2xl rounded-br-2xl rounded-bl-md') }} px-4 py-2.5">
                                     <p class="text-sm leading-relaxed whitespace-pre-wrap break-words">{{ $message->body }}</p>
+
+                                    {{-- Google Maps GPS Navigation Card --}}
+                                    @if(str_contains($message->body, 'maps.google.com') || str_contains($message->body, 'google.com/maps'))
+                                        @php
+                                            preg_match('/https:\/\/(www\.)?(google\.com\/maps|maps\.google\.com)[^\s\n\r]+/', $message->body, $gMapsMatches);
+                                            $gMapsUrl = $gMapsMatches[0] ?? null;
+                                        @endphp
+                                        @if($gMapsUrl)
+                                            <div class="mt-2.5 pt-2 border-t {{ $isMine ? 'border-white/20' : 'border-gray-200' }}">
+                                                <a href="{{ $gMapsUrl }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black text-xs shadow-sm transition active:scale-95">
+                                                    <span>🧭</span>
+                                                    <span>{{ __('Open in Google Maps') }}</span>
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                                </a>
+                                            </div>
+                                        @endif
+                                    @endif
                                 </div>
 
                                 {{-- Inline Translation Display --}}
@@ -306,7 +513,20 @@
             {{-- Message Input Bar --}}
             <div class="sticky bottom-0 left-0 right-0 bg-white border-t-2 border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-20">
                 <div class="max-w-4xl mx-auto px-3 sm:px-4 py-3">
-                    <form x-data="messageSender" @submit.prevent="send()" class="flex items-end gap-2 sm:gap-3">
+                    <form x-data="messageSender" 
+                          @submit.prevent="send()" 
+                          @send-gps-request.window="sendGpsLocation()" 
+                          class="flex items-end gap-2 sm:gap-3">
+                        {{-- 1-Click Live GPS Drop Pin Button --}}
+                        <button type="button" 
+                                @click="sendGpsLocation()" 
+                                :disabled="locatingGps || sending"
+                                title="{{ __('Send My Exact GPS Location') }}"
+                                class="h-11 w-11 flex items-center justify-center bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-2xl transition shadow-2xs flex-shrink-0 cursor-pointer active:scale-95">
+                            <span x-show="!locatingGps" class="text-base sm:text-lg">📍</span>
+                            <svg x-show="locatingGps" class="w-4 h-4 animate-spin text-emerald-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </button>
+
                         <div class="flex-1 relative">
                             <textarea
                                 x-model="message"
@@ -473,75 +693,196 @@
                                     <h3 class="text-xl leading-6 font-bold text-gray-900 mb-1" id="modal-transporters-title">
                                         🚚 {{ __('Browse Transporters (Sorted by Proximity)') }}
                                     </h3>
-                                    <p class="text-xs text-gray-500 mb-4">{{ __('Transporters are sorted from closest to furthest relative to pickup location.') }}</p>
+                                    <p class="text-xs text-gray-500 mb-3">{{ __('Transporters are sorted from closest to furthest relative to pickup location.') }}</p>
+
+                                    {{-- Required Deal Load & Capacity Filter Banner --}}
+                                    <div x-show="selectedOrderQty > 0" class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-3 mb-3 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-base">⚖️</span>
+                                            <span class="text-xs font-bold text-amber-900">{{ __('Required Deal Load:') }}</span>
+                                            <span class="text-xs font-black text-blue-700 bg-white px-2.5 py-0.5 rounded-lg border border-amber-200" x-text="selectedOrderQty + ' ' + selectedOrderUnit"></span>
+                                        </div>
+                                        <label class="flex items-center gap-1.5 text-xs font-bold text-gray-700 cursor-pointer bg-white px-2.5 py-1 rounded-xl border border-amber-200 hover:bg-amber-100/50 transition">
+                                            <input type="checkbox" x-model="filterSuitableOnly" @change="fetchDealCarriers()" class="rounded text-blue-600 focus:ring-0">
+                                            <span>{{ __('Show only vehicles with suitable capacity') }}</span>
+                                        </label>
+                                    </div>
+
+                                    {{-- Route & Address Exact Location Specification --}}
+                                    <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 mb-4 text-start space-y-3">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-base">📍</span>
+                                            <h4 class="font-bold text-gray-900 text-xs sm:text-sm">{{ __('Confirm Exact Pickup & Dropoff Locations') }}</h4>
+                                        </div>
+                                        <p class="text-[11px] text-gray-600">{{ __('Ez-Zitouni calculates transport distance and fare based on these locations. Use GPS or specify delegation for 100% accuracy.') }}</p>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                            {{-- Pickup Box --}}
+                                            <div class="bg-white rounded-xl p-3 border border-blue-100 shadow-sm space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                                                        <span>🟢</span>
+                                                        <span>{{ __('Pickup (مكان التحميل)') }}</span>
+                                                    </span>
+                                                    <button type="button" @click="useCurrentLocation('pickup')" :disabled="gettingGps" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
+                                                        <span>📍</span>
+                                                        <span>{{ __('GPS') }}</span>
+                                                    </button>
+                                                </div>
+                                                <select x-model="pickupGov" @change="fetchDealCarriers()" class="w-full text-xs py-1.5 px-2 bg-gray-50 border border-gray-200 rounded-lg font-medium focus:ring-0 focus:border-blue-400">
+                                                    <option value="">{{ __('Select Governorate') }}</option>
+                                                    @foreach(['صفاقس', 'تونس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
+                                                        <option value="{{ $g }}">{{ $g }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="text" x-model="pickupDel" placeholder="{{ __('Delegation / Locality (e.g. طينة)') }}" class="w-full text-xs py-1.5 px-2 bg-gray-50 border border-gray-200 rounded-lg placeholder-gray-400 focus:ring-0 focus:border-blue-400">
+                                            </div>
+
+                                            {{-- Dropoff Box --}}
+                                            <div class="bg-white rounded-xl p-3 border border-blue-100 shadow-sm space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-[11px] font-bold text-red-700 flex items-center gap-1">
+                                                        <span>🚩</span>
+                                                        <span>{{ __('Dropoff (مكان التسليم)') }}</span>
+                                                    </span>
+                                                    <button type="button" @click="useCurrentLocation('dropoff')" :disabled="gettingGps" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
+                                                        <span>📍</span>
+                                                        <span>{{ __('GPS') }}</span>
+                                                    </button>
+                                                </div>
+                                                <select x-model="dropoffGov" class="w-full text-xs py-1.5 px-2 bg-gray-50 border border-gray-200 rounded-lg font-medium focus:ring-0 focus:border-blue-400">
+                                                    <option value="">{{ __('Select Governorate') }}</option>
+                                                    @foreach(['تونس', 'صفاقس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
+                                                        <option value="{{ $g }}">{{ $g }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="text" x-model="dropoffDel" placeholder="{{ __('Delegation / Locality (e.g. المروج)') }}" class="w-full text-xs py-1.5 px-2 bg-gray-50 border border-gray-200 rounded-lg placeholder-gray-400 focus:ring-0 focus:border-blue-400">
+                                            </div>
+                                        </div>
+                                    </div>
                                     
-                                    @if(isset($carriers) && $carriers->count() > 0)
-                                        <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                                    {{-- Loading State --}}
+                                    <div x-show="loadingCarriers" class="py-8 text-center text-blue-600 text-xs font-bold flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        <span>{{ __('Loading and sorting nearest transporters...') }}</span>
+                                    </div>
+
+                                    {{-- Dynamic Carriers (Live sorted by nearest & capacity) --}}
+                                    <div x-show="!loadingCarriers && dynamicCarriers.length > 0" class="space-y-1.5 sm:space-y-2.5 max-h-[60vh] overflow-y-auto pr-2">
+                                        <template x-for="carrier in dynamicCarriers" :key="carrier.id">
+                                            <div class="group relative bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-xl p-2 sm:p-3 transition-all duration-150 shadow-2xs hover:shadow-xs border-s-4 border-s-blue-600 flex items-center justify-between gap-2 sm:gap-3">
+                                                <!-- Identity & Metrics -->
+                                                <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                                    <template x-if="carrier.avatar">
+                                                        <img :src="carrier.avatar" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover ring-1 ring-blue-100 flex-shrink-0 shadow-2xs">
+                                                    </template>
+                                                    <template x-if="!carrier.avatar">
+                                                        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-black text-xs sm:text-base flex-shrink-0 shadow-2xs ring-1 ring-blue-100" x-text="carrier.name.charAt(0).toUpperCase()"></div>
+                                                    </template>
+                                                    <div class="min-w-0 flex-1 text-start">
+                                                        <!-- Transporter Name (Wadha7) -->
+                                                        <div class="flex items-center gap-1 min-w-0">
+                                                            <h4 class="font-black text-slate-900 text-xs sm:text-base tracking-tight leading-snug group-hover:text-blue-600 transition-colors truncate" x-text="carrier.name"></h4>
+                                                            <span x-show="carrier.is_verified" class="inline-flex items-center text-blue-600 flex-shrink-0 text-[10px]" title="{{ __('Verified') }}">
+                                                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                        <!-- Badges: Distance & Capacity -->
+                                                        <div class="flex items-center gap-1 mt-0.5 flex-wrap">
+                                                            <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 text-[10px] sm:text-[11px] font-black border border-blue-200/60">
+                                                                <span>📍</span>
+                                                                <span x-text="carrier.distance_km != null ? carrier.distance_km + ' {{ __('km') }}' : '{{ __('Same Governorate') }}'"></span>
+                                                            </span>
+                                                            <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-950 text-[10px] sm:text-[11px] font-black border border-emerald-200/60">
+                                                                <span>⚖️</span>
+                                                                <span x-text="carrier.capacity_label"></span>
+                                                            </span>
+                                                            <template x-if="selectedOrderQty > 0">
+                                                                <span :class="carrier.fits_capacity ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-amber-50 text-amber-800 border-amber-300'" class="px-1.5 py-0.5 border rounded text-[9px] font-black" x-text="carrier.fits_capacity ? '✅ {{ __('Fits') }}' : '⚠️ {{ __('Smaller') }}'"></span>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Action Button -->
+                                                <div class="flex-shrink-0">
+                                                    <button @click="assignTransporter(carrier.id)"
+                                                            :disabled="assigningCarrier === carrier.id"
+                                                            class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black shadow-2xs hover:shadow-xs transition-all whitespace-nowrap cursor-pointer">
+                                                        <span x-show="assigningCarrier !== carrier.id" class="inline-flex items-center gap-1">
+                                                            <span class="text-xs">✉️</span>
+                                                            <span>{{ __('Send Request') }}</span>
+                                                        </span>
+                                                        <svg x-show="assigningCarrier === carrier.id" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    {{-- Initial Server Rendered List (Before any dynamic search or if JS loading) --}}
+                                    <div x-show="!loadingCarriers && dynamicCarriers.length === 0" class="space-y-1.5 sm:space-y-2.5 max-h-[60vh] overflow-y-auto pr-2">
+                                        @if(isset($carriers) && $carriers->count() > 0)
                                             @foreach($carriers as $carrier)
-                                                <div class="border rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 hover:border-blue-300 transition-colors bg-gray-50 hover:bg-white shadow-sm">
-                                                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                                                <div class="group relative bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-400 rounded-xl p-2 sm:p-3 transition-all duration-150 shadow-2xs hover:shadow-xs border-s-4 border-s-blue-600 flex items-center justify-between gap-2 sm:gap-3">
+                                                    <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                                                         @if($carrier->profile_picture)
-                                                            <img src="{{ Storage::url($carrier->profile_picture) }}" class="w-12 h-12 rounded-full object-cover shadow-sm">
+                                                            <img src="{{ Storage::url($carrier->profile_picture) }}" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover ring-1 ring-blue-100 flex-shrink-0 shadow-2xs">
                                                         @else
-                                                            <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl shadow-sm">
+                                                            <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-black text-xs sm:text-base flex-shrink-0 shadow-2xs ring-1 ring-blue-100">
                                                                 {{ strtoupper(substr($carrier->name, 0, 1)) }}
                                                             </div>
                                                         @endif
-                                                        <div class="{{ $isRTL ? 'text-right' : 'text-left' }}">
-                                                            <div class="flex items-center gap-2">
-                                                                <h4 class="font-bold text-gray-900">{{ $carrier->name }}</h4>
-                                                                @if(isset($carrier->distance_km))
-                                                                    <span class="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-[11px] font-bold">
-                                                                        📍 {{ $carrier->distance_km < 15 ? __('Same Governorate') : round($carrier->distance_km) . ' ' . __('km away') }}
+                                                        <div class="min-w-0 flex-1 {{ $isRTL ? 'text-right' : 'text-left' }}">
+                                                            <div class="flex items-center gap-1 min-w-0">
+                                                                <h4 class="font-black text-slate-900 text-xs sm:text-base tracking-tight leading-snug group-hover:text-blue-600 transition-colors truncate">{{ $carrier->name }}</h4>
+                                                                @if($carrier->is_verified)
+                                                                    <span class="inline-flex items-center text-blue-600 flex-shrink-0 text-[10px]" title="{{ __('Verified') }}">
+                                                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 20 20" fill="currentColor">
+                                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                                        </svg>
                                                                     </span>
                                                                 @endif
                                                             </div>
-                                                            <div class="text-xs text-gray-500 mt-1 flex flex-wrap items-center gap-2">
-                                                                <span>{{ $carrier->governorate_label ?? __('Tunisia') }}</span>
-                                                                @if($carrier->phone)
-                                                                    <span>•</span>
-                                                                    <span class="font-mono text-gray-700" dir="ltr">{{ $carrier->phone }}</span>
+                                                            <div class="flex items-center gap-1 mt-0.5 flex-wrap">
+                                                                @if(isset($carrier->distance_km))
+                                                                    <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 text-[10px] sm:text-[11px] font-black border border-blue-200/60">
+                                                                        <span>📍</span>
+                                                                        <span>{{ $carrier->distance_km < 15 ? __('Same Governorate') : round($carrier->distance_km) . ' ' . __('km') }}</span>
+                                                                    </span>
+                                                                @endif
+                                                                @if($carrier->camion_capacity)
+                                                                    <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-950 text-[10px] sm:text-[11px] font-black border border-emerald-200/60">
+                                                                        <span>⚖️</span>
+                                                                        <span>{{ $carrier->camion_capacity < 100 ? $carrier->camion_capacity . ' ' . __('Tons') : $carrier->camion_capacity . ' ' . __('Kg') }}</span>
+                                                                    </span>
                                                                 @endif
                                                             </div>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end flex-wrap">
-                                                        {{-- Direct Phone Call Button --}}
-                                                        @if($carrier->phone)
-                                                            <a href="tel:{{ $carrier->phone }}" class="px-2.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1 transition border border-emerald-200" title="{{ __('Call Transporter') }}">
-                                                                <span>📞</span>
-                                                                <span>{{ __('Call') }}</span>
-                                                            </a>
-                                                            
-                                                            @php
-                                                                $cPhoneClean = preg_replace('/[^0-9]/', '', (string)$carrier->phone);
-                                                                if (strlen($cPhoneClean) === 8) $cPhoneClean = '216' . $cPhoneClean;
-                                                                $cWaText = rawurlencode("سلام سي {$carrier->name}، عندي كورسة نقل زيت زيتون عبر منصة ZinToop. كلمني للتنسيق.");
-                                                            @endphp
-                                                            <a href="https://wa.me/{{ $cPhoneClean }}?text={{ $cWaText }}" target="_blank" class="px-2.5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold flex items-center gap-1 transition shadow-sm" title="WhatsApp">
-                                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.771.815 2.796.815 3.183 0 5.768-2.587 5.769-5.767.001-3.182-2.585-5.77-5.769-5.77zm3.377 8.219c-.144.405-.837.774-1.17.824-.312.045-.698.077-1.118-.057-.267-.085-.609-.204-1.053-.396-1.859-.806-3.076-2.695-3.169-2.819-.093-.124-.755-1.004-.755-1.916s.478-1.359.648-1.545c.17-.186.371-.233.494-.233.124 0 .248.001.356.006.114.005.267-.043.417.319.155.371.528 1.285.574 1.378.046.093.077.202.015.326-.062.124-.093.202-.186.31-.093.109-.196.243-.28.326-.093.093-.191.196-.082.382.109.186.483.797 1.036 1.29 1.135.708 1.488.928 1.7.99.144.041.289.02.392-.041.134-.082.573-.667.727-.895.155-.227.309-.191.52-.113.211.077 1.336.63 1.564.743.227.114.378.17.433.267.055.097.055.563-.089.968z"/></svg>
-                                                                <span>WhatsApp</span>
-                                                            </a>
-                                                        @endif
-
-                                                        {{-- Assign & Summon Button --}}
+                                                    <div class="flex-shrink-0">
                                                         <button @click="assignTransporter({{ $carrier->id }})"
                                                                 :disabled="assigningCarrier === {{ $carrier->id }}"
-                                                                class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5 whitespace-nowrap">
-                                                            <span x-show="assigningCarrier !== {{ $carrier->id }}">{{ __('Assign & Summon') }}</span>
-                                                            <svg x-show="assigningCarrier === {{ $carrier->id }}" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                                class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-black shadow-2xs hover:shadow-xs transition-all whitespace-nowrap cursor-pointer">
+                                                            <span x-show="assigningCarrier !== {{ $carrier->id }}" class="inline-flex items-center gap-1">
+                                                                <span class="text-xs">✉️</span>
+                                                                <span>{{ __('Send Request') }}</span>
+                                                            </span>
+                                                            <svg x-show="assigningCarrier === {{ $carrier->id }}" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                                         </button>
                                                     </div>
                                                 </div>
                                             @endforeach
-                                        </div>
-                                    @else
-                                        <div class="text-center py-8 text-gray-500">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M8 16l-4-4 4-4"/></svg>
-                                            <p>{{ __('No transporters available currently.') }}</p>
-                                        </div>
-                                    @endif
+                                        @else
+                                            <div class="text-center py-8 text-gray-500">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M8 16l-4-4 4-4"/></svg>
+                                                <p>{{ __('No transporters found matching your criteria.') }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -583,6 +924,9 @@
     </div>
     
     @push('scripts')
+    @php
+        $firstDealOrder = (isset($pendingOrders) && $pendingOrders->isNotEmpty()) ? $pendingOrders->first() : (isset($order) ? $order : null);
+    @endphp
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('messageChat', () => ({
@@ -591,7 +935,12 @@
                 assigningCarrier: null,
                 showCounterOfferModal: false,
                 showTransporters: false,
-                selectedOrderId: {{ $order?->id ?? 'null' }},
+                selectedOrderId: {{ $firstDealOrder?->id ?? 'null' }},
+                selectedOrderQty: 0,
+                selectedOrderUnit: 'L',
+                dynamicCarriers: [],
+                loadingCarriers: false,
+                filterSuitableOnly: false,
                 counterOrderId: null,
                 counterPrice: 0,
                 counterQty: 1,
@@ -599,6 +948,90 @@
                 submittingCounter: false,
                 translations: {},
                 translatingId: null,
+                pickupGov: '{{ $firstDealOrder?->seller?->addresses?->first()?->governorate ?? "صفاقس" }}',
+                pickupDel: '{{ $firstDealOrder?->seller?->addresses?->first()?->delegation ?? "" }}',
+                pickupLat: null,
+                pickupLng: null,
+                dropoffGov: '{{ $firstDealOrder?->buyer?->addresses?->first()?->governorate ?? "تونس" }}',
+                dropoffDel: '{{ $firstDealOrder?->buyer?->addresses?->first()?->delegation ?? "" }}',
+                dropoffLat: null,
+                dropoffLng: null,
+                gettingGps: false,
+
+                useCurrentLocation(type) {
+                    if (!navigator.geolocation) {
+                        alert('{{ __("GPS is not supported on this browser.") }}');
+                        return;
+                    }
+                    this.gettingGps = true;
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        if (type === 'pickup') {
+                            this.pickupLat = lat;
+                            this.pickupLng = lng;
+                            window.Alpine.store('toast').showToast('{{ __("Pickup GPS coordinates acquired!") }}', 'success');
+                            this.fetchDealCarriers();
+                        } else {
+                            this.dropoffLat = lat;
+                            this.dropoffLng = lng;
+                            window.Alpine.store('toast').showToast('{{ __("Dropoff GPS coordinates acquired!") }}', 'success');
+                        }
+                        this.gettingGps = false;
+                    }, (err) => {
+                        this.gettingGps = false;
+                        alert('{{ __("Could not get GPS location. Please check browser permissions.") }}');
+                    }, { enableHighAccuracy: true });
+                },
+
+                async acceptTransportAssignment(loadId) {
+                    try {
+                        const res = await fetch(`/transport/loads/${loadId}/accept`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            window.Alpine.store('toast').showToast(data.message || '{{ __("Mission accepted successfully!") }}', 'success');
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            } else {
+                                setTimeout(() => window.location.reload(), 1500);
+                            }
+                        } else {
+                            window.Alpine.store('toast').showToast(data.message || '{{ __("Action failed.") }}', 'error');
+                        }
+                    } catch (e) {
+                        window.Alpine.store('toast').showToast('{{ __("Network error.") }}', 'error');
+                    }
+                },
+
+                async denyTransportAssignment(loadId) {
+                    if (!confirm('{{ __("Are you sure you want to decline this mission?") }}')) return;
+                    try {
+                        const res = await fetch(`/transport/loads/${loadId}/deny`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            window.Alpine.store('toast').showToast(data.message || '{{ __("Mission declined.") }}', 'info');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            window.Alpine.store('toast').showToast(data.message || '{{ __("Action failed.") }}', 'error');
+                        }
+                    } catch (e) {
+                        window.Alpine.store('toast').showToast('{{ __("Network error.") }}', 'error');
+                    }
+                },
 
                 async translateMessage(msgId, text) {
                     if (this.translations[msgId]) {
@@ -632,9 +1065,44 @@
                     }
                 },
 
-                openTransporters(orderId) {
+                openTransporters(orderId, qty = 0, unit = 'L', sellerGov = '') {
                     this.selectedOrderId = orderId;
+                    this.selectedOrderQty = qty;
+                    this.selectedOrderUnit = unit;
+                    if (sellerGov && (!this.pickupGov || this.pickupGov === 'صفاقس')) {
+                        this.pickupGov = sellerGov;
+                    }
                     this.showTransporters = true;
+                    this.fetchDealCarriers();
+                },
+
+                async fetchDealCarriers() {
+                    this.loadingCarriers = true;
+                    try {
+                        const params = new URLSearchParams();
+                        if (this.pickupLat && this.pickupLng) {
+                            params.append('lat', this.pickupLat);
+                            params.append('lng', this.pickupLng);
+                        } else if (this.pickupGov) {
+                            params.append('governorate', this.pickupGov);
+                        }
+                        if (this.selectedOrderQty > 0) {
+                            params.append('required_qty', this.selectedOrderQty);
+                            params.append('unit', this.selectedOrderUnit || 'l');
+                        }
+                        if (this.filterSuitableOnly) {
+                            params.append('only_suitable', '1');
+                        }
+                        const res = await fetch(`{{ route('carriers.search', ['locale' => app()->getLocale()]) }}?${params.toString()}`);
+                        const data = await res.json();
+                        if (data.success && data.carriers) {
+                            this.dynamicCarriers = data.carriers;
+                        }
+                    } catch (e) {
+                        console.error('Failed to fetch sorted carriers:', e);
+                    } finally {
+                        this.loadingCarriers = false;
+                    }
                 },
 
                 init() {
@@ -689,7 +1157,7 @@
                 },
 
                 async assignTransporter(carrierId) {
-                    const orderId = this.selectedOrderId || {{ $order?->id ?? 'null' }};
+                    const orderId = this.selectedOrderId || {{ $firstDealOrder?->id ?? 'null' }};
                     if (!orderId) {
                         alert('No order selected.');
                         return;
@@ -705,7 +1173,18 @@
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            body: JSON.stringify({ order_id: orderId, carrier_id: carrierId })
+                            body: JSON.stringify({
+                                order_id: orderId,
+                                carrier_id: carrierId,
+                                pickup_governorate: this.pickupGov || null,
+                                pickup_delegation: this.pickupDel || null,
+                                pickup_lat: this.pickupLat || null,
+                                pickup_lng: this.pickupLng || null,
+                                dropoff_governorate: this.dropoffGov || null,
+                                dropoff_delegation: this.dropoffDel || null,
+                                dropoff_lat: this.dropoffLat || null,
+                                dropoff_lng: this.dropoffLng || null,
+                            })
                         });
                         const resData = await response.json();
                         if (resData.success) {
@@ -725,6 +1204,7 @@
             Alpine.data('messageSender', () => ({
                 message: '',
                 sending: false,
+                locatingGps: false,
                 async send() {
                     if (!this.message.trim() || this.sending) return;
                     this.sending = true;
@@ -751,6 +1231,28 @@
                     } finally {
                         this.sending = false;
                     }
+                },
+                sendGpsLocation() {
+                    if (!navigator.geolocation) {
+                        alert('{{ __("GPS is not supported on this device.") }}');
+                        return;
+                    }
+                    this.locatingGps = true;
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            const lat = pos.coords.latitude.toFixed(6);
+                            const lng = pos.coords.longitude.toFixed(6);
+                            const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                            this.message = `📍 موقعي الدقيق عبر الـ GPS:\n${mapsUrl}\n(يمكنك النقر مباشرة لفتح نظام الملاحة خرائط جوجل 🧭)`;
+                            this.locatingGps = false;
+                            this.send();
+                        },
+                        (err) => {
+                            this.locatingGps = false;
+                            alert('{{ __("Unable to access GPS location.") }}');
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    );
                 }
             }));
 

@@ -21,6 +21,12 @@
 
             <form method="POST" action="{{ route('login') }}" class="space-y-4">
                 @csrf
+                @if(request('intended') || session('url.intended'))
+                    <input type="hidden" name="intended" value="{{ request('intended') ?: session('url.intended') }}">
+                @endif
+                @if(request('action') || session('intended_action'))
+                    <input type="hidden" name="action" value="{{ request('action') ?: session('intended_action') }}">
+                @endif
 
                 <!-- Email or Phone Number -->
                 <div>
@@ -110,7 +116,7 @@
                     <!-- Register Link -->
                     <div class="text-center">
                         <span class="text-gray-600">{{ __("Don't have an account?") }}</span>
-                        <a href="{{ route('register') }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
+                        <a href="{{ route('register', array_filter(['intended' => request('intended') ?: session('url.intended'), 'action' => request('action') ?: session('intended_action')])) }}" class="text-[#C8A356] hover:text-[#b08a3c] font-bold transition">
                             {{ __('Register now') }}
                         </a>
                     </div>

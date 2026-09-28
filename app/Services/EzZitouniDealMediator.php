@@ -71,25 +71,31 @@ class EzZitouniDealMediator
     public static function onDealConfirmed(Thread $thread, Order $order): void
     {
         $ar = "🎉 **تهانينا! تم تأكيد وقبول الصفقة بنجاح!**\n\n"
-            . "💡 **إرشادات الزيتوني لإتمام العملية بأمان:**\n"
-            . "1️⃣ **طريقة الخلاص:** اتفقا معاً على وسيلة الدفع الأنسب لكما (نقداً عند الاستلام للمبالغ البسيطة، أو تحويل بنكي / شيك مصادق عليه للمبالغ الكبرى مع التحقق من الحساب قبل التسليم).\n"
-            . "2️⃣ **النقل والتوصيل:**\n"
-            . "   • يمكنكما الضغط على **'استدعاء ناقل'** بالأعلى لاختيار ناقل موثوق من المنصة (مع ميزة التتبع المباشر ورمز الأمان PIN).\n"
-            . "   • أو يمكن لأحدكما التكفل بالنقل مباشرة (بسيارته/شاحنته الخاصة أو ناقل معرفة).";
+            . "💡 **إرشادات الزيتوني لإتمام العملية بأمان وبأدق تكلفة:**\n"
+            . "1️⃣ **طريقة الخلاص:** اتفقا معاً على وسيلة الدفع الأنسب لكما (نقداً عند الاستلام، أو تحويل بنكي / شيك مصادق عليه مع التحقق قبل التسليم).\n"
+            . "2️⃣ **تحديد عنوان الشحنة بدقة (GPS):**\n"
+            . "   • ⚠️ **تنبيه هام:** احرصا على تحديد **مكان استلام البضاعة ومكان تسليمها بدقة** (عبر زر الـ GPS المباشر أو اختيار المعتمدية بالتفصيل) عند استدعاء الناقل، لضمان حساب مسافة وتكلفة الكورسة الصحيحة بدينار بدون أي خطأ أو زيادة.\n"
+            . "3️⃣ **استدعاء ناقل موثق:**\n"
+            . "   • يمكنكما الضغط على زر **'استدعاء ناقل 🚚'** بالأعلى لتكليف ناقل معتمد من المنصة (مع متابعة مسار الـ GPS وكود أمان PIN).\n"
+            . "   • أو يمكن لأحدكما التكفل بالنقل مباشرة.";
 
         $fr = "🎉 **Félicitations ! L'offre a été confirmée et acceptée !**\n\n"
-            . "💡 **Conseils d'Ez-Zitouni pour finaliser votre transaction en toute sécurité :**\n"
-            . "1️⃣ **Règlement :** Convenez ensemble du moyen de paiement (Espèces à la livraison pour les petits montants, ou Virement bancaire / Chèque certifié pour les montants importants avec vérification avant livraison).\n"
-            . "2️⃣ **Transport :**\n"
-            . "   • Vous pouvez cliquer sur **'Appeler un transporteur'** ci-dessus pour choisir un transporteur de la plateforme (avec suivi GPS et code PIN sécurisé).\n"
-            . "   • Ou l'un de vous peut assurer lui-même le transport (véhicule personnel ou transporteur de votre choix).";
+            . "💡 **Conseils d'Ez-Zitouni pour finaliser votre transaction en toute sécurité et au juste prix :**\n"
+            . "1️⃣ **Règlement :** Convenez ensemble du moyen de paiement (Espèces à la livraison, ou Virement bancaire / Chèque certifié avec vérification avant livraison).\n"
+            . "2️⃣ **Précision des adresses (GPS) :**\n"
+            . "   • ⚠️ **Important :** Veillez à renseigner **l'adresse exacte de chargement et de livraison** (via le bouton GPS ou en sélectionnant la délégation précise) lors de l'appel du transporteur, afin de garantir un calcul juste et précis de la distance et du tarif de la course.\n"
+            . "3️⃣ **Transport sécurisé :**\n"
+            . "   • Cliquez sur **'Appeler un transporteur 🚚'** ci-dessus pour choisir un transporteur vérifié de la plateforme (avec suivi GPS en direct et code PIN).\n"
+            . "   • Ou vous pouvez assurer le transport directement par vos propres moyens.";
 
         $en = "🎉 **Congratulations! The deal has been confirmed and accepted!**\n\n"
-            . "💡 **Ez-Zitouni's safety tips to complete your transaction:**\n"
-            . "1️⃣ **Payment:** Agree between yourselves on the best payment method (Cash on delivery for small amounts, or Bank transfer / Certified check for large commercial amounts with verification before release).\n"
-            . "2️⃣ **Transport & Logistics:**\n"
-            . "   • Click **'Summon Transporter'** above to assign a verified platform carrier (with live GPS tracking and secure PIN verification).\n"
-            . "   • Or arrange transportation directly between yourselves (own vehicle or preferred private transporter).";
+            . "💡 **Ez-Zitouni's safety & cost-accuracy guide:**\n"
+            . "1️⃣ **Payment:** Agree on your payment method (Cash on delivery, or Bank transfer / Certified check with verification before dispatch).\n"
+            . "2️⃣ **Exact Locations (GPS):**\n"
+            . "   • ⚠️ **Notice:** Make sure to specify the **exact pickup and dropoff locations** (using the live GPS button or selecting the exact delegation) when assigning a carrier, ensuring 100% fair and accurate distance & price calculation.\n"
+            . "3️⃣ **Summon Transporter:**\n"
+            . "   • Click **'Summon Transporter 🚚'** above to assign a verified platform carrier (with live GPS tracking and secure delivery PIN).\n"
+            . "   • Or arrange transportation directly between yourselves.";
 
         self::postMessage($thread, $ar, $fr, $en);
     }
@@ -111,9 +117,30 @@ class EzZitouniDealMediator
      */
     public static function onTransporterSummoned(Thread $thread, Load $load, string $carrierName, string $pinCode, float $estimatedCost): void
     {
-        $ar = "🚚 **تم استدعاء الناقل ({$carrierName}) بنجاح!**\nكلفة النقل التقديرية: **~{$estimatedCost} د.ت**.\n\n🔐 **رمز تأكيد الاستلام السري (PIN):** `{$pinCode}`\n⚠️ **تنبيه هام للمشتري:** هذا الرمز هو ضمانك، لا تسلمه للناقل إلا بعد وصول الشحنة وفحصها والتأكد من سلامتها.";
-        $fr = "🚚 **Le transporteur ({$carrierName}) a été assigné avec succès !**\nCoût estimé du transport : **~{$estimatedCost} TND**.\n\n🔐 **Code PIN de livraison sécurisé :** `{$pinCode}`\n⚠️ **Rappel pour l'acheteur :** Ce code est votre garantie, ne le communiquez au transporteur qu'après réception et vérification de la marchandise.";
-        $en = "🚚 **Transporter ({$carrierName}) assigned successfully!**\nEstimated transport cost: **~{$estimatedCost} TND**.\n\n🔐 **Secure Delivery PIN Code:** `{$pinCode}`\n⚠️ **Notice for Buyer:** This code is your delivery proof. Do not share it with the carrier until the shipment is received and inspected.";
+        $pickup = $load->pickup_label ?? ($load->pickup?->governorate ?? 'تونس');
+        $dropoff = $load->dropoff_label ?? ($load->dropoffAddress?->governorate ?? 'صفاقس');
+        $dist = $load->meta['distance_km'] ?? null;
+        $distText = $dist ? " (المسافة: ~{$dist} كم)" : "";
+        $distTextFr = $dist ? " (Distance: ~{$dist} km)" : "";
+        $distTextEn = $dist ? " (Distance: ~{$dist} km)" : "";
+
+        $ar = "🚚 **تم استدعاء الناقل ({$carrierName}) بنجاح!**\n"
+            . "📍 **المسار:** من **{$pickup}** إلى **{$dropoff}**{$distText}\n"
+            . "💰 **كلفة النقل التقديرية:** **~{$estimatedCost} د.ت**\n\n"
+            . "🔐 **رمز تأكيد الاستلام السري (PIN):** `{$pinCode}`\n"
+            . "⚠️ **تنبيه أمان هام للمشتري:** هذا الرمز هو ضمانك، لا تسلمه للناقل إلا بعد وصول الشحنة وفحصها والتأكد من سلامتها.";
+
+        $fr = "🚚 **Le transporteur ({$carrierName}) a été assigné avec succès !**\n"
+            . "📍 **Trajet :** De **{$pickup}** à **{$dropoff}**{$distTextFr}\n"
+            . "💰 **Coût estimé du transport :** **~{$estimatedCost} TND**\n\n"
+            . "🔐 **Code PIN de livraison sécurisé :** `{$pinCode}`\n"
+            . "⚠️ **Rappel sécurité pour l'acheteur :** Ce code est votre garantie, ne le communiquez au transporteur qu'après réception et inspection de la marchandise.";
+
+        $en = "🚚 **Transporter ({$carrierName}) assigned successfully!**\n"
+            . "📍 **Route:** From **{$pickup}** to **{$dropoff}**{$distTextEn}\n"
+            . "💰 **Estimated transport cost:** **~{$estimatedCost} TND**\n\n"
+            . "🔐 **Secure Delivery PIN Code:** `{$pinCode}`\n"
+            . "⚠️ **Security Notice for Buyer:** This code is your delivery proof. Do not share it with the carrier until the shipment is received and inspected.";
 
         self::postMessage($thread, $ar, $fr, $en);
     }

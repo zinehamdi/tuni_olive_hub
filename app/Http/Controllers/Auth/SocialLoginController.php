@@ -15,6 +15,12 @@ class SocialLoginController extends Controller
         if ($request->has('mobile_app')) {
             session(['mobile_app' => true]);
         }
+        if ($request->filled('intended')) {
+            session(['url.intended' => $request->query('intended')]);
+        }
+        if ($request->filled('action')) {
+            session(['intended_action' => $request->query('action')]);
+        }
         return Socialite::driver('facebook')->redirect();
     }
 
@@ -22,6 +28,12 @@ class SocialLoginController extends Controller
     {
         if ($request->has('mobile_app')) {
             session(['mobile_app' => true]);
+        }
+        if ($request->filled('intended')) {
+            session(['url.intended' => $request->query('intended')]);
+        }
+        if ($request->filled('action')) {
+            session(['intended_action' => $request->query('action')]);
         }
         if (empty(config('services.google.client_id'))) {
             return redirect('/register')->with('info', __('تسجيل الدخول عبر Google بيتطلب إعداد المعرف في ملف البيئة. يرجى التسجيل بالبريد الإلكتروني حالياً.'));
@@ -116,7 +128,13 @@ class SocialLoginController extends Controller
 
         // Redirect handled by EnsureOnboardingIsComplete middleware automatically
         // but we can be explicit if we want:
-        $intended = '/dashboard';
+        $intended = session('url.intended') ?: '/dashboard';
+        $action = session('intended_action');
+        if ($intended && $action && !str_contains($intended, 'action=')) {
+            $sep = str_contains($intended, '?') ? '&' : '?';
+            $intended .= $sep . 'action=' . urlencode($action);
+        }
+
         if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
             $intended = route('onboarding.complete');
         }
@@ -190,7 +208,13 @@ class SocialLoginController extends Controller
 
         Auth::login($user, true);
 
-        $intended = '/dashboard';
+        $intended = session('url.intended') ?: '/dashboard';
+        $action = session('intended_action');
+        if ($intended && $action && !str_contains($intended, 'action=')) {
+            $sep = str_contains($intended, '?') ? '&' : '?';
+            $intended .= $sep . 'action=' . urlencode($action);
+        }
+
         if (empty($user->phone) || empty($user->role) || $user->role === 'consumer') {
             $intended = route('onboarding.complete');
         }

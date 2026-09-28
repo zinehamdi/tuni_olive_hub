@@ -73,6 +73,7 @@ class Load extends Model
 
     public function owner(){ return $this->belongsTo(User::class,'owner_id'); }
     public function pickup(){ return $this->belongsTo(Address::class,'pickup_addr_id'); }
+    public function dropoff(){ return $this->belongsTo(Address::class,'dropoff_addr_id'); }
     public function pickupAddress(){ return $this->belongsTo(Address::class,'pickup_addr_id'); }
     public function dropoffAddress(){ return $this->belongsTo(Address::class,'dropoff_addr_id'); }
     public function offers(){ return $this->hasMany(CarrierOffer::class); }
@@ -114,5 +115,53 @@ class Load extends Model
             ->whereNull('delivered_at')
             ->latest()
             ->first();
+    }
+
+    public function getPickupLatAttribute(): float
+    {
+        $addr = $this->relationLoaded('pickupAddress') ? $this->getRelation('pickupAddress') : $this->pickupAddress()->first();
+        if ($addr && $addr->lat) return (float) $addr->lat;
+        $coords = \App\Services\TransportPricingService::resolveCoordinates($addr?->governorate ?? 'Sfax');
+        return $coords['lat'];
+    }
+
+    public function getPickupLngAttribute(): float
+    {
+        $addr = $this->relationLoaded('pickupAddress') ? $this->getRelation('pickupAddress') : $this->pickupAddress()->first();
+        if ($addr && $addr->lng) return (float) $addr->lng;
+        $coords = \App\Services\TransportPricingService::resolveCoordinates($addr?->governorate ?? 'Sfax');
+        return $coords['lng'];
+    }
+
+    public function getDropoffLatAttribute(): float
+    {
+        $addr = $this->relationLoaded('dropoffAddress') ? $this->getRelation('dropoffAddress') : $this->dropoffAddress()->first();
+        if ($addr && $addr->lat) return (float) $addr->lat;
+        $coords = \App\Services\TransportPricingService::resolveCoordinates($addr?->governorate ?? 'Tunis');
+        return $coords['lat'];
+    }
+
+    public function getDropoffLngAttribute(): float
+    {
+        $addr = $this->relationLoaded('dropoffAddress') ? $this->getRelation('dropoffAddress') : $this->dropoffAddress()->first();
+        if ($addr && $addr->lng) return (float) $addr->lng;
+        $coords = \App\Services\TransportPricingService::resolveCoordinates($addr?->governorate ?? 'Tunis');
+        return $coords['lng'];
+    }
+
+    public function getPickupLabelAttribute(): string
+    {
+        $addr = $this->relationLoaded('pickupAddress') ? $this->getRelation('pickupAddress') : $this->pickupAddress()->first();
+        if (!$addr) return __('Pickup Location');
+        $parts = array_filter([$addr->governorate, $addr->delegation, $addr->label]);
+        return implode(' - ', $parts) ?: ($addr->governorate ?? __('Pickup Location'));
+    }
+
+    public function getDropoffLabelAttribute(): string
+    {
+        $addr = $this->relationLoaded('dropoffAddress') ? $this->getRelation('dropoffAddress') : $this->dropoffAddress()->first();
+        if (!$addr) return __('Dropoff Location');
+        $parts = array_filter([$addr->governorate, $addr->delegation, $addr->label]);
+        return implode(' - ', $parts) ?: ($addr->governorate ?? __('Dropoff Location'));
     }
 }

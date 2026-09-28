@@ -44,6 +44,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         return response()->json(['success' => true, 'data' => $articles]);
     });
     Route::post('chat', [\App\Http\Controllers\ChatbotController::class, 'chat']);
+    Route::get('carriers/search', [\App\Http\Controllers\LoadController::class, 'searchCarriers']);
 
 
 

@@ -33,6 +33,12 @@
             <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 <input type="hidden" name="role" value="normal">
+                @if(request('intended') || session('url.intended'))
+                    <input type="hidden" name="intended" value="{{ request('intended') ?: session('url.intended') }}">
+                @endif
+                @if(request('action') || session('intended_action'))
+                    <input type="hidden" name="action" value="{{ request('action') ?: session('intended_action') }}">
+                @endif
                 
                 <!-- Personal Information Section -->
                 <div>

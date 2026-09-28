@@ -34,6 +34,7 @@ class User extends Authenticatable
         'show_address',
         'interest',
         'lab_analyses',
+        'is_verified',
     ];
 
     /**
@@ -53,6 +54,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_verified' => 'boolean',
         'cover_photos' => 'array',
         'show_contact_info' => 'boolean',
         'show_address' => 'boolean',

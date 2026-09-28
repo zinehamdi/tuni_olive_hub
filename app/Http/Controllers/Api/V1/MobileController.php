@@ -33,8 +33,8 @@ class MobileController extends ApiController
             if (!$ld) continue;
             $loads[] = [
                 'id' => $ld->id,
-                'pickup' => [ 'lat' => $ld->pickup_lat, 'lng' => $ld->pickup_lng, 'address' => $ld->pickup_address ],
-                'dropoff' => [ 'lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_address ],
+                'pickup' => [ 'lat' => $ld->pickup_lat, 'lng' => $ld->pickup_lng, 'address' => $ld->pickup_label ],
+                'dropoff' => [ 'lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_label ],
                 'qty' => (float) $ld->qty,
                 'unit' => $ld->unit,
                 'type' => $ld->order?->listing?->product?->type ?? 'olive',
@@ -76,8 +76,8 @@ class MobileController extends ApiController
             if (!$ld) continue;
             $loads[] = [
                 'id'      => $ld->id,
-                'pickup'  => ['lat' => $ld->pickup_lat,  'lng' => $ld->pickup_lng,  'address' => $ld->pickup_address],
-                'dropoff' => ['lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_address],
+                'pickup'  => ['lat' => $ld->pickup_lat,  'lng' => $ld->pickup_lng,  'address' => $ld->pickup_label],
+                'dropoff' => ['lat' => $ld->dropoff_lat, 'lng' => $ld->dropoff_lng, 'address' => $ld->dropoff_label],
                 'qty'     => (float) $ld->qty,
                 'unit'    => $ld->unit,
                 'kind'    => $ld->order?->listing?->product?->type ?? 'olive',

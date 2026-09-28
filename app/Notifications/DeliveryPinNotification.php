@@ -17,13 +17,27 @@ class DeliveryPinNotification extends Notification
 
     public Load $load;
     public string $pinCode;
-    public ?User $carrier;
+    public ?string $tripCode;
 
-    public function __construct(Load $load, string $pinCode, ?User $carrier = null)
+    public function __construct(Load $load, string $pinCode, ?User $carrier = null, ?string $tripCode = null)
     {
         $this->load = $load;
         $this->pinCode = $pinCode;
         $this->carrier = $carrier;
+        $this->tripCode = $tripCode;
+    }
+
+    protected function resolveTrackUrl(string $locale): string
+    {
+        $token = $this->tripCode;
+        if (!$token) {
+            $trip = \App\Models\Trip::whereJsonContains('load_ids', (int)$this->load->id)
+                ->orWhereJsonContains('load_ids', (string)$this->load->id)
+                ->latest('id')->first();
+            $token = $trip?->sr_code ?? (string)$this->load->id;
+        }
+
+        return route('trip.publicTrack', ['locale' => $locale, 'token' => $token]);
     }
 
     public function via($notifiable): array
@@ -37,6 +51,7 @@ class DeliveryPinNotification extends Notification
         $carrierPhone = $this->carrier ? ($this->carrier->phone ?? __('Not provided')) : '';
 
         $locale = $notifiable->locale ?? app()->getLocale() ?: 'ar';
+        $trackUrl = $this->resolveTrackUrl($locale);
 
         if ($locale === 'fr') {
             return (new MailMessage)
@@ -46,7 +61,7 @@ class DeliveryPinNotification extends Notification
                 ->line("Voici votre code secret de confirmation de livraison :")
                 ->line("👉 **CODE PIN : {$this->pinCode}**")
                 ->line("⚠️ **Consigne de sécurité :** Ne donnez ce code au transporteur qu'après avoir reçu et vérifié votre marchandise.")
-                ->action("Suivre la livraison en direct", route('mobile.trip', ['locale' => $locale, 'id' => $this->load->id]))
+                ->action("Suivre la livraison en direct", $trackUrl)
                 ->salutation("L'équipe ZinToop");
         }
 
@@ -58,7 +73,7 @@ class DeliveryPinNotification extends Notification
                 ->line("Here is your secret delivery confirmation PIN code:")
                 ->line("👉 **PIN CODE: {$this->pinCode}**")
                 ->line("⚠️ **Safety Notice:** Do not give this PIN to the carrier until your shipment arrives and is inspected.")
-                ->action("Live Track Delivery", route('mobile.trip', ['locale' => $locale, 'id' => $this->load->id]))
+                ->action("Live Track Delivery", $trackUrl)
                 ->salutation("ZinToop Team");
         }
 
@@ -70,13 +85,15 @@ class DeliveryPinNotification extends Notification
             ->line("إليك رمز التأكيد السري الخاص باستلام الشحنة:")
             ->line("👉 **رمز الاستلام (PIN): {$this->pinCode}**")
             ->line("⚠️ **تنبيه أمان هام:** احتفظ بهذا الرمز ولا تسلمه للناقل إلا عند وصول الشحنة وفحصها والتأكد من سلامتها.")
-            ->action("تتبع مسار الشحنة مباشرة", route('mobile.trip', ['locale' => $locale, 'id' => $this->load->id]))
+            ->action("تتبع مسار الشحنة مباشرة", $trackUrl)
             ->salutation("فريق منصة الزين (ZinToop)");
     }
 
     public function toArray($notifiable): array
     {
         $locale = $notifiable->locale ?? app()->getLocale() ?: 'ar';
+        $trackUrl = $this->resolveTrackUrl($locale);
+
         return [
             'title' => __('Delivery PIN: :pin', ['pin' => $this->pinCode]),
             'message' => __('Carrier :name was assigned to your order. Delivery PIN: :pin', ['name' => $this->carrier?->name ?? __('Carrier'), 'pin' => $this->pinCode]),
@@ -86,7 +103,7 @@ class DeliveryPinNotification extends Notification
             'carrier_name' => $this->carrier?->name,
             'body' => __('Your delivery PIN code is:') . ' ' . $this->pinCode,
             'type' => 'delivery_pin',
-            'url' => route('mobile.trip', ['locale' => $locale, 'id' => $this->load->id])
+            'url' => $trackUrl
         ];
     }
 }

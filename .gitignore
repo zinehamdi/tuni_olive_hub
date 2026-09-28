@@ -32,3 +32,6 @@ _ide_helper_models.php
 
 /scratch
 /resources/views_backup/
+scratch_old_articles.json
+walkthrough.md
+scripts/__pycache__/

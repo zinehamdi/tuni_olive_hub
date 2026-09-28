@@ -26,8 +26,21 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->filled('intended')) {
+            $request->session()->put('url.intended', $request->query('intended'));
+        } elseif (!$request->session()->has('url.intended')) {
+            $prev = url()->previous();
+            if ($prev && !str_contains($prev, '/login') && !str_contains($prev, '/register') && !str_contains($prev, '/logout')) {
+                $request->session()->put('url.intended', $prev);
+            }
+        }
+
+        if ($request->filled('action')) {
+            $request->session()->put('intended_action', $request->query('action'));
+        }
+
         return view('auth.register');
     }
 
@@ -165,8 +178,35 @@ class RegisteredUserController extends Controller
             }
         }
 
+        // Notify platform admin when a new carrier joins
+        if ($user->role === 'carrier') {
+            try {
+                $admins = User::where('role', 'admin')->get();
+                if ($admins->isNotEmpty()) {
+                    \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\NewCarrierRegisteredNotification($user));
+                }
+            } catch (\Throwable $e) {
+                Log::error('Failed to notify admins of new carrier: ' . $e->getMessage());
+            }
+        }
+
         // Log the user in, and force remember me for non-admins to keep session open
         Auth::login($user, $user->role !== 'admin');
+
+        $intended = $request->input('intended') ?: $request->session()->get('url.intended');
+        $action = $request->input('action') ?: $request->session()->get('intended_action');
+
+        if ($intended && str_contains($intended, '/messages/unread-count')) {
+            $intended = null;
+        }
+
+        if ($intended) {
+            if ($action && !str_contains($intended, 'action=')) {
+                $sep = str_contains($intended, '?') ? '&' : '?';
+                $intended .= $sep . 'action=' . urlencode($action);
+            }
+            return redirect()->intended($intended)->with('success', __('Registration successful! Welcome to your dashboard.'));
+        }
 
         return redirect()->route('dashboard')->with('success', __('Registration successful! Welcome to your dashboard.'));
     }
