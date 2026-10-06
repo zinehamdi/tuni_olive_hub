@@ -409,7 +409,9 @@
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-for="n in notifications" :key="n.id">
                                         <a :href="
-                                                (n.data.type === 'transport_deal' && n.data.load_id)
+                                                (n.data.type === 'direct_transporter_request')
+                                                    ? '{{ route('dashboard') }}#assigned-tasks'
+                                                : (n.data.type === 'transport_deal' && n.data.load_id)
                                                     ? '/mobile/trip?id=' + n.data.load_id
                                                 : (n.data.type === 'message')
                                                     ? '/messages'
@@ -421,8 +423,8 @@
                                            :class="!n.read_at ? 'bg-green-100 hover:bg-green-200/60 font-bold {{ app()->getLocale() === "ar" ? "border-r-4 border-r-[#6A8F3B]" : "border-l-4 border-l-[#6A8F3B]" }}' : 'bg-white hover:bg-gray-50 {{ app()->getLocale() === "ar" ? "border-r-4 border-r-transparent" : "border-l-4 border-l-transparent" }}'"
                                            class="block px-4 py-3 transition border-b border-gray-50 last:border-0 relative group">
                                             <div class="flex gap-3">
-                                                <div :class="n.data.type === 'message' ? 'bg-blue-50' : (n.data.type === 'deal_request' ? 'bg-amber-50' : 'bg-emerald-50')" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
-                                                    <span x-text="n.data.type === 'message' ? '💬' : (n.data.type === 'deal_request' ? '🤝' : '🔔')"></span>
+                                                <div :class="n.data.type === 'direct_transporter_request' || n.data.type === 'transport_deal' ? 'bg-amber-100' : (n.data.type === 'message' ? 'bg-blue-50' : (n.data.type === 'deal_request' ? 'bg-amber-50' : 'bg-emerald-50'))" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                                                    <span x-text="n.data.type === 'direct_transporter_request' || n.data.type === 'transport_deal' ? '🚚' : (n.data.type === 'message' ? '💬' : (n.data.type === 'deal_request' ? '🤝' : '🔔'))"></span>
                                                 </div>
                                                 <div class="min-w-0">
                                                     <p class="text-xs text-gray-900 font-medium line-clamp-2" x-text="

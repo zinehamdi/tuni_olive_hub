@@ -90,21 +90,52 @@ class TransportPricingService
      */
     public static function getVehicleTier(float $qty, string $productType = 'oil'): array
     {
-        if ($productType === 'oil' && $qty > 12000) {
-            return array_merge(['tier_key' => 'tanker'], self::TIERS['tanker']);
-        }
+        $isOil = ($productType === 'oil');
 
         if ($qty <= 1000) {
-            return array_merge(['tier_key' => 'fourgonnette'], self::TIERS['fourgonnette']);
+            $tierKey = 'fourgonnette';
+            $tier = self::TIERS['fourgonnette'];
+            if ($isOil) {
+                $tier['name_ar'] = 'فورغونات / براميل حتى 1 طن (1000 لتر)';
+                $tier['name_fr'] = 'Fourgonnette / Fûts (jusqu\'à 1T)';
+                $tier['name_en'] = 'Van / Drums (Up to 1T)';
+            }
         } elseif ($qty <= 2500) {
-            return array_merge(['tier_key' => 'light_commercial'], self::TIERS['light_commercial']);
+            $tierKey = 'light_commercial';
+            $tier = self::TIERS['light_commercial'];
+            if ($isOil) {
+                $tier['name_ar'] = 'شاحنة خفيفة / إيسيزو صهريج صغير (1 إلى 2.5 طن)';
+                $tier['name_fr'] = 'Camionnette / Isuzu petite citerne (1T - 2.5T)';
+                $tier['name_en'] = 'Light Truck / Isuzu Mini-Cistern (1T - 2.5T)';
+            }
         } elseif ($qty <= 5000) {
-            return array_merge(['tier_key' => 'light_truck'], self::TIERS['light_truck']);
+            $tierKey = 'light_truck';
+            $tier = self::TIERS['light_truck'];
+            if ($isOil) {
+                $tier['name_ar'] = 'شاحنة متوسطة مع صهريج زيت (2.5 إلى 5 طن)';
+                $tier['name_fr'] = 'Camionnette moyenne avec citerne (2.5T - 5T)';
+                $tier['name_en'] = 'Medium Truck with Cistern (2.5T - 5T)';
+            }
         } elseif ($qty <= 12000) {
-            return array_merge(['tier_key' => 'heavy_truck'], self::TIERS['heavy_truck']);
+            $tierKey = 'heavy_truck';
+            $tier = self::TIERS['heavy_truck'];
+            if ($isOil) {
+                $tier['name_ar'] = 'شاحنة صهريج زيت (5 إلى 12 طن)';
+                $tier['name_fr'] = 'Camion citerne à huile (5T - 12T)';
+                $tier['name_en'] = 'Tanker Truck (5T - 12T)';
+            }
         } else {
-            return array_merge(['tier_key' => 'tanker'], self::TIERS['tanker']);
+            $tierKey = 'tanker';
+            $tier = self::TIERS['tanker'];
+            if (!$isOil) {
+                $tier['name_ar'] = 'شاحنة مقطورة ثقيلة لنقل الزيتون (> 12 طن)';
+                $tier['name_fr'] = 'Poids lourd avec remorque (> 12T)';
+                $tier['name_en'] = 'Heavy Olive Trailer Truck (> 12T)';
+                $tier['icon'] = '🚛';
+            }
         }
+
+        return array_merge(['tier_key' => $tierKey, 'product_type' => $productType], $tier);
     }
 
     /**

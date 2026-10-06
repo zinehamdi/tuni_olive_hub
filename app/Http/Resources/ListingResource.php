@@ -33,6 +33,20 @@ class ListingResource extends JsonResource
             'price' => [ 'unit' => 'TND', 'value' => $this->relationLoaded('product') && $this->product ? $this->product->price : null ],
             'stock' => $this->relationLoaded('product') && $this->product ? $this->product->stock : null,
             'min_order' => $this->min_order,
+            'governorate' => $this->governorate,
+            'delegation' => $this->delegation,
+            'location' => $this->location,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'address' => $this->whenLoaded('address', function () {
+                return $this->address ? [
+                    'id' => $this->address->id,
+                    'governorate' => $this->address->governorate,
+                    'delegation' => $this->address->delegation,
+                    'lat' => $this->address->lat ? (float)$this->address->lat : null,
+                    'lng' => $this->address->lng ? (float)$this->address->lng : null,
+                ] : null;
+            }),
             'status' => $this->status,
             'payment_methods' => $this->payment_methods,
             'delivery_options' => $this->delivery_options,

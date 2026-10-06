@@ -31,7 +31,8 @@
         'قبلي' => ['en' => 'Kebili', 'fr' => 'Kébili', 'ar' => 'قبلي'],
     ];
     
-    $rawGov = optional($listing->seller->addresses->first())->governorate ?? 'تونس';
+    $listingAddress = $listing->address ?? $listing->seller?->addresses?->first();
+    $rawGov = $listingAddress?->governorate ?? 'تونس';
     $city = $govMap[$rawGov][$curLocale] ?? ($curLocale === 'ar' ? $rawGov : ($govMap[$rawGov]['en'] ?? 'Tunisia'));
     
     // Quality label
@@ -329,8 +330,8 @@
                             elseif($q === 'pomace') $qualityLabel = ' - ' . __('زيت فيتورة (Pomace)');
                             elseif($q) $qualityLabel = ' - ' . __($q); // This will map via ar.json / en.json / fr.json
 
-                            $cityLabel = $listing->seller->addresses->first() 
-                                ? ($isAr ? ' من ' : ($isFr ? ' de ' : ' from ')) . ($listing->seller->addresses->first()->governorate ?? '') 
+                            $cityLabel = $listingAddress 
+                                ? ($isAr ? ' من ' : ($isFr ? ' de ' : ' from ')) . ($listingAddress->governorate ?? '') 
                                 : '';
                             
                             $organicLabel = '';
@@ -459,8 +460,8 @@
                         </a>
                     </div>
                         
-                        @if($listing->seller->addresses->first())
-                            @php $address = $listing->seller->addresses->first(); @endphp
+                        @if($listingAddress)
+                            @php $address = $listingAddress; @endphp
                             <div class="mt-4 flex items-start gap-3 transition-all duration-300 rounded-lg p-2 -m-2" data-seller-location>
                                 <svg class="w-5 h-5 text-[#C8A356] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -820,7 +821,7 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                             </div>
                             
                             <!-- Map Modal -->
-                            @if($listing->seller->addresses->first() && $listing->seller->addresses->first()->lat && $listing->seller->addresses->first()->lng)
+                            @if($listingAddress && $listingAddress->lat && $listingAddress->lng)
                             <div x-show="showMapModal" 
                                  @click.self="if(map) { map.remove(); map = null; } showMapModal = false;"
                                  class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[9999] p-4"
@@ -848,9 +849,9 @@ $__arr2 = array_map(fn($k)=> $__dmap[trim($k)] ?? trim($k), $__arr2);
                                                 {{ $listing->seller->role === 'admin' ? __('Seller') : ($listing->seller->display_name ?? $listing->seller->name) }}
                                             </div>
                                             <div class="text-sm text-gray-600">
-                                                {{ $listing->seller->addresses->first()->governorate ?? '' }}
-                                                @if($listing->seller->addresses->first()->delegation)
-                                                    - {{ $listing->seller->addresses->first()->delegation }}
+                                                {{ $listingAddress->governorate ?? '' }}
+                                                @if($listingAddress->delegation)
+                                                    - {{ $listingAddress->delegation }}
                                                 @endif
                                             </div>
                                         </div>
@@ -1119,14 +1120,14 @@ document.addEventListener('alpine:init', () => {
         },
         
         openLocationInfo() {
-            @if($listing->seller->addresses->first() && $listing->seller->addresses->first()->lat && $listing->seller->addresses->first()->lng)
+            @if($listingAddress && $listingAddress->lat && $listingAddress->lng)
                 // Has GPS coordinates - open map
                 this.openMap();
             @else
                 // No GPS coordinates - show address info alert
-                @if($listing->seller->addresses->first())
-                    const address = '{{ $listing->seller->addresses->first()->governorate ?? '' }}' + 
-                                  ('{!! $listing->seller->addresses->first()->delegation ?? '' !!}' ? ', {!! $listing->seller->addresses->first()->delegation ?? '' !!}' : '');
+                @if($listingAddress)
+                    const address = '{{ $listingAddress->governorate ?? '' }}' + 
+                                  ('{!! $listingAddress->delegation ?? '' !!}' ? ', {!! $listingAddress->delegation ?? '' !!}' : '');
                     alert('{{ __('Location') }}:\n' + address + '\n\n{{ __('GPS coordinates not available for this location.') }}');
                 @else
                     alert('{{ __('No location information available for this seller.') }}');
@@ -1138,10 +1139,10 @@ document.addEventListener('alpine:init', () => {
             this.showMapModal = true;
             setTimeout(() => {
                 if (!this.map) {
-                    @if($listing->seller->addresses->first() && $listing->seller->addresses->first()->lat && $listing->seller->addresses->first()->lng)
+                    @if($listingAddress && $listingAddress->lat && $listingAddress->lng)
                         try {
-                            const lat = {{ $listing->seller->addresses->first()->lat }};
-                            const lng = {{ $listing->seller->addresses->first()->lng }};
+                            const lat = {{ $listingAddress->lat }};
+                            const lng = {{ $listingAddress->lng }};
                             
                             // Initialize map
                             this.map = L.map('map').setView([lat, lng], 13);
@@ -1154,7 +1155,7 @@ document.addEventListener('alpine:init', () => {
                             
                             // Add seller marker (red)
                             L.marker([lat, lng]).addTo(this.map)
-                                .bindPopup('<b>{{ addslashes($listing->seller->name) }}</b><br>{{ addslashes($listing->seller->addresses->first()->governorate ?? '') }}')
+                                .bindPopup('<b>{{ addslashes($listing->seller->name) }}</b><br>{{ addslashes($listingAddress->governorate ?? '') }}')
                                 .openPopup();
                             
                             // Add user marker (blue) if location available

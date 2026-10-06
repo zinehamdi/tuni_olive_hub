@@ -257,7 +257,6 @@ class AdminController extends Controller
         // Map legacy values to DB enum to avoid truncation
         $statusMap = [
             'inactive' => 'paused',
-            'pending' => 'draft',
             'expired' => 'out',
         ];
         $data['status'] = $statusMap[$data['status']] ?? $data['status'];

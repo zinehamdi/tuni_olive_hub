@@ -147,6 +147,55 @@
             }
             this.saving = false;
         },
+        async acceptTransporterRequest(id) {
+            if (!confirm(@js(__('Accept this direct transport mission?')))) return;
+            this.saving = true;
+            try {
+                const response = await fetch(`/transporter-requests/${id}/accept`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                const data = await response.json();
+                if (data.success && data.chat_url) {
+                    window.location.href = data.chat_url;
+                } else if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || @js(__('Failed to accept request.')));
+                    location.reload();
+                }
+            } catch (error) {
+                alert(@js(__('Network error.')));
+            }
+            this.saving = false;
+        },
+        async declineTransporterRequest(id) {
+            if (!confirm(@js(__('Decline this transport request?')))) return;
+            this.saving = true;
+            try {
+                const response = await fetch(`/transporter-requests/${id}/decline`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || @js(__('Failed to decline request.')));
+                }
+            } catch (error) {
+                alert(@js(__('Network error.')));
+            }
+            this.saving = false;
+        },
         async finalizeTrip(tripId, pin) {
             if (!pin) return;
             this.saving = true;
@@ -1274,8 +1323,74 @@
             @endif
             @endif
 
-            <!-- Carrier Tasks -->
             @if(Auth::user()->role === 'carrier')
+            @if(isset($incomingTransporterRequests) && $incomingTransporterRequests->count() > 0)
+            <!-- Urgent Direct Incoming Transporter Requests -->
+            <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-2xl shadow-xl overflow-hidden text-white p-1 mb-6">
+                <div class="bg-white rounded-[14px] p-4 sm:p-5 text-gray-900">
+                    <div class="flex items-center justify-between pb-3 border-b border-amber-100">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl font-bold flex-shrink-0">🚨</span>
+                            <div>
+                                <h3 class="font-black text-gray-900 text-base sm:text-lg flex items-center gap-2">
+                                    {{ __('Direct Transport Requests') }}
+                                    <span class="px-2.5 py-0.5 bg-red-500 text-white rounded-full text-xs font-bold animate-pulse">{{ $incomingTransporterRequests->count() }} {{ __('New') }}</span>
+                                </h3>
+                                <p class="text-xs text-gray-500 font-medium">{{ __('Urgent requests sent directly to you from clients on the marketplace.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 space-y-3">
+                        @foreach($incomingTransporterRequests as $req)
+                        <div class="border-2 border-amber-200 bg-amber-50/50 rounded-2xl p-4 hover:border-amber-400 transition shadow-sm">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div class="flex-1 space-y-2">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-2.5 py-1 bg-amber-200 text-amber-900 rounded-lg text-xs font-bold font-mono">#REQ-{{ $req->id }}</span>
+                                        <span class="text-sm font-black text-gray-900">👤 {{ $req->user?->name ?? __('Client') }}</span>
+                                        @if($req->user?->phone)
+                                            <span class="text-xs font-mono text-gray-600 bg-white px-2 py-0.5 rounded border border-gray-200" dir="ltr">📞 {{ $req->user->phone }}</span>
+                                        @endif
+                                        <span class="text-[11px] text-amber-800 font-medium bg-amber-100 px-2 py-0.5 rounded-full">⏳ {{ $req->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                        <div class="bg-white p-2.5 rounded-xl border border-amber-100">
+                                            <span class="text-[10px] font-bold text-gray-400 block mb-0.5 uppercase">📍 {{ __('Route') }}</span>
+                                            <div class="font-bold text-gray-800">🟢 {{ $req->pickup_governorate }} {{ $req->pickup_delegation ? "({$req->pickup_delegation})" : '' }}</div>
+                                            <div class="font-bold text-gray-800 mt-0.5">🚩 {{ $req->dropoff_governorate }} {{ $req->dropoff_delegation ? "({$req->dropoff_delegation})" : '' }}</div>
+                                            <div class="text-[11px] font-bold text-blue-600 mt-1">~{{ $req->distance_km }} كم</div>
+                                        </div>
+                                        <div class="bg-white p-2.5 rounded-xl border border-amber-100 flex flex-col justify-between">
+                                            <div>
+                                                <span class="text-[10px] font-bold text-gray-400 block mb-0.5 uppercase">📦 {{ __('Cargo & Estimated Fair Price') }}</span>
+                                                <div class="font-black text-gray-900 text-sm">{{ $req->weight }} {{ $req->unit === 'kg' ? 'كغ' : 'طن' }}</div>
+                                            </div>
+                                            <div class="font-black text-emerald-700 text-base mt-1">
+                                                ~{{ round((float)$req->estimated_cost) }} <span class="text-xs font-normal">د.ت</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-row md:flex-col gap-2 w-full md:w-auto">
+                                    <button @click="acceptTransporterRequest({{ $req->id }})" :disabled="saving" class="flex-1 md:flex-none px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
+                                        <span>✅</span>
+                                        <span>{{ __('Accept Mission') }}</span>
+                                    </button>
+                                    <button @click="declineTransporterRequest({{ $req->id }})" :disabled="saving" class="px-4 py-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50">
+                                        <span>❌</span>
+                                        <span>{{ __('Decline') }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Carrier Tasks -->
             <div id="assigned-tasks" class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
                     <h2 class="font-bold text-white flex items-center gap-2"><span>🚚</span>{{ __('Transport Tasks') }}</h2>

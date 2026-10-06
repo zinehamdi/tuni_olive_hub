@@ -43,10 +43,18 @@ class ProfileController extends Controller
         $pendingListings = $user->listings()->where('status', 'pending')->count();
         $profileCompletion = $this->calculateProfileCompletion($user);
         $assignedLoads = $user->role === 'carrier' ? $user->assignedLoads()->latest()->paginate(10) : collect();
+        $incomingTransporterRequests = $user->role === 'carrier'
+            ? \App\Models\TransporterRequest::where('carrier_id', $user->id)
+                ->where('status', \App\Models\TransporterRequest::STATUS_PENDING)
+                ->where('created_at', '>=', now()->subHours(24))
+                ->with('user')
+                ->latest()
+                ->get()
+            : collect();
         $tanks = in_array($user->role, ['farmer', 'mill']) ? $user->tanks()->latest()->get() : collect();
         $myStories = \App\Models\Story::where('user_id', $user->id)->where('status', 'active')->latest()->get();
 
-        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'tanks', 'myStories'));
+        return view('dashboard', compact('user','listings','activeListings','pendingListings','profileCompletion','coverUrl','assignedLoads', 'incomingTransporterRequests', 'tanks', 'myStories'));
     }
     public function viewPublicProfile(\App\Models\User $user)
     {

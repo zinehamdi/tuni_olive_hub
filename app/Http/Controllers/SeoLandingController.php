@@ -21,7 +21,7 @@ class SeoLandingController extends Controller
         $locale = app()->getLocale();
 
         // Fetch active listings suitable for bulk / wholesale sourcing
-        $query = Listing::with(['product', 'seller.addresses'])
+        $query = Listing::with(['product', 'address', 'seller.addresses'])
             ->where('status', 'active');
 
         // Optional filters
@@ -33,7 +33,10 @@ class SeoLandingController extends Controller
         }
         if ($request->filled('governorate')) {
             $gov = $request->governorate;
-            $query->whereHas('seller.addresses', fn($q) => $q->where('governorate', 'like', '%' . $gov . '%')->orWhere('delegation', 'like', '%' . $gov . '%'));
+            $query->where(function($q) use ($gov) {
+                $q->whereHas('address', fn($sq) => $sq->where('governorate', 'like', '%' . $gov . '%')->orWhere('delegation', 'like', '%' . $gov . '%'))
+                  ->orWhere(fn($sq2) => $sq2->whereNull('address_id')->whereHas('seller.addresses', fn($sq3) => $sq3->where('governorate', 'like', '%' . $gov . '%')->orWhere('delegation', 'like', '%' . $gov . '%')));
+            });
         }
 
         $listings = $query->latest('updated_at')->paginate(12)->withQueryString();

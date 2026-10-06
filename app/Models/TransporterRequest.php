@@ -15,6 +15,7 @@ class TransporterRequest extends Model
         'carrier_id',
         'weight',
         'unit',
+        'cargo_type',
         'pickup_governorate',
         'pickup_delegation',
         'pickup_lat',

@@ -3,7 +3,7 @@
 @section('content')
 @php
   $apiBase = url('/api/v1');
-  $address = $listing->seller->addresses->first();
+  $address = $listing->address ?? $listing->seller->addresses->first();
 @endphp
 <div dir="rtl" class="min-h-screen bg-[#F8F4EC] text-gray-900">
   <header class="sticky top-0 z-50 bg-white/90 border-b">

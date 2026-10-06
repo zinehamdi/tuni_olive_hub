@@ -217,36 +217,30 @@ class ListingController extends Controller
                 }
             }
 
-            // Create or update the seller's address if location data provided
-            if ($request->has('latitude') && $request->has('longitude')) {
-                $user = Auth::user();
-                $safeGov = $request->governorate ?: ($user->addresses()->first()?->governorate ?? 'صفاقس');
-                
-                // Check if user already has an address, otherwise create one
-                $address = $user->addresses()->first();
-                
-                if ($address) {
-                    // Update existing address
-                    $address->update([
-                        'lat' => $request->latitude,
-                        'lng' => $request->longitude,
-                        'governorate' => $safeGov,
-                        'delegation' => $request->delegation,
-                        'label' => $request->location_text ?? 'موقع المنتج',
-                    ]);
-                    Log::info('Address Updated:', ['address_id' => $address->id]);
-                } else {
-                    // Create new address
-                    $address = $user->addresses()->create([
-                        'lat' => $request->latitude,
-                        'lng' => $request->longitude,
-                        'governorate' => $safeGov,
-                        'delegation' => $request->delegation,
-                        'label' => $request->location_text ?? 'موقع المنتج',
-                    ]);
-                    Log::info('Address Created:', ['address_id' => $address->id]);
-                }
+            // Create a dedicated address record for this specific listing/orchard
+            $user = Auth::user();
+            $safeGov = $validated['governorate'] ?? ($request->governorate ?: 'صفاقس');
+            $addressLabel = $request->location_text 
+                ?: (($validated['sale_mode'] ?? null) === 'saniya' 
+                    ? ('سانية ' . ($validated['variety'] ?? 'زيتون')) 
+                    : ('موقع ' . ($validated['variety'] ?? 'المنتج')));
+
+            $address = $user->addresses()->create([
+                'governorate' => $safeGov,
+                'delegation' => $request->delegation,
+                'lat' => $request->latitude,
+                'lng' => $request->longitude,
+                'label' => $addressLabel,
+            ]);
+            Log::info('Listing Dedicated Address Created:', ['address_id' => $address->id, 'governorate' => $safeGov]);
+
+            // If user has no farm_location or personal location set on profile, set it as default
+            if (empty($user->farm_location)) {
+                $user->farm_location = $safeGov;
+                $user->save();
             }
+
+            $validated['address_id'] = $address->id;
 
             // Remove location fields from listing data (they're stored in addresses table)
             unset($validated['location_text'], $validated['latitude'], $validated['longitude'], 
@@ -449,7 +443,7 @@ class ListingController extends Controller
 
         // Load relationships
         // تحميل العلاقات
-        $listing->load(['product', 'seller.addresses']);
+        $listing->load(['product', 'address', 'seller.addresses']);
         
         return view('listings.show', compact('listing'));
     }
@@ -470,6 +464,7 @@ class ListingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $listing->load(['product', 'address', 'seller.addresses']);
         $products = Product::latest()->get(['id', 'variety', 'quality', 'price']);
         
         return view('listings.edit', compact('listing', 'products'));
@@ -559,27 +554,31 @@ class ListingController extends Controller
             
             $listing->update($listingData);
 
-        // Create or update the seller's address if location data provided
-        if ($request->has('latitude') && $request->has('longitude') && $request->latitude && $request->longitude) {
+        // Create or update the specific address for this listing
+        if ($request->filled('governorate') || ($request->has('latitude') && $request->has('longitude') && $request->latitude && $request->longitude)) {
             $user = Auth::user();
-            $address = $user->addresses()->first();
-            
-            if ($address) {
-                $address->update([
+            $safeGov = $request->governorate ?: ($listing->address?->governorate ?? 'صفاقس');
+            $addressLabel = $request->location_text ?? ('موقع ' . ($validated['variety'] ?? 'المنتج'));
+
+            if ($listing->address_id && $listing->address) {
+                // Update this listing's dedicated address without touching seller's other addresses
+                $listing->address->update([
                     'lat' => $request->latitude,
                     'lng' => $request->longitude,
-                    'governorate' => $request->governorate,
+                    'governorate' => $safeGov,
                     'delegation' => $request->delegation,
-                    'label' => $request->location_text ?? 'موقع المنتج',
+                    'label' => $addressLabel,
                 ]);
             } else {
-                $user->addresses()->create([
+                // Listing didn't have an address yet, create one
+                $address = $user->addresses()->create([
                     'lat' => $request->latitude,
                     'lng' => $request->longitude,
-                    'governorate' => $request->governorate,
+                    'governorate' => $safeGov,
                     'delegation' => $request->delegation,
-                    'label' => $request->location_text ?? 'موقع المنتج',
+                    'label' => $addressLabel,
                 ]);
+                $listing->update(['address_id' => $address->id]);
             }
         }
 

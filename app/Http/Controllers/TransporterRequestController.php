@@ -22,6 +22,7 @@ class TransporterRequestController extends Controller
         $unit = strtolower((string) $request->input('unit', 'ton'));
         $pickupGov = (string) $request->input('pickup_governorate', 'صفاقس');
         $dropoffGov = (string) $request->input('dropoff_governorate', 'تونس');
+        $cargoType = (string) $request->input('cargo_type', 'oil');
 
         $pLat = $request->filled('pickup_lat') ? (float) $request->input('pickup_lat') : null;
         $pLng = $request->filled('pickup_lng') ? (float) $request->input('pickup_lng') : null;
@@ -39,7 +40,7 @@ class TransporterRequestController extends Controller
             $pCoords['lng'],
             $dCoords['lat'],
             $dCoords['lng'],
-            'oil'
+            $cargoType
         );
 
         return response()->json([
@@ -67,6 +68,7 @@ class TransporterRequestController extends Controller
             'carrier_id' => 'required|exists:users,id',
             'weight' => 'required|numeric|min:0.1',
             'unit' => 'nullable|string|in:ton,kg,l',
+            'cargo_type' => 'nullable|string|in:oil,olive',
             'pickup_governorate' => 'required|string',
             'pickup_delegation' => 'nullable|string',
             'dropoff_governorate' => 'required|string',
@@ -131,6 +133,7 @@ class TransporterRequestController extends Controller
             isset($validated['dropoff_lng']) ? (float)$validated['dropoff_lng'] : null
         );
 
+        $cargoType = $validated['cargo_type'] ?? 'oil';
         $qtyInKg = ($unit === 'ton') ? ($weight * 1000.0) : $weight;
         $estimate = TransportPricingService::estimateCost(
             $qtyInKg,
@@ -138,7 +141,7 @@ class TransporterRequestController extends Controller
             $pCoords['lng'],
             $dCoords['lat'],
             $dCoords['lng'],
-            'oil'
+            $cargoType
         );
 
         $transporterRequest = TransporterRequest::create([
@@ -146,6 +149,7 @@ class TransporterRequestController extends Controller
             'carrier_id' => $carrier->id,
             'weight' => $weight,
             'unit' => $unit,
+            'cargo_type' => $cargoType,
             'pickup_governorate' => $validated['pickup_governorate'],
             'pickup_delegation' => $validated['pickup_delegation'] ?? null,
             'pickup_lat' => $pCoords['lat'],
@@ -160,6 +164,32 @@ class TransporterRequestController extends Controller
             'expires_at' => now()->addMinutes(10),
         ]);
 
+        // 1. Notify carrier in-app and email
+        try {
+            $carrier->notify(new \App\Notifications\DirectTransporterRequestReceived($transporterRequest, $user));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to notify carrier #{$carrier->id} of TransporterRequest: " . $e->getMessage());
+        }
+
+        // 2. Automated WhatsApp Cloud API dispatch to carrier
+        if (!empty($carrier->phone)) {
+            try {
+                $waService = app(\App\Services\Bot\WhatsAppCloudApiService::class);
+                $waService->sendDirectTransporterMission($carrier->phone, $transporterRequest, $carrier, $user);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp direct mission to carrier #{$carrier->id}: " . $e->getMessage());
+            }
+        }
+
+        // 3. Fallback direct WhatsApp link for client
+        $cleanPhone = preg_replace('/[^0-9]/', '', (string)$carrier->phone);
+        if (strlen($cleanPhone) === 8) {
+            $cleanPhone = '216' . $cleanPhone;
+        }
+        $waUnit = ($transporterRequest->unit === 'kg') ? 'كغ' : 'طن';
+        $waText = rawurlencode("سلام سي {$carrier->name}، بعثتلك طلب نقل فوري عبر منصة ZinToop من {$transporterRequest->pickup_governorate} إلى {$transporterRequest->dropoff_governorate} بحمولة {$transporterRequest->weight} {$waUnit}. السعر التقديري: ~{$transporterRequest->estimated_cost} د.ت. كلمني للتنسيق.");
+        $waDirectUrl = !empty($cleanPhone) ? "https://wa.me/{$cleanPhone}?text={$waText}" : null;
+
         $remaining = max(0, 3 - ($activePendingCount + 1));
 
         return response()->json([
@@ -169,6 +199,7 @@ class TransporterRequestController extends Controller
             'carrier_id' => $carrier->id,
             'carrier_name' => $carrier->name,
             'remaining_quota' => $remaining,
+            'whatsapp_url' => $waDirectUrl,
         ]);
     }
 
@@ -338,6 +369,9 @@ class TransporterRequestController extends Controller
         $thread = Chat::ensureThread('direct_message', 0, [$customer->id, $carrier->id]);
 
         $customerPhone = $customer->phone ?: ($customer->profile?->phone ?: 'غير مسجل');
+        $cargoLabel = ($transporterRequest->cargo_type === 'olive')
+            ? '🫒 زيتون فلاحي (حب / صناديق)'
+            : '🫙 صهريج زيت زيتون (Citerne / براميل)';
 
         // Official system dispatch message in thread
         $systemBody = "📢 **[نظام الزين - تأكيد مهمة النقل 🚚]**\n\n"
@@ -345,7 +379,8 @@ class TransporterRequestController extends Controller
             . "📞 **رقم هاتف الحريف:** `{$customerPhone}`\n"
             . "👉 **إشعار للناقل:** يمكنك الآن الاتصال بالحريف مباشرة عبر الهاتف لتنسيق مسار النقل والتوقيت الدقيق.\n\n"
             . "📋 **تفاصيل الكورسة:**\n"
-            . "• الحمولة: {$transporterRequest->weight} {$transporterRequest->unit}\n"
+            . "• نوع الحمولة: **{$cargoLabel}**\n"
+            . "• الوزن / الكمية: {$transporterRequest->weight} {$transporterRequest->unit}\n"
             . "• مسار النقل: من **{$transporterRequest->pickup_governorate}** إلى **{$transporterRequest->dropoff_governorate}**\n"
             . "• المسافة المقدرة: ~{$transporterRequest->distance_km} كم\n"
             . "• السعر التقديري العادل: ~{$transporterRequest->estimated_cost} د.ت\n\n"
@@ -358,6 +393,8 @@ class TransporterRequestController extends Controller
             'attachments' => [
                 'type' => 'transporter_request_accepted',
                 'request_id' => $transporterRequest->id,
+                'cargo_type' => $transporterRequest->cargo_type,
+                'cargo_label' => $cargoLabel,
                 'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
                 'customer_phone' => $customerPhone,

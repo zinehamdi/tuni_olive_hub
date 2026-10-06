@@ -239,6 +239,37 @@ class WhatsAppCloudApiService
     }
 
     /**
+     * Send direct incoming transport request from marketplace to carrier
+     */
+    public function sendDirectTransporterMission(string $toPhone, $req, $carrier, $customer): array
+    {
+        $pickupGov = $req->pickup_governorate . ($req->pickup_delegation ? " ({$req->pickup_delegation})" : '');
+        $dropoffGov = $req->dropoff_governorate . ($req->dropoff_delegation ? " ({$req->dropoff_delegation})" : '');
+        $unitLabel = ($req->unit === 'kg') ? 'كغ' : 'طن';
+        $qtyUnit = "{$req->weight} {$unitLabel}";
+        $cost = round((float) $req->estimated_cost);
+        $dist = round((float) $req->distance_km);
+        $baseUrl = config('app.url', 'https://zintoop.com');
+        $dashboardUrl = rtrim($baseUrl, '/') . '/dashboard#assigned-tasks';
+
+        $bodyText = "🚚 *طلب نقل مباشر عاجل | ZinToop*\n\n"
+            . "سلام سي *{$carrier->name}*، طلبك الحريف *{$customer->name}* لكورسة نقل فورية:\n\n"
+            . "📍 *الانطلاق:* {$pickupGov}\n"
+            . "🏁 *الوصول:* {$dropoffGov} (~{$dist} كم)\n"
+            . "📦 *الحمولة:* {$qtyUnit}\n"
+            . "💰 *السعر الصافي المقدر:* *~{$cost} د.ت* (بدون عمولة)\n\n"
+            . "📱 *لوحة التحكم للمعاينة والقبول:*\n{$dashboardUrl}\n\n"
+            . "هل تؤكد قبولك لهذه الكورسة؟";
+
+        $buttons = [
+            ['id' => 'ACCEPT_TREQ_' . $req->id, 'title' => '✅ قبول الكورسة'],
+            ['id' => 'DECLINE_TREQ_' . $req->id, 'title' => '❌ غير متوفر'],
+        ];
+
+        return $this->sendInteractiveButtons($toPhone, $bodyText, $buttons, "🫒 منصة ZinToop", "تنسيق ومكالمة مباشرة مع الحريف");
+    }
+
+    /**
      * Send the Delivery PIN code and live tracking link to Buyer
      */
     public function sendDeliveryPin(string $toPhone, $load, string $pinCode, $carrier): array

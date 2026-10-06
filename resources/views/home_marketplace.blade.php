@@ -825,11 +825,11 @@
                                         </svg>
                                         <span x-text="getSellerDisplayName(listing.seller)"></span>
                                     </div>
-                                    <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
+                                    <div x-show="listing.location || listing.governorate || listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         </svg>
-                                        <span x-text="translateLocation(listing.seller?.location || listing.seller?.farm_location || '')"></span>
+                                        <span x-text="translateLocation(listing.location || (listing.delegation ? (listing.governorate + ' - ' + listing.delegation) : listing.governorate) || listing.seller?.location || listing.seller?.farm_location || '')"></span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -946,11 +946,11 @@
                                             </svg>
                                             <span x-text="getSellerDisplayName(listing.seller)"></span>
                                         </div>
-                                        <div x-show="listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
+                                        <div x-show="listing.location || listing.governorate || listing.seller?.location || listing.seller?.farm_location" class="flex items-center gap-2 text-[#6A8F3B] font-semibold">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             </svg>
-                                            <span x-text="translateLocation(listing.seller?.location || listing.seller?.farm_location || '')"></span>
+                                            <span x-text="translateLocation(listing.location || (listing.delegation ? (listing.governorate + ' - ' + listing.delegation) : listing.governorate) || listing.seller?.location || listing.seller?.farm_location || '')"></span>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1109,13 +1109,13 @@
                     <div class="min-w-0 text-start">
                         <div class="flex items-center gap-2">
                             <h3 class="text-xs sm:text-base font-black text-white leading-tight truncate" 
-                                x-text="transporterStep === 1 ? '{{ __('1. تحديد مسار الكورسة والحمولة 📋') }}' : '{{ __('2. اختيار الناقل وإرسال الطلب 🚚') }}'">
+                                x-text="transporterStep === 1 ? @js(__('1. Define Route & Cargo 📋')) : @js(__('2. Select Carrier & Send Request 🚚'))">
                             </h3>
                             <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-white/20 text-white flex-shrink-0" 
                                   x-text="transporterStep + '/2'"></span>
                         </div>
                         <p class="text-[11px] text-white/80 hidden sm:block truncate" 
-                           x-text="transporterStep === 1 ? '{{ __('حدد مكان التحميل ومكان التفريغ والوزن لحساب السعر بدقة') }}' : '{{ __('اختر من بين أقرب الشاحنات المتوفرة لمسارك المحدد') }}'">
+                           x-text="transporterStep === 1 ? @js(__('Set pickup, dropoff and weight to calculate accurate price')) : @js(__('Choose from the closest available trucks for your route'))">
                         </p>
                     </div>
                 </div>
@@ -1140,17 +1140,17 @@
                         <div class="flex items-center justify-between mb-1">
                             <label class="text-xs font-black text-gray-800 flex items-center gap-1">
                                 <span>🟢</span>
-                                <span>{{ __('مكان التحميل (الانطلاق)') }}</span>
+                                <span>{{ __('Pickup Location (Origin)') }}</span>
                                 <span class="text-red-500">*</span>
                             </label>
                             <button type="button" 
                                     @click="locateTransporterGps()" 
                                     :disabled="locatingTransporterGps"
                                     class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition active:scale-95 cursor-pointer">
-                                <span x-show="!locatingTransporterGps">📍 {{ __('موقعي بالـ GPS') }}</span>
+                                <span x-show="!locatingTransporterGps">📍 {{ __('My GPS Location') }}</span>
                                 <span x-show="locatingTransporterGps" class="flex items-center gap-1">
                                     <svg class="w-3 h-3 animate-spin text-emerald-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                    {{ __('جاري التحديد...') }}
+                                    {{ __('Locating...') }}
                                 </span>
                             </button>
                         </div>
@@ -1159,9 +1159,9 @@
                             <select x-model="transporterPickupGov" 
                                     @change="transporterPickupDel = ''; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
-                                <option value="">-- {{ __('الولاية') }} --</option>
+                                <option value="">-- {{ __('Governorate') }} --</option>
                                 @foreach(['صفاقس', 'تونس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
-                                    <option value="{{ $g }}">{{ $g }}</option>
+                                    <option value="{{ $g }}">{{ __($g) }}</option>
                                 @endforeach
                             </select>
 
@@ -1171,7 +1171,7 @@
                                     @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
                                     :class="!transporterPickupGov ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-900 border-gray-300 focus:bg-white'">
-                                <option value="">-- {{ __('المعتمدية') }} --</option>
+                                <option value="">-- {{ __('Delegation') }} --</option>
                                 <template x-for="del in (tunisianDelegations[transporterPickupGov] || [])" :key="del">
                                     <option :value="del" x-text="del"></option>
                                 </template>
@@ -1183,7 +1183,7 @@
                     <div>
                         <label class="block text-xs font-black text-gray-800 mb-1">
                             <span>🚩</span>
-                            <span>{{ __('مكان التفريغ (الوجهة)') }}</span>
+                            <span>{{ __('Dropoff Location (Destination)') }}</span>
                             <span class="text-red-500">*</span>
                         </label>
                         <div class="grid grid-cols-2 gap-2">
@@ -1191,9 +1191,9 @@
                             <select x-model="transporterDropoffGov" 
                                     @change="transporterDropoffDel = ''; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
-                                <option value="">-- {{ __('الولاية') }} --</option>
+                                <option value="">-- {{ __('Governorate') }} --</option>
                                 @foreach(['تونس', 'صفاقس', 'سوسة', 'القيروان', 'المنستير', 'المهدية', 'نابل', 'بنزرت', 'باجة', 'جندوبة', 'الكاف', 'سليانة', 'زغوان', 'سيدي بوزيد', 'القصرين', 'قفصة', 'قابس', 'مدنين', 'تطاوين', 'توزر', 'قبلي', 'أريانة', 'بن عروس', 'منوبة'] as $g)
-                                    <option value="{{ $g }}">{{ $g }}</option>
+                                    <option value="{{ $g }}">{{ __($g) }}</option>
                                 @endforeach
                             </select>
 
@@ -1203,11 +1203,46 @@
                                     @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     class="w-full text-xs sm:text-sm font-bold py-2.5 px-2.5 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
                                     :class="!transporterDropoffGov ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-gray-50 text-gray-900 border-gray-300 focus:bg-white'">
-                                <option value="">-- {{ __('المعتمدية') }} --</option>
+                                <option value="">-- {{ __('Delegation') }} --</option>
                                 <template x-for="del in (tunisianDelegations[transporterDropoffGov] || [])" :key="del">
                                     <option :value="del" x-text="del"></option>
                                 </template>
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- 2.5 Cargo Type Selector (Oil Cistern vs Olives) -->
+                    <div>
+                        <label class="text-xs font-black text-gray-800 flex items-center gap-1 mb-1.5">
+                            <span>📦</span>
+                            <span>{{ __('نوع المادة المنقولة') }}</span>
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" 
+                                    @click="transporterCargoType = 'oil'; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()"
+                                    :class="transporterCargoType === 'oil' 
+                                        ? 'bg-amber-500 text-white font-black border-amber-600 shadow-xs ring-2 ring-amber-400/30' 
+                                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold border-gray-200'"
+                                    class="p-2.5 rounded-xl border text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                                <span class="text-lg">🫙</span>
+                                <div class="text-start leading-tight">
+                                    <div class="font-black text-xs">{{ __('زيت زيتون') }}</div>
+                                    <div class="text-[10px] opacity-90">{{ __('صهريج / براميل') }}</div>
+                                </div>
+                            </button>
+                            <button type="button" 
+                                    @click="transporterCargoType = 'olive'; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()"
+                                    :class="transporterCargoType === 'olive' 
+                                        ? 'bg-emerald-700 text-white font-black border-emerald-800 shadow-xs ring-2 ring-emerald-500/30' 
+                                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold border-gray-200'"
+                                    class="p-2.5 rounded-xl border text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                                <span class="text-lg">🫒</span>
+                                <div class="text-start leading-tight">
+                                    <div class="font-black text-xs">{{ __('زيتون فلاحي') }}</div>
+                                    <div class="text-[10px] opacity-90">{{ __('حب / صناديق') }}</div>
+                                </div>
+                            </button>
                         </div>
                     </div>
 
@@ -1216,7 +1251,7 @@
                         <div class="flex items-center justify-between mb-1">
                             <label class="text-xs font-black text-gray-800 flex items-center gap-1">
                                 <span>⚖️</span>
-                                <span>{{ __('وزن الحمولة ووسيلة النقل') }}</span>
+                                <span>{{ __('Cargo Weight & Transport Category') }}</span>
                                 <span class="text-red-500">*</span>
                             </label>
                             <span class="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg" x-text="getVehicleCategoryLabel(transporterWeight)"></span>
@@ -1228,53 +1263,53 @@
                                        @change="transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                        class="w-full text-sm font-black text-gray-900 outline-none bg-transparent" 
                                        placeholder="1">
-                                <span class="text-xs font-black text-gray-500 ms-1">{{ __('طن') }}</span>
+                                <span class="text-xs font-black text-gray-500 ms-1">{{ __('Ton') }}</span>
                             </div>
                         </div>
-                        <!-- Quick Weight Presets including Fourgonnettes and Light Commercial -->
+                        <!-- Quick Weight Presets (Adapts to Oil Cisterns vs Olive Cargo) -->
                         <div class="flex items-center gap-1.5 mt-2 flex-wrap">
-                            <span class="text-[10px] text-gray-400 font-bold">{{ __('خيارات سريعة:') }}</span>
+                            <span class="text-[10px] text-gray-400 font-bold">{{ __('Quick Options:') }}</span>
                             <button type="button" 
                                     @click="transporterWeight = 0.5; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 0.5 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🚐</span>
-                                <span>500 كغ</span>
+                                <span x-text="transporterCargoType === 'oil' ? '500 كغ (براميل)' : '500 كغ'"></span>
                             </button>
                             <button type="button" 
                                     @click="transporterWeight = 1.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 1.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🚐</span>
-                                <span>1 طن (بارتنر/كادي)</span>
+                                <span x-text="transporterCargoType === 'oil' ? '1 طن (براميل / صهريج صغير)' : '1 طن (بارتنر / كادي)'"></span>
                             </button>
                             <button type="button" 
                                     @click="transporterWeight = 2.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 2.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🛻</span>
-                                <span>2 طن (شاحنة خفيفة/ستافات)</span>
+                                <span x-text="transporterCargoType === 'oil' ? '2 طن (صهريج إيسيزو / ديماكس)' : '2 طن (ستافات / ديماكس)'"></span>
                             </button>
                             <button type="button" 
                                     @click="transporterWeight = 5.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 5.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🚚</span>
-                                <span>5 طن (شاحنة متوسطة)</span>
+                                <span x-text="transporterCargoType === 'oil' ? '5 طن (شاحنة صهريج زيت)' : '5 طن (شاحنة متوسطة)'"></span>
                             </button>
                             <button type="button" 
                                     @click="transporterWeight = 10.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 10.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🚛</span>
-                                <span>10 طن</span>
+                                <span x-text="transporterCargoType === 'oil' ? '10 طن (صهريج متوسط)' : '10 طن (شاحنة ثقيلة)'"></span>
                             </button>
                             <button type="button" 
                                     @click="transporterWeight = 25.0; transporterValidationError = ''; if(transporterPickupGov && transporterDropoffGov) calculateCourseEstimate()" 
                                     :class="transporterWeight == 25.0 ? 'bg-blue-600 text-white font-black shadow-2xs' : 'bg-gray-100 text-gray-700 font-bold hover:bg-gray-200'"
                                     class="px-2.5 py-1 rounded-lg text-[11px] transition cursor-pointer flex items-center gap-1">
                                 <span>🛢️</span>
-                                <span>25 طن (صهريج)</span>
+                                <span x-text="transporterCargoType === 'oil' ? '25 طن (صهريج ضخم Inox)' : '25 طن (شاحنة مقطورة)'"></span>
                             </button>
                         </div>
                     </div>
@@ -1290,13 +1325,13 @@
                                     <span x-text="transporterPickupGov + (transporterPickupDel ? ' (' + transporterPickupDel + ')' : '')"></span> ➔ <span x-text="transporterDropoffGov + (transporterDropoffDel ? ' (' + transporterDropoffDel + ')' : '')"></span>
                                 </div>
                                 <div class="text-[11px] text-gray-600 font-bold">
-                                    المسافة المقدرة: ~<span x-text="transporterCourseDistance"></span> كم
+                                    {{ __('Estimated Distance:') }} ~<span x-text="transporterCourseDistance"></span> {{ __('km') }}
                                 </div>
                             </div>
                         </div>
                         <div class="text-end flex-shrink-0">
-                            <span class="text-[10px] font-bold text-emerald-700 block">السعر التقديري العادل</span>
-                            <span class="text-base font-black text-emerald-900 leading-tight">~<span x-text="transporterCourseCost"></span> د.ت</span>
+                            <span class="text-[10px] font-bold text-emerald-700 block">{{ __('Estimated Fair Price') }}</span>
+                            <span class="text-base font-black text-emerald-900 leading-tight">~<span x-text="transporterCourseCost"></span> {{ __('TND') }}</span>
                         </div>
                     </div>
                 </div>
@@ -1306,7 +1341,7 @@
                     <button type="button" 
                             @click="proceedToTransportersList()" 
                             class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 active:scale-98 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                        <span>🔍 {{ __('البحث عن أقرب الناقلين المناسبين') }}</span>
+                        <span>🔍 {{ __('Search Nearest Available Transporters') }}</span>
                         <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
                     </button>
                 </div>
@@ -1321,23 +1356,26 @@
                     <div class="flex items-center gap-1.5 text-xs font-black text-gray-900 truncate">
                         <span>🟢 <span x-text="transporterPickupGov + (transporterPickupDel ? ' (' + transporterPickupDel + ')' : '')"></span></span>
                         <span>➔</span>
-                        <span>🚩 <span x-text="transporterDropoffGov + (transporterDropoffDel ? ' (' + transporterDropoffDel + ')' : '')"></span></span>
                         <span class="text-gray-300">|</span>
-                        <span>⚖️ <span x-text="transporterWeight"></span> {{ __('طن') }}</span>
+                        <span>⚖️ <span x-text="transporterWeight"></span> {{ __('Ton') }}</span>
+                        <span class="text-gray-300">|</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-black" 
+                              :class="transporterCargoType === 'oil' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-emerald-100 text-emerald-900 border border-emerald-300'" 
+                              x-text="transporterCargoType === 'oil' ? '🫙 صهريج زيت' : '🫒 زيتون'"></span>
                     </div>
                     <div class="flex items-center gap-2 text-[10px] text-gray-500 font-bold mt-0.5">
                         <span>🛣️ ~<span x-text="transporterCourseDistance"></span> {{ __('km') }}</span>
                         <span>•</span>
                         <span class="text-emerald-700 font-black">💰 ~<span x-text="transporterCourseCost"></span> {{ __('TND') }}</span>
                         <span>•</span>
-                        <span class="text-blue-700 font-black">⏳ {{ __('الكوتا:') }} <span x-text="remainingTransporterQuota + '/3'"></span></span>
+                        <span class="text-blue-700 font-black">⏳ {{ __('Quota:') }} <span x-text="remainingTransporterQuota + '/3'"></span></span>
                     </div>
                 </div>
                 <button type="button" 
                         @click="backToCourseParameters()" 
                         class="px-2.5 py-1.5 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-[11px] font-bold text-gray-700 transition active:scale-95 flex items-center gap-1 flex-shrink-0 cursor-pointer shadow-2xs">
                     <span>✏️</span>
-                    <span>{{ __('تعديل المسار') }}</span>
+                    <span>{{ __('Edit Route') }}</span>
                 </button>
             </div>
 
@@ -1360,7 +1398,7 @@
                 <!-- Loading State -->
                 <div x-show="loadingTransporters" class="py-12 text-center text-blue-600 text-xs font-bold flex flex-col items-center justify-center gap-2">
                     <svg class="w-7 h-7 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    <span>{{ __('جاري البحث عن أقرب الشاحنات المناسبة...') }}</span>
+                    <span>{{ __('Searching for nearest suitable trucks...') }}</span>
                 </div>
 
                 <!-- Empty State -->
@@ -1417,18 +1455,18 @@
                                     <div class="flex items-center gap-1 sm:gap-1.5">
                                         <span class="inline-flex items-center justify-center gap-1 px-2 py-1.5 sm:px-3 sm:py-2 bg-amber-50 text-amber-900 border border-amber-300 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xs whitespace-nowrap cursor-default">
                                             <span class="text-xs">⏳</span>
-                                            <span>{{ __('قيد الانتظار') }}</span>
+                                            <span>{{ __('Pending') }}</span>
                                         </span>
                                         <!-- Cancel Request Button -->
                                         <button type="button" 
                                                 @click="cancelTransporterRequest(carrier.id)"
                                                 :disabled="cancellingCarrierId === carrier.id"
                                                 class="px-2 py-1.5 sm:px-2.5 sm:py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-0.5 cursor-pointer shadow-2xs"
-                                                title="{{ __('إلغاء الطلب واختيار ناقل آخر') }}">
-                                            <span x-show="cancellingCarrierId !== carrier.id">❌ {{ __('إلغاء') }}</span>
+                                                title="{{ __('Cancel request and pick another carrier') }}">
+                                            <span x-show="cancellingCarrierId !== carrier.id">❌ {{ __('Cancel') }}</span>
                                             <span x-show="cancellingCarrierId === carrier.id" class="flex items-center gap-1 text-[10px]">
                                                 <svg class="w-3 h-3 animate-spin text-red-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                                {{ __('جاري...') }}
+                                                {{ __('Cancelling...') }}
                                             </span>
                                         </button>
                                     </div>
@@ -1464,7 +1502,7 @@
                             @click="backToCourseParameters()" 
                             class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-xs font-black text-gray-700 transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
                         <span>⬅️</span>
-                        <span>{{ __('تعديل المسار') }}</span>
+                        <span>{{ __('Edit Route') }}</span>
                     </button>
                 </div>
                 <button @click="transporterModalOpen = false" class="px-5 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition shadow-2xs cursor-pointer">
@@ -1483,15 +1521,15 @@
         <template x-if="acceptedMissionData">
             <a :href="acceptedMissionData.chat_url"
                class="group inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-full shadow-lg border border-emerald-300/60 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer animate-pulse"
-               title="{{ __('وافق الناقل - اضغط للمحادثة') }}">
+               title="{{ __('Carrier accepted - Click to chat') }}">
                 <span class="text-sm sm:text-base">🎉</span>
                 <div class="text-start leading-tight">
                     <div class="text-[11px] sm:text-xs font-black flex items-center gap-1">
-                        <span class="hidden sm:inline">{{ __('وافق الناقل:') }}</span>
+                        <span class="hidden sm:inline">{{ __('Carrier accepted:') }}</span>
                         <span x-text="acceptedMissionData.carrier_name"></span>
                     </div>
                     <div class="text-[9px] text-emerald-100 font-bold">
-                        {{ __('فتح المحادثة') }} 💬
+                        {{ __('Open Chat') }} 💬
                     </div>
                 </div>
             </a>
@@ -1501,18 +1539,18 @@
         <template x-if="!acceptedMissionData && sentTransporterRequests.length > 0">
             <button @click="openTransporterFinder()"
                     class="group inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-amber-500/90 hover:bg-amber-500 text-white rounded-full shadow-lg border border-amber-300/60 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                    title="{{ __('عرض طلبات النقل قيد الانتظار أو الإلغاء') }}">
+                    title="{{ __('View pending transport requests') }}">
                 <div class="relative flex items-center justify-center">
                     <span class="w-2 h-2 rounded-full bg-white animate-ping absolute"></span>
                     <span class="text-xs sm:text-sm">⏳</span>
                 </div>
                 <div class="text-start leading-tight">
                     <div class="text-[11px] sm:text-xs font-black flex items-center gap-1">
-                        <span>{{ __('بانتظار ناقل...') }}</span>
+                        <span>{{ __('Waiting for carrier...') }}</span>
                         <span class="px-1.5 py-0.2 bg-black/20 rounded-full text-[9px] font-mono" x-text="sentTransporterRequests.length + '/3'"></span>
                     </div>
                     <div class="text-[9px] text-amber-100 font-bold hidden sm:block">
-                        {{ __('اضغط للخيارات / الإلغاء') }}
+                        {{ __('Click for options / cancel') }}
                     </div>
                 </div>
             </button>
@@ -1522,9 +1560,9 @@
         <template x-if="!acceptedMissionData && sentTransporterRequests.length === 0">
             <button @click="openTransporterFinder()"
                     class="group inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-blue-600/85 hover:bg-blue-600 text-white rounded-full shadow-md border border-white/30 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                    title="{{ __('طلب ناقل زيتون أو معدات') }}">
+                    title="{{ __('Call a Transporter') }}">
                 <span class="text-sm">🚚</span>
-                <span class="text-[11px] sm:text-xs font-black tracking-wide">{{ __('طلب ناقل') }}</span>
+                <span class="text-[11px] sm:text-xs font-black tracking-wide">{{ __('Call Transporter') }}</span>
                 <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[9px] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform">
                     ➔
                 </span>
@@ -1631,6 +1669,7 @@ document.addEventListener('alpine:init', () => {
         transportersList: [],
         loadingTransporters: false,
         transporterWeight: 1.0,
+        transporterCargoType: 'oil',
         transporterPickupGov: '',
         transporterPickupDel: '',
         transporterDropoffGov: '',
@@ -1676,16 +1715,32 @@ document.addEventListener('alpine:init', () => {
 
         getVehicleCategoryLabel(w) {
             const num = parseFloat(w) || 0;
-            if (num <= 1.0) {
-                return '🚐 فورغونات (بارتنر / كادي)';
-            } else if (num <= 2.5) {
-                return '🛻 شاحنة خفيفة (ديماكس / ستافات)';
-            } else if (num <= 5.0) {
-                return '🚚 شاحنة متوسطة';
-            } else if (num <= 12.0) {
-                return '🚛 شاحنة ثقيلة';
+            const isOil = (this.transporterCargoType === 'oil');
+
+            if (isOil) {
+                if (num <= 1.0) {
+                    return '🚐 ' + @js(__('Fourgonnette / Fûts (jusqu\'à 1T)'));
+                } else if (num <= 2.5) {
+                    return '🛻 ' + @js(__('Camionnette / Isuzu petite citerne (1T - 2.5T)'));
+                } else if (num <= 5.0) {
+                    return '🚚 ' + @js(__('Camionnette moyenne avec citerne (2.5T - 5T)'));
+                } else if (num <= 12.0) {
+                    return '🚛 ' + @js(__('Camion citerne à huile (5T - 12T)'));
+                } else {
+                    return '🛢️ ' + @js(__('Citerne Alimentaire Inox (> 12T)'));
+                }
             } else {
-                return '🛢️ صهريج / كميون كبير';
+                if (num <= 1.0) {
+                    return '🚐 ' + @js(__('Fourgonnette (Partner / Caddy jusqu\'à 1T)'));
+                } else if (num <= 2.5) {
+                    return '🛻 ' + @js(__('Camionnette légère / Stafette (1T - 2.5T)'));
+                } else if (num <= 5.0) {
+                    return '🚚 ' + @js(__('Camionnette moyenne (2.5T - 5T)'));
+                } else if (num <= 12.0) {
+                    return '🚛 ' + @js(__('Poids Lourd (5T - 12T)'));
+                } else {
+                    return '🚛 ' + @js(__('Poids lourd avec remorque (> 12T)'));
+                }
             }
         },
 
@@ -1726,15 +1781,15 @@ document.addEventListener('alpine:init', () => {
         proceedToTransportersList() {
             this.transporterValidationError = '';
             if (!this.transporterPickupGov || !this.transporterPickupGov.trim()) {
-                this.transporterValidationError = '{{ __("يرجى اختيار ولاية التحميل (الانطلاق) أولاً.") }}';
+                this.transporterValidationError = @js(__('Please select pickup governorate first.'));
                 return;
             }
             if (!this.transporterDropoffGov || !this.transporterDropoffGov.trim()) {
-                this.transporterValidationError = '{{ __("يرجى اختيار ولاية التفريغ (الوجهة) أولاً.") }}';
+                this.transporterValidationError = @js(__('Please select dropoff governorate first.'));
                 return;
             }
             if (!this.transporterWeight || this.transporterWeight <= 0) {
-                this.transporterValidationError = '{{ __("يرجى إدخال وزن الحمولة بالطن.") }}';
+                this.transporterValidationError = @js(__('Please enter cargo weight in tons.'));
                 return;
             }
 
@@ -1758,26 +1813,148 @@ document.addEventListener('alpine:init', () => {
             this.transporterValidationError = '';
         },
 
+        async resolveTunisianLocationFromCoords(lat, lng) {
+            let detectedGov = null;
+            let detectedDel = null;
+
+            // 1. Try reverse geocoding via OpenStreetMap Nominatim with short timeout
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500);
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=ar`, {
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const data = await res.json();
+                    const addr = data.address || {};
+
+                    // Extract raw governorate string
+                    const rawGov = (addr.state || addr.province || addr.region || '').replace(/^ولاية\s+/, '').trim();
+                    const govKeys = Object.keys(this.tunisianDelegations);
+                    if (rawGov) {
+                        detectedGov = govKeys.find(g => rawGov.includes(g) || g.includes(rawGov));
+                    }
+
+                    // Extract candidates for delegation
+                    const rawCandidates = [
+                        addr.county, addr.town, addr.suburb, addr.city, addr.municipality,
+                        addr.village, addr.state_district, addr.neighbourhood, addr.city_district
+                    ].filter(Boolean).map(c => c.replace(/^(معتمدية|بلدية|مدينة)\s+/, '').trim());
+
+                    if (detectedGov && this.tunisianDelegations[detectedGov]) {
+                        const delegations = this.tunisianDelegations[detectedGov];
+                        for (const candidate of rawCandidates) {
+                            const match = delegations.find(d => candidate.includes(d) || d.includes(candidate));
+                            if (match) {
+                                detectedDel = match;
+                                break;
+                            }
+                        }
+                    } else if (!detectedGov) {
+                        for (const [g, dels] of Object.entries(this.tunisianDelegations)) {
+                            for (const candidate of rawCandidates) {
+                                const match = dels.find(d => candidate.includes(d) || d.includes(candidate));
+                                if (match) {
+                                    detectedGov = g;
+                                    detectedDel = match;
+                                    break;
+                                }
+                            }
+                            if (detectedGov) break;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Nominatim geocode fallback to centroids:', e);
+            }
+
+            // 2. Centroid distance fallback if governorate not yet resolved
+            if (!detectedGov) {
+                const govCentroids = {
+                    'تونس': { lat: 36.8065, lng: 10.1815 },
+                    'أريانة': { lat: 36.8665, lng: 10.1647 },
+                    'بن عروس': { lat: 36.7533, lng: 10.2222 },
+                    'منوبة': { lat: 36.8080, lng: 10.0972 },
+                    'نابل': { lat: 36.4561, lng: 10.7376 },
+                    'زغوان': { lat: 36.4029, lng: 10.1429 },
+                    'بنزرت': { lat: 37.2744, lng: 9.8739 },
+                    'باجة': { lat: 36.7256, lng: 9.1817 },
+                    'جندوبة': { lat: 36.5011, lng: 8.7802 },
+                    'الكاف': { lat: 36.1822, lng: 8.7149 },
+                    'سليانة': { lat: 36.0847, lng: 9.3708 },
+                    'سوسة': { lat: 35.8256, lng: 10.6369 },
+                    'المنستير': { lat: 35.7833, lng: 10.8333 },
+                    'المهدية': { lat: 35.5047, lng: 11.0622 },
+                    'صفاقس': { lat: 34.7406, lng: 10.7603 },
+                    'القيروان': { lat: 35.6781, lng: 10.0963 },
+                    'القصرين': { lat: 35.1676, lng: 8.8365 },
+                    'سيدي بوزيد': { lat: 35.0382, lng: 9.4849 },
+                    'قابس': { lat: 33.8815, lng: 10.0982 },
+                    'مدنين': { lat: 33.3549, lng: 10.5055 },
+                    'تطاوين': { lat: 32.9297, lng: 10.4518 },
+                    'قفصة': { lat: 34.4250, lng: 8.7842 },
+                    'توزر': { lat: 33.9197, lng: 8.1335 },
+                    'قبلي': { lat: 33.7050, lng: 8.9690 }
+                };
+
+                let minDistance = Infinity;
+                for (const [gov, c] of Object.entries(govCentroids)) {
+                    const d = Math.hypot(lat - c.lat, lng - c.lng);
+                    if (d < minDistance) {
+                        minDistance = d;
+                        detectedGov = gov;
+                    }
+                }
+            }
+
+            // 3. Delegation fallback: first delegation of the matched governorate
+            if (detectedGov && !detectedDel && this.tunisianDelegations[detectedGov]) {
+                detectedDel = this.tunisianDelegations[detectedGov][0];
+            }
+
+            return { governorate: detectedGov, delegation: detectedDel };
+        },
+
         locateTransporterGps() {
             if (!navigator.geolocation) {
-                alert('{{ __("GPS is not supported on this browser.") }}');
+                alert(@js(__('GPS is not supported on this browser.')));
                 return;
             }
             this.locatingTransporterGps = true;
             navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    this.transporterGpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                    this.locatingTransporterGps = false;
-                    if (this.userLocation?.governorate && !this.transporterPickupGov) {
-                        this.transporterPickupGov = this.userLocation.governorate;
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    this.transporterGpsCoords = { lat, lng };
+
+                    const loc = await this.resolveTunisianLocationFromCoords(lat, lng);
+                    if (loc.governorate) {
+                        this.transporterPickupGov = loc.governorate;
+                        this.transporterPickupDel = loc.delegation || '';
+                        this.transporterValidationError = '';
                     }
+
+                    this.locatingTransporterGps = false;
+
                     if (this.transporterPickupGov && this.transporterDropoffGov) {
                         this.calculateCourseEstimate();
                     }
                 },
                 (err) => {
                     this.locatingTransporterGps = false;
-                    alert('{{ __("Unable to access GPS location.") }}');
+                    console.warn('GPS location error:', err);
+                    if (this.userLocation?.governorate && !this.transporterPickupGov) {
+                        this.transporterPickupGov = this.userLocation.governorate;
+                        if (this.tunisianDelegations[this.transporterPickupGov]) {
+                            this.transporterPickupDel = this.tunisianDelegations[this.transporterPickupGov][0];
+                        }
+                        this.transporterValidationError = '';
+                        if (this.transporterDropoffGov) this.calculateCourseEstimate();
+                    } else {
+                        alert(@js(__('Unable to access GPS location.')));
+                    }
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
@@ -1790,6 +1967,7 @@ document.addEventListener('alpine:init', () => {
                 const params = new URLSearchParams({
                     weight: this.transporterWeight || 1.0,
                     unit: 'ton',
+                    cargo_type: this.transporterCargoType || 'oil',
                     pickup_governorate: this.transporterPickupGov,
                     dropoff_governorate: this.transporterDropoffGov,
                 });
@@ -1882,6 +2060,7 @@ document.addEventListener('alpine:init', () => {
                     carrier_id: carrierId,
                     weight: this.transporterWeight,
                     unit: 'ton',
+                    cargo_type: this.transporterCargoType || 'oil',
                     pickup_governorate: this.transporterPickupGov,
                     pickup_delegation: this.transporterPickupDel || null,
                     dropoff_governorate: this.transporterDropoffGov,
@@ -2538,15 +2717,10 @@ document.addEventListener('alpine:init', () => {
             }
 
             let city = '';
-            if (listing.seller?.addresses?.length > 0 && listing.seller.addresses[0]?.governorate) {
-                const rawCity = listing.seller.addresses[0]?.governorate || '';
+            const rawCity = listing.governorate || listing.address?.governorate || (listing.seller?.addresses?.length > 0 ? listing.seller.addresses[0]?.governorate : '') || listing.seller?.farm_location || listing.seller?.location || '';
+            if (rawCity) {
                 const translatedCity = this.translateLocation(rawCity);
                 city = (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + translatedCity;
-            } else if (listing.seller?.location || listing.seller?.farm_location) {
-                // Fallback to seller.location if no address object
-                const rawCity = listing.seller?.location || listing.seller?.farm_location || '';
-                const translatedCity = this.translateLocation(rawCity);
-                city = rawCity ? (isAr ? ' من ' : (isFr ? ' de ' : ' from ')) + translatedCity : '';
             }
 
             return `${typeLabel} ${variety}${quality}${organic}${city}`.trim();
@@ -2706,17 +2880,16 @@ document.addEventListener('alpine:init', () => {
             if (!this.userLocation.lat) return;
 
             this.listings.forEach(listing => {
-                // Try to get seller's address with coordinates
-                if (listing.seller?.addresses?.length > 0) {
-                    const address = listing.seller.addresses[0];
-                    if (address && address.lat && address.lng) {
-                        listing.distance = this.calculateDistance(
-                            this.userLocation.lat,
-                            this.userLocation.lng,
-                            address.lat,
-                            address.lng
-                        );
-                    }
+                // Prioritize listing-specific coordinates, fallback to seller address
+                const lat = listing.lat ?? listing.address?.lat ?? (listing.seller?.addresses?.length > 0 ? listing.seller.addresses[0]?.lat : null);
+                const lng = listing.lng ?? listing.address?.lng ?? (listing.seller?.addresses?.length > 0 ? listing.seller.addresses[0]?.lng : null);
+                if (lat && lng) {
+                    listing.distance = this.calculateDistance(
+                        this.userLocation.lat,
+                        this.userLocation.lng,
+                        lat,
+                        lng
+                    );
                 }
             });
         },

@@ -39,6 +39,16 @@ class TransportWhatsAppHandler
             return $this->activateCarrier($cleanPhone, $carrierId);
         }
 
+        if (str_starts_with($buttonId, 'ACCEPT_TREQ_')) {
+            $reqId = (int) str_replace('ACCEPT_TREQ_', '', $buttonId);
+            return $this->acceptTransporterRequest($cleanPhone, $reqId);
+        }
+
+        if (str_starts_with($buttonId, 'DECLINE_TREQ_')) {
+            $reqId = (int) str_replace('DECLINE_TREQ_', '', $buttonId);
+            return $this->declineTransporterRequest($cleanPhone, $reqId);
+        }
+
         return ['handled' => false];
     }
 
@@ -303,5 +313,119 @@ class TransportWhatsAppHandler
         } catch (\Throwable $e) {
             Log::error("Failed to notify thread for load update: {$e->getMessage()}");
         }
+    }
+
+    /**
+     * Accept direct TransporterRequest from WhatsApp interactive button
+     */
+    public function acceptTransporterRequest(string $cleanPhone, int $reqId): array
+    {
+        $req = \App\Models\TransporterRequest::with(['user', 'carrier'])->find($reqId);
+        if (!$req) {
+            return ['handled' => true, 'success' => false, 'message' => 'الطلب غير موجود.'];
+        }
+
+        if ($req->status !== \App\Models\TransporterRequest::STATUS_PENDING) {
+            $statusText = ($req->status === \App\Models\TransporterRequest::STATUS_ACCEPTED) ? 'تم قبوله مسبقاً.' : 'لم يعد متاحاً.';
+            $waService = app(WhatsAppCloudApiService::class);
+            $waService->sendTextMessage($cleanPhone, "ℹ️ هذا الطلب {$statusText}");
+            return ['handled' => true, 'success' => false];
+        }
+
+        // Accept request
+        $req->update([
+            'status' => \App\Models\TransporterRequest::STATUS_ACCEPTED,
+            'accepted_at' => now(),
+        ]);
+
+        // Cancel other pending requests from that user in this window
+        \App\Models\TransporterRequest::where('user_id', $req->user_id)
+            ->where('id', '!=', $req->id)
+            ->where('status', \App\Models\TransporterRequest::STATUS_PENDING)
+            ->update(['status' => \App\Models\TransporterRequest::STATUS_CANCELLED]);
+
+        // Ensure direct chat thread exists
+        $customer = $req->user;
+        $carrier = $req->carrier;
+        $thread = \App\Services\Chat::ensureThread('direct_message', 0, [$customer->id, $carrier->id]);
+        $customerPhone = $customer->phone ?: ($customer->profile?->phone ?: 'غير مسجل');
+
+        // Post official system message
+        $systemBody = "📢 **[نظام الزين - تأكيد مهمة النقل 🚚]**\n\n"
+            . "✅ **تم قبول وتأكيد المهمة بنجاح من طرف الناقل:** {$carrier->name}\n\n"
+            . "📞 **رقم هاتف الحريف:** `{$customerPhone}`\n"
+            . "👉 **إشعار للناقل:** يمكنك الآن الاتصال بالحريف مباشرة عبر الهاتف لتنسيق مسار النقل والتوقيت الدقيق.\n\n"
+            . "📋 **تفاصيل الكورسة:**\n"
+            . "• الحمولة: {$req->weight} {$req->unit}\n"
+            . "• مسار النقل: من **{$req->pickup_governorate}** إلى **{$req->dropoff_governorate}**\n"
+            . "• المسافة المقدرة: ~{$req->distance_km} كم\n"
+            . "• السعر التقديري العادل: ~{$req->estimated_cost} د.ت\n\n"
+            . "📍 **ملاحظة هامة للحريف:** نرجو النقر على زر **«📍 إرسال موقعي الدقيق للناقل»** أدناه حتى يصل الناقل مباشرة إلى مكان التحميل بدون أن يضيع.";
+
+        $msg = \App\Models\Message::create([
+            'thread_id' => $thread->id,
+            'sender_id' => $carrier->id,
+            'body' => $systemBody,
+            'attachments' => [
+                'type' => 'transporter_request_accepted',
+                'request_id' => $req->id,
+                'customer_id' => $customer->id,
+                'customer_name' => $customer->name,
+                'customer_phone' => $customerPhone,
+                'carrier_id' => $carrier->id,
+                'carrier_name' => $carrier->name,
+                'weight' => $req->weight,
+                'unit' => $req->unit,
+                'pickup' => $req->pickup_governorate,
+                'dropoff' => $req->dropoff_governorate,
+                'distance_km' => $req->distance_km,
+                'estimated_cost' => $req->estimated_cost,
+            ],
+            'is_flagged' => false,
+            'is_deleted' => false,
+            'is_hidden' => false,
+        ]);
+        $thread->touch();
+
+        // Broadcast if available
+        try {
+            broadcast(new \App\Events\MessageSent($msg))->toOthers();
+        } catch (\Throwable $e) {}
+
+        // Send WhatsApp reply to Carrier with customer's phone
+        $waService = app(WhatsAppCloudApiService::class);
+        $reply = "✅ *تم تأكيد وقبول الكورسة بنجاح! (#{$req->id})*\n\n"
+            . "👤 *الحريف:* {$customer->name}\n"
+            . "📞 *رقم هاتف الحريف:* {$customerPhone}\n"
+            . "📍 *المسار:* من {$req->pickup_governorate} إلى {$req->dropoff_governorate}\n"
+            . "💰 *السعر المقدر:* ~{$req->estimated_cost} د.ت\n\n"
+            . "👉 يمكنك الاتصال بالحريف الآن مباشرة لتنسيق ساعة التحميل والمكان.";
+
+        $waService->sendTextMessage($cleanPhone, $reply);
+
+        // Also if customer has phone, notify customer on WhatsApp
+        if (!empty($customer->phone)) {
+            $custReply = "🚚 *مبروك! تم قبول طلب النقل الخاص بك*\n\n"
+                . "قام الناقل *{$carrier->name}* بقبول طلبك لنقل شحنتك من {$req->pickup_governorate} إلى {$req->dropoff_governorate}.\n"
+                . "📞 *رقم هاتف الناقل:* {$carrier->phone}\n\n"
+                . "سيتصل بك الناقل قريباً للتنسيق، أو يمكنك الاتصال به مباشرة.";
+            $waService->sendTextMessage($customer->phone, $custReply);
+        }
+
+        return ['handled' => true, 'success' => true];
+    }
+
+    /**
+     * Decline direct TransporterRequest from WhatsApp interactive button
+     */
+    public function declineTransporterRequest(string $cleanPhone, int $reqId): array
+    {
+        $req = \App\Models\TransporterRequest::find($reqId);
+        if ($req && $req->status === \App\Models\TransporterRequest::STATUS_PENDING) {
+            $req->update(['status' => \App\Models\TransporterRequest::STATUS_DECLINED]);
+        }
+        $waService = app(WhatsAppCloudApiService::class);
+        $waService->sendTextMessage($cleanPhone, "تم تسجيل اعتذارك عن هذه الكورسة. شكراً لك! 🚚");
+        return ['handled' => true, 'success' => true];
     }
 }

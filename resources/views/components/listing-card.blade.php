@@ -8,7 +8,10 @@
     $formattedVal = fmod((float)$listing->price, 1.0) == 0.0 ? number_format((float)$listing->price, 0, '.', '') : ((($listing->currency ?? 'TND') === 'TND') ? number_format((float)$listing->price, 3, '.', '') : number_format((float)$listing->price, 2, '.', ''));
     $currLabel = ($locale === 'ar' && ($listing->currency ?? 'TND') === 'TND') ? 'دينار' : ($listing->currency ?? 'TND');
     $priceText = $listing->price == 0 ? __('Price on request') : ($formattedVal . ' ' . $currLabel . ' / ' . $priceUnit);
-    $city = optional($listing->seller->addresses->first())->city ?? optional($listing->seller->addresses->first())->governorate ?? 'Tunisie';
+    $listingAddr = $listing->address ?? $listing->seller?->addresses?->first();
+    $city = $listingAddr 
+        ? ($listingAddr->delegation ? ($listingAddr->governorate . ' - ' . $listingAddr->delegation) : $listingAddr->governorate)
+        : ($listing->seller?->farm_location ?? $listing->seller?->location ?? 'Tunisie');
 
     // Image fallback
     $productImage = null;

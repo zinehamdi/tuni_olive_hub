@@ -77,6 +77,7 @@ class Listing extends Model
     protected $fillable = [
         'product_id',
         'seller_id',
+        'address_id',
         'status', 'packaging',
         'price',
         'currency',
@@ -208,9 +209,71 @@ class Listing extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * Get the seller (user) who created this listing
+     * الحصول على البائع (المستخدم) الذي أنشأ هذا العرض
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    /**
+     * Get effective governorate for this listing (listing address first, then seller fallback)
+     */
+    public function getGovernorateAttribute(): ?string
+    {
+        return $this->address?->governorate 
+            ?? $this->seller?->addresses?->first()?->governorate 
+            ?? $this->seller?->farm_location;
+    }
+
+    /**
+     * Get effective delegation for this listing
+     */
+    public function getDelegationAttribute(): ?string
+    {
+        return $this->address?->delegation 
+            ?? $this->seller?->addresses?->first()?->delegation;
+    }
+
+    /**
+     * Get effective latitude for this listing
+     */
+    public function getLatitudeAttribute(): ?float
+    {
+        $lat = $this->address?->lat ?? $this->seller?->addresses?->first()?->lat;
+        return $lat !== null ? (float) $lat : null;
+    }
+
+    /**
+     * Get effective longitude for this listing
+     */
+    public function getLongitudeAttribute(): ?float
+    {
+        $lng = $this->address?->lng ?? $this->seller?->addresses?->first()?->lng;
+        return $lng !== null ? (float) $lng : null;
+    }
+
+    /**
+     * Get effective human-friendly location string
+     */
+    public function getLocationAttribute(): ?string
+    {
+        $addr = $this->address ?? $this->seller?->addresses?->first();
+        if ($addr) {
+            return $addr->delegation 
+                ? ($addr->governorate . ' - ' . $addr->delegation)
+                : $addr->governorate;
+        }
+        return $this->seller?->farm_location ?? $this->seller?->location;
     }
 
     // ─────────────────────────────────────────────────────────────────────────

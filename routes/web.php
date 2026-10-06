@@ -64,7 +64,7 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         // Get all active listings with product details and seller addresses for location-based filtering
         $featuredListings = \Illuminate\Support\Facades\Cache::remember('home_featured_listings', now()->addMinutes(5), function () {
             // Get Top 6 Admin Featured listings
-            $topFeatured = \App\Models\Listing::with(['product', 'seller.addresses'])
+            $topFeatured = \App\Models\Listing::with(['product', 'address', 'seller.addresses'])
                 ->where('status', 'active')
                 ->where('is_featured', true)
                 ->latest('updated_at')
@@ -74,7 +74,7 @@ Route::middleware(['web', 'set.locale'])->group(function () {
             $featuredIds = $topFeatured->pluck('id')->toArray();
 
             // Get remaining active listings in normal chronological order
-            $otherListings = \App\Models\Listing::with(['product', 'seller.addresses'])
+            $otherListings = \App\Models\Listing::with(['product', 'address', 'seller.addresses'])
                 ->where('status', 'active')
                 ->whereNotIn('id', $featuredIds)
                 ->latest('created_at')
@@ -86,14 +86,14 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         // Handle session new_listing_id for current user (Position #1 for creator's fresh listing)
         $newListingId = session('new_listing_id');
         if ($newListingId) {
-            $freshItem = \App\Models\Listing::with(['product', 'seller.addresses'])->find($newListingId);
+            $freshItem = \App\Models\Listing::with(['product', 'address', 'seller.addresses'])->find($newListingId);
             if ($freshItem) {
                 $featuredListings = collect([$freshItem])->concat($featuredListings->reject(fn($item) => $item->id == $newListingId))->values();
             }
         }
             
         $articles = \Illuminate\Support\Facades\Cache::remember('home_articles', now()->addMinutes(15), function () {
-            $priorityIds = [18, 15, 11];
+            $priorityIds = [19, 18, 15, 11];
             $priorityArticles = \App\Models\Article::where('is_active', true)
                 ->whereIn('id', $priorityIds)
                 ->get()
@@ -138,7 +138,13 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         
         $listingsPayload = $featuredListings->map(function ($listing) {
             $seller = $listing->seller;
-            $address = $seller?->addresses?->first();
+            $listingAddr = $listing->address ?? $seller?->addresses?->first();
+            $locGov = $listingAddr?->governorate ?? $seller?->farm_location ?? '';
+            $locDeleg = $listingAddr?->delegation ?? '';
+            $locLabel = $listingAddr ? ($locDeleg ? "{$locGov} - {$locDeleg}" : $locGov) : ($seller?->location ?? $seller?->farm_location ?? '');
+            $locLat = $listingAddr?->lat ? (float)$listingAddr->lat : null;
+            $locLng = $listingAddr?->lng ? (float)$listingAddr->lng : null;
+
             return [
                 'id' => $listing->id,
                 'category' => $listing->category ?? $listing->product?->type ?? 'oil',
@@ -156,6 +162,18 @@ Route::middleware(['web', 'set.locale'])->group(function () {
                 'media' => $listing->media ?? [],
                 'delivery_options' => $listing->delivery_options,
                 'seller_id' => $listing->seller_id,
+                'governorate' => $locGov,
+                'delegation' => $locDeleg,
+                'location' => $locLabel,
+                'lat' => $locLat,
+                'lng' => $locLng,
+                'address' => $listingAddr ? [
+                    'id' => $listingAddr->id,
+                    'governorate' => $listingAddr->governorate,
+                    'delegation' => $listingAddr->delegation,
+                    'lat' => $locLat,
+                    'lng' => $locLng,
+                ] : null,
                 'seller' => $seller ? [
                     'id' => $seller->id,
                     'name' => $seller->name,
@@ -164,9 +182,9 @@ Route::middleware(['web', 'set.locale'])->group(function () {
                     'profile_picture' => $seller->profile_picture,
                     'location' => $seller->location ?? $seller->farm_location ?? '',
                     'farm_location' => $seller->farm_location ?? '',
-                    'lat' => $address?->latitude ? (float)$address->latitude : null,
-                    'lng' => $address?->longitude ? (float)$address->longitude : null,
-                    'addresses' => $address ? [['governorate' => $address->governorate, 'latitude' => (float)$address->latitude, 'longitude' => (float)$address->longitude]] : []
+                    'lat' => $locLat ?? ($seller->addresses?->first()?->lat ? (float)$seller->addresses->first()->lat : null),
+                    'lng' => $locLng ?? ($seller->addresses?->first()?->lng ? (float)$seller->addresses->first()->lng : null),
+                    'addresses' => $listingAddr ? [['governorate' => $listingAddr->governorate, 'latitude' => $locLat, 'longitude' => $locLng, 'lat' => $locLat, 'lng' => $locLng]] : []
                 ] : null,
                 'product' => $listing->product ? [
                     'type' => $listing->product->type,
@@ -226,7 +244,7 @@ Route::middleware(['web', 'set.locale'])->group(function () {
         if (!$article) {
             return redirect(url(app()->getLocale() . '/articles'), 301);
         }
-        $priorityIds = [18, 15, 11];
+        $priorityIds = [19, 18, 15, 11];
         $priorityArticles = \App\Models\Article::where('is_active', true)
             ->where('id', '!=', $id)
             ->whereIn('id', $priorityIds)
