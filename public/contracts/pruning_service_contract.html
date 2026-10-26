@@ -264,10 +264,50 @@
             font-weight: 700;
             padding: 0 4px;
             vertical-align: baseline;
+            outline: none;
+            transition: all 0.2s ease;
         }
 
-        .fill-line-xs { min-width: 40px; }
-        .fill-line-sm { min-width: 55px; }
+        .edit-mode-on .fill-line {
+            background-color: #fffbeb;
+            border-bottom: 1.5px dashed #d97706;
+            cursor: text;
+        }
+
+        .edit-mode-on .fill-line:hover, .edit-mode-on .fill-line:focus {
+            background-color: #fef3c7;
+            border-bottom: 2px solid #b45309;
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
+        }
+
+        .fill-line:empty::before {
+            content: attr(data-placeholder);
+            color: #94a3b8;
+            font-weight: 400;
+            font-size: 10.5px;
+            font-style: italic;
+        }
+
+        .edit-mode-on .notes-row {
+            background-color: #fffbeb;
+            border-bottom: 1.5px dashed #d97706;
+            cursor: text;
+        }
+
+        .edit-mode-on .notes-row:hover, .edit-mode-on .notes-row:focus {
+            background-color: #fef3c7;
+            border-bottom: 2px solid #b45309;
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 2px solid #eab308;
+            background-color: #fefce8;
+            border-radius: 3px;
+        }
+
+        .fill-line-xs { min-width: 35px; }
+        .fill-line-sm { min-width: 50px; }
         .fill-line-md { min-width: 110px; }
         .fill-line-lg { min-width: 170px; }
 
@@ -336,6 +376,8 @@
             background: #ffffff;
             line-height: 1.4;
             font-size: 11.5px;
+            position: relative;
+            transition: all 0.2s ease;
         }
 
         [dir="ltr"] .clause-item {
@@ -348,13 +390,159 @@
         }
 
         .clause-header {
-            font-weight: 800;
-            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 6px;
             margin-bottom: 2px;
             font-size: 12px;
+        }
+
+        .clause-title {
+            flex: 1;
+            font-weight: 800;
+            color: var(--primary);
+            outline: none;
+            padding: 1px 3px;
+            border-radius: 3px;
+        }
+
+        .clause-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-inline-start: auto;
+            flex-shrink: 0;
+            background: rgba(241, 245, 249, 0.95);
+            padding: 2px 4px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-clause-tool {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            font-size: 10.5px;
+            cursor: pointer;
+            padding: 1px 5px;
+            color: #334155;
+            line-height: 1.2;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .btn-clause-tool:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-clause-delete {
+            color: #b91c1c;
+            background: #fef2f2;
+            border-color: #fecaca;
+            font-weight: 700;
+        }
+
+        .btn-clause-delete:hover {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+
+        .clause-action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding: 5px 9px;
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .btn-clause-add, .btn-clause-preset {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #ffffff;
+            border: 1.5px solid #1B2A1B;
+            color: #1B2A1B;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-clause-add:hover {
+            background: #1B2A1B;
+            color: #ffffff;
+        }
+
+        .btn-clause-preset {
+            border-color: #c59b27;
+            color: #8c6b12;
+            background: #fffdf5;
+        }
+
+        .btn-clause-preset:hover {
+            background: #c59b27;
+            color: #ffffff;
+        }
+
+        .clause-preset-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .preset-menu-dropdown {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            width: 320px;
+            padding: 5px 0;
+            z-index: 100;
+            margin-bottom: 5px;
+        }
+
+        [dir="ltr"] .preset-menu-dropdown {
+            right: auto;
+            left: 0;
+        }
+
+        .preset-menu-dropdown.hidden {
+            display: none;
+        }
+
+        .preset-menu-dropdown a {
+            display: block;
+            padding: 6px 10px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s ease;
+        }
+
+        .preset-menu-dropdown a:hover {
+            background: #f8fafc;
+            color: var(--primary);
+        }
+
+        .preset-menu-dropdown a:last-child {
+            border-bottom: none;
         }
 
         .clause-badge {
@@ -365,6 +553,7 @@
             padding: 1px 5px;
             font-size: 9.5px;
             font-weight: 900;
+            flex-shrink: 0;
         }
 
         .clause-badge-gold {
@@ -572,9 +761,21 @@
         <div class="bar-actions">
             <button class="btn btn-outline active" id="btnAr" onclick="setLanguage('ar')">العربية (Arabic)</button>
             <button class="btn btn-outline" id="btnFr" onclick="setLanguage('fr')">Français (الفرنسية)</button>
+            <button class="btn btn-outline active" id="btnEditToggle" onclick="toggleEditMode()" style="border-color: #f59e0b; color: #fef08a;">
+                <span>✏️</span>
+                <span id="txtEditToggle">تعديل الحقول (مفعّل)</span>
+            </button>
+            <button class="btn btn-outline" onclick="toggleFullDocEdit()" id="btnFullEdit" title="تعديل أي نص بالعقد">
+                <span>📝</span>
+                <span id="txtFullEdit">تعديل كامل النص</span>
+            </button>
+            <button class="btn btn-outline" onclick="resetSavedData()" title="إعادة تعيين ومسح البيانات المحفوظة">
+                <span>🔄</span>
+                <span>مسح</span>
+            </button>
             <button class="btn btn-gold" onclick="window.print()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-                طباعة العقد (A4)
+                طباعة / حفظ PDF
             </button>
         </div>
     </header>
@@ -675,128 +876,223 @@
                 </div>
             </div>
 
-            <!-- 4. Key Agreement Clauses -->
+            <!-- 4. Key Agreement Clauses (Dynamic & Editable) -->
             <div class="clauses-container">
 
-                <!-- بند 1: ميثاق الجودة وتعقيم المعدات -->
-                <div class="clause-item content-ar">
-                    <div class="clause-header">
-                        <span class="clause-badge">بند 1</span>
-                        <span>ميثاق الجودة الفنية والتعقيم الإجباري للمعدات (التزام زراعي وقائي صارم):</span>
-                    </div>
-                    <div class="clause-text">
-                        يلتزم الطرف الأول (ZinToop) بإجراء التقليم الفني وفق المعايير الزراعية الحديثة: <strong>تهوئة قلب الشجرة وتوزيع الإضاءة</strong>، وإزالة الأغصان المتشابكة واليابسة والسرطانات المائية (Gourmands / Rejets)، مع موازنة النمو الخضري والإثماري للحد من ظاهرة المعاومة. ويتعهد ZinToop بـ <span class="highlight-tag">التعقيم الإجباري والدوري لكافة المناشير والمقصات والمعدات</span> بمحلول كحولي ومطهر زراعي معتمد لمنع انتقال الأمراض الفطرية والبكتيرية (خاصة سل الزيتون وفطريات الأوعية)، مع دهن الجروح والقصات الكبيرة بالماستيك أو محلول نحاسي واقٍ.
-                    </div>
-                </div>
-
-                <!-- بند 2: التسعير حسب عدد الأشجار وحجمها -->
-                <div class="clause-item content-ar">
-                    <div class="clause-header">
-                        <span class="clause-badge">بند 2</span>
-                        <span>جدول التسعير المعتمد حسب حجم وأبعاد الأشجار (Calibre):</span>
-                    </div>
-                    <div class="clause-text">
-                        تم الاتفاق على احتساب أجر التقليم الصافي على أساس الحجم التقديري للأشجار وفق الجدول الآتي:
-                        <div class="caliber-grid">
-                            <div class="caliber-card">
-                                <div class="caliber-title">1. أشجار فتية / صغيرة (غراسة حديثة)</div>
-                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-small"></span> ]</strong> شجرة</div>
-                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-small">3.500</span> ]</strong> د.ت / أصل</div>
-                            </div>
-                            <div class="caliber-card">
-                                <div class="caliber-title">2. أشجار متوسطة (في أوج الإنتاج)</div>
-                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium"></span> ]</strong> شجرة</div>
-                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-medium">6.500</span> ]</strong> د.ت / أصل</div>
-                            </div>
-                            <div class="caliber-card">
-                                <div class="caliber-title">3. أشجار كبرى / معمرة (هرمة وتجديد)</div>
-                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-large"></span> ]</strong> شجرة</div>
-                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-large">10.000</span> ]</strong> د.ت / أصل</div>
+                <!-- ARABIC CLAUSES LIST -->
+                <div id="clausesListAr" class="content-ar clauses-list">
+                    <!-- بند 1 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">بند 1</span>
+                            <span class="clause-title" contenteditable="true">ميثاق الجودة الفنية والتعقيم الإجباري للمعدات (التزام زراعي وقائي صارم):</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="تحريك لأعلى">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="تحريك لأسفل">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="حذف هذا البند">🗑️ حذف</button>
                             </div>
                         </div>
-                        المجموع التقديري: [ <strong><span class="fill-line fill-line-xs slot-trees-total"></span></strong> ] أصل بقيمة إجمالية تقديرية قدرها: <strong>[ <span class="fill-line fill-line-md slot-amount-total"></span> ] دينار تونسي (د.ت)</strong>، وتتم التسوية النهائية بحسب الإحصاء الفعلي للأصول المقلمة على أرض الواقع.
+                        <div class="clause-text" contenteditable="true">
+                            يلتزم الطرف الأول (ZinToop) بإجراء التقليم الفني وفق المعايير الزراعية الحديثة: <strong>تهوئة قلب الشجرة وتوزيع الإضاءة</strong>، وإزالة الأغصان المتشابكة واليابسة والسرطانات المائية (Gourmands / Rejets)، مع موازنة النمو الخضري والإثماري للحد من ظاهرة المعاومة. ويتعهد ZinToop بـ <span class="highlight-tag">التعقيم الإجباري والدوري لكافة المناشير والمقصات والمعدات</span> بمحلول كحولي ومطهر زراعي معتمد لمنع انتقال الأمراض الفطرية والبكتيرية (خاصة سل الزيتون وفطريات الأوعية)، مع دهن الجروح والقصات الكبيرة بالماستيك أو محلول نحاسي واقٍ.
+                        </div>
                     </div>
-                </div>
 
-                <!-- بند 3: العربون وموعد انطلاق الأشغال -->
-                <div class="clause-item content-ar">
-                    <div class="clause-header">
-                        <span class="clause-badge">بند 3</span>
-                        <span>العربون وتثبيت موعد انطلاق الأشغال:</span>
-                    </div>
-                    <div class="clause-text">
-                        يدفع الطرف الثاني عند توقيع هذا العقد عربوناً بنسبة <strong>[ <span class="fill-line fill-line-xs slot-advance-pct"></span> % ]</strong> قدره <strong>[ <span class="fill-line fill-line-sm slot-advance"></span> د.ت ]</strong> لتأكيد الحجز وتخصيص الفريق الفني والمعدات إثر المعاينة الميدانية للضيعة. وقد تم تحديد <strong>تاريخ بداية الأشغال</strong> يوم: [ <strong dir="ltr" style="unicode-bidi: isolate; display: inline-block;">...... / ...... / 202<span class="fill-line" style="min-width: 18px;"></span></strong> ].
-                    </div>
-                </div>
-
-                <!-- بند 4: شروط الخلاص المالي -->
-                <div class="clause-item content-ar">
-                    <div class="clause-header">
-                        <span class="clause-badge clause-badge-gold">بند 4</span>
-                        <span>شروط الخلاص المالي:</span>
-                    </div>
-                    <div class="clause-text">
-                        يكون الدفع <span class="highlight-tag">دفعة واحدة فورية في نفس اليوم عند انتهاء الأشغال</span> إذا كانت مدة العمل قصيرة (<strong>&le; أسبوع واحد</strong>)؛ بينما يكون <span class="highlight-tag">الخلاص أسبوعياً دورياً</span> للضيعات والمشاريع الكبرى (<strong>> أسبوع</strong>) بحسب عدد الأصول التي تم تقليمها فعلياً خلال الأسبوع المنقضي، مع خصم وتسوية العربون بالحساب النهائي.
-                    </div>
-                </div>
-
-                <!-- FRENCH CLAUSES -->
-                <div class="clause-item content-fr">
-                    <div class="clause-header">
-                        <span class="clause-badge">Art. 1</span>
-                        <span>Charte Qualité & Désinfection Systématique du Matériel (Sécurité Sanitaire):</span>
-                    </div>
-                    <div class="clause-text">
-                        Taille raisonnée conforme aux قواعد agronomiques (aération du centre de l'arbre, équilibre bois/feuillage, élimination des gourmands et du bois mort). ZinToop s'engage à la <span class="highlight-tag">désinfection systématique des scies, sécateurs et outils</span> avec solution antiseptique homologuée afin de prévenir la propagation des bactérioses (galle du collet) et mycoses, avec masticage protecteur des plaies importantes.
-                    </div>
-                </div>
-
-                <div class="clause-item content-fr">
-                    <div class="clause-header">
-                        <span class="clause-badge">Art. 2</span>
-                        <span>Grille Tarifaire Selon le Gabarit des Arbres (Calibre):</span>
-                    </div>
-                    <div class="clause-text">
-                        Tarification nette convenue selon le volume et la taille des sujets:
-                        <div class="caliber-grid">
-                            <div class="caliber-card">
-                                <div class="caliber-title">1. Jeunes sujets / Petite taille</div>
-                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-small"></span> ]</strong></div>
-                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-small">3.500</span> ]</strong> DT/pied</div>
-                            </div>
-                            <div class="caliber-card">
-                                <div class="caliber-title">2. Arbres moyens en production</div>
-                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium"></span> ]</strong></div>
-                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-medium">6.500</span> ]</strong> DT/pied</div>
-                            </div>
-                            <div class="caliber-card">
-                                <div class="caliber-title">3. Grands arbres / Rajeunissement</div>
-                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-large"></span> ]</strong></div>
-                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-large">10.000</span> ]</strong> DT/pied</div>
+                    <!-- بند 2 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">بند 2</span>
+                            <span class="clause-title" contenteditable="true">جدول التسعير المعتمد حسب حجم وأبعاد الأشجار (Calibre):</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="تحريك لأعلى">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="تحريك لأسفل">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="حذف هذا البند">🗑️ حذف</button>
                             </div>
                         </div>
-                        Total estimé: [ <strong><span class="fill-line fill-line-xs slot-trees-total"></span></strong> ] pieds pour un montant prévisionnel de <strong>[ <span class="fill-line fill-line-md slot-amount-total"></span> ] DT</strong>. Régularisation au comptage réel final.
+                        <div class="clause-text" contenteditable="true">
+                            تم الاتفاق على احتساب أجر التقليم الصافي على أساس الحجم التقديري للأشجار وفق الجدول الآتي:
+                            <div class="caliber-grid">
+                                <div class="caliber-card">
+                                    <div class="caliber-title">1. أشجار فتية / صغيرة (غراسة حديثة)</div>
+                                    <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-small" contenteditable="true"></span> ]</strong> شجرة</div>
+                                    <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-small" contenteditable="true">3.500</span> ]</strong> د.ت / أصل</div>
+                                </div>
+                                <div class="caliber-card">
+                                    <div class="caliber-title">2. أشجار متوسطة (في أوج الإنتاج)</div>
+                                    <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium" contenteditable="true"></span> ]</strong> شجرة</div>
+                                    <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-medium" contenteditable="true">6.500</span> ]</strong> د.ت / أصل</div>
+                                </div>
+                                <div class="caliber-card">
+                                    <div class="caliber-title">3. أشجار كبرى / معمرة (هرمة وتجديد)</div>
+                                    <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-large" contenteditable="true"></span> ]</strong> شجرة</div>
+                                    <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-large" contenteditable="true">10.000</span> ]</strong> د.ت / أصل</div>
+                                </div>
+                            </div>
+                            المجموع التقديري: [ <strong><span class="fill-line fill-line-xs slot-trees-total" contenteditable="true"></span></strong> ] أصل بقيمة إجمالية تقديرية قدرها: <strong>[ <span class="fill-line fill-line-md slot-amount-total" contenteditable="true"></span> ] دينار تونسي (د.ت)</strong>، وتتم التسوية النهائية بحسب الإحصاء الفعلي للأصول المقلمة على أرض الواقع.
+                        </div>
+                    </div>
+
+                    <!-- بند 3 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">بند 3</span>
+                            <span class="clause-title" contenteditable="true">العربون وموعد انطلاق الأشغال:</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="تحريك لأعلى">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="تحريك لأسفل">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="حذف هذا البند">🗑️ حذف</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            يدفع الطرف الثاني عند توقيع هذا العقد عربوناً بنسبة <strong>[ <span class="fill-line fill-line-xs slot-advance-pct" contenteditable="true"></span> % ]</strong> قدره <strong>[ <span class="fill-line fill-line-sm slot-advance" contenteditable="true"></span> د.ت ]</strong> لتأكيد الحجز وتخصيص الفريق الفني والمعدات إثر المعاينة الميدانية للضيعة. وقد تم تحديد <strong>تاريخ بداية الأشغال</strong> يوم: [ <strong dir="ltr" style="unicode-bidi: isolate; display: inline-block;">...... / ...... / 202<span class="fill-line" style="min-width: 18px;" contenteditable="true"></span></strong> ].
+                        </div>
+                    </div>
+
+                    <!-- بند 4 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge clause-badge-gold">بند 4</span>
+                            <span class="clause-title" contenteditable="true">شروط الخلاص المالي:</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="تحريك لأعلى">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="تحريك لأسفل">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="حذف هذا البند">🗑️ حذف</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            يكون الدفع <span class="highlight-tag">دفعة واحدة فورية في نفس اليوم عند انتهاء الأشغال</span> إذا كانت مدة العمل قصيرة (<strong>&le; أسبوع واحد</strong>)؛ بينما يكون <span class="highlight-tag">الخلاص أسبوعياً دورياً</span> للضيعات والمشاريع الكبرى (<strong>> أسبوع</strong>) بحسب عدد الأصول التي تم تقليمها فعلياً خلال الأسبوع المنقضي، مع خصم وتسوية العربون بالحساب النهائي.
+                        </div>
                     </div>
                 </div>
 
-                <div class="clause-item content-fr">
-                    <div class="clause-header">
-                        <span class="clause-badge">Art. 3</span>
-                        <span>Acompte de Réservation & Début des Travaux:</span>
+                <!-- ARABIC CLAUSE ACTIONS BAR -->
+                <div class="clause-action-bar no-print content-ar">
+                    <button type="button" class="btn-clause-add" onclick="addNewClause('ar')">
+                        <span>➕ إضافة بند فارغ</span>
+                    </button>
+                    <div class="clause-preset-dropdown">
+                        <button type="button" class="btn-clause-preset" onclick="togglePresetMenu('ar')">
+                            <span>⚡ إضافة بند من القوالب الجاهزة ▾</span>
+                        </button>
+                        <div id="presetMenuAr" class="preset-menu-dropdown hidden">
+                            <a href="javascript:void(0)" onclick="addPresetClause('broyage_bois', 'ar')">🪵 مخلفات التقليم والفرامات (Chipping)</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('mastic', 'ar')">🩹 معالجة القصات الكبيرة بالماستيك</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('rest_rain', 'ar')">🌧️ الراحة الأسبوعية وتوقف الأشغال عند المطر</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('safety', 'ar')">🛡️ السلامة المهنية ومسؤولية العمالة</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('dispute', 'ar')">⚖️ فسخ العقد والاختصاص القضائي</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('custom', 'ar')">✍️ بند مخصص إضافي</a>
+                        </div>
                     </div>
-                    <div class="clause-text">
-                        Versement à la signature d'un acompte de <strong>[ <span class="fill-line fill-line-xs slot-advance-pct"></span> % ]</strong> (soit [ <span class="fill-line fill-line-sm slot-advance"></span> DT ]) confirmant le planning et l'affectation de l'équipe technique. <strong>Date convenue de démarrage du chantier:</strong> [ <strong>...... / ...... / 202<span class="fill-line" style="min-width: 18px;"></span></strong> ].
+                    <button type="button" class="btn-clause-tool" onclick="resetClausesToDefault('ar')" style="margin-right: auto;" title="استرجاع البنود الـ 4 الأصلية">
+                        <span>🔄 البنود الأصلية</span>
+                    </button>
+                </div>
+
+                <!-- FRENCH CLAUSES LIST -->
+                <div id="clausesListFr" class="content-fr clauses-list">
+                    <!-- Art. 1 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">Art. 1</span>
+                            <span class="clause-title" contenteditable="true">Charte Qualité & Désinfection Systématique du Matériel (Sécurité Sanitaire):</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="Déplacer vers le haut">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="Déplacer vers le bas">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="Supprimer cet article">🗑️ Suppr</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            Taille raisonnée conforme aux règles agronomiques (aération du centre de l'arbre, équilibre bois/feuillage, élimination des gourmands et du bois mort). ZinToop s'engage à la <span class="highlight-tag">désinfection systématique des scies, sécateurs et outils</span> avec solution antiseptique homologuée afin de prévenir la propagation des bactérioses (galle du collet) et mycoses, avec masticage protecteur des plaies importantes.
+                        </div>
+                    </div>
+
+                    <!-- Art. 2 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">Art. 2</span>
+                            <span class="clause-title" contenteditable="true">Grille Tarifaire Selon le Gabarit des Arbres (Calibre):</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="Déplacer vers le haut">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="Déplacer vers le bas">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="Supprimer cet article">🗑️ Suppr</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            Tarification nette convenue selon le volume et la taille des sujets:
+                            <div class="caliber-grid">
+                                <div class="caliber-card">
+                                    <div class="caliber-title">1. Jeunes sujets / Petite taille</div>
+                                    <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-small" contenteditable="true"></span> ]</strong></div>
+                                    <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-small" contenteditable="true">3.500</span> ]</strong> DT/pied</div>
+                                </div>
+                                <div class="caliber-card">
+                                    <div class="caliber-title">2. Arbres moyens en production</div>
+                                    <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium" contenteditable="true"></span> ]</strong></div>
+                                    <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-medium" contenteditable="true">6.500</span> ]</strong> DT/pied</div>
+                                </div>
+                                <div class="caliber-card">
+                                    <div class="caliber-title">3. Grands arbres / Rajeunissement</div>
+                                    <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-large" contenteditable="true"></span> ]</strong></div>
+                                    <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-large" contenteditable="true">10.000</span> ]</strong> DT/pied</div>
+                                </div>
+                            </div>
+                            Total estimé: [ <strong><span class="fill-line fill-line-xs slot-trees-total" contenteditable="true"></span></strong> ] pieds pour un montant prévisionnel de <strong>[ <span class="fill-line fill-line-md slot-amount-total" contenteditable="true"></span> ] DT</strong>. Régularisation au comptage réel final.
+                        </div>
+                    </div>
+
+                    <!-- Art. 3 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge">Art. 3</span>
+                            <span class="clause-title" contenteditable="true">Acompte de Réservation & Début des Travaux:</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="Déplacer vers le haut">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="Déplacer vers le bas">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="Supprimer cet article">🗑️ Suppr</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            Versement à la signature d'un acompte de <strong>[ <span class="fill-line fill-line-xs slot-advance-pct" contenteditable="true"></span> % ]</strong> (soit [ <span class="fill-line fill-line-sm slot-advance" contenteditable="true"></span> DT ]) confirmant le planning et l'affectation de l'équipe technique. <strong>Date convenue de démarrage du chantier:</strong> [ <strong>...... / ...... / 202<span class="fill-line" style="min-width: 18px;" contenteditable="true"></span></strong> ].
+                        </div>
+                    </div>
+
+                    <!-- Art. 4 -->
+                    <div class="clause-item">
+                        <div class="clause-header">
+                            <span class="clause-badge clause-badge-gold">Art. 4</span>
+                            <span class="clause-title" contenteditable="true">Modalités de Paiement:</span>
+                            <div class="clause-controls no-print">
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="Déplacer vers le haut">▲</button>
+                                <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="Déplacer vers le bas">▼</button>
+                                <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="Supprimer cet article">🗑️ Suppr</button>
+                            </div>
+                        </div>
+                        <div class="clause-text" contenteditable="true">
+                            Règlement <span class="highlight-tag">intégral le jour de clôture en un seul versement</span> pour les chantiers de courte durée (<strong>&le; 1 semaine</strong>) ; ou <span class="highlight-tag">hebdomadaire régulier</span> pour les grands domaines (<strong>> 1 semaine</strong>) au prorata des pieds taillés, avec imputation de l'acompte au décompte final.
+                        </div>
                     </div>
                 </div>
 
-                <div class="clause-item content-fr">
-                    <div class="clause-header">
-                        <span class="clause-badge clause-badge-gold">Art. 4</span>
-                        <span>Modalités de Paiement:</span>
+                <!-- FRENCH CLAUSE ACTIONS BAR -->
+                <div class="clause-action-bar no-print content-fr">
+                    <button type="button" class="btn-clause-add" onclick="addNewClause('fr')">
+                        <span>➕ Ajouter un article libre</span>
+                    </button>
+                    <div class="clause-preset-dropdown">
+                        <button type="button" class="btn-clause-preset" onclick="togglePresetMenu('fr')">
+                            <span>⚡ Ajouter un article modèle ▾</span>
+                        </button>
+                        <div id="presetMenuFr" class="preset-menu-dropdown hidden">
+                            <a href="javascript:void(0)" onclick="addPresetClause('broyage_bois', 'fr')">🪵 Broyage des Branches & Rémanents</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('mastic', 'fr')">🩹 Masticage des Grosses Plaies</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('rest_rain', 'fr')">🌧️ Repos & Suspension pour Intempéries</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('safety', 'fr')">🛡️ Sécurité du Travail & EPI</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('dispute', 'fr')">⚖️ Résiliation & Juridiction Compétente</a>
+                            <a href="javascript:void(0)" onclick="addPresetClause('custom', 'fr')">✍️ Article personnalisé complémentaire</a>
+                        </div>
                     </div>
-                    <div class="clause-text">
-                        Règlement <span class="highlight-tag">intégral le jour de clôture en un seul versement</span> pour les chantiers de courte durée (<strong>&le; 1 semaine</strong>) ; ou <span class="highlight-tag">hebdomadaire régulier</span> pour les grands domaines (<strong>> 1 semaine</strong>) au prorata des pieds taillés, avec imputation de l'acompte au décompte final.
-                    </div>
+                    <button type="button" class="btn-clause-tool" onclick="resetClausesToDefault('fr')" style="margin-left: auto;" title="Restaurer les 4 articles initiaux">
+                        <span>🔄 Articles initiaux</span>
+                    </button>
                 </div>
 
             </div>
@@ -899,18 +1195,329 @@
             btnFr.classList.remove('active');
 
             if (lang === 'ar') {
-                body.className = 'lang-ar';
+                body.className = 'lang-ar edit-mode-on';
                 body.setAttribute('dir', 'rtl');
                 btnAr.classList.add('active');
             } else if (lang === 'fr') {
-                body.className = 'lang-fr';
+                body.className = 'lang-fr edit-mode-on';
                 body.setAttribute('dir', 'ltr');
                 btnFr.classList.add('active');
             }
+            reindexClauses(lang);
         }
 
-        // Auto-fill slots from URL query parameters (Field Dispatch Manager)
+        // Clause Templates / Presets (Pruning Specific)
+        const CLAUSE_PRESETS = {
+            broyage_bois: {
+                title_ar: "مخلفات التقليم وفرم الأغصان (الحطب والأوراق):",
+                text_ar: "اتفق الطرفان على أن جمع مخلفات التقليم وحرقها أو فرمها (Broyage) بالضيعة لإعادة إدماجها في التربة يكون على عاتق [ الطرف الأول / الطرف الثاني ]، مع توفير الفرامة والمعدات اللازمة لذلك.",
+                title_fr: "Gestion des Déchets de Taille & Broyage des Branches :",
+                text_fr: "Le ramassage et le broyage des rémanents de taille pour paillage au sol sont à la charge de [ Prestataire / Client ], avec mise à disposition du matériel approprié."
+            },
+            mastic: {
+                title_ar: "دهن الجروح الكبيرة بالماستيك الزراعي:",
+                text_ar: "يلتزم الطرف الأول بدهن وتغطية كافة القصات والجروح التي يتجاوز قطرها 4 سم بمادة الماستيك أو معجون وقائي عازل، لحماية خشب الشجرة من الفطريات والتسوس.",
+                title_fr: "Application de Mastic Cicatrisant sur Grosses Coupes :",
+                text_fr: "Le prestataire applique un mastic cicatrisant ou badigeon cuprique sur toute plaie de taille de diamètre supérieur à 4 cm afin de prévenir les chancres et infections fongiques."
+            },
+            rest_rain: {
+                title_ar: "الراحة الأسبوعية وتوقف الأشغال عند المطر:",
+                text_ar: "تتوقف عمليات التقليم آلياً عند تساقط الأمطار أو البلل الشديد تفادياً لانتقال العدوى البكتيرية في الأنسجة الرطبة، وتُمدد فترة الأشغال تلقائياً بقدر أيام التوقف الفعلية.",
+                title_fr: "Repos Hebdomadaire & Suspension pour Intempéries :",
+                text_fr: "Arrêt immédiat de la taille en cas de pluie ou forte humidité pour éviter l'infection des plaies fraîches, prolongeant d'autant l'échéance convenue."
+            },
+            safety: {
+                title_ar: "السلامة المهنية والتأمين ضد حوادث الشغل:",
+                text_ar: "يضمن الطرف الأول تقيد عماله بجميع قواعد السلامة الفلاحية واستعمال معدات الحماية الفردية (خوذات، نظارات، قفازات واقية)، ويتحمل مسؤوليته القانونية الكاملة عن فريقه.",
+                title_fr: "Sécurité du Travail & Équipements de Protection :",
+                text_fr: "Le prestataire veille au port strict des EPI (gants anticoupure, lunettes, casques) et assume la responsabilité pleine et entière de son personnel d'élagage."
+            },
+            dispute: {
+                title_ar: "فسخ العقد والاختصاص القضائي:",
+                text_ar: "في حال إخلال أحد الطرفين بالتزاماته الفنية أو المالية، يحق للطرف الآخر توجيه إشعار كتابي بأجل 48 ساعة. وتختص المحاكم التونسية بالنظر في أي نزاع ناشئ عن هذا العقد.",
+                title_fr: "Résiliation & Juridiction Compétente :",
+                text_fr: "En cas d'inexécution notifiée sous préavis de 48 heures, le contrat peut être résilié. Tout litige relève de la compétence des tribunaux tunisiens."
+            },
+            custom: {
+                title_ar: "بند إضافي خاص بالتقليم:",
+                text_ar: "اتفق الطرفان بموجب هذا البند على ما يلي: [ ........................................................................................................................................ ].",
+                title_fr: "Article Complémentaire Particulier :",
+                text_fr: "Il est expressément convenu entre les parties ce qui suit : [ ........................................................................................................................................ ]."
+            }
+        };
+
+        function getClausesList(lang) {
+            return lang === 'ar' ? document.getElementById('clausesListAr') : document.getElementById('clausesListFr');
+        }
+
+        function reindexClauses(lang) {
+            const list = getClausesList(lang);
+            if (!list) return;
+            const items = list.querySelectorAll('.clause-item');
+            items.forEach((item, index) => {
+                const badge = item.querySelector('.clause-badge');
+                if (badge) {
+                    badge.innerText = (lang === 'ar') ? `بند ${index + 1}` : `Art. ${index + 1}`;
+                }
+            });
+        }
+
+        function deleteClause(btn) {
+            const item = btn.closest('.clause-item');
+            if (!item) return;
+            const isAr = document.body.classList.contains('lang-ar');
+            const msg = isAr ? 'هل أنت متأكد من حذف هذا البند؟' : 'Voulez-vous supprimer cet article ?';
+            if (confirm(msg)) {
+                item.remove();
+                reindexClauses(isAr ? 'ar' : 'fr');
+                saveClausesState();
+            }
+        }
+
+        function moveClauseUp(btn) {
+            const item = btn.closest('.clause-item');
+            if (item && item.previousElementSibling) {
+                item.parentElement.insertBefore(item, item.previousElementSibling);
+                const isAr = document.body.classList.contains('lang-ar');
+                reindexClauses(isAr ? 'ar' : 'fr');
+                saveClausesState();
+            }
+        }
+
+        function moveClauseDown(btn) {
+            const item = btn.closest('.clause-item');
+            if (item && item.nextElementSibling) {
+                item.parentElement.insertBefore(item.nextElementSibling, item);
+                const isAr = document.body.classList.contains('lang-ar');
+                reindexClauses(isAr ? 'ar' : 'fr');
+                saveClausesState();
+            }
+        }
+
+        function togglePresetMenu(lang) {
+            const menuId = lang === 'ar' ? 'presetMenuAr' : 'presetMenuFr';
+            const menu = document.getElementById(menuId);
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.clause-preset-dropdown')) {
+                document.querySelectorAll('.preset-menu-dropdown').forEach(m => m.classList.add('hidden'));
+            }
+        });
+
+        function addNewClause(lang) {
+            addPresetClause('custom', lang);
+        }
+
+        function addPresetClause(key, lang) {
+            const list = getClausesList(lang);
+            if (!list) return;
+
+            const preset = CLAUSE_PRESETS[key] || CLAUSE_PRESETS.custom;
+            const title = (lang === 'ar') ? preset.title_ar : preset.title_fr;
+            const text = (lang === 'ar') ? preset.text_ar : preset.text_fr;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'clause-item';
+            newItem.innerHTML = `
+                <div class="clause-header">
+                    <span class="clause-badge">${lang === 'ar' ? 'بند' : 'Art.'}</span>
+                    <span class="clause-title" contenteditable="true">${title}</span>
+                    <div class="clause-controls no-print">
+                        <button type="button" class="btn-clause-tool" onclick="moveClauseUp(this)" title="${lang === 'ar' ? 'تحريك لأعلى' : 'Monter'}">▲</button>
+                        <button type="button" class="btn-clause-tool" onclick="moveClauseDown(this)" title="${lang === 'ar' ? 'تحريك لأسفل' : 'Descendre'}">▼</button>
+                        <button type="button" class="btn-clause-tool btn-clause-delete" onclick="deleteClause(this)" title="${lang === 'ar' ? 'حذف هذا البند' : 'Supprimer'}">🗑️ ${lang === 'ar' ? 'حذف' : 'Suppr'}</button>
+                    </div>
+                </div>
+                <div class="clause-text" contenteditable="true">${text}</div>
+            `;
+
+            list.appendChild(newItem);
+            reindexClauses(lang);
+
+            newItem.querySelectorAll('[contenteditable]').forEach(el => {
+                el.addEventListener('input', saveClausesState);
+            });
+
+            document.querySelectorAll('.preset-menu-dropdown').forEach(m => m.classList.add('hidden'));
+            newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            saveClausesState();
+        }
+
+        function saveClausesState() {
+            try {
+                const listAr = document.getElementById('clausesListAr');
+                const listFr = document.getElementById('clausesListFr');
+                if (listAr) localStorage.setItem('zintoop_pruning_clauses_ar', listAr.innerHTML);
+                if (listFr) localStorage.setItem('zintoop_pruning_clauses_fr', listFr.innerHTML);
+            } catch (e) {
+                console.error('Error saving pruning clauses state', e);
+            }
+        }
+
+        function loadClausesState() {
+            try {
+                const rawAr = localStorage.getItem('zintoop_pruning_clauses_ar');
+                const rawFr = localStorage.getItem('zintoop_pruning_clauses_fr');
+                const listAr = document.getElementById('clausesListAr');
+                const listFr = document.getElementById('clausesListFr');
+
+                if (rawAr && listAr) listAr.innerHTML = rawAr;
+                if (rawFr && listFr) listFr.innerHTML = rawFr;
+
+                reindexClauses('ar');
+                reindexClauses('fr');
+
+                document.querySelectorAll('.clause-title, .clause-text').forEach(el => {
+                    el.setAttribute('contenteditable', 'true');
+                    el.addEventListener('input', saveClausesState);
+                });
+            } catch (e) {
+                console.error('Error loading pruning clauses state', e);
+            }
+        }
+
+        function resetClausesToDefault(lang) {
+            const isAr = lang === 'ar';
+            const msg = isAr ? 'هل تريد استرجاع البنود الـ 4 الأصلية وإلغاء أي تعديلات على البنود؟' : 'Voulez-vous restaurer les 4 articles initiaux ?';
+            if (confirm(msg)) {
+                if (isAr) localStorage.removeItem('zintoop_pruning_clauses_ar');
+                else localStorage.removeItem('zintoop_pruning_clauses_fr');
+                location.reload();
+            }
+        }
+
+        function saveToLocalStorage() {
+            const data = {};
+            document.querySelectorAll('.fill-line').forEach((el, index) => {
+                const key = el.className.split(' ').filter(c => c.startsWith('slot-'))[0] || ('field_' + index);
+                data[key] = el.innerText.trim();
+            });
+            const notes = [];
+            document.querySelectorAll('.notes-row').forEach(row => notes.push(row.innerText.trim()));
+            data['notes'] = notes;
+            try {
+                localStorage.setItem('zintoop_pruning_contract_fields', JSON.stringify(data));
+            } catch(e) {}
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem('zintoop_pruning_contract_fields');
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                for (const [key, val] of Object.entries(data)) {
+                    if (key === 'notes' && Array.isArray(val)) {
+                        document.querySelectorAll('.notes-row').forEach((row, idx) => {
+                            if (val[idx]) row.innerText = val[idx];
+                        });
+                    } else if (val) {
+                        document.querySelectorAll('.' + key).forEach(el => {
+                            if (el.innerText.trim() === '' || el.innerText.includes('......')) {
+                                el.innerText = val;
+                            }
+                        });
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function resetSavedData() {
+            if (confirm('هل تريد مسح جميع البيانات المدخلة وإعادة تعيين العقد؟ / Réinitialiser toutes les données ?')) {
+                localStorage.removeItem('zintoop_pruning_contract_fields');
+                localStorage.removeItem('zintoop_pruning_clauses_ar');
+                localStorage.removeItem('zintoop_pruning_clauses_fr');
+                location.reload();
+            }
+        }
+
+        let isFullDocEditable = false;
+        function toggleFullDocEdit() {
+            isFullDocEditable = !isFullDocEditable;
+            const doc = document.getElementById('contractDoc');
+            const btn = document.getElementById('btnFullEdit');
+            const txt = document.getElementById('txtFullEdit');
+            if (isFullDocEditable) {
+                doc.setAttribute('contenteditable', 'true');
+                btn.classList.add('active');
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#6ee7b7';
+                txt.innerText = 'إنهاء تعديل كامل النص';
+            } else {
+                doc.removeAttribute('contenteditable');
+                btn.classList.remove('active');
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                txt.innerText = 'تعديل كامل النص';
+            }
+        }
+
+        let isEditMode = true;
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const body = document.body;
+            const btn = document.getElementById('btnEditToggle');
+            const txt = document.getElementById('txtEditToggle');
+            if (isEditMode) {
+                body.classList.add('edit-mode-on');
+                btn.classList.add('active');
+                btn.style.borderColor = '#f59e0b';
+                btn.style.color = '#fef08a';
+                txt.innerText = 'تعديل الحقول (مفعّل)';
+            } else {
+                body.classList.remove('edit-mode-on');
+                btn.classList.remove('active');
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                txt.innerText = 'تعديل الحقول (معطّل)';
+            }
+        }
+
+        // Initialize Placeholders and Editable state
         window.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('edit-mode-on');
+
+            // Load saved clauses if any
+            loadClausesState();
+
+            // Make clauses editable and track changes
+            document.querySelectorAll('.clause-title, .clause-text').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+                el.addEventListener('input', saveClausesState);
+            });
+
+            // Set contenteditable and placeholders for fill-lines
+            document.querySelectorAll('.fill-line').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+                if (el.classList.contains('slot-client')) el.setAttribute('data-placeholder', 'اسم الفلاح / المستفيد');
+                else if (el.classList.contains('slot-cin')) el.setAttribute('data-placeholder', 'ب.ت.و / المعرف');
+                else if (el.classList.contains('slot-phone')) el.setAttribute('data-placeholder', 'الهاتف');
+                else if (el.classList.contains('slot-address')) el.setAttribute('data-placeholder', 'العنوان');
+                else if (el.classList.contains('slot-location')) el.setAttribute('data-placeholder', 'موقع الضيعة');
+                else if (el.classList.contains('slot-variety')) el.setAttribute('data-placeholder', 'الصنف');
+                else if (el.classList.contains('slot-type')) el.setAttribute('data-placeholder', 'نوع التقليم');
+                else if (el.classList.contains('slot-trees')) el.setAttribute('data-placeholder', 'عدد الأصول');
+                else if (el.classList.contains('slot-trees-total')) el.setAttribute('data-placeholder', 'المجموع');
+                else if (el.classList.contains('slot-amount-total')) el.setAttribute('data-placeholder', 'المبلغ الجملي د.ت');
+                else if (el.classList.contains('slot-advance-pct')) el.setAttribute('data-placeholder', '% العربون');
+                else if (el.classList.contains('slot-advance')) el.setAttribute('data-placeholder', 'مبلغ العربون');
+                else el.setAttribute('data-placeholder', 'اكتب هنا...');
+
+                el.addEventListener('input', saveToLocalStorage);
+            });
+
+            document.querySelectorAll('.notes-row').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+                el.addEventListener('input', saveToLocalStorage);
+            });
+
+            // Load saved data if present
+            loadFromLocalStorage();
+
+            // Auto-fill slots from URL query parameters (Field Dispatch Manager)
             const p = new URLSearchParams(window.location.search);
             if (p.get('client')) document.querySelectorAll('.slot-client').forEach(el => el.innerText = p.get('client'));
             if (p.get('phone')) document.querySelectorAll('.slot-phone').forEach(el => el.innerText = p.get('phone'));
@@ -927,9 +1534,9 @@
             const pMed = parseFloat(p.get('priceMedium')) || 6.500;
             const pLarge = parseFloat(p.get('priceLarge')) || 10.000;
 
-            document.querySelectorAll('.slot-price-small').forEach(el => el.innerText = pSmall.toFixed(3));
-            document.querySelectorAll('.slot-price-medium').forEach(el => el.innerText = pMed.toFixed(3));
-            document.querySelectorAll('.slot-price-large').forEach(el => el.innerText = pLarge.toFixed(3));
+            if (p.has('priceSmall')) document.querySelectorAll('.slot-price-small').forEach(el => el.innerText = pSmall.toFixed(3));
+            if (p.has('priceMedium')) document.querySelectorAll('.slot-price-medium').forEach(el => el.innerText = pMed.toFixed(3));
+            if (p.has('priceLarge')) document.querySelectorAll('.slot-price-large').forEach(el => el.innerText = pLarge.toFixed(3));
 
             let tSmall = 0, tMed = 0, tLarge = 0;
             if (calibre === 'mixte' || p.has('treesSmall') || p.has('treesMedium') || p.has('treesLarge')) {
@@ -940,19 +1547,23 @@
                 tSmall = totalTrees;
             } else if (calibre === 'grand') {
                 tLarge = totalTrees;
-            } else {
+            } else if (p.has('trees')) {
                 tMed = totalTrees;
             }
 
             const calcTotal = (tSmall + tMed + tLarge) || totalTrees;
             const calcTotalAmount = (tSmall * pSmall) + (tMed * pMed) + (tLarge * pLarge);
 
-            document.querySelectorAll('.slot-trees-small').forEach(el => el.innerText = tSmall > 0 ? tSmall : '—');
-            document.querySelectorAll('.slot-trees-medium').forEach(el => el.innerText = tMed > 0 ? tMed : '—');
-            document.querySelectorAll('.slot-trees-large').forEach(el => el.innerText = tLarge > 0 ? tLarge : '—');
-            document.querySelectorAll('.slot-trees-total').forEach(el => el.innerText = calcTotal > 0 ? calcTotal : '......');
-            document.querySelectorAll('.slot-trees').forEach(el => el.innerText = calcTotal > 0 ? calcTotal : '......');
-            document.querySelectorAll('.slot-amount-total').forEach(el => el.innerText = calcTotalAmount > 0 ? calcTotalAmount.toFixed(3) : '......');
+            if (tSmall > 0) document.querySelectorAll('.slot-trees-small').forEach(el => el.innerText = tSmall);
+            if (tMed > 0) document.querySelectorAll('.slot-trees-medium').forEach(el => el.innerText = tMed);
+            if (tLarge > 0) document.querySelectorAll('.slot-trees-large').forEach(el => el.innerText = tLarge);
+            if (calcTotal > 0) {
+                document.querySelectorAll('.slot-trees-total').forEach(el => el.innerText = calcTotal);
+                document.querySelectorAll('.slot-trees').forEach(el => el.innerText = calcTotal);
+            }
+            if (calcTotalAmount > 0) {
+                document.querySelectorAll('.slot-amount-total').forEach(el => el.innerText = calcTotalAmount.toFixed(3));
+            }
 
             const adv = parseFloat(p.get('advance')) || 0;
             if (adv > 0 && calcTotalAmount > 0) {
