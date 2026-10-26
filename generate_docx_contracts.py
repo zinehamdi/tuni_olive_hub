@@ -13,6 +13,80 @@ COLOR_GRAY_DARK = RGBColor(40, 40, 40)
 COLOR_GRAY_MUTED = RGBColor(100, 116, 139)
 COLOR_ALERT = RGBColor(185, 28, 28)
 
+TC_PR_ORDER = [
+    'cnfStyle', 'tcW', 'gridSpan', 'hMerge', 'vMerge', 
+    'tcBorders', 'shd', 'noWrap', 'tcMar', 'textDirection', 
+    'tcFitText', 'vAlign', 'hideMark', 'headers', 'cellIns', 
+    'cellDel', 'cellMerge', 'tcPrChange'
+]
+
+P_PR_ORDER = [
+    'pStyle', 'keepNext', 'keepLines', 'pageBreakBefore', 'framePr', 
+    'widowControl', 'numPr', 'pBdr', 'shd', 'tabs', 
+    'suppressAutoHyphens', 'kinsoku', 'wordWrap', 'overflowPunct', 
+    'topLinePunct', 'autoSpaceDE', 'autoSpaceDN', 'bidi', 
+    'adjustRightInd', 'snapToGrid', 'spacing', 'ind', 
+    'contextualSpacing', 'mirrorIndents', 'suppressOverlap', 'jc', 
+    'textDirection', 'textAlignment', 'textboxTightWrap', 
+    'outlineLvl', 'divId', 'cnfStyle', 'rPr', 'sectPr', 'pPrChange'
+]
+
+R_PR_ORDER = [
+    'rStyle', 'rFonts', 'b', 'bCs', 'i', 'iCs', 'caps', 'smallCaps', 
+    'strike', 'dstrike', 'outline', 'shadow', 'emboss', 'imprint', 
+    'noProof', 'snapToGrid', 'vanish', 'webHidden', 'color', 
+    'spacing', 'w', 'kern', 'position', 'sz', 'szCs', 'highlight', 
+    'u', 'effect', 'bdr', 'shd', 'fitText', 'vertAlign', 'rtl', 
+    'cs', 'em', 'lang', 'eastAsianLayout', 'specVanish', 'oMath', 
+    'rPrChange'
+]
+
+TBL_PR_ORDER = [
+    'tblStyle', 'tblpPr', 'tblOverlap', 'bidiVisual', 'tblStyleRowBandSize', 
+    'tblStyleColBandSize', 'tblW', 'jc', 'tblCellSpacing', 'tblInd', 
+    'tblBorders', 'shd', 'tblLayout', 'tblCellMar', 'tblLook', 
+    'tblCaption', 'tblDescription', 'tblPrChange'
+]
+
+def sort_xml_children(element, order_list):
+    if element is None:
+        return
+    def get_order(child):
+        tag = child.tag.split('}')[-1]
+        try:
+            return order_list.index(tag)
+        except ValueError:
+            return 999
+    children = list(element)
+    sorted_children = sorted(children, key=get_order)
+    if children != sorted_children:
+        for child in children:
+            element.remove(child)
+        for child in sorted_children:
+            element.append(child)
+
+def sanitize_document_schema(doc):
+    for p in doc.paragraphs:
+        if p._p.pPr is not None:
+            sort_xml_children(p._p.pPr, P_PR_ORDER)
+        for r in p.runs:
+            if r._r.rPr is not None:
+                sort_xml_children(r._r.rPr, R_PR_ORDER)
+                
+    for tbl in doc.tables:
+        if tbl._tbl.tblPr is not None:
+            sort_xml_children(tbl._tbl.tblPr, TBL_PR_ORDER)
+        for r in tbl.rows:
+            for c in r.cells:
+                if c._tc.tcPr is not None:
+                    sort_xml_children(c._tc.tcPr, TC_PR_ORDER)
+                for p in c.paragraphs:
+                    if p._p.pPr is not None:
+                        sort_xml_children(p._p.pPr, P_PR_ORDER)
+                    for run in p.runs:
+                        if run._r.rPr is not None:
+                            sort_xml_children(run._r.rPr, R_PR_ORDER)
+
 def set_cell_background(cell, hex_color):
     tcPr = cell._tc.get_or_add_tcPr()
     shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{hex_color}"/>')
@@ -296,6 +370,7 @@ def build_contract_recolte_ar(output_path):
     ft_r.font.color.rgb = RGBColor(140, 140, 140)
     set_run_font(ft_r, "Arial", True)
 
+    sanitize_document_schema(doc)
     doc.save(output_path)
     print(f"✅ Generated: {output_path}")
 
@@ -496,6 +571,7 @@ def build_contract_recolte_fr(output_path):
     ft_r.font.size = Pt(8)
     ft_r.font.color.rgb = RGBColor(140, 140, 140)
 
+    sanitize_document_schema(doc)
     doc.save(output_path)
     print(f"✅ Generated: {output_path}")
 
@@ -731,6 +807,7 @@ def build_contract_fas_agri(output_path):
     ft_r.font.color.rgb = RGBColor(140, 140, 140)
     set_run_font(ft_r, "Arial", True)
 
+    sanitize_document_schema(doc)
     doc.save(output_path)
     print(f"✅ Generated: {output_path}")
 
