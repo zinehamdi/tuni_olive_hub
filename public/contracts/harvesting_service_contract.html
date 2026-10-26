@@ -538,6 +538,10 @@
         <div class="bar-actions">
             <button class="btn btn-outline active" id="btnAr" onclick="setLanguage('ar')">العربية (Arabic)</button>
             <button class="btn btn-outline" id="btnFr" onclick="setLanguage('fr')">Français (الفرنسية)</button>
+            <a href="contrat_recolte_zintoop_ar.docx" id="btnDocx" class="btn btn-outline" download style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: rgba(200,163,86,0.18); border-color: var(--accent-gold); color: #fff;">
+                <span>📄</span>
+                <span id="txtDocx">تحميل Word (.docx)</span>
+            </a>
             <button class="btn btn-gold" onclick="window.print()">
                 <span>🖨️</span>
                 <span>طباعة / حفظ PDF (صفحة واحدة A4)</span>
@@ -827,14 +831,21 @@
             btnAr.classList.remove('active');
             btnFr.classList.remove('active');
 
+            const btnDocx = document.getElementById('btnDocx');
+            const txtDocx = document.getElementById('txtDocx');
+
             if (lang === 'ar') {
                 body.className = 'lang-ar';
                 body.setAttribute('dir', 'rtl');
                 btnAr.classList.add('active');
+                if (btnDocx) btnDocx.href = 'contrat_recolte_zintoop_ar.docx';
+                if (txtDocx) txtDocx.innerText = 'تحميل Word (.docx)';
             } else if (lang === 'fr') {
                 body.className = 'lang-fr';
                 body.setAttribute('dir', 'ltr');
                 btnFr.classList.add('active');
+                if (btnDocx) btnDocx.href = 'contrat_recolte_zintoop_fr.docx';
+                if (txtDocx) txtDocx.innerText = 'Télécharger Word (.docx)';
             }
         }
 
