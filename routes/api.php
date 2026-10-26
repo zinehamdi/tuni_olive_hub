@@ -26,6 +26,48 @@ RateLimiter::for('pod-photos', function(Request $request){
 // Lead capture route
 Route::post('subscribe', [\App\Http\Controllers\Api\SubscriberController::class, 'store']);
 
+// ZinToop Field Dispatch Manager: Persistent Local & Server Storage
+Route::get('dispatch-clients', function () {
+    $filePath = storage_path('app/dispatch_clients.json');
+    if (!file_exists($filePath)) {
+        return response()->json(['clients' => null, 'updatedAt' => 0]);
+    }
+    $content = file_get_contents($filePath);
+    $data = json_decode($content, true);
+    if (is_array($data) && isset($data['clients'])) {
+        return response()->json([
+            'clients' => is_array($data['clients']) ? $data['clients'] : [],
+            'updatedAt' => isset($data['updatedAt']) ? (float)$data['updatedAt'] : (filemtime($filePath) * 1000)
+        ]);
+    }
+    return response()->json([
+        'clients' => is_array($data) ? $data : [],
+        'updatedAt' => filemtime($filePath) * 1000
+    ]);
+});
+
+Route::post('dispatch-clients', function (\Illuminate\Http\Request $request) {
+    $clients = $request->input('clients');
+    $updatedAt = $request->input('updatedAt', round(microtime(true) * 1000));
+    if (is_array($clients)) {
+        $filePath = storage_path('app/dispatch_clients.json');
+        if (!file_exists(dirname($filePath))) {
+            mkdir(dirname($filePath), 0755, true);
+        }
+        $payload = [
+            'updatedAt' => (float)$updatedAt,
+            'clients' => $clients
+        ];
+        file_put_contents($filePath, json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        return response()->json([
+            'success' => true,
+            'count' => count($clients),
+            'updatedAt' => $payload['updatedAt']
+        ]);
+    }
+    return response()->json(['success' => false, 'error' => 'Invalid clients payload'], 400);
+});
+
 Route::prefix('v1')->name('api.')->group(function () {
     Route::get('/ping', fn() => response()->json(['ok' => true, 'v' => 1]));
 

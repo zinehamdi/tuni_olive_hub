@@ -1863,5 +1863,10 @@
     "الحد الأدنى لبيع الكيلو حب:": "Minimum selling price per kg (on tree):",
     "الحد الأدنى لبيع القَلبة حب:": "Minimum selling price per Galba (on tree):",
     "قاعدة السوق:": "Golden Market Rule:",
-    "أي سعر حب يعطيهولك الخضار أقل من هذا المبلغ، يعني راك خاسر مقارنة بإنك تجني وتعصر وتبيع زيتها بسعر الباز!": "Any olive purchase offer below this benchmark represents a loss compared to harvesting, milling, and selling the oil at the Baz market rate!"
+    "أي سعر حب يعطيهولك الخضار أقل من هذا المبلغ، يعني راك خاسر مقارنة بإنك تجني وتعصر وتبيع زيتها بسعر الباز!": "Any olive purchase offer below this benchmark represents a loss compared to harvesting, milling, and selling the oil at the Baz market rate!",
+    "معلوم الجني المتداول:": "Usual harvest rates:",
+    "كغ/قلبة": "kg / Galba",
+    "كغ زيت": "kg of oil",
+    "يعادل باللتر:": "Equivalent in liters:",
+    "بيدون": "container(s)"
 }

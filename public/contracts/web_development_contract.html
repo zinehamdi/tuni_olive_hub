@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop - عقد تصميم وتطوير وبرمجة موقع واب | Contrat B2B de Développement de Site Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-light: #2c422c;
+            --accent-gold: #C8A356;
+            --accent-gold-dark: #9E7D30;
+            --accent-green: #3B7A57;
+            --text-dark: #1F2937;
+            --text-muted: #4B5563;
+            --bg-body: #F1F4EE;
+            --white: #FFFFFF;
+            --border-color: #D1D5DB;
+            --border-dark: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', 'Amiri', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.55;
+            font-size: 13px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Top Action Bar (hidden in print) */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #121c12 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+        }
+
+        .bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+
+        .bar-brand span {
+            color: var(--accent-gold);
+        }
+
+        .bar-logo-img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 1px;
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-outline:hover,
+        .btn-outline.active {
+            background: var(--accent-gold);
+            color: #121c12;
+            border-color: var(--accent-gold);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #a68436 100%);
+            color: #121c12;
+            box-shadow: 0 2px 8px rgba(200, 163, 86, 0.35);
+        }
+
+        .btn-gold:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        /* Container & Multi-Page Layout */
+        .contracts-container {
+            max-width: 960px;
+            margin: 25px auto 40px;
+            padding: 0 15px;
+        }
+
+        /* Each Contract Page - Styled for Crisp Professional A4 Rendering */
+        .contract-page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 35px;
+            background: var(--white);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            border: 2px solid #334155;
+            position: relative;
+            padding: 10mm 14mm 8mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Corporate Watermark */
+        .contract-page::before {
+            content: '';
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            width: 420px;
+            height: 420px;
+            transform: translate(-50%, -50%);
+            background-image: url('/images/zintoop-logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .page-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* Official Header */
+        .official-header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3px;
+        }
+
+        .official-logo-img {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .brand-title-ar {
+            font-size: 15.5px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.25;
+            letter-spacing: 0.2px;
+        }
+
+        .brand-title-en {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-gold-dark);
+            letter-spacing: 0.4px;
+            margin-top: 1px;
+        }
+
+        .header-meta-strip {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 10px;
+            color: #334155;
+            line-height: 1.4;
+            background: #f8fafc;
+            padding: 2px 12px;
+            border-radius: 4px;
+            border: 1.2px solid #94a3b8;
+            margin-top: 4px;
+        }
+
+        .header-meta-strip strong {
+            color: var(--primary);
+        }
+
+        .meta-sep {
+            color: var(--accent-gold-dark);
+            font-weight: 900;
+        }
+
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        /* Running Minimal Header for Subsequent Pages */
+        .page-running-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--accent-gold);
+            padding-bottom: 4px;
+            margin-bottom: 10px;
+            font-size: 10.5px;
+            color: #475569;
+        }
+
+        .running-brand {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .running-logo {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-gold);
+            object-fit: contain;
+        }
+
+        .running-doc-num {
+            font-weight: 700;
+            color: var(--accent-gold-dark);
+        }
+
+        /* Title Block */
+        .doc-title-block {
+            text-align: center;
+            margin-bottom: 8px;
+            background: #fffdfa;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 5px 14px;
+            box-shadow: 0 1px 3px rgba(200, 163, 86, 0.12);
+        }
+
+        .doc-main-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .doc-meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11.5px;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        /* Placeholders / Fill Lines for Pen Entry */
+        .fill-line {
+            display: inline-block;
+            border-bottom: 1.5px dotted #1e293b;
+            min-width: 90px;
+            color: #111827;
+            font-weight: 700;
+            padding: 0 4px;
+            vertical-align: baseline;
+        }
+
+        .fill-line-xs {
+            min-width: 35px;
+        }
+
+        .fill-line-sm {
+            min-width: 65px;
+        }
+
+        .fill-line-md {
+            min-width: 140px;
+        }
+
+        .fill-line-lg {
+            min-width: 220px;
+        }
+
+        .fill-line-full {
+            width: 100%;
+            min-width: 100%;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Parties Grid */
+        .parties-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #fcfcfb;
+            border: 1.5px solid #64748b;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 11.5px;
+        }
+
+        .party-col {
+            line-height: 1.5;
+        }
+
+        .party-col-title {
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 12px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 2px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .project-scope-strip {
+            grid-column: span 2;
+            background: #f8fafc;
+            border: 1.5px solid #475569;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #0f172a;
+        }
+
+        .project-scope-strip strong {
+            color: var(--primary);
+        }
+
+        /* Preamble Box */
+        .preamble-box {
+            background: #f8fafc;
+            border: 1.2px solid #cbd5e1;
+            border-right: 3.5px solid var(--accent-gold);
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 11px;
+            color: #334155;
+            line-height: 1.45;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        [dir="ltr"] .preamble-box {
+            border-right: 1.2px solid #cbd5e1;
+            border-left: 3.5px solid var(--accent-gold);
+        }
+
+        /* Clauses & Articles Container */
+        .clauses-container {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+
+        .clause-item {
+            border: 1.5px solid #94a3b8;
+            border-right: 4px solid var(--primary);
+            border-radius: 5px;
+            padding: 6px 12px;
+            background: #ffffff;
+            line-height: 1.5;
+            font-size: 11.5px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        [dir="ltr"] .clause-item {
+            border-right: 1.5px solid #94a3b8;
+            border-left: 4px solid var(--primary);
+        }
+
+        .clause-item:nth-child(even) {
+            background: #fafaf8;
+        }
+
+        .clause-header {
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
+
+        .clause-badge {
+            background: #fef9ee;
+            color: #92400e;
+            border: 1.2px solid #d97706;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .clause-badge-gold {
+            background: #1B2A1B;
+            color: #C8A356;
+            border: 1.2px solid #C8A356;
+        }
+
+        .clause-text {
+            color: #1e293b;
+            font-size: 11.5px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .clause-text strong {
+            color: var(--primary);
+        }
+
+        .clause-subpoints {
+            margin-top: 4px;
+            padding-right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        [dir="ltr"] .clause-subpoints {
+            padding-right: 0;
+            padding-left: 12px;
+        }
+
+        .highlight-tag {
+            background: #f0fdf4;
+            color: #166534;
+            font-weight: 800;
+            padding: 0 4px;
+            border-radius: 3px;
+            border: 1px solid #86efac;
+            display: inline-block;
+        }
+
+        .alert-tag {
+            background: #fef2f2;
+            color: #991b1b;
+            font-weight: 800;
+            padding: 0 4px;
+            border-radius: 3px;
+            border: 1px solid #fca5a5;
+            display: inline-block;
+        }
+
+        /* Financial Grid */
+        .financial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin: 5px 0;
+        }
+
+        .fin-card {
+            background: #f8fafc;
+            border: 1.2px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 6px 8px;
+            text-align: center;
+        }
+
+        .fin-card-title {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .fin-card-val {
+            font-size: 11px;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        /* Technical Specifications Table */
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin: 6px 0;
+            border: 1.5px solid #64748b;
+        }
+
+        .tech-table th {
+            background: #1B2A1B;
+            color: #C8A356;
+            padding: 5px 8px;
+            font-weight: 800;
+            text-align: right;
+            border: 1px solid #475569;
+        }
+
+        [dir="ltr"] .tech-table th {
+            text-align: left;
+        }
+
+        .tech-table td {
+            padding: 5px 8px;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+        }
+
+        .tech-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* Signatures Grid */
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .sig-box {
+            border: 1.5px solid #475569;
+            background: #fafaf9;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 95px;
+            font-size: 11px;
+        }
+
+        .sig-box-title {
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1.5px solid #94a3b8;
+            padding-bottom: 3px;
+            margin-bottom: 4px;
+            font-size: 11.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-box-content {
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .sig-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 6px;
+            padding-top: 4px;
+            border-top: 1.5px dashed #94a3b8;
+        }
+
+        .sig-stamp-placeholder {
+            font-size: 9.5px;
+            color: #475569;
+            border: 1.5px dashed #475569;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: #fff;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Running Page Footer with Paraphe Box */
+        .doc-page-footer {
+            border-top: 1.5px solid #94a3b8;
+            padding-top: 4px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9.5px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .paraphe-strip {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 9px;
+            color: #334155;
+            background: #f8fafc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .paraphe-box {
+            display: inline-block;
+            border: 1px dotted #64748b;
+            padding: 1px 6px;
+            min-width: 40px;
+            text-align: center;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        /* Language Toggle Utility */
+        body.lang-ar .content-fr {
+            display: none !important;
+        }
+
+        body.lang-fr .content-ar {
+            display: none !important;
+        }
+
+        /* PRINT STYLES - GUARANTEED EXACT 3-PAGE A4 OUTPUT (NO BLANK PAGES) */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        @media print {
+
+            html,
+            body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.38 !important;
+                width: 210mm !important;
+                height: auto !important;
+            }
+
+            .no-print-bar {
+                display: none !important;
+            }
+
+            .contracts-container {
+                max-width: 100% !important;
+                width: 210mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .contract-page {
+                width: 210mm !important;
+                max-width: 210mm !important;
+                height: 297mm !important;
+                min-height: 297mm !important;
+                max-height: 297mm !important;
+                margin: 0 !important;
+                padding: 8mm 12mm 6mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .contract-page:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="lang-ar">
+
+    <!-- Top Action Bar (hidden in print) -->
+    <div class="no-print-bar">
+        <div class="bar-brand">
+            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo"
+                class="bar-logo-img">
+            <div>
+                ZinToop <span>Legal Hub</span>
+                <span style="font-size: 11px; opacity: 0.8; font-weight: 400; margin-right: 6px;">| عقد تطوير وبرمجة
+                    موقع واب B2B</span>
+            </div>
+        </div>
+        <div class="bar-actions">
+            <button type="button" class="btn btn-outline active" id="btn-lang-ar" onclick="setLang('ar')">
+                🇸🇳 العربية (النسخة الرسمية)
+            </button>
+            <button type="button" class="btn btn-outline" id="btn-lang-fr" onclick="setLang('fr')">
+                🇫🇷 Français (Version Bilingue)
+            </button>
+            <button type="button" class="btn btn-gold" onclick="window.print()">
+                🖨️ طباعة العقد (Imprimer A4)
+            </button>
+        </div>
+    </div>
+
+    <!-- Multi-Page Document Container -->
+    <div class="contracts-container">
+
+        <!-- ========================================== -->
+        <!-- 📄 PAGE 1: الترويسة، الأطراف، الديباجة، ونطاق العمل -->
+        <!-- ========================================== -->
+        <div class="contract-page" id="page-1">
+            <div class="page-inner">
+
+                <div>
+                    <!-- 1. Official Header (ZinToop Corporate Details) -->
+                    <div class="official-header">
+                        <div class="header-logo-wrap">
+                            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'"
+                                alt="ZinToop Logo" class="official-logo-img">
+                        </div>
+                        <div class="content-ar">
+                            <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                            <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM • وحدة تطوير البرمجيات
+                                والحلول الرقمية (Digital Solutions)</div>
+                            <div class="header-meta-strip">
+                                <span><strong>المعرف الجبائي (MF):</strong> <span
+                                        class="font-mono">1969552S</span></span>
+                                <span class="meta-sep">•</span>
+                                <span><strong>المقر:</strong> دار أمان، حدائق الخضراوي، 3140 القيروان</span>
+                                <span class="meta-sep">•</span>
+                                <span><strong>الاتصال:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                            </div>
+                        </div>
+                        <div class="content-fr">
+                            <div class="brand-title-ar">EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</div>
+                            <div class="brand-title-en">Unité des Solutions Digitales & Développement Logiciel •
+                                Kairouan, Tunisie</div>
+                            <div class="header-meta-strip">
+                                <span><strong>Matricule Fiscal:</strong> <span class="font-mono">1969552S</span></span>
+                                <span class="meta-sep">•</span>
+                                <span><strong>Siège:</strong> Dar Amen, Jardins Khadhraoui, Kairouan</span>
+                                <span class="meta-sep">•</span>
+                                <span><strong>Contact:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Contract Title Block -->
+                    <div class="doc-title-block">
+                        <div class="content-ar">
+                            <h1 class="doc-main-title">عقد تقديم خدمات تصميم وتطوير وبرمجة موقع واب (B2B)</h1>
+                            <div class="doc-meta-row">
+                                <span><strong>رقم العقد:</strong> <span dir="ltr"
+                                        style="unicode-bidi: isolate; display: inline-block;">WEB-202<span
+                                            class="fill-line" style="min-width: 15px;"></span>/<span
+                                            class="fill-line fill-line-xs"></span></span></span>
+                                <span>•</span>
+                                <span><strong>تاريخ التحرير:</strong> <span dir="ltr"
+                                        style="unicode-bidi: isolate; display: inline-block;">...... / ...... / 202<span
+                                            class="fill-line" style="min-width: 18px;"></span></span></span>
+                                <span>•</span>
+                                <span><strong>مكان الإبرام:</strong> تونس / القيروان</span>
+                            </div>
+                        </div>
+                        <div class="content-fr">
+                            <h1 class="doc-main-title">Contrat de Conception, Développement et Déploiement de Site Web
+                                (B2B)</h1>
+                            <div class="doc-meta-row">
+                                <span><strong>N° Contrat:</strong> WEB-202<span class="fill-line"
+                                        style="min-width: 15px;"></span>/<span
+                                        class="fill-line fill-line-xs"></span></span>
+                                <span>•</span>
+                                <span><strong>Date:</strong> ...... / ...... / 202<span class="fill-line"
+                                        style="min-width: 18px;"></span></span>
+                                <span>•</span>
+                                <span><strong>Lieu:</strong> Kairouan / Tunisie</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Identification of Parties (ZinToop & Client Placeholders) -->
+                    <div class="parties-grid">
+                        <!-- ARABIC PARTIES -->
+                        <div class="party-col content-ar">
+                            <div class="party-col-title">الطرف الأول (المطور والمنفذ التقني):</div>
+                            <p><strong>شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</strong>، شركة ذات مسؤولية
+                                محدودة للشخص الواحد مسجلة بالسجل الوطني للمؤسسات ومعرفها الجبائي <span
+                                    class="font-mono">1969552S</span>، ومقرها دار أمان، حدائق الخضراوي، القيروان،
+                                ويمثلها قانونياً مديرها العام السيد <strong>حمدي الزين (Hamdi Ezzine)</strong> بصفته
+                                وكيلاً وممثلاً شرعياً للشركة (ويشار إليها لاحقاً بـ <strong>"المطور"</strong> أو
+                                <strong>"الطرف الأول"</strong>).</p>
+                        </div>
+                        <div class="party-col content-ar">
+                            <div class="party-col-title">الطرف الثاني (الحريف / الشركة المستفيدة):</div>
+                            <p>الشركة / المؤسسة: <span class="fill-line fill-line-lg"></span><br>
+                                المعرف الجبائي (MF) / ب.ت.و: <span class="fill-line fill-line-md"></span><br>
+                                المقر الاجتماعي / العنوان: <span class="fill-line fill-line-lg"></span><br>
+                                يمثلها السيد(ة): <span class="fill-line fill-line-md"></span> بصفته: <span
+                                    class="fill-line fill-line-sm"></span><br>
+                                الهاتف: <span class="fill-line fill-line-sm"></span> • البريد الإلكتروني: <span
+                                    class="fill-line fill-line-md"></span><br>
+                                (ويشار إليها لاحقاً بـ <strong>"الحريف"</strong> أو <strong>"الطرف الثاني"</strong>).
+                            </p>
+                        </div>
+                        <div class="project-scope-strip content-ar">
+                            <div><strong>طبيعة المشروع:</strong> [ <span class="fill-line fill-line-md"></span> ] (موقع
+                                تعريفي / منصة تجارة إلكترونية / بوابة خدماتية)</div>
+                            <div><strong>النطاق المقترح (Domaine):</strong> www.<span
+                                    class="fill-line fill-line-md"></span></div>
+                        </div>
+
+                        <!-- FRENCH PARTIES -->
+                        <div class="party-col content-fr">
+                            <div class="party-col-title">Première Partie (Prestataire & Développeur):</div>
+                            <p><strong>ZinToop SUARL</strong> (EZZINE TUNISIAN OLIVE OIL PLATFORM), Société
+                                Unipersonnelle à Responsabilité Limitée, MF: <span class="font-mono">1969552S</span>,
+                                Siège social: Dar Amen, Jardins Khadhraoui, Kairouan, valablement représentée par son Gérant M. <strong>Hamdi Ezzine</strong> (ci-après dénommée <strong>"Le Prestataire"</strong>).</p>
+                        </div>
+                        <div class="party-col content-fr">
+                            <div class="party-col-title">Seconde Partie (Le Client / Entreprise Bénéficiaire):</div>
+                            <p>Entreprise / Société: <span class="fill-line fill-line-lg"></span><br>
+                                Matricule Fiscal / CIN: <span class="fill-line fill-line-md"></span><br>
+                                Siège / Adresse: <span class="fill-line fill-line-lg"></span><br>
+                                Représentée par: <span class="fill-line fill-line-md"></span> Qualité: <span
+                                    class="fill-line fill-line-sm"></span><br>
+                                Tél: <span class="fill-line fill-line-sm"></span> • Email: <span
+                                    class="fill-line fill-line-md"></span><br>
+                                (ci-après dénommée <strong>"Le Client"</strong>).</p>
+                        </div>
+                        <div class="project-scope-strip content-fr">
+                            <div><strong>Type de projet:</strong> [ <span class="fill-line fill-line-md"></span> ]
+                                (Vitrine / E-Commerce / Portail B2B)</div>
+                            <div><strong>Nom de domaine cible:</strong> www.<span class="fill-line fill-line-md"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Legal Preamble -->
+                    <div class="preamble-box content-ar">
+                        <strong>تمهيد قانوني:</strong> لما كان الطرف الثاني يرغب في إنشاء وتطوير منصة وموقع واب متطور ذي
+                        طابع مهني يعكس هويته المؤسساتية ويخدم نشاطه التجاري؛ ولما كان الطرف الأول (ZinToop) يتمتع
+                        بالخبرة الفنية والكفاءة البرمجية والتكنولوجية اللازمة في تصميم وتطوير المنظومات الرقمية؛ فقد تم
+                        التراضي والاتفاق بمقتضى أحكام مجلة الالتزامات والعقود التونسية وقانون المعاملات والتجارة
+                        الإلكترونية على إبرام هذا العقد بالشروط الآتية:
+                    </div>
+                    <div class="preamble-box content-fr">
+                        <strong>Préambule:</strong> Le Client souhaitant concevoir et déployer une solution web
+                        performante et sur-mesure pour son activité; et le Prestataire (ZinToop) disposant de
+                        l'expertise technique et d'ingénierie logicielle requise; les parties ont convenu du présent
+                        contrat régi par le droit commercial tunisien et le Code des Obligations et des Contrats.
+                    </div>
+
+                    <!-- 5. Clauses of Page 1 (Articles 1 & 2) -->
+                    <div class="clauses-container">
+                        <!-- ARTICLE 1 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 1</span>
+                                <span>موضوع العقد والتعيين المهني (Objet du Contrat):</span>
+                            </div>
+                            <div class="clause-text">
+                                يلتزم الطرف الأول (ZinToop) بإنجاز وتطوير وبرمجة موقع الواب الخاص بالطرف الثاني وفق أفضل
+                                الممارسات الهندسية والمعايير التقنية المعمول بها دولياً، ويشمل ذلك: التصميم الجرافيكي
+                                لواجهات الاستخدام (UI/UX)، كتابة الشيفرات البرمجية (Frontend & Backend)، هيكلة قواعد
+                                البيانات، ضبط إعدادات الأمان والتصفح السريع، وربط الموقع بلوحة تحكم تفاعلية تمكن الحريف
+                                من إدارة محتواه باستقلالية.
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 2 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 2</span>
+                                <span>النطاق الوظيفي والمواصفات الفنية المعتمدة (Périmètre Technique):</span>
+                            </div>
+                            <div class="clause-text">
+                                يتعهد الطرف الأول بضمان استجابة وتوافق المنصة مع المواصفات التقنية الأساسية الآتية:
+                                <div class="clause-subpoints">
+                                    <div>• <span class="highlight-tag">التصميم المتجاوب (Responsive Design):</span>
+                                        ملائمة كاملة ودقيقة لجميع مقاسات الشاشات (الهواتف الذكية، الأجهزة اللوحية،
+                                        والشاشات المكتبية).</div>
+                                    <div>• <span class="highlight-tag">لوحة التحكم والإدارة (Admin Dashboard):</span>
+                                        واجهة آمنة ومحمية تسمح للحريف بتعديل النصوص، المنتجات، الصور، ومتابعة الطلبيات
+                                        والرسائل.</div>
+                                    <div>• <span class="highlight-tag">الأمان وحماية البيانات:</span> تثبيت شهادة الأمان
+                                        المشفرة (SSL/TLS HTTPS)، والحماية من الثغرات البرمجية الشائعة (CSRF, XSS, SQL
+                                        Injection).</div>
+                                    <div>• <span class="highlight-tag">التهيئة لمحركات البحث (SEO Basics):</span> هيكلة
+                                        الوسوم الدلالية وسرعة التحميل بما يضمن فهرسة سليمة للموقع على محركات البحث.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FR ARTICLES 1 & 2 -->
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 1</span>
+                                <span>Objet de la Prestation & Mission:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le Prestataire s'engage à concevoir, développer, tester et mettre en ligne le site web
+                                du Client selon les règles de l'art du génie logiciel. La prestation englobe: la
+                                conception de l'ergonomie (UI/UX), le développement front-end et back-end, la
+                                modélisation de la base de données, l'intégration d'un panneau d'administration autonome
+                                (Dashboard CMS), et la configuration de sécurité.
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 2</span>
+                                <span>Spécifications Techniques & Exigences Fondamentales:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le site web livré devra répondre aux impératifs d'ingénierie logicielle suivants:
+                                <div class="clause-subpoints">
+                                    <div>• <span class="highlight-tag">Design Responsive:</span> Adaptation fluide sur
+                                        smartphones, tablettes et ordinateurs.</div>
+                                    <div>• <span class="highlight-tag">Panneau d'Administration (Dashboard):</span>
+                                        Espace d'administration dédié pour la gestion des contenus.</div>
+                                    <div>• <span class="highlight-tag">Sécurité & Chiffrement:</span> Protocole
+                                        SSL/HTTPS et protection contre les injections et attaques de sécurité web.</div>
+                                    <div>• <span class="highlight-tag">Optimisation & SEO de base:</span> Structure
+                                        sémantique optimisée pour le référencement naturel.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 1 Footer with Paraphe -->
+                <div class="doc-page-footer">
+                    <div>عقد تطوير موقع واب B2B — ZinToop SUARL</div>
+                    <div class="paraphe-strip">
+                        <span>تأشيرة الطرف 1: <span class="paraphe-box">HE</span></span>
+                        <span>تأشيرة الطرف 2 (الحريف): <span class="paraphe-box">......</span></span>
+                    </div>
+                    <div>الصفحة 1 من 3</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 📄 PAGE 2: مراحل العمل، التسليم، المسؤوليات، وشروط الخلاص -->
+        <!-- ========================================== -->
+        <div class="contract-page" id="page-2">
+            <div class="page-inner">
+
+                <div>
+                    <!-- Running Minimal Header -->
+                    <div class="page-running-header">
+                        <div class="running-brand">
+                            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'"
+                                alt="ZinToop" class="running-logo">
+                            <span>ZinToop SUARL • وحدة الحلول الرقمية</span>
+                        </div>
+                        <div class="running-doc-num">عقد تطوير وبرمجة موقع واب B2B</div>
+                        <div>الصفحة 2 من 3</div>
+                    </div>
+
+                    <!-- Clauses of Page 2 (Articles 3, 4, 5, 6, 7) -->
+                    <div class="clauses-container">
+
+                        <!-- ARTICLE 3 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 3</span>
+                                <span>مراحل الإنجاز وآجال التسليم (Jalons & Délais d'Exécution):</span>
+                            </div>
+                            <div class="clause-text">
+                                يخضع تنفيذ المشروع للجدول الزمني والمراحل المرحلية الآتية:
+                                <div class="clause-subpoints">
+                                    <div><strong>1. مرحلة التحضير والتصميم:</strong> اعتماد الهيكل العام، الألوان،
+                                        والشعار خلال [ <span class="fill-line fill-line-xs"></span> ] أيام من استلام
+                                        المواد من الحريف.</div>
+                                    <div><strong>2. مرحلة البرمجة والنسخة التجريبية (Staging):</strong> إتاحة رابط
+                                        تجريبي سري للحريف لمعاينة عمل المنصة ووظائفها.</div>
+                                    <div><strong>3. أجل التسليم النهائي:</strong> حُدّد الأجل الإجمالي لتسليم الموقع بـ:
+                                        <strong>[ <span class="fill-line fill-line-sm"></span> ]</strong> يوماً /
+                                        أسبوعاً عمل، تحتسب ابتداءً من تاريخ خلاص قسط العربون الأول وتوفير الحريف لكافة
+                                        المحتويات المطلوبة.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 4 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 4</span>
+                                <span>المعاينة والمصادقة ومحضر التسليم (Recette & Validation):</span>
+                            </div>
+                            <div class="clause-text">
+                                يمنح الحريف مهلة فحص وتجربة قدرها <strong>(10) أيام عمل</strong> ابتداءً من تاريخ تسليمه
+                                النسخة التجريبية لإبداء أي ملاحظات تتعلق بعدم مطابقة الميزات المتفق عليها. عند استيفاء
+                                التعديلات أو انقضاء الأجل دون اعتراض كتابي، يُعتبر العمل مصادقاً عليه نهائياً، ويحرر
+                                <strong>محضر تسليم نهائي (PV de Recette)</strong> يُعلن فيه الإطلاق الرسمي للموقع
+                                (Go-Live).
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 5 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 5</span>
+                                <span>المقابل المالي وشروط الخلاص المجدول (Conditions Financières):</span>
+                            </div>
+                            <div class="clause-text">
+                                اتفقت الأطراف على تحديد الأجر الإجمالي الصافي لإنجاز وتطوير الموقع بمبلغ قدره:
+                                <div style="text-align: center; margin: 4px 0; font-size: 13px;">
+                                    <strong>[ <span class="fill-line fill-line-md"></span> ]</strong> دينار تونسي صافي
+                                    (د.ت)
+                                    (بالحروف: <span class="fill-line fill-line-lg"></span> دينار).
+                                </div>
+                                ويتم الخلاص وفق نظام الأقساط المحددة كالآتي:
+                                <div class="financial-grid">
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">القسط الأول (عربون حجز وانطلاق)</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> د.ت ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b; margin-top: 2px;">يُدفع فور إمضاء
+                                            هذا العقد</div>
+                                    </div>
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">القسط الثاني (المصادقة التجريبية)</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> د.ت ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b; margin-top: 2px;">عند جاهزية
+                                            النسخة التجريبية Staging</div>
+                                    </div>
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">القسط الثالث (التسليم النهائي)</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> د.ت ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b; margin-top: 2px;">عند النشر
+                                            النهائي وتسليم المفاتيح</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 6 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 6</span>
+                                <span>مسؤوليات والتزامات الطرف الأول / ZinToop (Obligations du Développeur):</span>
+                            </div>
+                            <div class="clause-text">
+                                • <strong>بذل العناية والاحترافية:</strong> يلتزم ZinToop بتسخير كافة الكفاءات التقنية
+                                لإنجاز المنصة وفق المواصفات القياسية، مع تقديم دورة إرشادية وتدريبية لممثلي الحريف لشرح
+                                كيفية إدارة الموقع.<br>
+                                • <span class="alert-tag">حدود المسؤولية وإخلاؤها:</span> ينحصر التزام ZinToop في
+                                التطوير البرمجي؛ ويُخلى طرفه صراحة من أي مسؤولية ناتجة عن: انقطاع شبكة الإنترنت أو خوادم
+                                الاستضافة الخارجية (Third-party Host Outages)، أو الهجمات السيبرانية الدولية القاهرة، أو
+                                أي أعطاب تنجم عن قيام طرف ثالث غير مرخص بتعديل الشيفرات البرمجية بعد التسليم.
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 7 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 7</span>
+                                <span>التزامات الحريف والمحتوى (Obligations du Client):</span>
+                            </div>
+                            <div class="clause-text">
+                                يلتزم الحريف بتوفير كافة المواد اللازمة (النصوص، الصور، الهوية البصرية، بيانات الاتصال،
+                                وتراخيص النشاط) في الآجال المتفق عليها دون تأخير يعطل سير المشروع. ويتحمل الحريف وحده
+                                المسؤولية القانونية والأخلاقية الكاملة عن صحة وملكية كافة البيانات والمحتويات المنشورة
+                                على موقعه، وخلوها من أي انتهاك لحقوق الغير أو التعدي على العلامات التجارية.
+                            </div>
+                        </div>
+
+                        <!-- FR ARTICLES 3, 4, 5, 6, 7 -->
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 3</span>
+                                <span>Jalons, Méthodologie & Délais de Livraison:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le projet se déroule en trois phases: 1) Maquettage et architecture; 2) Développement &
+                                Pré-production (Staging); 3) Déploiement final. Le délai global est fixé à <strong>[
+                                    <span class="fill-line fill-line-sm"></span> ]</strong> jours/semaines ouvrés à
+                                compter de la réception de l'acompte et des contenus.
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 4</span>
+                                <span>Recette & Procès-Verbal de Validation:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le Client dispose d'un délai d'évaluation de <strong>10 jours ouvrés</strong> dès la
+                                mise à disposition de la version Staging. La mise en ligne définitive fera l'objet d'un
+                                <strong>Procès-Verbal de Recette Définitive</strong> signé conjointement.
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 5</span>
+                                <span>Prix de la Prestation & Échelonnement des Règlements:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le montant forfaitaire total de la prestation s'élève à <strong>[ <span
+                                        class="fill-line fill-line-md"></span> ] TND net</strong> (en toutes lettres:
+                                <span class="fill-line fill-line-lg"></span> Dinars), réglable selon l'échéancier:
+                                <div class="financial-grid">
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">1. Acompte de démarrage</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> TND ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b;">À la signature du contrat</div>
+                                    </div>
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">2. Validation Staging</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> TND ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b;">À la validation de la démo</div>
+                                    </div>
+                                    <div class="fin-card">
+                                        <div class="fin-card-title">3. Solde de Livraison</div>
+                                        <div class="fin-card-val">[ <span class="fill-line fill-line-xs"></span> % ] = [
+                                            <span class="fill-line fill-line-sm"></span> TND ]</div>
+                                        <div style="font-size: 9.5px; color: #64748b;">À la mise en ligne et PV</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 6 & 7</span>
+                                <span>Obligations Respectives & Limitation de Responsabilité:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le Prestataire est tenu d'une obligation de moyens selon les standards de l'industrie
+                                logicielle. Il est expressément dégagé de toute responsabilité en cas de défaillance des
+                                hébergeurs tiers ou d'intrusion externe imprévisible. Le Client s'engage à fournir tous
+                                les éléments textuels et graphiques et répond de la légalité des contenus diffusés.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Page 2 Footer with Paraphe -->
+                <div class="doc-page-footer">
+                    <div>عقد تطوير موقع واب B2B — ZinToop SUARL</div>
+                    <div class="paraphe-strip">
+                        <span>تأشيرة الطرف 1: <span class="paraphe-box">HE</span></span>
+                        <span>تأشيرة الطرف 2 (الحريف): <span class="paraphe-box">......</span></span>
+                    </div>
+                    <div>الصفحة 2 من 3</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 📄 PAGE 3: الملكية الفكرية، الصيانة، السرية، والتوثيق -->
+        <!-- ========================================== -->
+        <div class="contract-page" id="page-3">
+            <div class="page-inner">
+
+                <div>
+                    <!-- Running Minimal Header -->
+                    <div class="page-running-header">
+                        <div class="running-brand">
+                            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'"
+                                alt="ZinToop" class="running-logo">
+                            <span>ZinToop SUARL • وحدة الحلول الرقمية</span>
+                        </div>
+                        <div class="running-doc-num">عقد تطوير وبرمجة موقع واب B2B</div>
+                        <div>الصفحة 3 من 3</div>
+                    </div>
+
+                    <!-- Clauses of Page 3 (Articles 8, 9, 10, 11) -->
+                    <div class="clauses-container">
+
+                        <!-- ARTICLE 8 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 8</span>
+                                <span>الملكية الفكرية والتسليم الكامل للشيفرات (Propriété Intellectuelle):</span>
+                            </div>
+                            <div class="clause-text">
+                                • <span class="highlight-tag">نقل الملكية الكاملة:</span> بمجرد خلاص كامل المقابل المالي
+                                المنصوص عليه في الفصل 5، تنتقل ملكية الموقع، والتصاميم، وقواعد البيانات، والملفات
+                                البرمجية بصفة باتة ونهائية وحصرية إلى الطرف الثاني (الحريف).<br>
+                                • <strong>تسليم المفاتيح وبيانات الوصول:</strong> يلتزم ZinToop بتسليم الحريف كافة رموز
+                                وبيانات الدخول إلى خادم الاستضافة (Hosting/FTP/SSH)، ولوحة التحكم، وقواعد البيانات.<br>
+                                • يحتفظ ZinToop بالحق الأدبي في الإشارة إلى الموقع ضمن قائمة أعماله وإنجازاته المهنية
+                                (Portfolio / Références).
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 9 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge clause-badge-gold">الفصل 9</span>
+                                <span>الضمان التقني وخدمات الصيانة المجانية (Garantie & Maintenance):</span>
+                            </div>
+                            <div class="clause-text">
+                                يلتزم الطرف الأول (ZinToop) بتقديم ضمان تقني وصيانة تصحيحية مجانية لمدة:
+                                <strong>[ <span class="fill-line fill-line-sm"></span> ] أشهر</strong> ابتداءً من تاريخ
+                                التسليم النهائي للموقع، وتشمل:
+                                <div class="clause-subpoints">
+                                    <div>• التدخل الفوري لإصلاح أي خطأ برمجي أو عيب تقني غير مكتشف (Bug Fixes) لضمان
+                                        استقرار الموقع.</div>
+                                    <div>• إجراء التحديثات الأمنية الدورية للأنظمة والحزم البرمجية لحمايتها من الثغرات.
+                                    </div>
+                                    <div>• توفير نسخ احتياطية دورية (Backup) لقواعد البيانات لتفادي فقدان المعلومات.
+                                    </div>
+                                    <div>• <span class="alert-tag">استثناء:</span> لا تشمل الصيانة المجانية إضافة صفحات
+                                        أو وظائف برمجية جديدة لم تُذكر في نطاق العمل الأصلي؛ وتخضع أي إضافة جديدة لملحق
+                                        تقديري منفصل (Avenant).</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ARTICLE 10 & 11 -->
+                        <div class="clause-item content-ar">
+                            <div class="clause-header">
+                                <span class="clause-badge">الفصل 10 و 11</span>
+                                <span>السرية، فسخ العقد، وحل النزاعات (Confidentialité & Juridiction):</span>
+                            </div>
+                            <div class="clause-text">
+                                • <strong>السرية التامة:</strong> يلتزم الطرفان بالحفاظ على السرية المطلقة لجميع
+                                البيانات والمعلومات والوثائق المتبادلة وعدم إفشائها لأي طرف ثالث.<br>
+                                • <strong>القوة القاهرة والفسخ:</strong> يحق لأي طرف فسخ العقد في حال إخلال الطرف الآخر
+                                بتعهداته الجوهرية بعد مضي 15 يوماً من توجيه تنبيه رسمي كتابي.<br>
+                                • <strong>القانون المنطبق والنزاعات:</strong> يخضع هذا العقد حصرياً لأحكام
+                                <strong>التشريع التونسي</strong> ومجلة الالتزامات والعقود. وفي صورة نشوب أي خلاف يتعذر
+                                حله صلحاً، تختص <strong>المحاكم التونسية الابتدائية ذات النظر</strong> بالبت فيه بصفة
+                                نهائية.
+                            </div>
+                        </div>
+
+                        <!-- FR ARTICLES 8, 9, 10, 11 -->
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 8</span>
+                                <span>Cession des Droits de Propriété Intellectuelle:</span>
+                            </div>
+                            <div class="clause-text">
+                                La pleine propriété des développements, de la base de données et des codes sources est
+                                transférée au Client <span class="highlight-tag">dès règlement intégral du prix
+                                    convenu</span>. Le Prestataire transmettra l'ensemble des identifiants et accès
+                                (Hosting, FTP, BDD, Admin). Le Prestataire conserve le droit de citer la réalisation
+                                dans ses références.
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge clause-badge-gold">Article 9</span>
+                                <span>Garantie Fonctionnelle & Maintenance Corrective Offerte:</span>
+                            </div>
+                            <div class="clause-text">
+                                Le Prestataire accorde une garantie et maintenance corrective offerte d'une durée de
+                                <strong>[ <span class="fill-line fill-line-sm"></span> ] mois</strong> à compter de la
+                                recette finale. Elle couvre la correction des dysfonctionnements (bugs), les mises à
+                                jour de sécurité et la surveillance technique de base. Tout ajout fonctionnel majeur
+                                fera l'objet d'un avenant séparé.
+                            </div>
+                        </div>
+
+                        <div class="clause-item content-fr">
+                            <div class="clause-header">
+                                <span class="clause-badge">Article 10 & 11</span>
+                                <span>Confidentialité & Droit Applicable:</span>
+                            </div>
+                            <div class="clause-text">
+                                Les parties s'engagent à une stricte confidentialité de toutes données échangées. Le
+                                présent contrat est soumis au droit tunisien. Tout différend relatif à sa validité ou
+                                exécution sera porté devant les tribunaux compétents de Tunisie.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Technical Specifications Summary Table (Placeholder annex) -->
+                    <table class="tech-table content-ar">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">البند الفني</th>
+                                <th style="width: 45%;">التفاصيل والمواصفات المعتمدة</th>
+                                <th style="width: 30%;">ملاحظات التفعيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>الاستضافة والنطاق</strong></td>
+                                <td>حجز اسم النطاق وربط الخادم: [ <span class="fill-line fill-line-sm"></span> ]</td>
+                                <td>توفير شهادة حماية SSL مجانية</td>
+                            </tr>
+                            <tr>
+                                <td><strong>البريد الإلكتروني المهني</strong></td>
+                                <td>إنشاء حسابات بريد رسمية: [ <span class="fill-line fill-line-xs"></span> ] حسابات
+                                    باسم النطاق</td>
+                                <td>ربط وتفعيل مع الهواتف والحواسيب</td>
+                            </tr>
+                            <tr>
+                                <td><strong>التدريب والدعم</strong></td>
+                                <td>جلسة تدريبية واحدة لممثلي الشركة على إدارة لوحة التحكم</td>
+                                <td>تسليم دليل استخدام إرشادي</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="tech-table content-fr">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Élément Technique</th>
+                                <th style="width: 45%;">Spécifications Validées</th>
+                                <th style="width: 30%;">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Hébergement & Domaine</strong></td>
+                                <td>Configuration serveur & domaine: [ <span class="fill-line fill-line-sm"></span> ]
+                                </td>
+                                <td>Certificat SSL/HTTPS inclus</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Emails Professionnels</strong></td>
+                                <td>Création de [ <span class="fill-line fill-line-xs"></span> ] boîtes emails
+                                    professionnelles</td>
+                                <td>Configuration Webmail / Client mail</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Formation & Remise</strong></td>
+                                <td>Session de prise en main du panneau d'administration</td>
+                                <td>Remise des accès officiels</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Official Signatures & Seal Section -->
+                    <div class="signatures-grid">
+                        <!-- ZINTOOP SIGNATURE -->
+                        <div class="sig-box content-ar">
+                            <div class="sig-box-title">
+                                <span>عن الطرف الأول (المطور):</span>
+                                <span style="font-size: 10px; color: #15803d;">ZinToop SUARL</span>
+                            </div>
+                            <div class="sig-box-content">
+                                الممثل القانوني: <strong>السيد حمدي الزين</strong><br>
+                                الصفة: الوكيل والممثل القانوني<br>
+                                <span style="font-size: 10px; color: #64748b;">(توقيع معتمد وختم الشركة)</span>
+                            </div>
+                            <div class="sig-footer-row">
+                                <div class="sig-stamp-placeholder">ختم شركة ZinToop SUARL<br>والإمضاء المعتمد</div>
+                                <div style="font-size: 10px; color: #64748b;">التاريخ: ...... / ...... / 202...</div>
+                            </div>
+                        </div>
+
+                        <!-- CLIENT SIGNATURE -->
+                        <div class="sig-box content-ar">
+                            <div class="sig-box-title">
+                                <span>عن الطرف الثاني (الحريف):</span>
+                                <span style="font-size: 10px; color: #1e3a8a;">المستفيد والمفوّض</span>
+                            </div>
+                            <div class="sig-box-content">
+                                السيد(ة): <span class="fill-line fill-line-md"></span><br>
+                                الصفة: <span class="fill-line fill-line-sm"></span><br>
+                                <span style="font-size: 10px; color: #64748b;">(مع كتابة عبارة "قرئ وصودق عليه")</span>
+                            </div>
+                            <div class="sig-footer-row">
+                                <div class="sig-stamp-placeholder">ختم المؤسسة / الشركة<br>وتوقيع الممثل المفوض</div>
+                                <div style="font-size: 10px; color: #64748b;">التاريخ: ...... / ...... / 202...</div>
+                            </div>
+                        </div>
+
+                        <!-- FR SIGNATURES -->
+                        <div class="sig-box content-fr">
+                            <div class="sig-box-title">
+                                <span>Pour le Prestataire:</span>
+                                <span style="font-size: 10px; color: #15803d;">ZinToop SUARL</span>
+                            </div>
+                            <div class="sig-box-content">
+                                Représentant légal: M. <strong>Hamdi Ezzine</strong><br>
+                                Qualité: Gérant statutaire<br>
+                                <span style="font-size: 10px; color: #64748b;">(Signature & Cachet officiel)</span>
+                            </div>
+                            <div class="sig-footer-row">
+                                <div class="sig-stamp-placeholder">Cachet ZinToop SUARL<br>& Signature autorisée</div>
+                                <div style="font-size: 10px; color: #64748b;">Date: ...... / ...... / 202...</div>
+                            </div>
+                        </div>
+
+                        <div class="sig-box content-fr">
+                            <div class="sig-box-title">
+                                <span>Pour le Client:</span>
+                                <span style="font-size: 10px; color: #1e3a8a;">L'Entreprise</span>
+                            </div>
+                            <div class="sig-box-content">
+                                Nom & Prénom: <span class="fill-line fill-line-md"></span><br>
+                                Qualité: <span class="fill-line fill-line-sm"></span><br>
+                                <span style="font-size: 10px; color: #64748b;">(Mention manuscrite "Lu et
+                                    approuvé")</span>
+                            </div>
+                            <div class="sig-footer-row">
+                                <div class="sig-stamp-placeholder">Cachet Commercial<br>& Signature du Client</div>
+                                <div style="font-size: 10px; color: #64748b;">Date: ...... / ...... / 202...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Page 3 Footer with Paraphe -->
+                <div class="doc-page-footer">
+                    <div>عقد تطوير موقع واب B2B — ZinToop SUARL</div>
+                    <div class="paraphe-strip">
+                        <span>تأشيرة الطرف 1: <span class="paraphe-box">HE</span></span>
+                        <span>تأشيرة الطرف 2 (الحريف): <span class="paraphe-box">......</span></span>
+                    </div>
+                    <div>الصفحة 3 من 3</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Script for Language Toggle -->
+    <script>
+        function setLang(lang) {
+            const body = document.body;
+            const btnAr = document.getElementById('btn-lang-ar');
+            const btnFr = document.getElementById('btn-lang-fr');
+
+            if (lang === 'ar') {
+                body.classList.remove('lang-fr');
+                body.classList.add('lang-ar');
+                body.setAttribute('dir', 'rtl');
+                btnAr.classList.add('active');
+                btnFr.classList.remove('active');
+            } else {
+                body.classList.remove('lang-ar');
+                body.classList.add('lang-fr');
+                body.setAttribute('dir', 'ltr');
+                btnFr.classList.add('active');
+                btnAr.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+
+</html>

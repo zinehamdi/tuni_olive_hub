@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عقد جني صابة زيتون - شركة منصة الزين (ZinToop) & شركة فاس أقري (FAS AGRI)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-dark: #0f172a;
+            --primary-green: #15803d;
+            --accent-gold: #c59b27;
+            --accent-gold-dark: #8c6b12;
+            --accent-gold-light: #fef9ee;
+            --border-color: #cbd5e1;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 14px;
+            padding-bottom: 40px;
+        }
+
+        /* Top Action Bar (hidden when printing) */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #0f172a 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            color: #ffffff;
+        }
+
+        .bar-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 14.5px;
+        }
+
+        .bar-info span {
+            color: var(--accent-gold);
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #c59b27 0%, #a68019 100%);
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(197, 155, 39, 0.4);
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            opacity: 0.93;
+            transform: translateY(-1px);
+        }
+
+        /* Paper Container */
+        .paper-container {
+            max-width: 860px;
+            margin: 25px auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px 48px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        /* Header */
+        .header-section {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 16px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .company-header-box {
+            width: 65%;
+        }
+
+        .company-header-box h2 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+
+        .company-header-box .sub-en {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--accent-gold-dark);
+            margin-bottom: 4px;
+        }
+
+        .company-header-box p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 1.5px 0;
+            line-height: 1.4;
+        }
+
+        .date-badge {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        /* Document Title */
+        .doc-title-box {
+            text-align: center;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+        }
+
+        .doc-title-box h1 {
+            font-size: 21px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .doc-title-box .subtitle {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        /* Preambule & Parties */
+        .parties-box {
+            background: #fcfcfd;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 22px;
+        }
+
+        .parties-intro {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 6px;
+        }
+
+        .party-item {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .party-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .party-title {
+            font-weight: 800;
+            color: var(--primary-green);
+            font-size: 14.5px;
+            margin-bottom: 2px;
+        }
+
+        /* Articles */
+        .article {
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .article:last-child {
+            border-bottom: none;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .article-title .badge {
+            background: var(--accent-gold-light);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold-dark);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .article-content {
+            font-size: 13.8px;
+            line-height: 1.7;
+            text-align: justify;
+            color: #334155;
+        }
+
+        .highlight-box {
+            background: #f0fdf4;
+            border-right: 4px solid var(--primary-green);
+            border-radius: 4px;
+            padding: 8px 14px;
+            margin: 8px 0;
+            font-size: 13.5px;
+            color: #14532d;
+        }
+
+        .info-pill-box {
+            background: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            border-radius: 4px;
+            padding: 8px 14px;
+            margin: 8px 0;
+            font-size: 13.5px;
+            color: #78350f;
+        }
+
+        ul.clause-list {
+            padding-right: 22px;
+            margin: 6px 0;
+        }
+
+        ul.clause-list li {
+            margin-bottom: 5px;
+        }
+
+        /* Signatures Grid */
+        .signatures-section {
+            margin-top: 30px;
+            border-top: 2px solid #0f172a;
+            padding-top: 18px;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .sign-box {
+            border: 1.5px solid #94a3b8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            background: #fafafa;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sign-header {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary);
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+            margin-bottom: 6px;
+        }
+
+        .sign-body {
+            font-size: 12.5px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .sign-stamp-area {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 6px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .stamp-badge {
+            border: 1px dashed #94a3b8;
+            padding: 3px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #64748b;
+            background: #fff;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 11.5px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+        }
+
+        /* Print Settings */
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .no-print-bar {
+                display: none !important;
+            }
+
+            .paper-container {
+                max-width: 100%;
+                margin: 0;
+                padding: 15mm 16mm;
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .article {
+                page-break-inside: avoid;
+            }
+
+            .signatures-section {
+                page-break-inside: avoid;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP ACTION BAR -->
+    <header class="no-print-bar">
+        <div class="bar-info">
+            <span>📑 عقد جني صابة الزيتون — ZinToop & FAS AGRI</span>
+            <small style="color: #94a3b8; font-weight: normal;">(الموسم الفلاحي 2026 / 2027 • ولاية زغوان)</small>
+        </div>
+        <div class="bar-actions">
+            <button class="btn-action" onclick="window.print()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>طباعة العقد أو حفظه PDF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTRACT PAPER -->
+    <main class="paper-container">
+
+        <!-- HEADER -->
+        <header class="header-section">
+            <div class="company-header-box">
+                <h2>شركة منصة الزين لزيت الزيتون التونسي (SUARL)</h2>
+                <div class="sub-en">"ZINTOOP" EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                <p><strong>المعرف الوحيد (RNE) والمعرف الجبائي:</strong> 1969552S • <strong>عدد التصرف الداخلي:</strong> B5094322026</p>
+                <p><strong>المقر الاجتماعي:</strong> فيلا HUB، حدائق الخضراوي، حي ابن الجزار، س1، دار الأمان، 3140 القيروان</p>
+                <p><strong>الهاتف:</strong> <span dir="ltr">25 777 926</span> • <strong>البريد الإلكتروني:</strong> contact@zintoop.com</p>
+            </div>
+            <div class="date-badge">
+                تونس / القيروان في: <strong dir="ltr" style="letter-spacing: 1.5px; font-weight: 800;">...... / ...... / 2026</strong>
+            </div>
+        </header>
+
+        <!-- TITLE -->
+        <div class="doc-title-box">
+            <h1>عقد تقديم خدمات جني صابة الزيتون</h1>
+            <div class="subtitle">الموسم الفلاحي: 2026 / 2027 • ضيعات ولاية زغوان (500 طن زيتون)</div>
+        </div>
+
+        <!-- PARTIES -->
+        <section class="parties-box">
+            <div class="parties-intro">وقع الاتفاق والتراضي التام بين الممضيين أسفله:</div>
+            
+            <div class="party-item">
+                <div class="party-title">الطرف الأول: مسدي الخدمات (ZinToop)</div>
+                <p>
+                    <strong>شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</strong>، شركة الشخص الواحد ذات المسؤولية المحدودة، المعرف الجبائي عدد: <strong>1969552S</strong>، ومقرها الاجتماعي الكائن بـ دار الأمان، حدائق الخضراوي، 3140 القيروان، ويمثلها بخصوص هذا العقد وكيلها وممثلها القانوني السيد <strong>حمدي الزين (Ezzine Hamdi)</strong>، صاحب بطاقة التعريف الوطنية عدد: <strong>07712882</strong>.
+                </p>
+            </div>
+
+            <div class="party-item">
+                <div class="party-title">الطرف الثاني: المستفيد - صاحب الضيعة (FAS AGRI)</div>
+                <p>
+                    <strong>شركة فاس أقري (FAS AGRI SARL)</strong>، شركة ذات المسؤولية المحدودة، المعرف الجبائي عدد: <strong>1772025K</strong>، ومقرها الاجتماعي الكائن بـ: <strong>100 نهج الحسين بوزيان – باب البحر – تونس 1001</strong>، ويمثلها قانونياً وكيلها السيد <strong>محمد حسين صفر</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- ARTICLES -->
+
+        <!-- ARTICLE 1 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 1</span>
+                <span>موضوع العقد والكميات ونسق الجني اليومي التصاعدي:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    يتمثل هذا العقد في تعهد والتزام <strong>الطرف الأول (شركة منصة الزين - ZinToop)</strong> بالقيام بأشغال الجني الميكانيكي لمحصول الزيتون بالضيعات الفلاحية التابعة لـ <strong>الطرف الثاني (شركة فاس أقري) الكائنة بولاية زغوان</strong>، وذلك خلال الموسم الفلاحي <strong>2026 / 2027</strong>.
+                </p>
+                <p>
+                    يُقدّر المحصول الجملي المتعاقد عليه بحوالي <strong>خمسمائة ألف كيلوغرام (500.000 كغ)</strong>، أي ما يعادل 500 طناً، متأتية من حوالي <strong>8,200 شجرة زيتون</strong> من صنف <strong>"شملالي"</strong> و<strong>"شتوي"</strong>.
+                </p>
+                <div class="highlight-box">
+                    <strong>📌 وتيرة ونسق الجني اليومي التصاعدي (Cadence progressive):</strong><br>
+                    اتفق الطرفان على أن تنطلق وتيرة الجني اليومية <strong>بداية من خمسة أطنان (5 طن) يومياً كنسق أولي تشغيلي</strong>، على أن يتولى الطرف الأول تعزيز الفريق الميداني تدريجياً باليد العاملة المختصة والآلات الميكانيكية للوصول بالنسق تدريجياً إلى طاقة جني يومية تتراوح بين <strong>عشرة أطنان (10 طن) وأربعة عشر طناً (14 طن) يومياً</strong>، بما يضمن استكمال جمع المحصول في أفضل الآجال.
+                </div>
+            </div>
+        </article>
+
+        <!-- ARTICLE 2 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 2</span>
+                <span>مدة العقد، أيام العمل والراحة الأسبوعية، واستثناء الظروف الجوية:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    يباشر الطرف الأول تنفيذ أعمال الجني الميدانية بداية من يوم: <strong dir="ltr" style="letter-spacing: 1px;">[ ...... / ...... / 2026 ]</strong>، وتستمر الأشغال حتى الانتهاء التام من جمع كامل محصول صابة الزيتون المتفق عليه.
+                </p>
+                <ul class="clause-list">
+                    <li>
+                        <strong>يوم الراحة الأسبوعي:</strong> يُخصص <strong>يوم راحة أسبوعي</strong> لفريق العمل الميداني (يوم الأحد من كل أسبوع، أو أي يوم آخر يتم التنسيق والاتفاق المسبق حوله بين الطرفين)، وذلك لإراحة اليد العاملة وإجراء الصيانة الدورية وتفقد المشاطات والتجهيزات الميكانيكية.
+                    </li>
+                    <li>
+                        <strong>توقف العمل بفعل الأمطار والعوامل المناخية:</strong> يتوقف العمل بصفة آلية ومبررة <strong>عند هطول الأمطار أو وجود بلل ورطوبة شديدة بالأشجار والثمار</strong>، وذلك حفاظاً على سلامة العمالة الميدانية من مخاطر التكهرب والتزحلق، وحماية للأشجار من تكسر الأغصان، وحفظاً لجودة الثمار قبل تحويلها. ولا يُعد هذا التوقف الاضطراري إخلالاً بالعقد، وتُمدد مدة إنجاز العقد تلقائياً بما يعادل أيام التوقف المناخي الفعلية.
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ARTICLE 3 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 3</span>
+                <span>التزامات الطرفين بخصوص الآلات والمعدات والتجهيزات:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    نظراً لتوفر جانب هام من المعدات لدى صاحب الضيعة وحرصاً على التكامل التقني بين الطرفين، تم ضبط الالتزامات والمعدات كما يلي:
+                </p>
+                <div class="info-pill-box">
+                    <strong>1. التزامات الطرف الثاني (المستفيد - شركة فاس أقري):</strong>
+                    <ul class="clause-list" style="margin-top: 4px; margin-bottom: 0;">
+                        <li>توفير <strong>آلة كبيرة لجني الزيتون</strong> (هزاز ميكانيكي / Vibreur mécanisé) في حالة عمل جيدة وجاهزة للتشغيل.</li>
+                        <li>توفير عدد من <strong>المشاطات والآلات الكهربائية الحديثة</strong> المتوفرة بالضيعة مع كابلاتها وتوابعها لمعاضدة أعمال الجني.</li>
+                        <li>توفير <strong>الصناديق البلاستيكية المهواة</strong> المخصصة لحفظ جودة الزيتون وكذلك الأكياس القماشية بالعدد الكافي حسب عرف النشاط وفي حالة حسنة.</li>
+                        <li>توفير نقاط تزويد الطاقة (شاحنات طاقة / مولدات أو بطاريات) لتشغيل وشحن الآلات بالضيعة.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>2. التزامات الطرف الأول (مسدي الخدمات - شركة ZinToop):</strong>
+                    <ul class="clause-list" style="margin-top: 4px; margin-bottom: 0;">
+                        <li>توفير <strong>اليد العاملة المختصة والمدربة</strong> (سائقي ومشغلي المشاطات، فرق الجمع واللمّ، والمشرفين الميدانيين) وتعزيز العدد تصاعدياً حسب وتيرة الإنتاج.</li>
+                        <li>توفير <strong>مشاطات كهربائية حديثة مكملة</strong> تابعة له لدعم الإنتاجية اليومية.</li>
+                        <li>الحفاظ التام على المعدات والآلات والصناديق المسلمة له من الطرف الثاني، وتشغيلها بحرفية وأمانة، وإرجاعها عند انتهاء الأشغال بالحالة التي تسلمها عليها (باستثناء الاستهلاك الطبيعي الناتج عن الاستعمال العادي).</li>
+                        <li><strong>الامتناع البات والقطعي عن استعمال العصا أو الضرب</strong> لحماية أصول وبراعم الأشجار والأغصان الفتية.</li>
+                        <li>الجمع الكامل والأمين للثمار دون ترك زيتون متبقٍ بالأشجار.</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- ARTICLE 4 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 4</span>
+                <span>المقابل المالي، الأوزان بالضيعة، وجدول الخلاص:</span>
+            </h3>
+            <div class="article-content">
+                <ul class="clause-list">
+                    <li>
+                        <strong>سعر الجني الصافي:</strong> حُدد سعر الجني الصافي بمبلغ <strong>ثلاثمائة وأربعون مليماً (0.340 د)</strong> عن الكيلوغرام الواحد الصافي المجني دون احتساب الأداء.
+                    </li>
+                    <li>
+                        <strong>عملية الوزن:</strong> يتم وزن كميات الزيتون المجموع بواسطة <strong>"باسكول" / ميزان الطرف الأول بالضيعة وبحضور ممثل الطرف الثاني</strong> الذي يوقع على وصل وزن يومي رسمي (Bon de pesée)، مع احتفاظ الطرف الثاني بحق التثبت ومطابقة الوزن عند تفريغ المحصول بالمعصرة.
+                    </li>
+                    <li>
+                        <strong>التسبقة المالية (العربون):</strong> دفع الطرف الثاني للطرف الأول مبلغاً قدره <strong>ألفا دينار (2.000,000 د)</strong> بعنوان تسبقة مالية مباشرة عبر تحويل بنكي عند إمضاء هذا العقد، وتُخصم هذه التسبقة بالحساب من الفاتورة النهائية للموسم.
+                    </li>
+                    <li>
+                        <strong>دورية الخلاص:</strong> يقوم الطرف الثاني بخلاص أجرة العمل المنجزة للطرف الأول <strong>كل خمسة عشر (15) يوماً</strong> بواسطة تحويل بنكي مباشر لحساب مسدي الخدمات، وذلك بالاعتماد على مجموع وصولات الوزن المعتمدة لتلك الفترة.
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ARTICLE 5 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 5</span>
+                <span>المسؤولية والسلامة المهنية:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    يلتزم الطرف الأول بتطبيق قواعد السلامة المهنية لعملته داخل الضيعة، ويتعهد بعدم إحداث أي ضرر بأشجار أو تجهيزات ضيعات الطرف الثاني خارج إطار الاستغلال الفلاحي العادي، وإلا كان مسؤولاً مدنياً طبقاً لأحكام الفصول 82 و83 من مجلة الالتزامات والعقود التونسية.
+                </p>
+            </div>
+        </article>
+
+        <!-- ARTICLE 6 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 6</span>
+                <span>فسخ العقد:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    يجوز فسخ هذا العقد باتفاق الطرفين كتابياً بالتراضي. وفي صورة إخلال أحد الطرفين بأحد التزاماته الجوهرية (كتأخر الطرف الثاني عن خلاص المستحقات بعد انقضاء 15 يوماً، أو توقف الطرف الأول غير المبرر)، يتم التنبيه على الطرف المخل بمراسلة مضمونة الوصول مع الإعلام بالبلوغ، وإذا لم يُرفع الإخلال خلال أجل خمسة (5) أيام، يُفسخ العقد وجوباً مع حفظ حق الطرف المتضرر في التعويض.
+                </p>
+            </div>
+        </article>
+
+        <!-- ARTICLE 7 -->
+        <article class="article">
+            <h3 class="article-title">
+                <span class="badge">الفصل 7</span>
+                <span>المحكمة المختصة والقانون المنطبق:</span>
+            </h3>
+            <div class="article-content">
+                <p>
+                    يخضع هذا العقد ويفسر طبقاً لأحكام القانون التونسي. وفي حال نشوء أي نزاع يتعذر تسويته ودياً بين الطرفين، تختص <strong>محاكم تونس 1</strong> حصرياً بالنظر فيه والبت فيه.
+                </p>
+                <p style="margin-top: 6px; font-weight: 700;">
+                    حرر هذا العقد في نظيرين أصليين بتاريخ: <span dir="ltr" style="letter-spacing: 1px; font-weight: 800;">[ ...... / ...... / 2026 ]</span> (نظير لكل طرف للعمل بمقتضاه عن حسن نية).
+                </p>
+            </div>
+        </article>
+
+        <!-- SIGNATURES -->
+        <section class="signatures-section">
+            <div class="signatures-grid">
+                
+                <!-- PARTY 1 SIGN -->
+                <div class="sign-box">
+                    <div>
+                        <div class="sign-header">إمضاء وختم الطرف الأول (مسدي الخدمات):</div>
+                        <div class="sign-body">
+                            <strong>شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</strong><br>
+                            الوكيل والممثل القانوني: <strong>حمدي الزين (Ezzine Hamdi)</strong><br>
+                            المعرف الجبائي: 1969552S
+                        </div>
+                    </div>
+                    <div class="sign-stamp-area">
+                        <span>التوقيع: .......................................</span>
+                        <span class="stamp-badge">ختم الشركة</span>
+                    </div>
+                </div>
+
+                <!-- PARTY 2 SIGN -->
+                <div class="sign-box">
+                    <div>
+                        <div class="sign-header">إمضاء وختم الطرف الثاني (صاحب الضيعة):</div>
+                        <div class="sign-body">
+                            <strong>شركة فاس أقري (FAS AGRI SARL)</strong><br>
+                            الممثل القانوني والوكيل: <strong>محمد حسين صفر</strong><br>
+                            المعرف الجبائي: 1772025K
+                        </div>
+                    </div>
+                    <div class="sign-stamp-area">
+                        <span>التوقيع: .......................................</span>
+                        <span class="stamp-badge">ختم الشركة</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="doc-footer">
+            وثيقة تعاقدية رسمية — شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL) • تونس / القيروان
+        </footer>
+
+    </main>
+
+</body>
+</html>

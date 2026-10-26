@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop - عقد تقديم خدمات تقليم وتزيين أشجار الزيتون (الزبيرة) | Contrat de Taille et d'Élagage des Oliviers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-dark: #121c12;
+            --accent-gold: #C8A356;
+            --accent-gold-dark: #9E7D30;
+            --bg-light: #F9F9F6;
+            --text-dark: #1C1D1A;
+            --border-color: #DDE0D8;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f1f3ee;
+            color: var(--text-dark);
+            line-height: 1.42;
+            padding-bottom: 30px;
+            font-size: 13px;
+        }
+
+        /* Top Action Bar (hidden in print) */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #121c12 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .bar-brand span {
+            color: var(--accent-gold);
+        }
+
+        .bar-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 1px;
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-outline:hover, .btn-outline.active {
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            border-color: var(--accent-gold);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #a68436 100%);
+            color: #1a1a1a;
+            box-shadow: 0 2px 6px rgba(200, 163, 86, 0.35);
+        }
+
+        .btn-gold:hover {
+            opacity: 0.92;
+        }
+
+        /* Document Wrapper - Sized for exact 1 Page A4 with Crisp Border Frame */
+        .document-wrapper {
+            width: 210mm;
+            min-height: 290mm;
+            max-height: 297mm;
+            margin: 15px auto;
+            background: var(--white);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-radius: 6px;
+            border: 2px solid #334155;
+            position: relative;
+            padding: 6.5mm 12mm 4.5mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Watermark */
+        .document-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            width: 380px;
+            height: 380px;
+            transform: translate(-50%, -50%);
+            background-image: url('/images/zintoop-logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .doc-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* Centered Official Header */
+        .official-header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 4px;
+            margin-bottom: 5px;
+        }
+
+        .header-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2px;
+        }
+
+        .official-logo-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 2px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .brand-title-ar {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.2;
+            letter-spacing: 0.2px;
+        }
+
+        .brand-title-en {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--accent-gold-dark);
+            letter-spacing: 0.3px;
+            margin-top: 1px;
+        }
+
+        .header-meta-strip {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 10px;
+            color: #334155;
+            line-height: 1.35;
+            background: #f8fafc;
+            padding: 2px 12px;
+            border-radius: 4px;
+            border: 1.2px solid #94a3b8;
+            margin-top: 3px;
+        }
+
+        .header-meta-strip strong {
+            color: var(--primary);
+        }
+
+        .meta-sep {
+            color: var(--accent-gold-dark);
+            font-weight: 900;
+        }
+
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        /* Title Block with Distinct Gold Border */
+        .doc-title-block {
+            text-align: center;
+            margin-bottom: 5px;
+            background: #fffdfa;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 4px 12px;
+            box-shadow: 0 1px 3px rgba(200, 163, 86, 0.12);
+        }
+
+        .doc-main-title {
+            font-size: 15.5px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .doc-meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11.5px;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .fill-line {
+            display: inline-block;
+            border-bottom: 1.5px dotted #1e293b;
+            min-width: 80px;
+            color: #111827;
+            font-weight: 700;
+            padding: 0 4px;
+            vertical-align: baseline;
+        }
+
+        .fill-line-xs { min-width: 40px; }
+        .fill-line-sm { min-width: 55px; }
+        .fill-line-md { min-width: 110px; }
+        .fill-line-lg { min-width: 170px; }
+
+        /* Parties Grid with Crisp Border */
+        .parties-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            background: #fcfcfb;
+            border: 1.5px solid #64748b;
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-bottom: 5px;
+            font-size: 11.5px;
+        }
+
+        .party-col {
+            line-height: 1.4;
+        }
+
+        .party-col-title {
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 12px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 2px;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .farm-strip {
+            grid-column: span 2;
+            background: #f8fafc;
+            border: 1.5px solid #475569;
+            border-radius: 4px;
+            padding: 3.5px 8px;
+            margin-top: 3px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #0f172a;
+        }
+
+        .farm-strip strong {
+            color: var(--primary);
+        }
+
+        /* Compact Clauses List with Defined Accent Borders */
+        .clauses-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4.5px;
+            margin-bottom: 5px;
+        }
+
+        .clause-item {
+            border: 1.5px solid #94a3b8;
+            border-right: 4px solid var(--primary);
+            border-radius: 5px;
+            padding: 4px 9px;
+            background: #ffffff;
+            line-height: 1.4;
+            font-size: 11.5px;
+        }
+
+        [dir="ltr"] .clause-item {
+            border-right: 1.5px solid #94a3b8;
+            border-left: 4px solid var(--primary);
+        }
+
+        .clause-item:nth-child(even) {
+            background: #fafaf8;
+        }
+
+        .clause-header {
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+            font-size: 12px;
+        }
+
+        .clause-badge {
+            background: #fef9ee;
+            color: #92400e;
+            border: 1.2px solid #d97706;
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 9.5px;
+            font-weight: 900;
+        }
+
+        .clause-badge-gold {
+            background: #1B2A1B;
+            color: #C8A356;
+            border: 1.2px solid #C8A356;
+        }
+
+        .clause-text {
+            color: #1e293b;
+            font-size: 11.5px;
+            line-height: 1.4;
+        }
+
+        .clause-text strong {
+            color: var(--primary);
+        }
+
+        .highlight-tag {
+            background: #f0fdf4;
+            color: #166534;
+            font-weight: 800;
+            padding: 0 4px;
+            border-radius: 3px;
+            border: 1px solid #86efac;
+            display: inline-block;
+        }
+
+        .alert-tag {
+            background: #fef2f2;
+            color: #991b1b;
+            font-weight: 800;
+            padding: 0 4px;
+            border-radius: 3px;
+            border: 1px solid #fca5a5;
+            display: inline-block;
+        }
+
+        /* Caliber Pricing Grid */
+        .caliber-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin: 3px 0 2px;
+        }
+
+        .caliber-card {
+            background: #f8fafc;
+            border: 1.2px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 10.5px;
+            line-height: 1.35;
+        }
+
+        .caliber-title {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 10.5px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1px;
+            margin-bottom: 2px;
+        }
+
+        /* Notes Box with Defined Dashed Border */
+        .notes-section {
+            border: 1.5px dashed #475569;
+            background: #f8fafc;
+            border-radius: 5px;
+            padding: 3px 8px;
+            margin-bottom: 5px;
+        }
+
+        .notes-title {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #334155;
+            margin-bottom: 2px;
+        }
+
+        .notes-row {
+            border-bottom: 1.5px dotted #64748b;
+            height: 13px;
+            width: 100%;
+        }
+
+        /* Signatures Grid with Clear Defined Borders */
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .sig-box {
+            border: 1.5px solid #64748b;
+            background: #fafaf9;
+            border-radius: 6px;
+            padding: 5px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 68px;
+            font-size: 10.5px;
+        }
+
+        .sig-box-title {
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1.5px solid #94a3b8;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-box-content {
+            color: #334155;
+            line-height: 1.35;
+        }
+
+        .sig-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 3px;
+            padding-top: 2px;
+            border-top: 1.5px dashed #94a3b8;
+        }
+
+        .sig-stamp-placeholder {
+            font-size: 9.5px;
+            color: #475569;
+            border: 1.5px dashed #475569;
+            padding: 1px 7px;
+            border-radius: 4px;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .doc-footer {
+            border-top: 1.5px solid #94a3b8;
+            padding-top: 3px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Language Switch */
+        body.lang-ar .content-fr { display: none !important; }
+        body.lang-fr .content-ar { display: none !important; }
+
+        /* PRINT STYLES - STAGE GUARANTEED SINGLE A4 PAGE */
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11.5px !important;
+                line-height: 1.36 !important;
+                height: 100% !important;
+                overflow: hidden !important;
+            }
+
+            .no-print-bar {
+                display: none !important;
+            }
+
+            .document-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                min-height: auto !important;
+                max-height: 288mm !important;
+                margin: 0 !important;
+                padding: 4mm 7mm 3mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                overflow: hidden !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 4mm 6mm;
+            }
+        }
+    </style>
+</head>
+<body class="lang-ar">
+
+    <!-- Action Bar -->
+    <header class="no-print-bar">
+        <div class="bar-brand">
+            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo" class="bar-logo-img">
+            <div>ZINTOOP <span>SERVICES</span> | عقد تقليم وتزيين الزيتون (الزبيرة - صفحة واحدة)</div>
+        </div>
+
+        <div class="bar-actions">
+            <button class="btn btn-outline active" id="btnAr" onclick="setLanguage('ar')">العربية (Arabic)</button>
+            <button class="btn btn-outline" id="btnFr" onclick="setLanguage('fr')">Français (الفرنسية)</button>
+            <button class="btn btn-gold" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                طباعة العقد (A4)
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Contract Page Wrapper (Exact A4 Single Page) -->
+    <div class="document-wrapper" id="contractDoc">
+        <div class="doc-inner">
+
+            <!-- 1. Centered Official Header -->
+            <div class="official-header">
+                <div class="header-logo-wrap">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                </div>
+                <div class="content-ar">
+                    <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                    <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM • وحدة الخدمات الفلاحية الميدانية والتقليم المهني (AgriTech)</div>
+                    <div class="header-meta-strip">
+                        <span><strong>المعرف الجبائي (MF):</strong> <span class="font-mono">1969552S</span></span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>المقر:</strong> دار أمان، حدائق الخضراوي، 3140 القيروان</span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>الاتصال:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                    </div>
+                </div>
+                <div class="content-fr">
+                    <div class="brand-title-ar">EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</div>
+                    <div class="brand-title-en">Unité des Services Agricoles & Taille Professionnelle des Oliviers • Kairouan, Tunisie</div>
+                    <div class="header-meta-strip">
+                        <span><strong>Matricule Fiscal:</strong> <span class="font-mono">1969552S</span></span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>Siège:</strong> Dar Amen, Jardins Khadhraoui, Kairouan</span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>Contact:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Contract Title Block -->
+            <div class="doc-title-block">
+                <div class="content-ar">
+                    <h1 class="doc-main-title">عقد تقديم خدمات تقليم وتزيين أشجار الزيتون (الزبيرة الفلاحية)</h1>
+                    <div class="doc-meta-row">
+                        <span><strong>الموسم الفلاحي:</strong> <span dir="ltr" style="unicode-bidi: isolate; display: inline-block;">202<span class="fill-line" style="min-width: 18px;"></span> / 202<span class="fill-line" style="min-width: 18px;"></span></span></span>
+                        <span>•</span>
+                        <span><strong>رقم العقد:</strong> <span dir="ltr" style="unicode-bidi: isolate; display: inline-block;">PRU-202<span class="fill-line" style="min-width: 15px;"></span>/<span class="fill-line fill-line-xs"></span></span></span>
+                        <span>•</span>
+                        <span><strong>تاريخ التحرير:</strong> <span dir="ltr" style="unicode-bidi: isolate; display: inline-block;">...... / ...... / 202<span class="fill-line" style="min-width: 18px;"></span></span></span>
+                    </div>
+                </div>
+                <div class="content-fr">
+                    <h1 class="doc-main-title">Contrat de Prestation de Taille et d'Élagage des Oliviers</h1>
+                    <div class="doc-meta-row">
+                        <span><strong>Campagne:</strong> 202<span class="fill-line" style="min-width: 22px;"></span> / 202<span class="fill-line" style="min-width: 22px;"></span></span>
+                        <span>•</span>
+                        <span><strong>N° Contrat:</strong> PRU-202<span class="fill-line" style="min-width: 15px;"></span>/<span class="fill-line fill-line-xs"></span></span>
+                        <span>•</span>
+                        <span><strong>Date:</strong> ...... / ...... / 202<span class="fill-line" style="min-width: 20px;"></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Parties & Farm Strip -->
+            <div class="parties-grid">
+                <!-- ARABIC PARTIES -->
+                <div class="party-col content-ar">
+                    <div class="party-col-title">الطرف الأول (مقدم الخدمة والمنفذ):</div>
+                    <p><strong>شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</strong> المذكورة كامل بياناتها بالترويسة الرسمية أعلاه، ويمثلها قانونياً السيد <strong>حمدي الزين (Hamdi Ezzine)</strong> بصفته المدير والممثل القانوني للشركة.</p>
+                </div>
+                <div class="party-col content-ar">
+                    <div class="party-col-title">الطرف الثاني (المستفيد / صاحب الضيعة):</div>
+                    <p>السيد(ة) / المجمع: <span class="fill-line fill-line-md slot-client"></span><br>
+                    ب.ت.و / المعرف: <span class="fill-line fill-line-sm slot-cin"></span> • الهاتف: <span class="fill-line fill-line-sm slot-phone"></span><br>
+                    مقر السكنى: <span class="fill-line fill-line-md slot-address"></span></p>
+                </div>
+                <div class="farm-strip content-ar">
+                    <div><strong>موقع الضيعة:</strong> <span class="fill-line fill-line-md slot-location"></span></div>
+                    <div><strong>صنف الزيتون:</strong> <span class="fill-line fill-line-sm slot-variety"></span></div>
+                    <div><strong>نوع التقليم المطلوب:</strong> [ <span class="fill-line fill-line-xs slot-type"></span> ] (إثمار / صيانة / تجديد وهيكلة)</div>
+                    <div><strong>إجمالي الأصول التقديري:</strong> <span class="fill-line fill-line-xs slot-trees"></span> أصل</div>
+                </div>
+
+                <!-- FRENCH PARTIES -->
+                <div class="party-col content-fr">
+                    <div class="party-col-title">Première Partie (Prestataire ZinToop):</div>
+                    <p><strong>ZinToop SUARL</strong> dont les coordonnées légales complètes figurent à l'en-tête ci-dessus, valablement représentée par son Gérant, M. <strong>Hamdi Ezzine</strong>.</p>
+                </div>
+                <div class="party-col content-fr">
+                    <div class="party-col-title">Deuxième Partie (L'Agriculteur / Client):</div>
+                    <p>M./Mme: <span class="fill-line fill-line-md slot-client"></span><br>
+                    CIN / Identifiant: <span class="fill-line fill-line-sm slot-cin"></span> • Tél: <span class="fill-line fill-line-sm slot-phone"></span><br>
+                    Adresse: <span class="fill-line fill-line-md slot-address"></span></p>
+                </div>
+                <div class="farm-strip content-fr">
+                    <div><strong>Lieu du verger:</strong> <span class="fill-line fill-line-md slot-location"></span></div>
+                    <div><strong>Variété:</strong> <span class="fill-line fill-line-sm slot-variety"></span></div>
+                    <div><strong>Type de taille:</strong> [ <span class="fill-line fill-line-xs slot-type"></span> ] (Fructification / Entretien / Rajeunissement)</div>
+                    <div><strong>Total arbres estimé:</strong> <span class="fill-line fill-line-xs slot-trees"></span> pieds</div>
+                </div>
+            </div>
+
+            <!-- 4. Key Agreement Clauses -->
+            <div class="clauses-container">
+
+                <!-- بند 1: ميثاق الجودة وتعقيم المعدات -->
+                <div class="clause-item content-ar">
+                    <div class="clause-header">
+                        <span class="clause-badge">بند 1</span>
+                        <span>ميثاق الجودة الفنية والتعقيم الإجباري للمعدات (التزام زراعي وقائي صارم):</span>
+                    </div>
+                    <div class="clause-text">
+                        يلتزم الطرف الأول (ZinToop) بإجراء التقليم الفني وفق المعايير الزراعية الحديثة: <strong>تهوئة قلب الشجرة وتوزيع الإضاءة</strong>، وإزالة الأغصان المتشابكة واليابسة والسرطانات المائية (Gourmands / Rejets)، مع موازنة النمو الخضري والإثماري للحد من ظاهرة المعاومة. ويتعهد ZinToop بـ <span class="highlight-tag">التعقيم الإجباري والدوري لكافة المناشير والمقصات والمعدات</span> بمحلول كحولي ومطهر زراعي معتمد لمنع انتقال الأمراض الفطرية والبكتيرية (خاصة سل الزيتون وفطريات الأوعية)، مع دهن الجروح والقصات الكبيرة بالماستيك أو محلول نحاسي واقٍ.
+                    </div>
+                </div>
+
+                <!-- بند 2: التسعير حسب عدد الأشجار وحجمها -->
+                <div class="clause-item content-ar">
+                    <div class="clause-header">
+                        <span class="clause-badge">بند 2</span>
+                        <span>جدول التسعير المعتمد حسب حجم وأبعاد الأشجار (Calibre):</span>
+                    </div>
+                    <div class="clause-text">
+                        تم الاتفاق على احتساب أجر التقليم الصافي على أساس الحجم التقديري للأشجار وفق الجدول الآتي:
+                        <div class="caliber-grid">
+                            <div class="caliber-card">
+                                <div class="caliber-title">1. أشجار فتية / صغيرة (غراسة حديثة)</div>
+                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-small"></span> ]</strong> شجرة</div>
+                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-small">3.500</span> ]</strong> د.ت / أصل</div>
+                            </div>
+                            <div class="caliber-card">
+                                <div class="caliber-title">2. أشجار متوسطة (في أوج الإنتاج)</div>
+                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium"></span> ]</strong> شجرة</div>
+                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-medium">6.500</span> ]</strong> د.ت / أصل</div>
+                            </div>
+                            <div class="caliber-card">
+                                <div class="caliber-title">3. أشجار كبرى / معمرة (هرمة وتجديد)</div>
+                                <div>العدد: <strong>[ <span class="fill-line fill-line-xs slot-trees-large"></span> ]</strong> شجرة</div>
+                                <div>السعر: <strong>[ <span class="fill-line fill-line-xs slot-price-large">10.000</span> ]</strong> د.ت / أصل</div>
+                            </div>
+                        </div>
+                        المجموع التقديري: [ <strong><span class="fill-line fill-line-xs slot-trees-total"></span></strong> ] أصل بقيمة إجمالية تقديرية قدرها: <strong>[ <span class="fill-line fill-line-md slot-amount-total"></span> ] دينار تونسي (د.ت)</strong>، وتتم التسوية النهائية بحسب الإحصاء الفعلي للأصول المقلمة على أرض الواقع.
+                    </div>
+                </div>
+
+                <!-- بند 3: العربون وموعد انطلاق الأشغال -->
+                <div class="clause-item content-ar">
+                    <div class="clause-header">
+                        <span class="clause-badge">بند 3</span>
+                        <span>العربون وتثبيت موعد انطلاق الأشغال:</span>
+                    </div>
+                    <div class="clause-text">
+                        يدفع الطرف الثاني عند توقيع هذا العقد عربوناً بنسبة <strong>[ <span class="fill-line fill-line-xs slot-advance-pct"></span> % ]</strong> قدره <strong>[ <span class="fill-line fill-line-sm slot-advance"></span> د.ت ]</strong> لتأكيد الحجز وتخصيص الفريق الفني والمعدات إثر المعاينة الميدانية للضيعة. وقد تم تحديد <strong>تاريخ بداية الأشغال</strong> يوم: [ <strong dir="ltr" style="unicode-bidi: isolate; display: inline-block;">...... / ...... / 202<span class="fill-line" style="min-width: 18px;"></span></strong> ].
+                    </div>
+                </div>
+
+                <!-- بند 4: شروط الخلاص المالي -->
+                <div class="clause-item content-ar">
+                    <div class="clause-header">
+                        <span class="clause-badge clause-badge-gold">بند 4</span>
+                        <span>شروط الخلاص المالي:</span>
+                    </div>
+                    <div class="clause-text">
+                        يكون الدفع <span class="highlight-tag">دفعة واحدة فورية في نفس اليوم عند انتهاء الأشغال</span> إذا كانت مدة العمل قصيرة (<strong>&le; أسبوع واحد</strong>)؛ بينما يكون <span class="highlight-tag">الخلاص أسبوعياً دورياً</span> للضيعات والمشاريع الكبرى (<strong>> أسبوع</strong>) بحسب عدد الأصول التي تم تقليمها فعلياً خلال الأسبوع المنقضي، مع خصم وتسوية العربون بالحساب النهائي.
+                    </div>
+                </div>
+
+                <!-- FRENCH CLAUSES -->
+                <div class="clause-item content-fr">
+                    <div class="clause-header">
+                        <span class="clause-badge">Art. 1</span>
+                        <span>Charte Qualité & Désinfection Systématique du Matériel (Sécurité Sanitaire):</span>
+                    </div>
+                    <div class="clause-text">
+                        Taille raisonnée conforme aux قواعد agronomiques (aération du centre de l'arbre, équilibre bois/feuillage, élimination des gourmands et du bois mort). ZinToop s'engage à la <span class="highlight-tag">désinfection systématique des scies, sécateurs et outils</span> avec solution antiseptique homologuée afin de prévenir la propagation des bactérioses (galle du collet) et mycoses, avec masticage protecteur des plaies importantes.
+                    </div>
+                </div>
+
+                <div class="clause-item content-fr">
+                    <div class="clause-header">
+                        <span class="clause-badge">Art. 2</span>
+                        <span>Grille Tarifaire Selon le Gabarit des Arbres (Calibre):</span>
+                    </div>
+                    <div class="clause-text">
+                        Tarification nette convenue selon le volume et la taille des sujets:
+                        <div class="caliber-grid">
+                            <div class="caliber-card">
+                                <div class="caliber-title">1. Jeunes sujets / Petite taille</div>
+                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-small"></span> ]</strong></div>
+                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-small">3.500</span> ]</strong> DT/pied</div>
+                            </div>
+                            <div class="caliber-card">
+                                <div class="caliber-title">2. Arbres moyens en production</div>
+                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-medium"></span> ]</strong></div>
+                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-medium">6.500</span> ]</strong> DT/pied</div>
+                            </div>
+                            <div class="caliber-card">
+                                <div class="caliber-title">3. Grands arbres / Rajeunissement</div>
+                                <div>Nombre: <strong>[ <span class="fill-line fill-line-xs slot-trees-large"></span> ]</strong></div>
+                                <div>Tarif: <strong>[ <span class="fill-line fill-line-xs slot-price-large">10.000</span> ]</strong> DT/pied</div>
+                            </div>
+                        </div>
+                        Total estimé: [ <strong><span class="fill-line fill-line-xs slot-trees-total"></span></strong> ] pieds pour un montant prévisionnel de <strong>[ <span class="fill-line fill-line-md slot-amount-total"></span> ] DT</strong>. Régularisation au comptage réel final.
+                    </div>
+                </div>
+
+                <div class="clause-item content-fr">
+                    <div class="clause-header">
+                        <span class="clause-badge">Art. 3</span>
+                        <span>Acompte de Réservation & Début des Travaux:</span>
+                    </div>
+                    <div class="clause-text">
+                        Versement à la signature d'un acompte de <strong>[ <span class="fill-line fill-line-xs slot-advance-pct"></span> % ]</strong> (soit [ <span class="fill-line fill-line-sm slot-advance"></span> DT ]) confirmant le planning et l'affectation de l'équipe technique. <strong>Date convenue de démarrage du chantier:</strong> [ <strong>...... / ...... / 202<span class="fill-line" style="min-width: 18px;"></span></strong> ].
+                    </div>
+                </div>
+
+                <div class="clause-item content-fr">
+                    <div class="clause-header">
+                        <span class="clause-badge clause-badge-gold">Art. 4</span>
+                        <span>Modalités de Paiement:</span>
+                    </div>
+                    <div class="clause-text">
+                        Règlement <span class="highlight-tag">intégral le jour de clôture en un seul versement</span> pour les chantiers de courte durée (<strong>&le; 1 semaine</strong>) ; ou <span class="highlight-tag">hebdomadaire régulier</span> pour les grands domaines (<strong>> 1 semaine</strong>) au prorata des pieds taillés, avec imputation de l'acompte au décompte final.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 5. Free Notes -->
+            <div class="notes-section">
+                <div class="content-ar">
+                    <div class="notes-title">ملاحظات أو شروط خاصة متفق عليها:</div>
+                    <div class="notes-row"></div>
+                    <div class="notes-row" style="margin-top: 2px;"></div>
+                </div>
+                <div class="content-fr">
+                    <div class="notes-title">Remarques ou conventions particulières complémentaires :</div>
+                    <div class="notes-row"></div>
+                    <div class="notes-row" style="margin-top: 2px;"></div>
+                </div>
+            </div>
+
+            <!-- 6. Compact Signatures Area -->
+            <div class="signatures-grid">
+                <!-- ARABIC SIGNATURES -->
+                <div class="sig-box content-ar">
+                    <div class="sig-box-title">
+                        <span>عن الطرف الأول (ZinToop SUARL)</span>
+                        <span style="font-size: 10px; color: var(--accent-gold-dark);">مقدم الخدمة المنفذ</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>الممثل القانوني:</strong> حمدي الزين (Hamdi Ezzine)<br>
+                        <strong>الصفة:</strong> المدير والممثل القانوني للشركة
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>التوقيع والختم:</strong></span>
+                        <span class="sig-stamp-placeholder">ختم ZinToop الرسمي</span>
+                    </div>
+                </div>
+
+                <div class="sig-box content-ar">
+                    <div class="sig-box-title">
+                        <span>عن الطرف الثاني (المستفيد)</span>
+                        <span style="font-size: 10px; color: #6b7280;">صاحب الضيعة / الفلاح</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>الاسم واللقب:</strong> ....................................................<br>
+                        <strong>الصفة:</strong> الفلاح / مالك الضيعة الفلاحية
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>إمضاء الفلاح:</strong></span>
+                        <span class="sig-stamp-placeholder">توقيع الطرف الثاني</span>
+                    </div>
+                </div>
+
+                <!-- FRENCH SIGNATURES -->
+                <div class="sig-box content-fr">
+                    <div class="sig-box-title">
+                        <span>Pour la Première Partie (ZinToop SUARL)</span>
+                        <span style="font-size: 10px; color: var(--accent-gold-dark);">Prestataire</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>Représentant Légal:</strong> Hamdi Ezzine<br>
+                        <strong>Qualité:</strong> Gérant Mandataire
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>Signature & Cachet:</strong></span>
+                        <span class="sig-stamp-placeholder">Cachet ZinToop</span>
+                    </div>
+                </div>
+
+                <div class="sig-box content-fr">
+                    <div class="sig-box-title">
+                        <span>Pour la Deuxième Partie (Le Client)</span>
+                        <span style="font-size: 10px; color: #6b7280;">Exploitant Agricole</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>Nom & Prénom:</strong> ....................................................<br>
+                        <strong>Qualité:</strong> Propriétaire / Exploitant
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>Signature Client:</strong></span>
+                        <span class="sig-stamp-placeholder">Émargement</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Bottom Verification Footer -->
+            <div class="doc-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF: 1969552S • Kairouan, Tunisie</div>
+                <div>وثيقة تعاقدية ملزمة • صفحة 1 من 1 • Taille & Élagage des Oliviers 202... / 202...</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            const body = document.body;
+            const btnAr = document.getElementById('btnAr');
+            const btnFr = document.getElementById('btnFr');
+
+            btnAr.classList.remove('active');
+            btnFr.classList.remove('active');
+
+            if (lang === 'ar') {
+                body.className = 'lang-ar';
+                body.setAttribute('dir', 'rtl');
+                btnAr.classList.add('active');
+            } else if (lang === 'fr') {
+                body.className = 'lang-fr';
+                body.setAttribute('dir', 'ltr');
+                btnFr.classList.add('active');
+            }
+        }
+
+        // Auto-fill slots from URL query parameters (Field Dispatch Manager)
+        window.addEventListener('DOMContentLoaded', () => {
+            const p = new URLSearchParams(window.location.search);
+            if (p.get('client')) document.querySelectorAll('.slot-client').forEach(el => el.innerText = p.get('client'));
+            if (p.get('phone')) document.querySelectorAll('.slot-phone').forEach(el => el.innerText = p.get('phone'));
+            if (p.get('cin')) document.querySelectorAll('.slot-cin').forEach(el => el.innerText = p.get('cin'));
+            if (p.get('address')) document.querySelectorAll('.slot-address').forEach(el => el.innerText = p.get('address'));
+            if (p.get('location')) document.querySelectorAll('.slot-location').forEach(el => el.innerText = p.get('location'));
+            if (p.get('variety')) document.querySelectorAll('.slot-variety').forEach(el => el.innerText = p.get('variety'));
+            if (p.get('advance')) document.querySelectorAll('.slot-advance').forEach(el => el.innerText = p.get('advance'));
+            if (p.get('type')) document.querySelectorAll('.slot-type').forEach(el => el.innerText = p.get('type'));
+
+            const calibre = p.get('calibre') || 'moyen';
+            const totalTrees = parseInt(p.get('trees')) || 0;
+            const pSmall = parseFloat(p.get('priceSmall')) || 3.500;
+            const pMed = parseFloat(p.get('priceMedium')) || 6.500;
+            const pLarge = parseFloat(p.get('priceLarge')) || 10.000;
+
+            document.querySelectorAll('.slot-price-small').forEach(el => el.innerText = pSmall.toFixed(3));
+            document.querySelectorAll('.slot-price-medium').forEach(el => el.innerText = pMed.toFixed(3));
+            document.querySelectorAll('.slot-price-large').forEach(el => el.innerText = pLarge.toFixed(3));
+
+            let tSmall = 0, tMed = 0, tLarge = 0;
+            if (calibre === 'mixte' || p.has('treesSmall') || p.has('treesMedium') || p.has('treesLarge')) {
+                tSmall = parseInt(p.get('treesSmall')) || 0;
+                tMed = parseInt(p.get('treesMedium')) || 0;
+                tLarge = parseInt(p.get('treesLarge')) || 0;
+            } else if (calibre === 'petit') {
+                tSmall = totalTrees;
+            } else if (calibre === 'grand') {
+                tLarge = totalTrees;
+            } else {
+                tMed = totalTrees;
+            }
+
+            const calcTotal = (tSmall + tMed + tLarge) || totalTrees;
+            const calcTotalAmount = (tSmall * pSmall) + (tMed * pMed) + (tLarge * pLarge);
+
+            document.querySelectorAll('.slot-trees-small').forEach(el => el.innerText = tSmall > 0 ? tSmall : '—');
+            document.querySelectorAll('.slot-trees-medium').forEach(el => el.innerText = tMed > 0 ? tMed : '—');
+            document.querySelectorAll('.slot-trees-large').forEach(el => el.innerText = tLarge > 0 ? tLarge : '—');
+            document.querySelectorAll('.slot-trees-total').forEach(el => el.innerText = calcTotal > 0 ? calcTotal : '......');
+            document.querySelectorAll('.slot-trees').forEach(el => el.innerText = calcTotal > 0 ? calcTotal : '......');
+            document.querySelectorAll('.slot-amount-total').forEach(el => el.innerText = calcTotalAmount > 0 ? calcTotalAmount.toFixed(3) : '......');
+
+            const adv = parseFloat(p.get('advance')) || 0;
+            if (adv > 0 && calcTotalAmount > 0) {
+                const advPct = ((adv / calcTotalAmount) * 100).toFixed(0);
+                document.querySelectorAll('.slot-advance-pct').forEach(el => el.innerText = advPct);
+            }
+        });
+    </script>
+</body>
+</html>

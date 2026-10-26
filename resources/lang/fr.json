@@ -1628,5 +1628,10 @@
     "الحد الأدنى لبيع الكيلو حب:": "Prix plancher de vente au kilo (sur pied) :",
     "الحد الأدنى لبيع القَلبة حب:": "Prix plancher de vente par Galba (sur pied) :",
     "قاعدة السوق:": "Règle d'or du marché :",
-    "أي سعر حب يعطيهولك الخضار أقل من هذا المبلغ، يعني راك خاسر مقارنة بإنك تجني وتعصر وتبيع زيتها بسعر الباز!": "Toute offre d'achat d'olives inférieure à ce seuil est un manque à gagner comparé à la récolte, la trituration et la vente de l'huile au prix du Baz !"
+    "أي سعر حب يعطيهولك الخضار أقل من هذا المبلغ، يعني راك خاسر مقارنة بإنك تجني وتعصر وتبيع زيتها بسعر الباز!": "Toute offre d'achat d'olives inférieure à ce seuil est un manque à gagner comparé à la récolte, la trituration et la vente de l'huile au prix du Baz !",
+    "معلوم الجني المتداول:": "Tarif usuel de récolte :",
+    "كغ/قلبة": "kg / Galba",
+    "كغ زيت": "kg d'huile",
+    "يعادل باللتر:": "Équivalent en litres :",
+    "بيدون": "bidon(s)"
 }

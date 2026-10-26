@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop - Facture Proforma Interactive & Calculateur TVA | Proforma Invoice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-light: #2c422c;
+            --accent-gold: #C8A356;
+            --accent-gold-dark: #9E7D30;
+            --bg-body: #EEF2E6;
+            --white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border-color: #CBD5E1;
+            --success-green: #15803D;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.45;
+            font-size: 13px;
+            padding-bottom: 40px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Top Sticky Interactive Action Bar */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #121c12 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            color: #ffffff;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+
+        .bar-brand span {
+            color: var(--accent-gold);
+        }
+
+        .bar-logo-img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 1px;
+        }
+
+        .counter-badge {
+            background: rgba(200, 163, 86, 0.15);
+            border: 1.5px solid var(--accent-gold);
+            color: #fef08a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: #ffffff;
+            border-color: #22c55e;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
+        }
+        .btn-confirm:hover {
+            background: #15803d;
+            transform: translateY(-1px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #a68436 100%);
+            color: #121c12;
+            box-shadow: 0 2px 8px rgba(200, 163, 86, 0.35);
+        }
+        .btn-gold:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        /* Container & Exact A4 Document Layout */
+        .invoice-wrapper {
+            width: 210mm;
+            min-height: 297mm;
+            max-height: 297mm;
+            margin: 20px auto;
+            background: var(--white);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+            border-radius: 6px;
+            border: 2px solid #334155;
+            position: relative;
+            padding: 8mm 13mm 6mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* Subtle ZinToop Corporate Watermark */
+        .invoice-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
+            background-image: url('/images/zintoop-logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .doc-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* Header Grid: ZinToop on Left, Proforma Details on Right */
+        .invoice-header {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 15px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .company-identity {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 2px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .company-name {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.2;
+            letter-spacing: -0.2px;
+        }
+
+        .company-sub {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--accent-gold-dark);
+            letter-spacing: 0.2px;
+            margin-top: 1px;
+        }
+
+        .company-meta {
+            font-size: 10px;
+            color: #475569;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        .company-meta strong {
+            color: var(--primary);
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-weight: 700;
+            color: #15803d;
+        }
+
+        .proforma-title-box {
+            text-align: right;
+            background: #fffdfa;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 6px 12px;
+            box-shadow: 0 1px 4px rgba(200, 163, 86, 0.12);
+        }
+
+        .proforma-main-title {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .proforma-meta-grid {
+            margin-top: 4px;
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-content: end;
+            gap: 2px 10px;
+            font-size: 10.5px;
+            color: #334155;
+        }
+
+        .proforma-meta-grid strong {
+            color: var(--primary);
+        }
+
+        /* Parties / Client Section */
+        .client-section {
+            background: #f8fafc;
+            border: 1.5px solid #64748b;
+            border-radius: 6px;
+            padding: 7px 12px;
+            margin-bottom: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 11px;
+        }
+
+        .client-col-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1.5px solid var(--accent-gold);
+            padding-bottom: 2px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Live Editable Fields */
+        .editable-field {
+            display: inline-block;
+            border-bottom: 1px dashed #94a3b8;
+            padding: 1px 4px;
+            color: #0f172a;
+            font-weight: 600;
+            min-width: 80px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .editable-field:hover, .editable-field:focus {
+            background: #fef08a;
+            border-bottom-color: #ca8a04;
+            border-radius: 2px;
+        }
+
+        .editable-block {
+            width: 100%;
+            display: block;
+        }
+
+        /* Items / Prestations Table */
+        .table-wrap {
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            border: 1.5px solid #475569;
+        }
+
+        .invoice-table th {
+            background: #1B2A1B;
+            color: #C8A356;
+            padding: 5px 8px;
+            font-weight: 800;
+            text-align: left;
+            font-size: 10.5px;
+            border: 1px solid #334155;
+            letter-spacing: 0.3px;
+        }
+
+        .invoice-table td {
+            padding: 5px 8px;
+            border: 1px solid #cbd5e1;
+            vertical-align: middle;
+            color: #1e293b;
+        }
+
+        .invoice-table tr:nth-child(even) {
+            background: #fafaf8;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: 700; }
+
+        .input-cell {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 11px;
+            color: inherit;
+            padding: 2px 4px;
+            outline: none;
+        }
+        .input-cell:focus {
+            background: #fef08a;
+            border-radius: 2px;
+        }
+        .input-cell.num {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .btn-row-action {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0 4px;
+            font-weight: bold;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .btn-row-action:hover {
+            opacity: 1;
+        }
+
+        .btn-add-line {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f1f5f9;
+            border: 1px dashed #64748b;
+            color: var(--primary);
+            padding: 3px 10px;
+            font-size: 10.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .btn-add-line:hover {
+            background: #e2e8f0;
+            border-color: var(--accent-gold);
+        }
+
+        /* Summary & Totals Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 12px;
+            margin-bottom: 6px;
+            align-items: start;
+        }
+
+        .legal-notes-card {
+            background: #f8fafc;
+            border: 1.2px solid #cbd5e1;
+            border-left: 3.5px solid var(--accent-gold);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 10px;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .legal-notes-card strong {
+            color: var(--primary);
+        }
+
+        .totals-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            border: 1.5px solid #475569;
+            background: #ffffff;
+        }
+
+        .totals-table td {
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .totals-label {
+            font-weight: 700;
+            color: #334155;
+            background: #f8fafc;
+        }
+
+        .totals-val {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .tva-select {
+            font-family: inherit;
+            font-size: 10.5px;
+            font-weight: 700;
+            border: 1px solid #94a3b8;
+            border-radius: 3px;
+            padding: 1px 4px;
+            background: #fff;
+            color: var(--primary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .totals-row-final {
+            background: #1B2A1B !important;
+            color: #ffffff;
+        }
+        .totals-row-final .totals-label {
+            background: #1B2A1B;
+            color: #C8A356;
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .totals-row-final .totals-val {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        /* Amount in Words Box */
+        .words-box {
+            background: #fffdfa;
+            border: 1.2px solid var(--accent-gold);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 10px;
+            color: #1e293b;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        /* Signatures Grid */
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .sig-box {
+            border: 1.5px solid #64748b;
+            background: #fafaf9;
+            border-radius: 5px;
+            padding: 5px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 62px;
+            font-size: 10px;
+        }
+
+        .sig-box-title {
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1.2px solid #94a3b8;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+            font-size: 10.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-stamp-placeholder {
+            font-size: 9px;
+            color: #475569;
+            border: 1.2px dashed #475569;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .doc-footer {
+            border-top: 1.5px solid #94a3b8;
+            padding-top: 3px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* PRINT STYLES - STRICT SINGLE A4 PAGE GUARANTEE */
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.35 !important;
+                height: 100% !important;
+                overflow: hidden !important;
+            }
+
+            .no-print-bar, .btn-row-action, .btn-add-line {
+                display: none !important;
+            }
+
+            .invoice-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                min-height: auto !important;
+                max-height: 288mm !important;
+                margin: 0 !important;
+                padding: 4mm 7mm 3mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                overflow: hidden !important;
+            }
+
+            .editable-field {
+                border-bottom: none !important;
+                background: transparent !important;
+            }
+
+            .tva-select {
+                border: none !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                padding: 0 !important;
+                font-weight: 700 !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 4mm 6mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Interactive Action Bar (Hidden in Print) -->
+    <header class="no-print-bar">
+        <div class="bar-brand">
+            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo" class="bar-logo-img">
+            <div>
+                ZinToop <span>Invoicing</span> | Facture Proforma Interactive
+            </div>
+            <div class="counter-badge" id="counterBadgeDisplay" title="Compteur officiel stocké localement">
+                <span>N° Facture :</span> <strong id="topCounterNum">FP-2026-0001</strong>
+            </div>
+        </div>
+
+        <div class="bar-actions">
+            <!-- Action to Confirm and Increment Counter -->
+            <button class="btn btn-confirm" onclick="confirmAndIncrement()" title="Valide la facture en cours et incrémente automatiquement le compteur de +1 pour la prochaine facture">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                Confirmer Facture (+1 N°)
+            </button>
+
+            <!-- Load Presets -->
+            <button class="btn btn-outline" onclick="loadPreset('recolte')" title="Charger un exemple de devis récolte">
+                Ex. Récolte
+            </button>
+            <button class="btn btn-outline" onclick="loadPreset('taillage')" title="Charger un exemple de devis taillage">
+                Ex. Taillage
+            </button>
+            <button class="btn btn-outline" onclick="resetFormBlank()" title="Vider les lignes">
+                Vierge
+            </button>
+
+            <!-- Print / Save as PDF Button -->
+            <button class="btn btn-gold" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                Imprimer A4 / PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- Document Wrapper (Exact A4 Single Page) -->
+    <div class="invoice-wrapper" id="invoiceDoc">
+        <div class="doc-inner">
+
+            <!-- 1. Header: ZinToop Corporate + Proforma Details -->
+            <div class="invoice-header">
+                <!-- Company Identity -->
+                <div class="company-identity">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo" class="company-logo">
+                    <div>
+                        <div class="company-name">EZZINE TUNISIAN OLIVE OIL PLATFORM</div>
+                        <div class="company-sub">ZinToop SUARL • Services Agricoles & AgriTech</div>
+                        <div class="company-meta">
+                            <strong>Matricule Fiscal:</strong> <span class="font-mono">1969552S</span><br>
+                            <strong>Siège:</strong> Dar Amen, Jardins Khadhraoui, 3140 Kairouan, Tunisie<br>
+                            <strong>Contact:</strong> +216 25 777 926 &bull; contact@zintoop.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proforma Title & Metadata Block -->
+                <div class="proforma-title-box">
+                    <div class="proforma-main-title">FACTURE PROFORMA</div>
+                    <div class="proforma-meta-grid">
+                        <span><strong>N° Proforma :</strong></span>
+                        <span class="editable-field font-mono" contenteditable="true" id="docInvoiceNumber">FP-2026-0001</span>
+
+                        <span><strong>Date :</strong></span>
+                        <span class="editable-field" contenteditable="true" id="invoiceDate">15/10/2026</span>
+
+                        <span><strong>Validité :</strong></span>
+                        <span class="editable-field" contenteditable="true" id="invoiceValidity">30 jours</span>
+
+                        <span><strong>Réf. Campagne :</strong></span>
+                        <span class="editable-field" contenteditable="true" id="invoiceCampaign">2026 / 2027</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Client Information Grid -->
+            <div class="client-section">
+                <!-- Client Details -->
+                <div>
+                    <div class="client-col-title">
+                        <span>Informations du Client / Exploitant :</span>
+                    </div>
+                    <div>
+                        <strong>Client / Société :</strong> 
+                        <span class="editable-field editable-block" contenteditable="true" id="clientName">Domaine Oléicole El Baraka / M. Mohamed Trabelsi</span>
+                    </div>
+                    <div style="margin-top: 2px;">
+                        <strong>Matricule Fiscal / CIN :</strong> 
+                        <span class="editable-field" contenteditable="true" id="clientTaxId">CIN: 04879652</span>
+                    </div>
+                    <div style="margin-top: 2px;">
+                        <strong>Adresse :</strong> 
+                        <span class="editable-field editable-block" contenteditable="true" id="clientAddress">Route de Sbikha Km 12, Kairouan</span>
+                    </div>
+                </div>
+
+                <!-- Orchard / Project Details -->
+                <div>
+                    <div class="client-col-title">
+                        <span>Détails de l'Exploitation / Chantier :</span>
+                    </div>
+                    <div>
+                        <strong>Localisation du verger :</strong> 
+                        <span class="editable-field editable-block" contenteditable="true" id="orchardLocation">Sbikha, Kairouan (Parcelle Nord)</span>
+                    </div>
+                    <div style="margin-top: 2px;">
+                        <strong>Variété / Spécificité :</strong> 
+                        <span class="editable-field" contenteditable="true" id="oliveVariety">Chemlali &bull; Arbres en production</span>
+                    </div>
+                    <div style="margin-top: 2px;">
+                        <strong>Téléphone / Email :</strong> 
+                        <span class="editable-field" contenteditable="true" id="clientPhone">+216 98 123 456</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Prestations Table (Interactive & Live Calculating) -->
+            <div class="table-wrap">
+                <table class="invoice-table" id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;" class="text-center">#</th>
+                            <th style="width: 47%;">Désignation des Prestations Agricoles</th>
+                            <th style="width: 10%;" class="text-center">Unité</th>
+                            <th style="width: 12%;" class="text-right">Quantité</th>
+                            <th style="width: 13%;" class="text-right">P.U. HT (TND)</th>
+                            <th style="width: 13%;" class="text-right">Total HT (TND)</th>
+                            <th style="width: 4%;" class="text-center no-print-bar"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn-add-line no-print-bar" onclick="addNewLine()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+                    Ajouter une prestation
+                </button>
+            </div>
+
+            <!-- 4. Legal Fiscal Notes & Totals Calculation Card -->
+            <div class="summary-grid">
+                <!-- Legal Tax Exemption Notes (Tableau A) & Bank Details -->
+                <div class="legal-notes-card">
+                    <div><strong>Régime Fiscal & Exonération de TVA :</strong></div>
+                    <div id="taxExemptionClause" class="editable-field" contenteditable="true" style="margin-top: 2px; color: #166534; font-weight: 600; width: 100%;">
+                        ✓ Prestation de services agricoles exonérée de la TVA en vertu des dispositions du <strong>Tableau « A » du Code de la TVA tunisien</strong>.
+                    </div>
+                    <div style="margin-top: 4px; border-top: 1px dotted #cbd5e1; padding-top: 3px;">
+                        <strong>Modalités de paiement :</strong> 
+                        <span class="editable-field" contenteditable="true" id="paymentTermsNotes">Acompte à la commande, solde hebdomadaire selon décompte effectif.</span>
+                    </div>
+                    <div style="margin-top: 3px;">
+                        <strong>Coordonnées Bancaires (RIB) :</strong> 
+                        <span class="editable-field font-mono" contenteditable="true" id="bankRibNotes" style="font-size: 9.5px; color: #0f172a;">TN59 14 000 0000000000000 88 (Attijari Bank)</span>
+                    </div>
+                </div>
+
+                <!-- Totals Calculation Table -->
+                <table class="totals-table">
+                    <tr>
+                        <td class="totals-label">Total Brut HT :</td>
+                        <td class="totals-val" id="dispTotalBrutHT">0.000</td>
+                    </tr>
+                    <tr>
+                        <td class="totals-label">
+                            TVA : 
+                            <select class="tva-select" id="tvaRateSelect" onchange="calculateTotals()">
+                                <option value="0" selected>0% (Exonérée - Tab. A)</option>
+                                <option value="7">7% (Taux réduit)</option>
+                                <option value="19">19% (Taux normal)</option>
+                            </select>
+                        </td>
+                        <td class="totals-val" id="dispTvaAmount">0.000</td>
+                    </tr>
+                    <tr>
+                        <td class="totals-label">Droit de Timbre Fiscal :</td>
+                        <td class="totals-val" id="dispTimbreFiscal">1.000</td>
+                    </tr>
+                    <tr class="totals-row-final">
+                        <td class="totals-label">TOTAL TTC NET (TND) :</td>
+                        <td class="totals-val" id="dispTotalTTC">1.000</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 5. Amount in Words (Auto-generated in French) -->
+            <div class="words-box">
+                Arrêtée la présente facture proforma à la somme totale TTC de :<br>
+                <strong id="dispAmountInWords" class="editable-field" contenteditable="true" style="color: var(--primary); font-size: 11px; width: 100%;">Un Dinar Tunisien et Zéro Millime.</strong>
+            </div>
+
+            <!-- 6. Signatures Area -->
+            <div class="signatures-grid">
+                <!-- ZinToop SUARL -->
+                <div class="sig-box">
+                    <div class="sig-box-title">
+                        <span>Pour ZinToop SUARL (Émetteur) :</span>
+                        <span style="font-size: 9.5px; color: var(--accent-gold-dark);">Services Agricoles</span>
+                    </div>
+                    <div>
+                        <strong>Représentant :</strong> <span class="editable-field" contenteditable="true">M. Hamdi Ezzine &bull; Gérant</span><br>
+                        <span style="font-size: 9.5px; color: #64748b;">(Signature autorisée & Cachet de l'entreprise)</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2px;">
+                        <span class="sig-stamp-placeholder">Cachet ZinToop SUARL</span>
+                        <span style="font-size: 9px; color: #64748b;">Kairouan, le <span class="editable-field" contenteditable="true" id="sigDate">15/10/2026</span></span>
+                    </div>
+                </div>
+
+                <!-- Client Accord -->
+                <div class="sig-box">
+                    <div class="sig-box-title">
+                        <span>Bon pour Accord & Confirmation du Client :</span>
+                        <span style="font-size: 9.5px; color: #64748b;">Acceptation Devis</span>
+                    </div>
+                    <div>
+                        <strong>Nom & Qualité :</strong> <span class="editable-field" contenteditable="true" style="min-width: 140px;">............................................................</span><br>
+                        <span style="font-size: 9.5px; color: #64748b;">(Mention manuscrite obligatoire : « Bon pour accord »)</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2px;">
+                        <span class="sig-stamp-placeholder">Cachet & Signature Client</span>
+                        <span style="font-size: 9px; color: #64748b;">Date: <span class="editable-field" contenteditable="true">...... / ...... / 202...</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Footer -->
+            <div class="doc-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) &bull; MF: 1969552S &bull; Kairouan</div>
+                <div>Facture Proforma &bull; Page 1/1 &bull; Document commercial conforme à la réglementation fiscale tunisienne</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Interactive Script: Live Calculation, Number in Words, LocalStorage Counter Management -->
+    <script>
+        // Default Invoice Counter Prefix and Storage Key
+        const COUNTER_KEY = 'zintoop_proforma_counter';
+        const YEAR = new Date().getFullYear();
+
+        // Preset Line Items
+        const PRESETS = {
+            recolte: [
+                { desc: "Prestation de récolte mécanique des olives au peigne vibreur électrique (Sans gaulage)", unit: "Kg", qty: 25000, price: 0.280 },
+                { desc: "Mise en caisses ajourées et chargement pour transport au moulin", unit: "Forfait", qty: 1, price: 250.000 }
+            ],
+            taillage: [
+                { desc: "Taille et élagage raisonné des oliviers - Calibre moyen en production (Aération & élimination des gourmands)", unit: "Pieds", qty: 450, price: 5.500 },
+                { desc: "Taille de rajeunissement et restructuration - Grands arbres anciens", unit: "Pieds", qty: 80, price: 12.000 },
+                { desc: "Désinfection systématique des lames et masticage protecteur des plaies de coupe", unit: "Inclus", qty: 1, price: 0.000 }
+            ],
+            blank: [
+                { desc: "Prestation de services agricoles", unit: "U", qty: 1, price: 0.000 }
+            ]
+        };
+
+        // Initialize Counter from LocalStorage
+        function getInvoiceCounter() {
+            let count = localStorage.getItem(COUNTER_KEY);
+            if (!count) {
+                count = 1;
+                localStorage.setItem(COUNTER_KEY, count);
+            }
+            return parseInt(count, 10);
+        }
+
+        function formatInvoiceNumber(num) {
+            const formatted = String(num).padStart(4, '0');
+            return `FP-${YEAR}-${formatted}`;
+        }
+
+        function updateCounterDisplay() {
+            const currentCount = getInvoiceCounter();
+            const invNum = formatInvoiceNumber(currentCount);
+            document.getElementById('topCounterNum').innerText = invNum;
+            document.getElementById('docInvoiceNumber').innerText = invNum;
+        }
+
+        // Action: Confirm Current Invoice & Increment Counter by 1
+        function confirmAndIncrement() {
+            const current = getInvoiceCounter();
+            const currentNum = formatInvoiceNumber(current);
+            const nextCount = current + 1;
+            
+            if (confirm(`Confirmer la facture ${currentNum} ?\n\nCela va incrémenter automatiquement le compteur à ${formatInvoiceNumber(nextCount)} pour la prochaine proforma.`)) {
+                localStorage.setItem(COUNTER_KEY, nextCount);
+                updateCounterDisplay();
+                alert(`Facture ${currentNum} confirmée avec succès !\nLe numéro actif suivant est : ${formatInvoiceNumber(nextCount)}.`);
+            }
+        }
+
+        // Table Rows Management
+        function renderRows(items) {
+            const tbody = document.getElementById('itemsTableBody');
+            tbody.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-center font-bold" style="color: #64748b;">${index + 1}</td>
+                    <td>
+                        <input type="text" class="input-cell" value="${item.desc}" oninput="calculateTotals()" placeholder="Description...">
+                    </td>
+                    <td class="text-center">
+                        <input type="text" class="input-cell text-center" value="${item.unit}" oninput="calculateTotals()" style="width: 50px;">
+                    </td>
+                    <td>
+                        <input type="number" step="any" class="input-cell num qty-input" value="${item.qty}" oninput="calculateTotals()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.001" class="input-cell num price-input" value="${Number(item.price).toFixed(3)}" oninput="calculateTotals()">
+                    </td>
+                    <td class="text-right font-mono font-bold row-total">0.000</td>
+                    <td class="text-center no-print-bar">
+                        <button type="button" class="btn-row-action" onclick="deleteRow(this)" title="Supprimer la ligne">&times;</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            calculateTotals();
+        }
+
+        function addNewLine() {
+            const tbody = document.getElementById('itemsTableBody');
+            const rowCount = tbody.children.length;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="text-center font-bold" style="color: #64748b;">${rowCount + 1}</td>
+                <td>
+                    <input type="text" class="input-cell" value="" placeholder="Nouvelle prestation..." oninput="calculateTotals()">
+                </td>
+                <td class="text-center">
+                    <input type="text" class="input-cell text-center" value="Unité" oninput="calculateTotals()" style="width: 50px;">
+                </td>
+                <td>
+                    <input type="number" step="any" class="input-cell num qty-input" value="1" oninput="calculateTotals()">
+                </td>
+                <td>
+                    <input type="number" step="0.001" class="input-cell num price-input" value="0.000" oninput="calculateTotals()">
+                </td>
+                <td class="text-right font-mono font-bold row-total">0.000</td>
+                <td class="text-center no-print-bar">
+                    <button type="button" class="btn-row-action" onclick="deleteRow(this)" title="Supprimer la ligne">&times;</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            calculateTotals();
+        }
+
+        function deleteRow(btn) {
+            const tbody = document.getElementById('itemsTableBody');
+            if (tbody.children.length > 1) {
+                btn.closest('tr').remove();
+                // renumber
+                Array.from(tbody.children).forEach((tr, idx) => {
+                    tr.children[0].innerText = idx + 1;
+                });
+                calculateTotals();
+            } else {
+                alert("La facture doit comporter au moins une ligne de prestation.");
+            }
+        }
+
+        // Calculation of Totals
+        function calculateTotals() {
+            const tbody = document.getElementById('itemsTableBody');
+            let totalHT = 0;
+
+            Array.from(tbody.children).forEach(tr => {
+                const qty = parseFloat(tr.querySelector('.qty-input').value) || 0;
+                const price = parseFloat(tr.querySelector('.price-input').value) || 0;
+                const lineTotal = qty * price;
+                tr.querySelector('.row-total').innerText = lineTotal.toFixed(3);
+                totalHT += lineTotal;
+            });
+
+            const tvaRate = parseFloat(document.getElementById('tvaRateSelect').value) || 0;
+            const tvaAmount = totalHT * (tvaRate / 100);
+            const timbreFiscal = 1.000; // Fixed 1 DT in Tunisia
+            const totalTTC = totalHT + tvaAmount + timbreFiscal;
+
+            // Update displays
+            document.getElementById('dispTotalBrutHT').innerText = totalHT.toFixed(3);
+            document.getElementById('dispTvaAmount').innerText = tvaAmount.toFixed(3);
+            document.getElementById('dispTimbreFiscal').innerText = timbreFiscal.toFixed(3);
+            document.getElementById('dispTotalTTC').innerText = totalTTC.toFixed(3);
+
+            // Update Tax Exemption Notice Text
+            const noticeEl = document.getElementById('taxExemptionClause');
+            if (tvaRate === 0) {
+                noticeEl.innerHTML = `✓ Prestation de services agricoles exonérée de la TVA en vertu des dispositions du <strong>Tableau « A » du Code de la TVA tunisien</strong>.`;
+                noticeEl.style.color = '#166534';
+            } else {
+                noticeEl.innerHTML = `Facturation avec TVA au taux légal de <strong>${tvaRate}%</strong>.`;
+                noticeEl.style.color = '#1e3a8a';
+            }
+
+            // Convert Total TTC into French Words
+            document.getElementById('dispAmountInWords').innerText = convertAmountToFrenchWords(totalTTC);
+        }
+
+        // Preset Loaders
+        function loadPreset(key) {
+            if (PRESETS[key]) {
+                renderRows(PRESETS[key]);
+            }
+        }
+
+        function resetFormBlank() {
+            renderRows(PRESETS.blank);
+        }
+
+        // French Number to Words Converter for Tunisian Dinars & Millimes
+        function convertAmountToFrenchWords(amount) {
+            const dinars = Math.floor(amount);
+            const millimes = Math.round((amount - dinars) * 1000);
+
+            const units = ['', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit', 'Neuf', 'Dix', 'Onze', 'Douze', 'Treize', 'Quatorze', 'Quinze', 'Seize', 'Dix-sept', 'Dix-huit', 'Dix-neuf'];
+            const tens = ['', '', 'Vingt', 'Trente', 'Quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt-dix'];
+
+            function numberToWords(n) {
+                if (n === 0) return 'Zéro';
+                if (n < 20) return units[n];
+                if (n < 100) {
+                    const ten = Math.floor(n / 10);
+                    const rest = n % 10;
+                    if (ten === 7) return 'Soixante-' + (rest === 1 ? 'et-Onze' : units[10 + rest]);
+                    if (ten === 9) return 'Quatre-vingt-' + units[10 + rest];
+                    if (ten === 8 && rest === 0) return 'Quatre-vingts';
+                    return tens[ten] + (rest === 1 ? '-et-Un' : (rest > 0 ? '-' + units[rest] : ''));
+                }
+                if (n < 1000) {
+                    const hundred = Math.floor(n / 100);
+                    const rest = n % 100;
+                    const hStr = hundred === 1 ? 'Cent' : units[hundred] + ' Cents';
+                    return hStr + (rest > 0 ? ' ' + numberToWords(rest) : '');
+                }
+                if (n < 1000000) {
+                    const thousand = Math.floor(n / 1000);
+                    const rest = n % 1000;
+                    const tStr = thousand === 1 ? 'Mille' : numberToWords(thousand) + ' Mille';
+                    return tStr + (rest > 0 ? ' ' + numberToWords(rest) : '');
+                }
+                return String(n);
+            }
+
+            let text = numberToWords(dinars) + (dinars > 1 ? ' Dinars Tunisiens' : ' Dinar Tunisien');
+            if (millimes > 0) {
+                text += ' et ' + numberToWords(millimes) + (millimes > 1 ? ' Millimes' : ' Millime');
+            } else {
+                text += ' et Zéro Millime';
+            }
+            return text + '.';
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCounterDisplay();
+            loadPreset('recolte'); // Default to olive harvesting
+
+            // Auto-update today's date if empty
+            const today = new Date();
+            const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+            const dateEl = document.getElementById('invoiceDate');
+            if (dateEl) dateEl.innerText = formattedDate;
+            const sigDateEl = document.getElementById('sigDate');
+            if (sigDateEl) sigDateEl.innerText = formattedDate;
+
+            // Check URL Search Params for Pre-filling from Dispatch Manager
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('client')) document.getElementById('clientName').innerText = urlParams.get('client');
+            if (urlParams.get('phone')) document.getElementById('clientPhone').innerText = urlParams.get('phone');
+            if (urlParams.get('location')) document.getElementById('orchardLocation').innerText = urlParams.get('location');
+            if (urlParams.get('address')) document.getElementById('clientAddress').innerText = urlParams.get('address');
+            
+            const paramQty = parseFloat(urlParams.get('qty')) || 0;
+            const paramTrees = parseInt(urlParams.get('trees')) || 0;
+            const paramCalibre = urlParams.get('calibre') || 'moyen';
+            const paramSmall = parseInt(urlParams.get('treesSmall')) || 0;
+            const paramMed = parseInt(urlParams.get('treesMedium')) || 0;
+            const paramLarge = parseInt(urlParams.get('treesLarge')) || 0;
+            
+            if (paramQty > 0 || paramTrees > 0 || paramSmall > 0 || paramMed > 0 || paramLarge > 0) {
+                const dynamicRows = [];
+                if (paramQty > 0) {
+                    dynamicRows.push({
+                        desc: "Prestation de récolte mécanique des olives au peigne vibreur électrique (Sans gaulage)",
+                        unit: "Kg",
+                        qty: paramQty,
+                        price: 0.400
+                    });
+                }
+                if (paramCalibre === 'mixte' && (paramSmall > 0 || paramMed > 0 || paramLarge > 0)) {
+                    if (paramSmall > 0) {
+                        dynamicRows.push({
+                            desc: "Taille d'oliviers - Sujets jeunes / petite taille (غراسة حديثة - Calibre 1)",
+                            unit: "Pieds",
+                            qty: paramSmall,
+                            price: 3.500
+                        });
+                    }
+                    if (paramMed > 0) {
+                        dynamicRows.push({
+                            desc: "Taille et élagage raisonné - Arbres moyens en pleine production (Calibre 2)",
+                            unit: "Pieds",
+                            qty: paramMed,
+                            price: 6.500
+                        });
+                    }
+                    if (paramLarge > 0) {
+                        dynamicRows.push({
+                            desc: "Taille de restructuration et rajeunissement - Grands arbres / معمرة (Calibre 3)",
+                            unit: "Pieds",
+                            qty: paramLarge,
+                            price: 10.000
+                        });
+                    }
+                } else if (paramTrees > 0) {
+                    const priceT = (paramCalibre === 'petit') ? 3.500 : (paramCalibre === 'grand') ? 10.000 : 6.500;
+                    const labelT = (paramCalibre === 'petit') ? "Taille d'oliviers (Petits sujets)" : (paramCalibre === 'grand') ? "Taille et rajeunissement (Grands arbres)" : "Prestation de taille et élagage raisonné des oliviers (Calibre moyen)";
+                    dynamicRows.push({
+                        desc: labelT,
+                        unit: "Pieds",
+                        qty: paramTrees,
+                        price: priceT
+                    });
+                }
+                renderRows(dynamicRows);
+                calculateTotals();
+            }
+        });
+    </script>
+</body>
+</html>

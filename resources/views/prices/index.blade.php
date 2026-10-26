@@ -106,7 +106,7 @@
                     <span class="text-3xl font-black text-white">
                         {{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2) : '—' }}
                     </span>
-                    <span class="text-sm font-bold text-[#F5E5C0]">TND/{{ $locale === 'ar' ? 'لتر' : 'L' }}</span>
+                    <span class="text-sm font-bold text-[#F5E5C0]">TND/{{ $locale === 'ar' ? 'كغ' : 'kg' }}</span>
                 </div>
                 <div class="mt-2 flex items-center justify-between text-xs text-gray-400 border-t border-white/10 pt-2">
                     <span>{{ __('محدث يومياً من الأسواق') }}</span>
@@ -181,8 +181,8 @@
             gtou3Galba: 2.8,
             gtou3Pct: 20,
             recolteMode: 'galba',
-            recolteGalba: 3.5,
-            recolteMillimes: 250,
+            recolteGalba: 5.6,
+            recolteMillimes: 400,
             tgargibMode: 'kg',
             tgargibMillimes: 200,
             tgargibGalba: 2.8,
@@ -234,15 +234,19 @@
             get totalGalba() {
                 return this.volUnit === 'galba' ? (parseFloat(this.galbaCount) || 0) : +((parseFloat(this.kgCount) || 0) / 14).toFixed(1);
             },
-            get totalOilLiters() {
+            get totalOilKg() {
                 const rate = (this.gtou3Mode === 'galba') 
                     ? ((parseFloat(this.gtou3Galba) || 0) / 14) 
                     : ((parseFloat(this.gtou3Pct) || 0) / 100);
                 return +(this.totalKg * rate).toFixed(1);
             },
+            get totalOilLiters() {
+                // Density of olive oil is ~0.916 kg/L (1 L ≈ 0.916 kg => Liters = kg / 0.916)
+                return +(this.totalOilKg / 0.916).toFixed(1);
+            },
             get grossRevenue() {
                 const b = parseFloat(this.prixBaz) || 0;
-                return +(this.totalOilLiters * b).toFixed(2);
+                return +(this.totalOilKg * b).toFixed(2);
             },
             get totalRecolteCost() {
                 const costPerKg = (this.recolteMode === 'galba') 
@@ -272,67 +276,69 @@
                 return this.totalKg > 0 ? +(this.grossRevenue / this.totalKg).toFixed(3) : 0;
             }
          }"
-         class="bg-gradient-to-br from-white via-[#fbfdfa] to-[#f4f7f1] rounded-3xl shadow-xl border-2 border-[#6A8F3B]/30 overflow-hidden transition-all duration-300">
+         class="bg-gradient-to-br from-white via-[#fbfdfa] to-[#f4f7f1] rounded-2xl sm:rounded-3xl shadow-xl border-2 border-[#6A8F3B]/30 overflow-hidden transition-all duration-300">
 
         {{-- Header bar with Toggle --}}
-        <div class="bg-gradient-to-r from-[#142E18] via-[#1B2A1B] to-[#142E18] text-white p-5 sm:p-6 flex items-center justify-between gap-4 border-b border-[#C8A356]/40 cursor-pointer select-none"
+        <div class="bg-gradient-to-r from-[#142E18] via-[#1B2A1B] to-[#142E18] text-white p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 border-b border-[#C8A356]/40 cursor-pointer select-none"
              @click="isExpanded = !isExpanded">
-            <div class="flex items-center gap-3 sm:gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C8A356] to-[#b08b3a] flex items-center justify-center text-2xl shadow-lg border border-white/20">
+            <div class="flex items-start sm:items-center gap-3 sm:gap-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#C8A356] to-[#b08b3a] flex items-center justify-center text-xl sm:text-2xl shadow-lg border border-white/20 flex-shrink-0 mt-0.5 sm:mt-0">
                     🧮
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#C8A356] text-gray-950 uppercase tracking-wide">
+                <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span class="px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black bg-[#C8A356] text-gray-950 uppercase tracking-wide">
                             {{ __('محاكي الفلاح الذكي') }}
                         </span>
-                        <span class="text-xs text-[#F5E5C0] font-semibold hidden sm:inline">
+                        <span class="text-[11px] sm:text-xs text-[#F5E5C0] font-semibold">
                             🇹🇳 {{ __('1 قَلبة = 14 كغ زيتون') }}
                         </span>
                     </div>
-                    <h2 class="text-xl sm:text-2xl font-black text-white mt-1">
+                    <h2 class="text-base sm:text-2xl font-black text-white mt-1 leading-snug">
                         {{ __('حساب قيمة الزيتون بالقلبة والكيلو مقارنة بسعر الباز') }}
                     </h2>
-                    <p class="text-xs text-gray-300 mt-0.5">
+                    <p class="text-[11px] sm:text-xs text-gray-300 mt-0.5 leading-relaxed">
                         {{ __('احسب مردودية صابتك: كمية الزيت، كلفة التقرقيب (المعصرة)، كلفة الجني، وسعر الكيلو الصافي في جيبك') }}
                     </p>
                 </div>
             </div>
 
-            <button type="button" 
-                    class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition flex-shrink-0">
-                <span x-text="isExpanded ? '{{ __('إخفاء') }}' : '{{ __('فتح المحاكي') }}'"></span>
-                <svg class="w-4 h-4 transition-transform duration-300" :class="isExpanded ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
+            <div class="flex items-center justify-end sm:justify-center self-end sm:self-auto flex-shrink-0">
+                <button type="button" 
+                        class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition flex-shrink-0">
+                    <span x-text="isExpanded ? '{{ __('إخفاء') }}' : '{{ __('فتح المحاكي') }}'"></span>
+                    <svg class="w-4 h-4 transition-transform duration-300" :class="isExpanded ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         {{-- Collapsible Body --}}
-        <div x-show="isExpanded" x-collapse class="p-5 sm:p-8 space-y-8">
+        <div x-show="isExpanded" x-collapse class="p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
 
-            {{-- 1. INPUTS GRID: BIG, HIGH-CONTRAST, SUPER EASY TO EDIT --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {{-- 1. INPUTS GRID: BIG, HIGH-CONTRAST, SUPER EASY TO EDIT & MOBILE RESPONSIVE --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
 
                 {{-- FIELD 1: QUANTITE OLIVES (GALBA / KG) --}}
-                <div class="bg-white rounded-2xl p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
-                    <div class="flex items-center justify-between">
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
                         <label class="text-xs font-black text-[#142E18] uppercase tracking-wide flex items-center gap-1.5">
                             <span class="text-base">📦</span>
                             <span>{{ __('1. كمية المحصول') }}</span>
                         </label>
                         {{-- Unit Switcher Pills --}}
-                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold gap-1">
                             <button type="button" 
                                     @click="volUnit = 'galba'" 
                                     :class="volUnit === 'galba' ? 'bg-[#6A8F3B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-3 py-1 rounded-lg transition">
+                                    class="px-2.5 sm:px-3 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('بالقلبة (14كغ)') }}
                             </button>
                             <button type="button" 
                                     @click="volUnit = 'kg'" 
                                     :class="volUnit === 'kg' ? 'bg-[#6A8F3B] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-3 py-1 rounded-lg transition">
+                                    class="px-2.5 sm:px-3 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('بالكيلو (Kg)') }}
                             </button>
                         </div>
@@ -342,7 +348,7 @@
                     <div class="flex items-center gap-2">
                         <button type="button" 
                                 @click="volUnit === 'galba' ? adjustGalba(-10) : adjustKg(-100)"
-                                class="w-11 h-11 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-black text-xl flex items-center justify-center transition flex-shrink-0 shadow-inner">
+                                class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-black text-lg sm:text-xl flex items-center justify-center transition flex-shrink-0 shadow-inner">
                             -
                         </button>
 
@@ -352,20 +358,20 @@
                                        x-model.number="galbaCount" 
                                        @input="onGalbaChange()"
                                        step="5" min="1"
-                                       class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition shadow-inner">
+                                       class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition shadow-inner">
                             </template>
                             <template x-if="volUnit === 'kg'">
                                 <input type="number" 
                                        x-model.number="kgCount" 
                                        @input="onKgChange()"
                                        step="50" min="14"
-                                       class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition shadow-inner">
+                                       class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#6A8F3B] focus:ring-4 focus:ring-[#6A8F3B]/20 transition shadow-inner">
                             </template>
                         </div>
 
                         <button type="button" 
                                 @click="volUnit === 'galba' ? adjustGalba(10) : adjustKg(100)"
-                                class="w-11 h-11 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-black text-xl flex items-center justify-center transition flex-shrink-0 shadow-inner">
+                                class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-black text-lg sm:text-xl flex items-center justify-center transition flex-shrink-0 shadow-inner">
                             +
                         </button>
                     </div>
@@ -381,9 +387,9 @@
                     </div>
                 </div>
 
-                {{-- FIELD 2: PRIX DU BAZ (TND / L) --}}
-                <div class="bg-white rounded-2xl p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
-                    <div class="flex items-center justify-between">
+                {{-- FIELD 2: PRIX DU BAZ (TND / KG) --}}
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <label class="text-xs font-black text-[#142E18] uppercase tracking-wide flex items-center gap-1.5">
                             <span class="text-base">🏷️</span>
                             <span>{{ __('2. سعر الباز (زيت الزيتون)') }}</span>
@@ -398,8 +404,8 @@
                         <input type="number" 
                                x-model.number="prixBaz" 
                                step="0.25" min="5" max="40"
-                               class="w-full text-center text-2xl font-black text-amber-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 transition shadow-inner">
-                        <span class="absolute left-3 top-3.5 text-xs font-black text-gray-400">TND / L</span>
+                               class="w-full text-center text-xl sm:text-2xl font-black text-amber-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 transition shadow-inner">
+                        <span class="absolute left-3 top-3 text-xs font-black text-gray-400">TND / {{ $locale === 'ar' ? 'كغ' : 'kg' }}</span>
                     </div>
 
                     <div class="flex items-center justify-between text-xs text-gray-600 bg-gray-50 rounded-xl px-3 py-2 border border-gray-200">
@@ -407,31 +413,31 @@
                         <button type="button" 
                                 @click="prixBaz = {{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2, '.', '') : '16.50' }}"
                                 class="text-xs font-bold text-[#6A8F3B] hover:underline flex items-center gap-1">
-                            <span>{{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2) : '16.50' }} {{ $locale === 'ar' ? 'د.ت' : 'TND' }}</span>
-                            <span class="text-[10px] bg-[#6A8F3B]/10 px-1.5 py-0.5 rounded">{{ __('تطبيق') }}</span>
+                            <span>{{ isset($tunisianAvg) ? number_format((float)$tunisianAvg, 2) : '16.50' }} {{ $locale === 'ar' ? 'د.ت / كغ' : 'TND / kg' }}</span>
+                            <span class="text-[10px] bg-[#6A8F3B]/10 px-1.5 py-0.5 rounded font-black">{{ __('تطبيق') }}</span>
                         </button>
                     </div>
                 </div>
 
-                {{-- FIELD 3: GTOU3 / RENDEMENT (L/GALBA or %) --}}
-                <div class="bg-white rounded-2xl p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
-                    <div class="flex items-center justify-between">
+                {{-- FIELD 3: GTOU3 / RENDEMENT (KG/GALBA or %) --}}
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <label class="text-xs font-black text-[#142E18] uppercase tracking-wide flex items-center gap-1.5">
                             <span class="text-base">💧</span>
                             <span>{{ __('3. القطوع (المردودية)') }}</span>
                         </label>
                         {{-- Mode Switcher --}}
-                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold gap-1">
                             <button type="button" 
                                     @click="gtou3Mode = 'galba'" 
                                     :class="gtou3Mode === 'galba' ? 'bg-[#C8A356] text-gray-950 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
-                                {{ __('لتر/قلبة') }}
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
+                                {{ __('كغ/قلبة') }}
                             </button>
                             <button type="button" 
                                     @click="gtou3Mode = 'pct'" 
                                     :class="gtou3Mode === 'pct' ? 'bg-[#C8A356] text-gray-950 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('عيارة %') }}
                             </button>
                         </div>
@@ -444,48 +450,48 @@
                                    x-model.number="gtou3Galba" 
                                    @input="onGtou3GalbaChange()"
                                    step="0.1" min="0.5" max="7"
-                                   class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition shadow-inner">
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition shadow-inner">
                         </template>
                         <template x-if="gtou3Mode === 'pct'">
                             <input type="number" 
                                    x-model.number="gtou3Pct" 
                                    @input="onGtou3PctChange()"
                                    step="0.5" min="5" max="40"
-                                   class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition shadow-inner">
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#C8A356] focus:ring-4 focus:ring-[#C8A356]/20 transition shadow-inner">
                         </template>
-                        <span class="absolute left-3 top-3.5 text-xs font-black text-gray-400" x-text="gtou3Mode === 'galba' ? '{{ $locale === 'ar' ? 'L / قلبة' : 'L / Galba' }}' : '%'"></span>
+                        <span class="absolute left-3 top-3 text-xs font-black text-gray-400" x-text="gtou3Mode === 'galba' ? '{{ $locale === 'ar' ? 'كغ / قلبة' : 'kg / Galba' }}' : '%'"></span>
                     </div>
 
                     {{-- Equivalency helper --}}
                     <div class="flex items-center justify-between text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
                         <span>{{ __('العيارة المقابلة:') }}</span>
                         <span>
-                            <strong class="text-sm" x-text="gtou3Galba"></strong> {{ __('لتر/قلبة') }}
+                            <strong class="text-sm" x-text="gtou3Galba"></strong> {{ __('كغ/قلبة') }}
                             ≈
                             <strong class="text-sm" x-text="gtou3Pct"></strong>% {{ __('زيت') }}
                         </span>
                     </div>
                 </div>
 
-                {{-- FIELD 4: COUT RECOLTE / CUEILLETTE (GALBA or MILLIMES/KG) --}}
-                <div class="bg-white rounded-2xl p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
-                    <div class="flex items-center justify-between">
+                {{-- FIELD 4: COUT RECOLTE / CUEILLETTE (GALBA or MILLIMES/KG) - DEFAULT 5.6 TND / GALBA --}}
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <label class="text-xs font-black text-[#142E18] uppercase tracking-wide flex items-center gap-1.5">
                             <span class="text-base">🚜</span>
                             <span>{{ __('4. كلفة الجني (يد عاملة/ماكينات)') }}</span>
                         </label>
                         {{-- Mode Switcher --}}
-                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold gap-1">
                             <button type="button" 
                                     @click="recolteMode = 'galba'" 
                                     :class="recolteMode === 'galba' ? 'bg-[#142E18] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('بالقلبة (د.ت)') }}
                             </button>
                             <button type="button" 
                                     @click="recolteMode = 'kg'" 
                                     :class="recolteMode === 'kg' ? 'bg-[#142E18] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('بالكيلو (مليم)') }}
                             </button>
                         </div>
@@ -497,17 +503,36 @@
                             <input type="number" 
                                    x-model.number="recolteGalba" 
                                    @input="onRecolteGalbaChange()"
-                                   step="0.25" min="0.5" max="15"
-                                   class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#142E18] focus:ring-4 focus:ring-[#142E18]/20 transition shadow-inner">
+                                   step="0.2" min="0.5" max="15"
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#142E18] focus:ring-4 focus:ring-[#142E18]/20 transition shadow-inner">
                         </template>
                         <template x-if="recolteMode === 'kg'">
                             <input type="number" 
                                    x-model.number="recolteMillimes" 
                                    @input="onRecolteMillimesChange()"
                                    step="10" min="50" max="1000"
-                                   class="w-full text-center text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-[#142E18] focus:ring-4 focus:ring-[#142E18]/20 transition shadow-inner">
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-[#142E18] bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-[#142E18] focus:ring-4 focus:ring-[#142E18]/20 transition shadow-inner">
                         </template>
-                        <span class="absolute left-3 top-3.5 text-xs font-black text-gray-400" x-text="recolteMode === 'galba' ? '{{ $locale === 'ar' ? 'DT / قلبة' : 'TND / Galba' }}' : '{{ $locale === 'ar' ? 'مليم / كغ' : 'Millimes / kg' }}'"></span>
+                        <span class="absolute left-3 top-3 text-xs font-black text-gray-400" x-text="recolteMode === 'galba' ? '{{ $locale === 'ar' ? 'DT / قلبة' : 'TND / Galba' }}' : '{{ $locale === 'ar' ? 'مليم / كغ' : 'Millimes / kg' }}'"></span>
+                    </div>
+
+                    {{-- Fast presets for recolte --}}
+                    <div class="flex flex-wrap items-center justify-between text-xs font-bold text-gray-700 bg-gray-50 rounded-xl px-3 py-2 border border-gray-200 gap-1.5">
+                        <span>{{ __('معلوم الجني المتداول:') }}</span>
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <button type="button" @click="recolteGalba = 3.5; onRecolteGalbaChange()" 
+                                    :class="recolteGalba == 3.5 ? 'bg-emerald-600 border-emerald-600 text-white font-black shadow-xs' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">3.5 {{ $locale === 'ar' ? 'د' : 'DT' }}</button>
+                            <button type="button" @click="recolteGalba = 4.5; onRecolteGalbaChange()" 
+                                    :class="recolteGalba == 4.5 ? 'bg-emerald-600 border-emerald-600 text-white font-black shadow-xs' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">4.5 {{ $locale === 'ar' ? 'د' : 'DT' }}</button>
+                            <button type="button" @click="recolteGalba = 5.6; onRecolteGalbaChange()" 
+                                    :class="recolteGalba == 5.6 ? 'bg-emerald-600 border-emerald-600 text-white font-black shadow-xs' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">5.6 {{ $locale === 'ar' ? 'د' : 'DT' }} (400{{ $locale === 'ar' ? 'م' : 'm' }})</button>
+                            <button type="button" @click="recolteGalba = 7.0; onRecolteGalbaChange()" 
+                                    :class="recolteGalba == 7.0 ? 'bg-emerald-600 border-emerald-600 text-white font-black shadow-xs' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">7.0 {{ $locale === 'ar' ? 'د' : 'DT' }}</button>
+                        </div>
                     </div>
 
                     {{-- Equivalency helper --}}
@@ -522,24 +547,24 @@
                 </div>
 
                 {{-- FIELD 5: FRAIS TGARGIB / TRITURATION (MILLIMES/KG or GALBA) --}}
-                <div class="bg-white rounded-2xl p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
-                    <div class="flex items-center justify-between">
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-gray-200 shadow-sm hover:border-[#6A8F3B] transition space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <label class="text-xs font-black text-[#142E18] uppercase tracking-wide flex items-center gap-1.5">
                             <span class="text-base">⚙️</span>
                             <span>{{ __('5. سوم التقرقيب (المعصرة)') }}</span>
                         </label>
                         {{-- Mode Switcher --}}
-                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                        <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-bold gap-1">
                             <button type="button" 
                                     @click="tgargibMode = 'kg'" 
                                     :class="tgargibMode === 'kg' ? 'bg-[#b91c1c] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('مليم/كغ') }}
                             </button>
                             <button type="button" 
                                     @click="tgargibMode = 'galba'" 
                                     :class="tgargibMode === 'galba' ? 'bg-[#b91c1c] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
-                                    class="px-2.5 py-1 rounded-lg transition">
+                                    class="px-2.5 py-1 rounded-lg transition text-[11px] sm:text-xs">
                                 {{ __('بالقلبة (د.ت)') }}
                             </button>
                         </div>
@@ -552,48 +577,54 @@
                                    x-model.number="tgargibMillimes" 
                                    @input="onTgargibMillimesChange()"
                                    step="10" min="50" max="600"
-                                   class="w-full text-center text-2xl font-black text-rose-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/20 transition shadow-inner">
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-rose-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/20 transition shadow-inner">
                         </template>
                         <template x-if="tgargibMode === 'galba'">
                             <input type="number" 
                                    x-model.number="tgargibGalba" 
                                    @input="onTgargibGalbaChange()"
                                    step="0.2" min="0.5" max="8"
-                                   class="w-full text-center text-2xl font-black text-rose-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-3 px-2 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/20 transition shadow-inner">
+                                   class="w-full text-center text-xl sm:text-2xl font-black text-rose-700 bg-gray-50 border-2 border-gray-300 rounded-xl py-2.5 sm:py-3 px-2 focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/20 transition shadow-inner">
                         </template>
-                        <span class="absolute left-3 top-3.5 text-xs font-black text-gray-400" x-text="tgargibMode === 'kg' ? '{{ $locale === 'ar' ? 'مليم / كغ' : 'Millimes / kg' }}' : '{{ $locale === 'ar' ? 'DT / قلبة' : 'TND / Galba' }}'"></span>
+                        <span class="absolute left-3 top-3 text-xs font-black text-gray-400" x-text="tgargibMode === 'kg' ? '{{ $locale === 'ar' ? 'مليم / كغ' : 'Millimes / kg' }}' : '{{ $locale === 'ar' ? 'DT / قلبة' : 'TND / Galba' }}'"></span>
                     </div>
 
                     {{-- Fast presets --}}
-                    <div class="flex items-center justify-between text-xs font-bold text-rose-900 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                    <div class="flex flex-wrap items-center justify-between text-xs font-bold text-rose-900 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2 gap-1.5">
                         <span>{{ __('معلوم العصير المتداول:') }}</span>
-                        <div class="flex items-center gap-1.5">
-                            <button type="button" @click="tgargibMillimes = 150; onTgargibMillimesChange()" class="px-2 py-0.5 rounded bg-white border border-rose-200 hover:bg-rose-100">150 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
-                            <button type="button" @click="tgargibMillimes = 200; onTgargibMillimesChange()" class="px-2 py-0.5 rounded bg-white border border-rose-200 hover:bg-rose-100">200 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
-                            <button type="button" @click="tgargibMillimes = 250; onTgargibMillimesChange()" class="px-2 py-0.5 rounded bg-white border border-rose-200 hover:bg-rose-100">250 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <button type="button" @click="tgargibMillimes = 150; onTgargibMillimesChange()" 
+                                    :class="tgargibMillimes == 150 ? 'bg-rose-600 border-rose-600 text-white font-black shadow-xs' : 'bg-white border-rose-200 text-rose-900 hover:bg-rose-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">150 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
+                            <button type="button" @click="tgargibMillimes = 200; onTgargibMillimesChange()" 
+                                    :class="tgargibMillimes == 200 ? 'bg-rose-600 border-rose-600 text-white font-black shadow-xs' : 'bg-white border-rose-200 text-rose-900 hover:bg-rose-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">200 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
+                            <button type="button" @click="tgargibMillimes = 250; onTgargibMillimesChange()" 
+                                    :class="tgargibMillimes == 250 ? 'bg-rose-600 border-rose-600 text-white font-black shadow-xs' : 'bg-white border-rose-200 text-rose-900 hover:bg-rose-100'"
+                                    class="px-2 py-0.5 rounded border text-[11px] transition">250 {{ $locale === 'ar' ? 'م' : 'm' }}</button>
                         </div>
                     </div>
                 </div>
 
                 {{-- SUMMARY QUICK CARD --}}
-                <div class="bg-gradient-to-br from-[#142E18] to-[#0C1A0F] text-white rounded-2xl p-5 border-2 border-[#C8A356]/40 shadow-lg flex flex-col justify-between">
+                <div class="bg-gradient-to-br from-[#142E18] to-[#0C1A0F] text-white rounded-2xl p-4 sm:p-5 border-2 border-[#C8A356]/40 shadow-lg flex flex-col justify-between space-y-3">
                     <div>
                         <div class="flex items-center justify-between text-xs text-[#F5E5C0] font-bold mb-2">
                             <span>{{ __('مؤشر التكلفة الإجمالية / كغ') }}</span>
-                            <span>{{ __('جني + عصير') }}</span>
+                            <span class="bg-white/10 px-2 py-0.5 rounded-full text-[10px]">{{ __('جني + عصير') }}</span>
                         </div>
-                        <div class="text-3xl font-black text-[#F5E5C0] flex items-baseline gap-1">
+                        <div class="text-2xl sm:text-3xl font-black text-[#F5E5C0] flex items-baseline gap-1">
                             <span x-text="((recolteMillimes + tgargibMillimes) / 1000).toFixed(3)"></span>
                             <span class="text-sm font-bold text-gray-300">TND / {{ $locale === 'ar' ? 'كغ' : 'kg' }}</span>
                         </div>
-                        <p class="text-xs text-gray-400 mt-1">
+                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">
                             {{ __('كل كغ زيتون يتكلف عليك') }} 
                             <strong class="text-white" x-text="recolteMillimes + tgargibMillimes"></strong> 
                             {{ __('مليم بين جني ومعصرة') }}
                         </p>
                     </div>
 
-                    <div class="border-t border-white/10 pt-3 mt-3 flex items-center justify-between text-xs text-gray-300">
+                    <div class="border-t border-white/10 pt-2.5 mt-2 flex items-center justify-between text-xs text-gray-300">
                         <span>{{ __('التكلفة للقلبة الواحدة:') }}</span>
                         <span class="font-black text-amber-300 text-sm">
                             <span x-text="(( (recolteMillimes + tgargibMillimes) / 1000 ) * 14).toFixed(3)"></span> {{ $locale === 'ar' ? 'د.ت' : 'TND' }}
@@ -604,90 +635,91 @@
             </div>
 
             {{-- 2. LIVE RESULTS SHOWCASE: BIG, CLEAR & ACTIONABLE --}}
-            <div class="border-t-2 border-gray-200 pt-8 space-y-6">
+            <div class="border-t-2 border-gray-200 pt-6 sm:pt-8 space-y-4 sm:space-y-6">
 
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg sm:text-xl font-black text-[#142E18] flex items-center gap-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h3 class="text-base sm:text-xl font-black text-[#142E18] flex items-center gap-2">
                         <span>📊</span>
                         <span>{{ __('النتائج الفورية للمحصول وصافي الأرباح') }}</span>
                     </h3>
-                    <span class="text-xs font-bold text-gray-500 bg-white border border-gray-200 px-3 py-1 rounded-full shadow-sm">
+                    <span class="text-[11px] sm:text-xs font-bold text-gray-500 bg-white border border-gray-200 px-2.5 sm:px-3 py-1 rounded-full shadow-sm">
                         {{ __('حساب لحظي مباشر') }}
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
 
                     {{-- MAIN KPI 1: PRIX NET DU KILO D'OLIVE --}}
-                    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-emerald-400/50">
+                    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-emerald-400/50">
                         <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 pointer-events-none">⚖️</div>
                         <div>
                             <span class="text-xs font-black uppercase tracking-wider text-emerald-100 flex items-center gap-1.5">
                                 <span>🌿</span>
                                 <span>{{ __('سعر الكيلو زيتون الصافي') }}</span>
                             </span>
-                            <div class="text-4xl font-black text-white mt-2 flex items-baseline gap-1.5">
+                            <div class="text-3xl sm:text-4xl font-black text-white mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
                                 <span x-text="netPricePerKg"></span>
                                 <span class="text-base font-bold text-emerald-200">TND/{{ $locale === 'ar' ? 'كغ' : 'kg' }}</span>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-emerald-400/30 text-xs text-emerald-100 font-medium">
+                        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-emerald-400/30 text-[11px] sm:text-xs text-emerald-100 font-medium">
                             {{ __('الصافي في جيبك بعد خصم مصاريف الجني والتقرقيب') }}
                         </div>
                     </div>
 
                     {{-- MAIN KPI 2: PRIX NET DE LA GALBA --}}
-                    <div class="bg-gradient-to-br from-[#142E18] to-[#1B2A1B] text-white rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-[#C8A356]/40">
+                    <div class="bg-gradient-to-br from-[#142E18] to-[#1B2A1B] text-white rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-[#C8A356]/40">
                         <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 pointer-events-none">🧺</div>
                         <div>
                             <span class="text-xs font-black uppercase tracking-wider text-[#F5E5C0] flex items-center gap-1.5">
                                 <span>🧺</span>
                                 <span>{{ __('سعر القَلبة زيتون صافية') }}</span>
                             </span>
-                            <div class="text-4xl font-black text-[#F5E5C0] mt-2 flex items-baseline gap-1.5">
+                            <div class="text-3xl sm:text-4xl font-black text-[#F5E5C0] mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
                                 <span x-text="netPricePerGalba"></span>
                                 <span class="text-base font-bold text-amber-200">TND/{{ $locale === 'ar' ? 'قلبة' : 'galba' }}</span>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-white/10 text-xs text-gray-300 font-medium">
+                        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 text-[11px] sm:text-xs text-gray-300 font-medium">
                             {{ __('قيمة الـ 14 كغ زيتون صافية وموازية لسعر الباز') }}
                         </div>
                     </div>
 
                     {{-- MAIN KPI 3: TOTAL OIL YIELD --}}
-                    <div class="bg-white rounded-2xl p-6 shadow-md border-2 border-gray-200 flex flex-col justify-between">
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-md border-2 border-gray-200 flex flex-col justify-between">
                         <div>
                             <span class="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
                                 <span>🫒</span>
                                 <span>{{ __('محصول الزيت المتوقع') }}</span>
                             </span>
-                            <div class="text-3xl font-black text-[#142E18] mt-2 flex items-baseline gap-1.5">
-                                <span x-text="totalOilLiters.toLocaleString()"></span>
-                                <span class="text-sm font-bold text-gray-600">{{ __('لتر زيت') }}</span>
+                            <div class="text-2xl sm:text-3xl font-black text-[#142E18] mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
+                                <span x-text="totalOilKg.toLocaleString()"></span>
+                                <span class="text-sm font-bold text-gray-600">{{ __('كغ زيت') }}</span>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-600 font-semibold flex items-center justify-between">
-                            <span>{{ __('يعادل تقريباً:') }}</span>
+                        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-gray-100 text-xs text-gray-600 font-semibold flex items-center justify-between">
+                            <span>{{ __('يعادل باللتر:') }}</span>
                             <span class="font-bold text-[#6A8F3B]">
-                                <strong x-text="Math.round(totalOilLiters / 20)"></strong> {{ __('بيدون (20L)') }}
+                                <strong x-text="totalOilLiters.toLocaleString()"></strong> {{ $locale === 'ar' ? 'لتر' : 'L' }}
+                                (<span x-text="Math.round(totalOilLiters / 20)"></span> {{ __('بيدون') }})
                             </span>
                         </div>
                     </div>
 
                     {{-- MAIN KPI 4: NET CASH PROFIT --}}
-                    <div class="bg-gradient-to-br from-amber-500 to-amber-700 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-amber-300/50">
+                    <div class="bg-gradient-to-br from-amber-500 to-amber-700 text-white rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden flex flex-col justify-between border-2 border-amber-300/50">
                         <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 pointer-events-none">💰</div>
                         <div>
                             <span class="text-xs font-black uppercase tracking-wider text-amber-100 flex items-center gap-1.5">
                                 <span>💰</span>
                                 <span>{{ __('صافي الأرباح في جيبك') }}</span>
                             </span>
-                            <div class="text-3xl sm:text-4xl font-black text-white mt-2 flex items-baseline gap-1.5">
+                            <div class="text-2xl sm:text-4xl font-black text-white mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
                                 <span x-text="netProfit.toLocaleString()"></span>
                                 <span class="text-base font-bold text-amber-100">TND</span>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-amber-300/30 text-xs text-amber-100 font-medium">
+                        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-amber-300/30 text-[11px] sm:text-xs text-amber-100 font-medium">
                             {{ __('بعد خلاص كامل مصاريف الجني والتقرقيب') }}
                         </div>
                     </div>
@@ -695,19 +727,19 @@
                 </div>
 
                 {{-- DETAILED BREAKDOWN ROW & SMART SELLING DECISION ADVISOR --}}
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
 
                     {{-- EXPENSES BREAKDOWN CARD --}}
-                    <div class="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-sm space-y-4">
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 shadow-sm space-y-3 sm:space-y-4">
                         <h4 class="text-sm font-black text-[#142E18] flex items-center gap-2">
                             <span>🧾</span>
                             <span>{{ __('تفصيل المصاريف والمدخول الإجمالي') }}</span>
                         </h4>
 
-                        <div class="space-y-3 text-xs sm:text-sm font-bold">
+                        <div class="space-y-2.5 sm:space-y-3 text-xs sm:text-sm font-bold">
                             <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-100">
                                 <span class="text-gray-600">{{ __('المدخول الخام لبيع الزيت بسعر الباز:') }}</span>
-                                <span class="text-[#142E18] font-black text-base">
+                                <span class="text-[#142E18] font-black text-sm sm:text-base">
                                     <span x-text="grossRevenue.toLocaleString()"></span> TND
                                 </span>
                             </div>
@@ -726,9 +758,9 @@
                                 </span>
                             </div>
 
-                            <div class="flex items-center justify-between p-3 rounded-xl bg-gray-100 text-gray-800 border-2 border-gray-200 font-black">
+                            <div class="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-gray-100 text-gray-800 border-2 border-gray-200 font-black">
                                 <span>{{ __('مجموع المصاريف الإجمالية:') }}</span>
-                                <span class="text-rose-700 text-base">
+                                <span class="text-rose-700 text-sm sm:text-base">
                                     <span x-text="totalExpenses.toLocaleString()"></span> TND
                                 </span>
                             </div>
@@ -736,11 +768,11 @@
                     </div>
 
                     {{-- SMART SELLING ADVISOR (DECISION HELPER) --}}
-                    <div class="bg-gradient-to-br from-[#f0fdf4] to-[#ecfdf5] rounded-2xl p-6 border-2 border-emerald-300 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="bg-gradient-to-br from-[#f0fdf4] to-[#ecfdf5] rounded-2xl p-4 sm:p-6 border-2 border-emerald-300 shadow-sm flex flex-col justify-between space-y-3 sm:space-y-4">
                         <div>
-                            <div class="flex items-center gap-2 mb-2">
+                            <div class="flex items-center gap-2 mb-1.5 sm:mb-2">
                                 <span class="text-xl">💡</span>
-                                <h4 class="text-sm font-black text-[#166534] uppercase tracking-wide">
+                                <h4 class="text-xs sm:text-sm font-black text-[#166534] uppercase tracking-wide">
                                     {{ __('دليل قرار الفلاح الذكي (Sur Pied vs Trituration)') }}
                                 </h4>
                             </div>
@@ -749,22 +781,22 @@
                             </p>
                         </div>
 
-                        <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm space-y-2">
+                        <div class="bg-white rounded-xl p-3.5 sm:p-4 border border-emerald-200 shadow-sm space-y-2">
                             <div class="flex items-baseline justify-between text-xs sm:text-sm">
                                 <span class="font-bold text-gray-600">{{ __('الحد الأدنى لبيع الكيلو حب:') }}</span>
-                                <span class="font-black text-emerald-700 text-lg">
+                                <span class="font-black text-emerald-700 text-base sm:text-lg">
                                     <span x-text="netPricePerKg"></span> TND / {{ $locale === 'ar' ? 'كغ' : 'kg' }}
                                 </span>
                             </div>
                             <div class="flex items-baseline justify-between text-xs sm:text-sm border-t border-gray-100 pt-2">
                                 <span class="font-bold text-gray-600">{{ __('الحد الأدنى لبيع القَلبة حب:') }}</span>
-                                <span class="font-black text-emerald-700 text-lg">
+                                <span class="font-black text-emerald-700 text-base sm:text-lg">
                                     <span x-text="netPricePerGalba"></span> TND / {{ $locale === 'ar' ? 'قلبة' : 'galba' }}
                                 </span>
                             </div>
                         </div>
 
-                        <div class="text-[11px] font-bold text-emerald-800 bg-emerald-100/60 rounded-xl p-3 border border-emerald-200 leading-relaxed">
+                        <div class="text-[11px] font-bold text-emerald-800 bg-emerald-100/60 rounded-xl p-2.5 sm:p-3 border border-emerald-200 leading-relaxed">
                             ⚠️ <strong>{{ __('قاعدة السوق:') }}</strong> 
                             {{ __('أي سعر حب يعطيهولك الخضار أقل من هذا المبلغ، يعني راك خاسر مقارنة بإنك تجني وتعصر وتبيع زيتها بسعر الباز!') }}
                         </div>

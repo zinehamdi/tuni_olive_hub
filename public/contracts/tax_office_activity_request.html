@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطلب إضافة نشاط جبائي فلاحي - مكتب مراقبة الأداءات الخوارزمي القيروان</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #166534;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --bg-page: #f8fafc;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Amiri', 'Tajawal', serif;
+            background: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.85;
+            font-size: 15px;
+            padding: 24px 12px;
+        }
+
+        .no-print-bar {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-print {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-print:hover {
+            background: var(--primary-dark);
+        }
+
+        .paper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px 65px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 14px;
+        }
+
+        .sender-box {
+            width: 60%;
+        }
+
+        .sender-box h3 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 3px;
+        }
+
+        .sender-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 2px 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .date-box {
+            text-align: left;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .recipient-box {
+            margin: 24px auto;
+            text-align: center;
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            padding: 14px 20px;
+            border-radius: 6px;
+            width: 85%;
+        }
+
+        .recipient-box h2 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 3px;
+        }
+
+        .recipient-box p {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .subject-box {
+            background: #f0fdf4;
+            border-right: 4px solid var(--primary);
+            padding: 10px 16px;
+            margin-bottom: 22px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14.5px;
+            font-weight: 700;
+        }
+
+        .body-text {
+            font-size: 15.5px;
+            text-align: justify;
+            margin-bottom: 18px;
+        }
+
+        .body-text p {
+            margin-bottom: 14px;
+            text-indent: 20px;
+        }
+
+        .activity-details-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin: 16px 0;
+        }
+
+        .activity-details-box h4 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #92400e;
+            margin-bottom: 6px;
+        }
+
+        .activity-details-box ul {
+            padding-right: 20px;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .activity-details-box li {
+            margin-bottom: 5px;
+        }
+
+        .attachments-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+
+        .attachments-box h4 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .attachments-box ol {
+            padding-right: 20px;
+            font-size: 13.5px;
+            color: #334155;
+        }
+
+        .attachments-box li {
+            margin-bottom: 3px;
+        }
+
+        .signature-section {
+            margin-top: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .receipt-box {
+            width: 48%;
+            border: 1px dashed #94a3b8;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 12px;
+            color: #64748b;
+            height: 115px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .agent-sign-box {
+            width: 46%;
+            text-align: center;
+        }
+
+        .agent-sign-box p {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .sign-placeholder {
+            height: 85px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 12.5px;
+            background: #fafafa;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .no-print-bar {
+                display: none;
+            }
+            .paper {
+                box-shadow: none;
+                border: none;
+                padding: 25px 35px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-bar">
+        <div>
+            <strong>مطلب إضافة نشاط خدمات فلاحية</strong> — موجه لمكتب مراقبة الأداءات "الخوارزمي" بالقيروان.
+        </div>
+        <button class="btn-print" onclick="window.print()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>طباعة المطلب (Imprimer)</span>
+        </button>
+    </div>
+
+    <div class="paper">
+        <!-- HEADER -->
+        <div class="header-section">
+            <div class="sender-box">
+                <h3>شركة منصة الزين لزيت الزيتون التونسي (SUARL)</h3>
+                <p><strong>"ZINTOOP" EZZINE TUNISIAN OLIVE OIL PLATFORM</strong></p>
+                <p>المعرف الوحيد (RNE) والمعرف الجبائي: <strong>1969552S</strong></p>
+                <p>المقر الاجتماعي: <strong>فيلا HUB، حدائق الخضراوي، حي ابن الجزار، س1، دار الأمان، 3140 القيروان</strong></p>
+                <p>الهاتف: <strong dir="ltr" style="direction: ltr; unicode-bidi: isolate; display: inline-block;">25 777 926</strong></p>
+            </div>
+            <div class="date-box">
+                القيروان في: ...... / ...... / 2026
+            </div>
+        </div>
+
+        <!-- RECIPIENT -->
+        <div class="recipient-box">
+            <h2>إلــى السيّــد : رئيــس مركــز مراقبــة الأداءات</h2>
+            <p>مكتب مراقبة الأداءات «الخوارزمي» — القيروان</p>
+        </div>
+
+        <!-- SUBJECT -->
+        <div class="subject-box">
+            الموضوع : مطلب تحيين بطاقة التعريف الجبائية (الباتيندة) وإضافة نشاط «خدمات فلاحية» (Services Agricoles).
+        </div>
+
+        <!-- BODY -->
+        <div class="body-text">
+            <p>
+                تحية طيبة وبعد،
+            </p>
+            <p>
+                يشرفني أنا الممضي أسفله، <strong>حمدي الزين (Ezzine Hamdi)</strong>، صاحب بطاقة التعريف الوطنية رقم: <strong>07712882</strong>، بصفتي الوكيل القانوني والممثل الشرعي لشركة <strong>«منصة الزين لزيت الزيتون التونسي» (SUARL)</strong>، الحاملة للمعرف الوحيد بالسجل الوطني للمؤسسات والمعرف الجبائي عدد <strong>1969552S</strong> (عدد التصرف الداخلي: B5094322026)، ومقرها الاجتماعي بـ: <strong>فيلا HUB، حدائق الخضراوي، حي ابن الجزار، القيروان</strong>،
+            </p>
+            <p>
+                أن أتقدم لجنابكم الموقر بهذا المطلب قصد <strong>تحيين بطاقة التعريف الجبائية (الباتيندة) للشركة وإضافة نشاط فرعي جديد بعنوان: «خدمات فلاحية»</strong>، وذلك تبعاً لمداولة الجلسة العامة الخارقة للعادة وتصريح الاستثمار لدى وكالة النهوض بالاستثمارات الفلاحية (APIA).
+            </p>
+            <p>
+                حيث قررت الشركة، في إطار توسعة نشاطها الخدماتي وتلبية للطلب المتزايد من الفلاحين وأصحاب الضيعات، إحداث وحدة متخصصة في <strong>إسداء الخدمات الفلاحية الميدانية</strong> وفق البيانات والمشمولات التالية:
+            </p>
+
+            <div class="activity-details-box">
+                <div style="font-family: 'Tajawal', sans-serif; font-size: 14.5px; font-weight: 800; color: #166534; margin-bottom: 8px; border-bottom: 1.5px solid #bbf7d0; padding-bottom: 5px;">
+                    📌 التسمية الرسمية للنشاط المطلوب إضافته في الباتيندة :
+                </div>
+
+                <div style="background: #ffffff; border: 2px solid #16a34a; border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; text-align: center;">
+                    <div style="font-family: 'Tajawal', sans-serif; font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: 0.5px;">
+                        « خــدمــات فــلاحــيــة »
+                    </div>
+                    <div style="font-size: 13.5px; font-weight: 700; color: #475569; margin-top: 2px;" dir="ltr">
+                        (Services Agricoles)
+                    </div>
+                </div>
+
+                <div style="font-size: 14.5px; line-height: 1.85; color: #1e293b; background: rgba(255,255,255,0.75); padding: 12px 16px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <strong style="color: #166534; font-family: 'Tajawal', sans-serif; font-size: 14.5px;">تفسير النشاط ومشمولاته (الأنشطة الفرعية الميدانية التابعة له) :</strong>
+                    <ul style="padding-right: 22px; margin-top: 6px; margin-bottom: 2px;">
+                        <li style="margin-bottom: 4px;"><strong>مكننة جني الزيتون والمحاصيل الفلاحية:</strong> باستعمال الآلات والمعدات الميكانيكية الحديثة وشباك وتجهيزات الجمع السريع.</li>
+                        <li style="margin-bottom: 4px;"><strong>تقليم وتهذيب أشجار الزيتون والأشجار المثمرة (Taille):</strong> تقليم إثماري، صيانة، وتشبيب لحماية وتطوير الإنتاجية.</li>
+                        <li style="margin-bottom: 4px;"><strong>كراء وتشغيل المعدات والآلات الفلاحية:</strong> والتجهيزات الميكانيكية ومعدات الطاقة الموجهة للضيعات والمستغلات الفلاحية.</li>
+                        <li style="margin-bottom: 0;"><strong>المتابعة والتوجيه الميداني للورشات:</strong> تنظيم مواعيد الجني وخدمات الدعم الفني لأصحاب الضيعات.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p>
+                هذا وأحيطكم علماً بأن الشركة أودعت تصريحاً بالاستثمار في هذا النشاط لدى <strong>وكالة النهوض بالاستثمارات الفلاحية (APIA)</strong> كخدمات فلاحية للانتفاع بالتشجيعات الممنوحة لقطاع الخدمات الفلاحية طبقاً لقانون الاستثمار.
+            </p>
+            <p>
+                وعليه، فالرجاء من سيادتكم التفضل بالموافقة على هذا المطلب وتمكين الشركة من <strong>بطاقة التعريف الجبائية المحينة (Patente Modifiée)</strong> التي تتضمن النشاط الجديد لمباشرة المعاملات وتوثيق العقود المبرمة مع الفلاحين.
+            </p>
+            <p>
+                وفي انتظار تفضلكم بقبول طلبي، تقبلوا منا سيدي الرئيس فائق عبارات التقدير والاحترام.
+            </p>
+        </div>
+
+        <!-- ATTACHMENTS -->
+        <div class="attachments-box">
+            <h4>المؤيدات والوثائق المرفقة :</h4>
+            <ol>
+                <li>نظير مسجل بالقباضة المالية من محضر مداولة الجلسة العامة الخارقة للعادة (إضافة نشاط خدمات فلاحية).</li>
+                <li>نسخة من شهادة إيداع تصريح الاستثمار لدى وكالة النهوض بالاستثمارات الفلاحية (APIA).</li>
+                <li>الاستمارة الجبائية لتحيين التصريح بالوجود (Déclaration modificative d'existence).</li>
+                <li>نسخة من بطاقة التعريف الجبائية الحالية (المعرف: 1969552S).</li>
+                <li>نسخة من بطاقة التعريف الوطنية للوكيل (عدد 07712882).</li>
+            </ol>
+        </div>
+
+        <!-- SIGNATURES -->
+        <div class="signature-section">
+            <div class="receipt-box">
+                وصل إيداع مخصص لمركز مراقبة الأداءات<br>
+                <strong>(مكتب مراقبة الأداءات الخوارزمي - القيروان)</strong><br><br>
+                تاريخ التسليم: ...... / ...... / 2026<br>
+                ختم وتوقيع العون المتسلّم
+            </div>
+            <div class="agent-sign-box">
+                <p>عن الشركة / الوكيل والشريك الوحيد</p>
+                <p><strong>السيد حمدي الزين</strong></p>
+                <div class="sign-placeholder">
+                    (إمضاء الوكيل وختم المؤسسة)
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

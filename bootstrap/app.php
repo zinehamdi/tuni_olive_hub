@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'broadcasting/auth',
+            'api/dispatch-clients',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
