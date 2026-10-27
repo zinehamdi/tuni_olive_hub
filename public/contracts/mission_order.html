@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinToop - إذن بمأمورية ونقل معدات فلاحية وعمال | Ordre de Mission & Feuille de Route</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1B2A1B;
+            --primary-dark: #121c12;
+            --primary-light: #2d442d;
+            --accent-gold: #C8A356;
+            --accent-gold-dark: #9E7D30;
+            --bg-light: #F9F9F6;
+            --text-dark: #1C1D1A;
+            --border-color: #CBD5E1;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding-bottom: 25px;
+            font-size: 12.5px;
+        }
+
+        body.lang-fr {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Top Action Bar (hidden in print) */
+        .no-print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1B2A1B 0%, #121c12 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .bar-brand span {
+            color: var(--accent-gold);
+        }
+
+        .bar-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid var(--accent-gold);
+            object-fit: contain;
+            padding: 1px;
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 11px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-outline:hover, .btn-outline.active {
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            border-color: var(--accent-gold);
+        }
+
+        .btn-type-selector {
+            background: #233723;
+            border: 1.5px solid #4a6d4a;
+            color: #e2e8f0;
+        }
+
+        .btn-type-selector.active {
+            background: #f59e0b;
+            color: #1a1a1a;
+            border-color: #d97706;
+            font-weight: 900;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #a68436 100%);
+            color: #1a1a1a;
+            box-shadow: 0 2px 6px rgba(200, 163, 86, 0.35);
+        }
+
+        .btn-gold:hover {
+            opacity: 0.92;
+        }
+
+        /* Document Wrapper - Sized for exact 1 Page A4 */
+        .document-wrapper {
+            width: 210mm;
+            min-height: 292mm;
+            max-height: 297mm;
+            margin: 12px auto;
+            background: var(--white);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-radius: 6px;
+            border: 2px solid #334155;
+            position: relative;
+            padding: 6mm 10mm 4mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Watermark */
+        .document-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            width: 360px;
+            height: 360px;
+            transform: translate(-50%, -50%);
+            background: url('/images/zintoop-logo.png') no-repeat center;
+            background-size: contain;
+            opacity: 0.038;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .doc-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* Official Header */
+        .official-header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 3px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .header-logo-wrap {
+            position: absolute;
+            top: 0;
+            right: 4px;
+        }
+
+        [dir="ltr"] .header-logo-wrap {
+            right: auto;
+            left: 4px;
+        }
+
+        .official-logo-img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+        }
+
+        .header-badge-wrap {
+            position: absolute;
+            top: 0;
+            left: 4px;
+            text-align: left;
+        }
+
+        [dir="ltr"] .header-badge-wrap {
+            left: auto;
+            right: 4px;
+            text-align: right;
+        }
+
+        .security-badge {
+            background: #fef2f2;
+            border: 1.5px solid #dc2626;
+            color: #991b1b;
+            font-size: 9.5px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-title-ar {
+            font-size: 13.5px;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -0.2px;
+            line-height: 1.25;
+        }
+
+        .brand-title-en {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--accent-gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .header-meta-strip {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 10px;
+            color: #334155;
+            line-height: 1.3;
+            background: #f8fafc;
+            padding: 1.5px 10px;
+            border-radius: 4px;
+            border: 1.2px solid #94a3b8;
+            margin-top: 2px;
+        }
+
+        .header-meta-strip strong {
+            color: var(--primary);
+        }
+
+        .meta-sep {
+            color: var(--accent-gold-dark);
+            font-weight: 900;
+        }
+
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        /* Title Block with Distinct Gold/Green Border */
+        .doc-title-block {
+            text-align: center;
+            margin-bottom: 5px;
+            background: #fffdfa;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 4px 10px;
+            box-shadow: 0 1px 3px rgba(200, 163, 86, 0.12);
+        }
+
+        .doc-main-title {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .doc-sub-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .doc-meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11px;
+            color: #334155;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Fill Lines & Editable Slots */
+        .fill-line {
+            display: inline-block;
+            border-bottom: 1.5px dotted #1e293b;
+            min-width: 70px;
+            color: #111827;
+            font-weight: 700;
+            padding: 0 3px;
+            vertical-align: baseline;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .edit-mode-on .fill-line {
+            background-color: #fffbeb;
+            border-bottom: 1.5px dashed #d97706;
+            cursor: text;
+        }
+
+        .edit-mode-on .fill-line:hover, .edit-mode-on .fill-line:focus {
+            background-color: #fef3c7;
+            border-bottom: 2px solid #b45309;
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
+        }
+
+        .fill-line:empty::before {
+            content: attr(data-placeholder);
+            color: #94a3b8;
+            font-weight: 400;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 2px solid #eab308;
+            background-color: #fefce8;
+            border-radius: 3px;
+        }
+
+        .fill-line-xs { min-width: 35px; }
+        .fill-line-sm { min-width: 50px; }
+        .fill-line-md { min-width: 105px; }
+        .fill-line-lg { min-width: 160px; }
+
+        /* Grid Sections */
+        .section-box {
+            border: 1.5px solid #64748b;
+            border-radius: 5px;
+            background: #ffffff;
+            padding: 5px 8px;
+            margin-bottom: 4.5px;
+            position: relative;
+        }
+
+        .section-header {
+            font-size: 11.5px;
+            font-weight: 900;
+            color: var(--primary);
+            border-bottom: 1.5px solid var(--accent-gold);
+            padding-bottom: 2px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header .tag {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 0 5px;
+            border-radius: 3px;
+            font-size: 9.5px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+
+        .grid-4col {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1.2fr 0.8fr;
+            gap: 5px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1.2px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        .info-card-highlight {
+            background: #fffdf5;
+            border-color: var(--accent-gold);
+        }
+
+        .info-card-alert {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: #475569;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .plate-box {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 900;
+            font-size: 13px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1.5px solid #94a3b8;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        /* Equipment Table */
+        .table-wrap {
+            margin: 2px 0 3px;
+            overflow-x: auto;
+        }
+
+        .equipment-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            background: #ffffff;
+        }
+
+        .equipment-table th, .equipment-table td {
+            border: 1.2px solid #94a3b8;
+            padding: 3px 5px;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        [dir="ltr"] .equipment-table th, [dir="ltr"] .equipment-table td {
+            text-align: left;
+        }
+
+        .equipment-table th {
+            background: #1B2A1B;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 10.5px;
+            padding: 3px 5px;
+        }
+
+        .equipment-table th.th-gold {
+            background: #C8A356;
+            color: #1a1a1a;
+        }
+
+        .equipment-table tr:nth-child(even) {
+            background: #fafaf9;
+        }
+
+        .equipment-table td input, .equipment-table td [contenteditable] {
+            outline: none;
+        }
+
+        .btn-row-del {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #b91c1c;
+            border-radius: 3px;
+            padding: 1px 4px;
+            font-size: 10px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .btn-row-del:hover {
+            background: #fca5a5;
+        }
+
+        .btn-table-add {
+            background: #f1f5f9;
+            border: 1.2px dashed #94a3b8;
+            color: #1e293b;
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-table-add:hover {
+            background: #e2e8f0;
+            border-color: #64748b;
+        }
+
+        /* Police / Security / Customs Notice Strip */
+        .security-notice-box {
+            background: #fffbeb;
+            border: 1.5px dashed #b45309;
+            border-radius: 5px;
+            padding: 4px 8px;
+            margin-bottom: 4px;
+            font-size: 10.5px;
+            line-height: 1.35;
+            color: #78350f;
+        }
+
+        .security-notice-box strong {
+            color: #92400e;
+        }
+
+        /* Signatures Grid with Clear Defined Borders */
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .sig-box {
+            border: 1.5px solid #64748b;
+            background: #fafaf9;
+            border-radius: 5px;
+            padding: 5px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 64px;
+            font-size: 10px;
+        }
+
+        .sig-box-title {
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1.5px solid #94a3b8;
+            padding-bottom: 1px;
+            margin-bottom: 2px;
+            font-size: 10.5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-box-content {
+            color: #334155;
+            line-height: 1.3;
+        }
+
+        .sig-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 2px;
+        }
+
+        .sig-stamp-placeholder {
+            font-size: 8.5px;
+            color: #64748b;
+            border: 1.2px dashed #94a3b8;
+            padding: 1px 6px;
+            border-radius: 3px;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .doc-footer {
+            border-top: 1.5px solid #94a3b8;
+            padding-top: 2px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8.5px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Language Switch */
+        body.lang-ar .content-fr { display: none !important; }
+        body.lang-fr .content-ar { display: none !important; }
+
+        /* PRINT STYLES - STAGE GUARANTEED SINGLE A4 PAGE */
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.3 !important;
+                height: 100% !important;
+                overflow: hidden !important;
+            }
+
+            .no-print, .no-print-bar {
+                display: none !important;
+            }
+
+            .document-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                min-height: auto !important;
+                max-height: 288mm !important;
+                margin: 0 !important;
+                padding: 4mm 6mm 3mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                overflow: hidden !important;
+            }
+
+            .fill-line {
+                background-color: transparent !important;
+                border-bottom: 1.2px dotted #1e293b !important;
+                box-shadow: none !important;
+            }
+
+            .fill-line:empty::before {
+                display: none !important;
+            }
+
+            .section-box, .info-card, .sig-box {
+                background-color: transparent !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 4mm 6mm;
+            }
+        }
+    </style>
+</head>
+<body class="lang-ar edit-mode-on">
+
+    <!-- Action Bar -->
+    <header class="no-print-bar">
+        <div class="bar-brand">
+            <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Logo" class="bar-logo-img">
+            <div>ZINTOOP <span>LOGISTICS</span> | إذن مأمورية ونقل معدات فلاحية (Ordre de Mission)</div>
+        </div>
+
+        <div class="bar-actions">
+            <!-- Mission Type Switchers -->
+            <button class="btn btn-type-selector active" id="btnTypeRecolte" onclick="setMissionType('recolte')">
+                <span>🌾 مهمة جني الزيتون</span>
+            </button>
+            <button class="btn btn-type-selector" id="btnTypeTaille" onclick="setMissionType('taille')">
+                <span>✂️ مهمة تقليم وزبيرة</span>
+            </button>
+
+            <!-- Language Switchers -->
+            <button class="btn btn-outline active" id="btnAr" onclick="setLanguage('ar')">العربية</button>
+            <button class="btn btn-outline" id="btnFr" onclick="setLanguage('fr')">Français</button>
+
+            <!-- Editing Toggles -->
+            <button class="btn btn-outline active" id="btnEditToggle" onclick="toggleEditMode()" style="border-color: #f59e0b; color: #fef08a;">
+                <span>✏️</span>
+                <span id="txtEditToggle">تعديل الحقول (مفعّل)</span>
+            </button>
+            <button class="btn btn-outline" onclick="toggleFullDocEdit()" id="btnFullEdit" title="تعديل أي نص بالمأمورية">
+                <span>📝</span>
+                <span id="txtFullEdit">تعديل كامل النص</span>
+            </button>
+            <button class="btn btn-outline" onclick="resetSavedData()" title="مسح واسترجاع البيانات الافتراضية">
+                <span>🔄</span>
+                <span>مسح</span>
+            </button>
+
+            <!-- Word Docx Download -->
+            <a href="ordre_de_mission_zintoop.docx" download class="btn btn-outline" style="border-color: #38bdf8; color: #bae6fd; text-decoration: none;" title="تحميل ملف Word قابل للتعديل">
+                <span>📄</span>
+                <span>Word (.docx)</span>
+            </a>
+
+            <!-- Print / PDF -->
+            <button class="btn btn-gold" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                <span>طباعة / حفظ PDF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Contract Page Wrapper (Exact A4 Single Page) -->
+    <div class="document-wrapper" id="missionDoc">
+        <div class="doc-inner">
+
+            <!-- 1. Centered Official Header -->
+            <div class="official-header">
+                <div class="header-logo-wrap">
+                    <img src="/images/zintoop-logo.png" onerror="this.src='../images/zintoop-logo.png'" alt="ZinToop Official Logo" class="official-logo-img">
+                </div>
+                <div class="header-badge-wrap">
+                    <span class="security-badge content-ar">وثيقة طريق رسمية • إشعار أمني</span>
+                    <span class="security-badge content-fr">FEUILLE DE ROUTE OFFICIELLE</span>
+                </div>
+
+                <div class="content-ar">
+                    <div class="brand-title-ar">شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)</div>
+                    <div class="brand-title-en">EZZINE TUNISIAN OLIVE OIL PLATFORM • وحدة الدعم اللوجستي والمأموريات الميدانية</div>
+                    <div class="header-meta-strip">
+                        <span><strong>المعرف الجبائي (MF):</strong> <span class="font-mono">1969552S</span></span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>المقر الاجتماعي:</strong> دار أمان، حدائق الخضراوي، 3140 القيروان</span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>الهاتف المباشر:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                    </div>
+                </div>
+                <div class="content-fr">
+                    <div class="brand-title-ar">EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL)</div>
+                    <div class="brand-title-en">Unité de Gestion Logistique & Missions Agricoles de Terrain • Kairouan</div>
+                    <div class="header-meta-strip">
+                        <span><strong>Matricule Fiscal:</strong> <span class="font-mono">1969552S</span></span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>Siège:</strong> Dar Amen, Jardins Khadhraoui, Kairouan</span>
+                        <span class="meta-sep">•</span>
+                        <span><strong>Contact:</strong> <span dir="ltr">+216 25 777 926</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Document Title Block -->
+            <div class="doc-title-block">
+                <div class="content-ar">
+                    <div class="doc-main-title">
+                        <span>إذن بمأمورية ونقل معدات فلاحية وعمالة ميدانية</span>
+                    </div>
+                    <div class="doc-sub-title">ترخيص رسمي لتنقل فريق العمل الفني والآلات الخاصة لتقديم خدمات فلاحية تعاقدية بالضيعة</div>
+                    <div class="doc-meta-row">
+                        <span><strong>رقم المأمورية:</strong> <span class="font-mono slot-odm-ref" contenteditable="true">ODM-2024/094</span></span>
+                        <span>|</span>
+                        <span><strong>تاريخ الإصدار:</strong> <span class="slot-issue-date" contenteditable="true">...... / ...... / 202...</span></span>
+                        <span>|</span>
+                        <span><strong>الموسم الفلاحي:</strong> <span contenteditable="true">2024 / 2025</span></span>
+                    </div>
+                </div>
+                <div class="content-fr">
+                    <div class="doc-main-title">
+                        <span>ORDRE DE MISSION & TRANSPORT DE MATÉRIEL AGRICOLE</span>
+                    </div>
+                    <div class="doc-sub-title">Autorisation Officielle de Circulation pour Équipe Technique et Équipements de Terrain</div>
+                    <div class="doc-meta-row">
+                        <span><strong>Réf Mission:</strong> <span class="font-mono slot-odm-ref" contenteditable="true">ODM-2024/094</span></span>
+                        <span>|</span>
+                        <span><strong>Date d'émission:</strong> <span class="slot-issue-date" contenteditable="true">...... / ...... / 202...</span></span>
+                        <span>|</span>
+                        <span><strong>Campagne:</strong> <span contenteditable="true">2024 / 2025</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Section: Contract & Destination (السند التعاقدي والضيعة المستفيدة) -->
+            <div class="section-box">
+                <div class="section-header content-ar">
+                    <span>1. السند التعاقدي والضيعة الوجهة (Données du Contrat & Destination)</span>
+                    <span class="tag">مرتبط بالعقد الرسمي المبرم</span>
+                </div>
+                <div class="section-header content-fr">
+                    <span>1. Données du Contrat & Destination de la Mission</span>
+                    <span class="tag">Lié au Contrat Commercial</span>
+                </div>
+
+                <!-- Arabic Content -->
+                <div class="grid-2col content-ar">
+                    <div class="info-card info-card-highlight">
+                        <span class="info-label">العقد المرجعي وطبيعة الأشغال:</span>
+                        عقد تقديم خدمات فلاحية رقم: <strong>[ <span class="fill-line fill-line-sm slot-contract-ref" contenteditable="true" data-placeholder="رقم العقد">REC-2024/...</span> ]</strong><br>
+                        طبيعة المأمورية: <strong class="slot-mission-label">جني ميكانيكي لمحصول الزيتون</strong><br>
+                        الفترة المحددة: من <strong>[ <span class="fill-line fill-line-xs slot-date-start" contenteditable="true" data-placeholder="البداية">.../...</span> ]</strong> إلى <strong>[ <span class="fill-line fill-line-xs slot-date-end" contenteditable="true" data-placeholder="النهاية">.../...</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">الحريف المستفيد والضيعة الوجهة:</span>
+                        اسم الفلاح / الشركة: <strong>[ <span class="fill-line fill-line-md slot-client" contenteditable="true" data-placeholder="اسم الفلاح">.......................................</span> ]</strong><br>
+                        الهاتف: <strong>[ <span class="fill-line fill-line-sm slot-phone" contenteditable="true" data-placeholder="الهاتف">...................</span> ]</strong> • ب.ت.و: <strong>[ <span class="fill-line fill-line-xs slot-cin" contenteditable="true" data-placeholder="ب.ت.و">...............</span> ]</strong><br>
+                        موقع الضيعة: <strong>[ <span class="fill-line fill-line-md slot-location" contenteditable="true" data-placeholder="الولاية والمعتمدية والمنطقة">...................................................</span> ]</strong>
+                    </div>
+                </div>
+
+                <!-- French Content -->
+                <div class="grid-2col content-fr">
+                    <div class="info-card info-card-highlight">
+                        <span class="info-label">Référence Contrat & Type de Travaux:</span>
+                        Contrat de Prestation N°: <strong>[ <span class="fill-line fill-line-sm slot-contract-ref" contenteditable="true" data-placeholder="N° Contrat">REC-2024/...</span> ]</strong><br>
+                        Nature de la Mission: <strong class="slot-mission-label">Récolte Mécanisée des Olives</strong><br>
+                        Période convenue: du <strong>[ <span class="fill-line fill-line-xs slot-date-start" contenteditable="true">.../...</span> ]</strong> au <strong>[ <span class="fill-line fill-line-xs slot-date-end" contenteditable="true">.../...</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">Client / Exploitant & Verger de Destination:</span>
+                        Nom / Société: <strong>[ <span class="fill-line fill-line-md slot-client" contenteditable="true">.......................................</span> ]</strong><br>
+                        Tél: <strong>[ <span class="fill-line fill-line-sm slot-phone" contenteditable="true">...................</span> ]</strong> • CIN: <strong>[ <span class="fill-line fill-line-xs slot-cin" contenteditable="true">...............</span> ]</strong><br>
+                        Lieu du Verger: <strong>[ <span class="fill-line fill-line-md slot-location" contenteditable="true">...................................................</span> ]</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Section: Logistics, Vehicle & Field Team (بيانات وسيلة النقل وطاقم المأمورية) -->
+            <div class="section-box">
+                <div class="section-header content-ar">
+                    <span>2. بيانات وسيلة النقل وطاقم المأمورية (Véhicule, Chauffeur & Équipe)</span>
+                    <span class="tag">النقل والمسؤولية الميدانية</span>
+                </div>
+                <div class="section-header content-fr">
+                    <span>2. Moyen de Transport & Équipe Mobile de Terrain</span>
+                    <span class="tag">Logistique & Responsables</span>
+                </div>
+
+                <!-- Arabic Content -->
+                <div class="grid-4col content-ar">
+                    <div class="info-card">
+                        <span class="info-label">وسيلة النقل المنجمية (الكرهبة):</span>
+                        رقم التسجيل: <span class="plate-box slot-vehicle-reg" contenteditable="true">... تونس ....</span><br>
+                        النوع / الموديل: <strong>[ <span class="fill-line fill-line-xs slot-vehicle-model" contenteditable="true">Isuzu D-Max</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">السائق المسؤول (Chauffeur):</span>
+                        الاسم: <strong>[ <span class="fill-line fill-line-sm slot-driver-name" contenteditable="true">........................</span> ]</strong><br>
+                        ب.ت.و: <strong>[ <span class="fill-line fill-line-xs slot-driver-cin" contenteditable="true">................</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">رئيس الفريق الفني (Chef d'équipe):</span>
+                        الاسم: <strong>[ <span class="fill-line fill-line-sm slot-leader-name" contenteditable="true">........................</span> ]</strong><br>
+                        الهاتف: <strong>[ <span class="fill-line fill-line-xs slot-leader-phone" contenteditable="true">................</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">العدد الجملي للعمال:</span>
+                        <div style="font-size: 15px; font-weight: 900; color: var(--primary); text-align: center; margin-top: 2px;">
+                            [ <span class="slot-workers-count" contenteditable="true">06</span> ] أفراد
+                        </div>
+                    </div>
+                </div>
+
+                <!-- French Content -->
+                <div class="grid-4col content-fr">
+                    <div class="info-card">
+                        <span class="info-label">Véhicule Utilisé:</span>
+                        Immatriculation: <span class="plate-box slot-vehicle-reg" contenteditable="true">... TU ....</span><br>
+                        Modèle: <strong>[ <span class="fill-line fill-line-xs slot-vehicle-model" contenteditable="true">Isuzu D-Max</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">Chauffeur Assigné:</span>
+                        Nom: <strong>[ <span class="fill-line fill-line-sm slot-driver-name" contenteditable="true">........................</span> ]</strong><br>
+                        CIN: <strong>[ <span class="fill-line fill-line-xs slot-driver-cin" contenteditable="true">................</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">Chef d'Équipe Technique:</span>
+                        Nom: <strong>[ <span class="fill-line fill-line-sm slot-leader-name" contenteditable="true">........................</span> ]</strong><br>
+                        Tél: <strong>[ <span class="fill-line fill-line-xs slot-leader-phone" contenteditable="true">................</span> ]</strong>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">Effectif à Bord:</span>
+                        <div style="font-size: 15px; font-weight: 900; color: var(--primary); text-align: center; margin-top: 2px;">
+                            [ <span class="slot-workers-count" contenteditable="true">06</span> ] personnes
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Section: Inventory of Equipment & Machinery (قائمة الماكينات والمعدات المنقولة) -->
+            <div class="section-box" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="section-header content-ar">
+                    <span>3. جرد الماكينات والآلات والمعدات الفلاحية المنقولة (Inventaire du Matériel & Équipements)</span>
+                    <button type="button" class="btn-table-add no-print" onclick="addEquipmentRow('ar')">➕ إضافة معدة / آلة</button>
+                </div>
+                <div class="section-header content-fr">
+                    <span>3. Inventaire des Machines, Outillages & Équipements Embarqués</span>
+                    <button type="button" class="btn-table-add no-print" onclick="addEquipmentRow('fr')">➕ Ajouter un équipement</button>
+                </div>
+
+                <div class="table-wrap">
+                    <!-- ARABIC EQUIPMENT TABLE -->
+                    <table class="equipment-table content-ar" id="equipmentTableAr">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px; text-align: center;">#</th>
+                                <th style="width: 200px;">الآلة / المعدة الفلاحية</th>
+                                <th style="width: 70px; text-align: center;" class="th-gold">العدد</th>
+                                <th style="width: 170px;">الماركة / الطراز / الرقم التسلسلي</th>
+                                <th>الحالة والملاحظات الفنية</th>
+                                <th style="width: 35px; text-align: center;" class="no-print">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentBodyAr">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+
+                    <!-- FRENCH EQUIPMENT TABLE -->
+                    <table class="equipment-table content-fr" id="equipmentTableFr">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px; text-align: center;">#</th>
+                                <th style="width: 200px;">Désignation de la Machine / Outillage</th>
+                                <th style="width: 70px; text-align: center;" class="th-gold">Quantité</th>
+                                <th style="width: 170px;">Marque / Modèle / N° de Série</th>
+                                <th>État & Observations Techniques</th>
+                                <th style="width: 35px; text-align: center;" class="no-print">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentBodyFr">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. Legal Attestation & Road Check Notice (إشعار رسمي لحرس المرور والمراقبة الأمنية والديوانية) -->
+            <div class="security-notice-box">
+                <div class="content-ar">
+                    <strong>🛡️ شهادة قانونية وإشعار لسلطات المراقبة الأمنية وأعوان حرس المرور:</strong><br>
+                    تُشهد شركة <strong>ZinToop SUARL</strong> (المعرف الجبائي: 1969552S) أن كامل الماكينات والمعدات والشباك والصناديق المذكورة بهذا الجدول هي <strong>ملكية قانونية خاصة للشركة</strong>، منقولة على متن وسيلة النقل المذكورة تحت مسؤولية السائق ورئيس الفريق لأداء مهام فلاحية تعاقدية لفائدة الفلاح المذكور بموجب العقد المرفق. ويُحجر تحجيراً باتاً بيعها أو رهنها أو تفويتها. ونرجو من كافة السلطات الأمنية وأعوان حرس المرور والديوانة ومصالح النقل <strong>تسهيل مرور هذه المأمورية الميدانية</strong> وفق التراتيب والقوانين الجاري بها العمل.
+                </div>
+                <div class="content-fr">
+                    <strong>🛡️ ATTESTATION DE PROPRIÉTÉ & CONTRÔLE ROUTIER (Garde Nationale & Sécurité Routière) :</strong><br>
+                    La société <strong>ZinToop SUARL</strong> (MF: 1969552S) atteste que l'ensemble des machines, peignes vibreurs, caisses et outillages figurant au présent inventaire sont la <strong>propriété exclusive de la société</strong>, transportés à bord du véhicule mentionné sous la garde de l'équipe pour l'exécution d'un contrat agricole au profit de l'exploitant désigné. Prière aux autorités de contrôle routier de <strong>faciliter le passage de cette mission de service agricole</strong>.
+                </div>
+            </div>
+
+            <!-- 7. Compact Signatures Area -->
+            <div class="signatures-grid">
+                <!-- ARABIC SIGNATURES -->
+                <div class="sig-box content-ar">
+                    <div class="sig-box-title">
+                        <span>عن إدارة الشركة المصدرة (ZinToop SUARL)</span>
+                        <span style="font-size: 9px; color: var(--accent-gold-dark);">إذن رسمي</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>الممثل القانوني:</strong> حمدي الزين (Hamdi Ezzine) — الوكيل القانوني<br>
+                        المصادقة: إذن مأمورية ساري المفعول مع تفويض نقل المعدات.
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>التوقيع والختم:</strong></span>
+                        <span class="sig-stamp-placeholder">ختم الشركة الرسمي</span>
+                    </div>
+                </div>
+
+                <div class="sig-box content-ar">
+                    <div class="sig-box-title">
+                        <span>السائق المسؤول ورئيس الفريق الميداني</span>
+                        <span style="font-size: 9px; color: #64748b;">تعهد بالاستلام والمسؤولية</span>
+                    </div>
+                    <div class="sig-box-content">
+                        أتعهد بسلامة المعدات المسلمة والالتزام بمسار المأمورية وقواعد المرور والسلامة المهنية.
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>إمضاء السائق / رئيس الفريق:</strong></span>
+                        <span class="sig-stamp-placeholder">إمضاء الاستلام</span>
+                    </div>
+                </div>
+
+                <!-- FRENCH SIGNATURES -->
+                <div class="sig-box content-fr">
+                    <div class="sig-box-title">
+                        <span>Direction Générale (ZinToop SUARL)</span>
+                        <span style="font-size: 9px; color: var(--accent-gold-dark);">Autorisation Légale</span>
+                    </div>
+                    <div class="sig-box-content">
+                        <strong>Représentant Légal:</strong> Hamdi Ezzine — Gérant Mandataire<br>
+                        Ordre de mission et transport de matériel validé pour exécution.
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>Signature & Cachet:</strong></span>
+                        <span class="sig-stamp-placeholder">Cachet Officiel</span>
+                    </div>
+                </div>
+
+                <div class="sig-box content-fr">
+                    <div class="sig-box-title">
+                        <span>Chauffeur & Chef d'Équipe Responsables</span>
+                        <span style="font-size: 9px; color: #64748b;">Prise en charge</span>
+                    </div>
+                    <div class="sig-box-content">
+                        Engagement de conformité d'itinéraire, respect du code de la route et garde du matériel.
+                    </div>
+                    <div class="sig-footer-row">
+                        <span><strong>Émargement Responsables:</strong></span>
+                        <span class="sig-stamp-placeholder">Signature</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Bottom Verification Footer -->
+            <div class="doc-footer">
+                <div>EZZINE TUNISIAN OLIVE OIL PLATFORM (ZinToop SUARL) • MF: 1969552S • Kairouan, Tunisie</div>
+                <div>وثيقة مأمورية رسمية صالحة لكامل تراب الجمهورية التونسية • صفحة 1 من 1</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Default Equipment Presets for Harvesting vs Pruning
+        const EQUIPMENT_PRESETS = {
+            recolte: {
+                ar: [
+                    { item: "مشاطات كهربائية حديثة لجني الزيتون", qty: "06", ref: "ZinToop Vibrate / Pellenc / Olivion", obs: "حالة ممتازة وجاهزة للعمل" },
+                    { item: "بطاريات ليثيوم ظهرية + كوابل توصيل", qty: "06", ref: "Pack Lithium 44.4V / Câbles 15m", obs: "مشحونة 100% مع شواحنها" },
+                    { item: "مفرشات وشباك جني زيتون مقاومة للتمزق", qty: "14", ref: "Filets 10x10m & 8x12m renforcés", obs: "نظيفة وسليمة دون تمزقات" },
+                    { item: "صناديق بلاستيكية مهواة مخصصة للجني", qty: "80", ref: "Caisses Ajourées ZinToop (20-25 Kg)", obs: "ملكية خاصة لـ ZinToop" },
+                    { item: "مولد كهربائي ميداني متنقل (Groupe)", qty: "01", ref: "Honda / Pramac 3.5 kVA", obs: "جاهز مع خزان وقود كافٍ" },
+                    { item: "ميزان إلكتروني ميداني / باسكول ضيعة", qty: "01", ref: "Bascule Plateforme ZinToop 500 Kg", obs: "معاير ومطابق لشروط الوزن" },
+                    { item: "حقيبة إسعاف أولي ومعدات وقاية فردية (EPI)", qty: "01", ref: "Gilets jaunes, casquettes, gants", obs: "مطابقة لقواعد السلامة" }
+                ],
+                fr: [
+                    { item: "Peignes vibreurs électroportatifs modernes", qty: "06", ref: "ZinToop Vibrate / Pellenc / Olivion", obs: "Parfait état de marche" },
+                    { item: "Batteries dorsales Lithium + Câbles 15m", qty: "06", ref: "Pack Lithium 44.4V / Chargeurs", obs: "100% chargées avec câbles" },
+                    { item: "Filets de récolte renforcés anti-déchirure", qty: "14", ref: "Filets 10x10m & 8x12m ZinToop", obs: "Propres et contrôlés" },
+                    { item: "Caisses plastiques ajourées de récolte", qty: "80", ref: "Caisses Ajourées ZinToop (20-25 Kg)", obs: "Propriété exclusive ZinToop" },
+                    { item: "Groupe électrogène mobile de secours", qty: "01", ref: "Groupe Essence 3.5 kVA", obs: "Plein effectué, opérationnel" },
+                    { item: "Bascule électronique mobile de pesée verger", qty: "01", ref: "Plateforme 500 Kg certifiée", obs: "Calibrée pour pesée au champ" },
+                    { item: "Trousse premiers secours & EPI de sécurité", qty: "01", ref: "Gilets haute visibilité, gants, trousse", obs: "Conforme normes sécurité" }
+                ]
+            },
+            taille: {
+                ar: [
+                    { item: "مناشير تقليم شجرية حرارية وخفيفة", qty: "04", ref: "Stihl MS 194 T / Husqvarna T435", obs: "سلاسل حادة ومعقمة" },
+                    { item: "مقصات تقليم كهربائية محمولة (Sécateurs)", qty: "04", ref: "Felco / Infaco Electrocoup F3015", obs: "مع بطارياتها وشواحنها" },
+                    { item: "مناشير يدوية يابانية ومقصات فروع طويلة", qty: "06", ref: "Silky Zubat / Ébrancheurs Bahco", obs: "معقمة بمحلول كحولي" },
+                    { item: "سلالم ألومنيوم فلاحية ثلاثية القوائم", qty: "03", ref: "Échelles tripodes alu 3.0m", obs: "سليمة ومطابقة للسلامة" },
+                    { item: "دلاء ومواد دهن الجروح (الماستيك الزراعي)", qty: "04", ref: "Mastic cicatrisant / Pâte protectrice", obs: "معجون عازل للجروح الكبيرة" },
+                    { item: "مضخات يدوية لتعقيم أدوات القص (Alcool)", qty: "03", ref: "Pulvérisateurs désinfectants 1.5L", obs: "مطهر كحولي ونحاسي وقائي" },
+                    { item: "معدات حماية فردية خاصة بالتقليم (EPI)", qty: "06", ref: "خوذات، نظارات واقية، قفازات ضد القص", obs: "إلزامية لكافة الفريق" }
+                ],
+                fr: [
+                    { item: "Tronçonneuses d'élagage légères", qty: "04", ref: "Stihl MS 194 T / Husqvarna T435", obs: "Chaînes affûtées & désinfectées" },
+                    { item: "Sécateurs électriques professionnels autonomes", qty: "04", ref: "Felco / Infaco Electrocoup F3015", obs: "Avec batteries et étuis" },
+                    { item: "Scies arboricoles japonaises & ébrancheurs", qty: "06", ref: "Silky Zubat / Bahco démultipliés", obs: "Désinfectés avant départ" },
+                    { item: "Échelles agricoles tripodes en aluminium", qty: "03", ref: "Échelles verger 3.0m sécurisées", obs: "Patins antidérapants vérifiés" },
+                    { item: "Seaux de mastic cicatrisant arboricole", qty: "04", ref: "Mastic protecteur plaies de coupe", obs: "Pour traitement des gros bois" },
+                    { item: "Pulvérisateurs pour désinfection des outils", qty: "03", ref: "Pulvés manuels alcool & cuivre", obs: "Désinfection obligatoire" },
+                    { item: "Équipements de protection individuelle (EPI)", qty: "06", ref: "Casques visière, gants anti-coupure", obs: "Dotation complète de l'équipe" }
+                ]
+            }
+        };
+
+        let currentMissionType = 'recolte';
+        let currentLang = 'ar';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const body = document.body;
+            const btnAr = document.getElementById('btnAr');
+            const btnFr = document.getElementById('btnFr');
+
+            btnAr.classList.remove('active');
+            btnFr.classList.remove('active');
+
+            if (lang === 'ar') {
+                body.className = 'lang-ar edit-mode-on';
+                body.setAttribute('dir', 'rtl');
+                btnAr.classList.add('active');
+            } else if (lang === 'fr') {
+                body.className = 'lang-fr edit-mode-on';
+                body.setAttribute('dir', 'ltr');
+                btnFr.classList.add('active');
+            }
+        }
+
+        function setMissionType(type) {
+            currentMissionType = type;
+            const btnRecolte = document.getElementById('btnTypeRecolte');
+            const btnTaille = document.getElementById('btnTypeTaille');
+
+            if (type === 'recolte') {
+                btnRecolte.classList.add('active');
+                btnTaille.classList.remove('active');
+                document.querySelectorAll('.slot-mission-label').forEach(el => {
+                    el.innerText = currentLang === 'ar' ? 'جني ميكانيكي لمحصول الزيتون' : 'Récolte Mécanisée des Olives';
+                });
+            } else {
+                btnTaille.classList.add('active');
+                btnRecolte.classList.remove('active');
+                document.querySelectorAll('.slot-mission-label').forEach(el => {
+                    el.innerText = currentLang === 'ar' ? 'تقليم زراعي وتزيين الزيتون (الزبيرة)' : 'Taille & Élagage Raisonné des Oliviers';
+                });
+            }
+
+            renderEquipmentTables(type);
+            saveToLocalStorage();
+        }
+
+        function renderEquipmentTables(type) {
+            const bodyAr = document.getElementById('equipmentBodyAr');
+            const bodyFr = document.getElementById('equipmentBodyFr');
+
+            const listAr = EQUIPMENT_PRESETS[type].ar;
+            const listFr = EQUIPMENT_PRESETS[type].fr;
+
+            bodyAr.innerHTML = '';
+            listAr.forEach((item, index) => {
+                bodyAr.appendChild(createRowElement(index + 1, item.item, item.qty, item.ref, item.obs, 'ar'));
+            });
+
+            bodyFr.innerHTML = '';
+            listFr.forEach((item, index) => {
+                bodyFr.appendChild(createRowElement(index + 1, item.item, item.qty, item.ref, item.obs, 'fr'));
+            });
+        }
+
+        function createRowElement(idx, item, qty, ref, obs, lang) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="text-align: center; font-weight: 800;" class="row-idx">${idx}</td>
+                <td><span class="eq-item" contenteditable="true">${item}</span></td>
+                <td style="text-align: center; font-weight: 800; color: #166534;"><span class="eq-qty" contenteditable="true">${qty}</span></td>
+                <td><span class="eq-ref" contenteditable="true">${ref}</span></td>
+                <td><span class="eq-obs" contenteditable="true">${obs}</span></td>
+                <td style="text-align: center;" class="no-print">
+                    <button type="button" class="btn-row-del" onclick="deleteEquipmentRow(this, '${lang}')" title="حذف هذا السطر">✕</button>
+                </td>
+            `;
+
+            tr.querySelectorAll('[contenteditable]').forEach(el => {
+                el.addEventListener('input', saveToLocalStorage);
+            });
+
+            return tr;
+        }
+
+        function addEquipmentRow(lang) {
+            const tbody = lang === 'ar' ? document.getElementById('equipmentBodyAr') : document.getElementById('equipmentBodyFr');
+            const idx = tbody.children.length + 1;
+            const placeholderItem = lang === 'ar' ? 'اسم المعدة أو الأداة...' : 'Nom de l\'équipement...';
+            const placeholderRef = lang === 'ar' ? 'الموديل أو الرقم...' : 'Modèle ou N°...';
+            const placeholderObs = lang === 'ar' ? 'ملاحظات...' : 'Observations...';
+
+            const newRow = createRowElement(idx, placeholderItem, '01', placeholderRef, placeholderObs, lang);
+            tbody.appendChild(newRow);
+            reindexRows(lang);
+            saveToLocalStorage();
+        }
+
+        function deleteEquipmentRow(btn, lang) {
+            const row = btn.closest('tr');
+            if (row) {
+                row.remove();
+                reindexRows(lang);
+                saveToLocalStorage();
+            }
+        }
+
+        function reindexRows(lang) {
+            const tbody = lang === 'ar' ? document.getElementById('equipmentBodyAr') : document.getElementById('equipmentBodyFr');
+            tbody.querySelectorAll('tr').forEach((r, i) => {
+                const idxSpan = r.querySelector('.row-idx');
+                if (idxSpan) idxSpan.innerText = i + 1;
+            });
+        }
+
+        function saveToLocalStorage() {
+            const data = {
+                missionType: currentMissionType,
+                fields: {}
+            };
+
+            document.querySelectorAll('.fill-line, .plate-box, .slot-odm-ref, .slot-issue-date, .slot-workers-count').forEach((el, index) => {
+                const key = el.className.split(' ').filter(c => c.startsWith('slot-'))[0] || ('field_' + index);
+                data.fields[key] = el.innerText.trim();
+            });
+
+            // Save table state
+            try {
+                const bodyAr = document.getElementById('equipmentBodyAr');
+                const bodyFr = document.getElementById('equipmentBodyFr');
+                if (bodyAr) data['equipmentHtmlAr'] = bodyAr.innerHTML;
+                if (bodyFr) data['equipmentHtmlFr'] = bodyFr.innerHTML;
+
+                localStorage.setItem('zintoop_mission_order_data', JSON.stringify(data));
+            } catch (e) {
+                console.error('Error saving mission order state', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem('zintoop_mission_order_data');
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+
+                if (data.missionType) {
+                    currentMissionType = data.missionType;
+                    const btnRecolte = document.getElementById('btnTypeRecolte');
+                    const btnTaille = document.getElementById('btnTypeTaille');
+                    if (data.missionType === 'taille') {
+                        btnTaille.classList.add('active');
+                        btnRecolte.classList.remove('active');
+                    } else {
+                        btnRecolte.classList.add('active');
+                        btnTaille.classList.remove('active');
+                    }
+                }
+
+                if (data.fields) {
+                    for (const [key, val] of Object.entries(data.fields)) {
+                        if (val) {
+                            document.querySelectorAll('.' + key).forEach(el => {
+                                el.innerText = val;
+                            });
+                        }
+                    }
+                }
+
+                const bodyAr = document.getElementById('equipmentBodyAr');
+                const bodyFr = document.getElementById('equipmentBodyFr');
+
+                if (data.equipmentHtmlAr && bodyAr) {
+                    bodyAr.innerHTML = data.equipmentHtmlAr;
+                }
+                if (data.equipmentHtmlFr && bodyFr) {
+                    bodyFr.innerHTML = data.equipmentHtmlFr;
+                }
+
+                // Re-bind listeners
+                document.querySelectorAll('[contenteditable]').forEach(el => {
+                    el.addEventListener('input', saveToLocalStorage);
+                });
+
+                return true;
+            } catch (e) {
+                console.error('Error loading mission order state', e);
+                return false;
+            }
+        }
+
+        function resetSavedData() {
+            if (confirm('هل تريد مسح جميع البيانات المدخلة واسترجاع الحالة الافتراضية؟ / Réinitialiser la feuille de mission ?')) {
+                localStorage.removeItem('zintoop_mission_order_data');
+                location.reload();
+            }
+        }
+
+        let isFullDocEditable = false;
+        function toggleFullDocEdit() {
+            isFullDocEditable = !isFullDocEditable;
+            const doc = document.getElementById('missionDoc');
+            const btn = document.getElementById('btnFullEdit');
+            const txt = document.getElementById('txtFullEdit');
+            if (isFullDocEditable) {
+                doc.setAttribute('contenteditable', 'true');
+                btn.classList.add('active');
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#6ee7b7';
+                txt.innerText = 'إنهاء تعديل كامل النص';
+            } else {
+                doc.removeAttribute('contenteditable');
+                btn.classList.remove('active');
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                txt.innerText = 'تعديل كامل النص';
+            }
+        }
+
+        let isEditMode = true;
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const body = document.body;
+            const btn = document.getElementById('btnEditToggle');
+            const txt = document.getElementById('txtEditToggle');
+            if (isEditMode) {
+                body.classList.add('edit-mode-on');
+                btn.classList.add('active');
+                btn.style.borderColor = '#f59e0b';
+                btn.style.color = '#fef08a';
+                txt.innerText = 'تعديل الحقول (مفعّل)';
+            } else {
+                body.classList.remove('edit-mode-on');
+                btn.classList.remove('active');
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                txt.innerText = 'تعديل الحقول (معطّل)';
+            }
+        }
+
+        // Initialize document
+        window.addEventListener('DOMContentLoaded', () => {
+            const hasSaved = loadFromLocalStorage();
+            if (!hasSaved) {
+                renderEquipmentTables(currentMissionType);
+            }
+
+            // Bind listeners on editable elements
+            document.querySelectorAll('.fill-line, .plate-box, .slot-odm-ref, .slot-issue-date, .slot-workers-count').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+                el.addEventListener('input', saveToLocalStorage);
+            });
+
+            // Parse URL query parameters to link directly from Contract
+            const p = new URLSearchParams(window.location.search);
+            if (p.has('contract')) document.querySelectorAll('.slot-contract-ref').forEach(el => el.innerText = p.get('contract'));
+            if (p.has('client')) document.querySelectorAll('.slot-client').forEach(el => el.innerText = p.get('client'));
+            if (p.has('phone')) document.querySelectorAll('.slot-phone').forEach(el => el.innerText = p.get('phone'));
+            if (p.has('cin')) document.querySelectorAll('.slot-cin').forEach(el => el.innerText = p.get('cin'));
+            if (p.has('location')) document.querySelectorAll('.slot-location').forEach(el => el.innerText = p.get('location'));
+            if (p.has('dateStart')) document.querySelectorAll('.slot-date-start').forEach(el => el.innerText = p.get('dateStart'));
+            if (p.has('dateEnd')) document.querySelectorAll('.slot-date-end').forEach(el => el.innerText = p.get('dateEnd'));
+            if (p.has('vehicle')) document.querySelectorAll('.slot-vehicle-reg').forEach(el => el.innerText = p.get('vehicle'));
+            if (p.has('driver')) document.querySelectorAll('.slot-driver-name').forEach(el => el.innerText = p.get('driver'));
+            if (p.has('leader')) document.querySelectorAll('.slot-leader-name').forEach(el => el.innerText = p.get('leader'));
+            if (p.has('workers')) document.querySelectorAll('.slot-workers-count').forEach(el => el.innerText = p.get('workers'));
+
+            if (p.has('type')) {
+                setMissionType(p.get('type') === 'taille' ? 'taille' : 'recolte');
+            }
+
+            // Set current date if empty
+            const today = new Date();
+            const dateStr = `${String(today.getDate()).padStart(2, '0')} / ${String(today.getMonth() + 1).padStart(2, '0')} / ${today.getFullYear()}`;
+            document.querySelectorAll('.slot-issue-date').forEach(el => {
+                if (el.innerText.includes('......')) el.innerText = dateStr;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -773,6 +773,10 @@
                 <span>🔄</span>
                 <span>مسح</span>
             </button>
+            <button class="btn btn-outline" onclick="openMissionOrder('taille')" title="إنشاء إذن مأمورية وجدول معدات الزبيرة وفريق العمل المرتبط بهذا العقد" style="border-color: #38bdf8; color: #bae6fd;">
+                <span>🚚</span>
+                <span>إذن المأمورية (Ordre de Mission)</span>
+            </button>
             <button class="btn btn-gold" onclick="window.print()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
                 طباعة / حفظ PDF
@@ -1474,6 +1478,34 @@
                 btn.style.color = '';
                 txt.innerText = 'تعديل الحقول (معطّل)';
             }
+        function openMissionOrder(type = 'taille') {
+            const client = (document.querySelector('.slot-client') ? document.querySelector('.slot-client').innerText : '').trim();
+            const phone = (document.querySelector('.slot-phone') ? document.querySelector('.slot-phone').innerText : '').trim();
+            const cin = (document.querySelector('.slot-cin') ? document.querySelector('.slot-cin').innerText : '').trim();
+            const location = (document.querySelector('.slot-location') ? document.querySelector('.slot-location').innerText : '').trim();
+
+            let contractRef = '';
+            const metaSpans = document.querySelectorAll('.doc-meta-row span');
+            metaSpans.forEach(s => {
+                if (s.innerText && s.innerText.includes('TAI-')) {
+                    const clean = s.innerText.replace(/.*رقم العقد:\s*|.*N° Contrat:\s*/i, '').trim();
+                    if (clean && !clean.includes('....')) contractRef = clean;
+                }
+            });
+            if (!contractRef) {
+                contractRef = 'TAI-2025-' + String(Math.floor(Math.random() * 900) + 100);
+            }
+
+            const params = new URLSearchParams({
+                type: type,
+                contract: contractRef,
+                client: client,
+                phone: phone,
+                cin: cin,
+                location: location
+            });
+
+            window.open(`mission_order.html?${params.toString()}`, '_blank');
         }
 
         // Initialize Placeholders and Editable state

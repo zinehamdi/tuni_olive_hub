@@ -811,6 +811,292 @@ def build_contract_fas_agri(output_path):
     doc.save(output_path)
     print(f"✅ Generated: {output_path}")
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 4. BUILD ORDRE DE MISSION & TRANSPORT MATÉRIEL (ARABIC / BILINGUAL)
+# ─────────────────────────────────────────────────────────────────────────────
+def build_ordre_de_mission(output_path):
+    doc = docx.Document()
+    
+    # Page setup (A4, 0.45 in margins for compact single page)
+    for section in doc.sections:
+        section.page_width = Inches(8.27)
+        section.page_height = Inches(11.69)
+        section.top_margin = Inches(0.4)
+        section.bottom_margin = Inches(0.4)
+        section.left_margin = Inches(0.45)
+        section.right_margin = Inches(0.45)
+
+    # Header Box
+    h_tbl = doc.add_table(rows=1, cols=1)
+    make_table_rtl(h_tbl)
+    h_cell = h_tbl.cell(0, 0)
+    set_cell_background(h_cell, "1B2A1B")
+    set_cell_margins(h_cell, top=100, bottom=100, left=150, right=150)
+    
+    hp = h_cell.paragraphs[0]
+    make_p_rtl(hp)
+    hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    hr1 = hp.add_run("شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL)")
+    hr1.font.bold = True
+    hr1.font.size = Pt(12)
+    hr1.font.color.rgb = RGBColor(255, 255, 255)
+    set_run_font(hr1, "Arial", True)
+    
+    hp2 = h_cell.add_paragraph()
+    make_p_rtl(hp2)
+    hp2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    hr2 = hp2.add_run("EZZINE TUNISIAN OLIVE OIL PLATFORM • وحدة الدعم اللوجستي والمأموريات الميدانية")
+    hr2.font.size = Pt(9)
+    hr2.font.color.rgb = RGBColor(200, 163, 86)
+    set_run_font(hr2, "Arial", False)
+
+    hp3 = h_cell.add_paragraph()
+    make_p_rtl(hp3)
+    hp3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    hr3 = hp3.add_run("المعرف الجبائي (MF): 1969552S  •  المقر: دار أمان، حدائق الخضراوي، القيروان  •  الهاتف: 25 777 926 (+216)")
+    hr3.font.size = Pt(8)
+    hr3.font.color.rgb = RGBColor(220, 220, 220)
+    set_run_font(hr3, "Arial", True)
+
+    # Title Block
+    tp = doc.add_paragraph()
+    make_p_rtl(tp)
+    tp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    tr1 = tp.add_run("إذن بمأمورية ونقل معدات فلاحية وعمالة ميدانية\n")
+    tr1.font.bold = True
+    tr1.font.size = Pt(14)
+    tr1.font.color.rgb = COLOR_PRIMARY
+    set_run_font(tr1, "Arial", True)
+    
+    tr2 = tp.add_run("ORDRE DE MISSION & AUTORISATION DE TRANSPORT DE MATÉRIEL ET D'ÉQUIPES\n")
+    tr2.font.bold = True
+    tr2.font.size = Pt(9.5)
+    tr2.font.color.rgb = COLOR_DARK_GOLD
+    set_run_font(tr2, "Arial", False)
+
+    tmp = doc.add_paragraph()
+    make_p_rtl(tmp)
+    tmp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    tm_run = tmp.add_run("رقم المأمورية: ODM-202.../.....  |  تاريخ الخروج: ...... / ...... / 202...  |  الموسم: 2024 / 2025")
+    tm_run.font.bold = True
+    tm_run.font.size = Pt(9.5)
+    tm_run.font.color.rgb = COLOR_GRAY_DARK
+    set_run_font(tm_run, "Arial", True)
+
+    # Section 1 & 2: Contract, Destination, Vehicle & Team (Grid 2x2)
+    tbl_info = doc.add_table(rows=2, cols=2)
+    make_table_rtl(tbl_info)
+    
+    # Row 0, Cell 0: Contract
+    c00 = tbl_info.cell(0, 0)
+    set_cell_background(c00, "F8FAF8")
+    set_cell_margins(c00, top=70, bottom=70, left=100, right=100)
+    set_cell_borders(c00, 
+        top={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        bottom={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        left={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        right={'sz': '12', 'val': 'single', 'color': '1B2A1B'}
+    )
+    p00 = c00.paragraphs[0]
+    make_p_rtl(p00)
+    r00 = p00.add_run("1. السند التعاقدي وطبيعة الأشغال:\n")
+    r00.font.bold = True
+    r00.font.size = Pt(9.5)
+    r00.font.color.rgb = COLOR_PRIMARY
+    r00_sub = p00.add_run("• عقد تقديم خدمات رقم: REC-202... / .....\n• طبيعة المهمة: [ جني ميكانيكي / تقليم وزبيرة ]\n• تاريخ المهمة: من ...... / ...... إلى ...... / ......")
+    r00_sub.font.size = Pt(8.5)
+
+    # Row 0, Cell 1: Client & Orchard
+    c01 = tbl_info.cell(0, 1)
+    set_cell_background(c01, "F8FAF8")
+    set_cell_margins(c01, top=70, bottom=70, left=100, right=100)
+    set_cell_borders(c01, 
+        top={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        bottom={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        left={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        right={'sz': '12', 'val': 'single', 'color': 'C8A356'}
+    )
+    p01 = c01.paragraphs[0]
+    make_p_rtl(p01)
+    r01 = p01.add_run("2. الحريف المستفيد والضيعة الوجهة:\n")
+    r01.font.bold = True
+    r01.font.size = Pt(9.5)
+    r01.font.color.rgb = COLOR_PRIMARY
+    r01_sub = p01.add_run("• السيد(ة) / الشركة: .......................................\n• الهاتف: ........................  • ب.ت.و: ..................\n• موقع الضيعة: ...................................................")
+    r01_sub.font.size = Pt(8.5)
+
+    # Row 1, Cell 0: Vehicle & Driver
+    c10 = tbl_info.cell(1, 0)
+    set_cell_background(c10, "FFFFFF")
+    set_cell_margins(c10, top=70, bottom=70, left=100, right=100)
+    set_cell_borders(c10, 
+        top={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        bottom={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        left={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        right={'sz': '12', 'val': 'single', 'color': '1B2A1B'}
+    )
+    p10 = c10.paragraphs[0]
+    make_p_rtl(p10)
+    r10 = p10.add_run("3. وسيلة النقل والسائق (الكرهبة):\n")
+    r10.font.bold = True
+    r10.font.size = Pt(9.5)
+    r10.font.color.rgb = COLOR_PRIMARY
+    r10_sub = p10.add_run("• رقم التسجيل المنجمي: [ ......... تونس .......... ]\n• نوع وسيلة النقل: Isuzu D-Max / Fourgon\n• السائق المسؤول: ............................................\n• ب.ت.و السائق: ................................................")
+    r10_sub.font.size = Pt(8.5)
+
+    # Row 1, Cell 1: Team Leader & Crew
+    c11 = tbl_info.cell(1, 1)
+    set_cell_background(c11, "FFFFFF")
+    set_cell_margins(c11, top=70, bottom=70, left=100, right=100)
+    set_cell_borders(c11, 
+        top={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        bottom={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        left={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+        right={'sz': '12', 'val': 'single', 'color': 'C8A356'}
+    )
+    p11 = c11.paragraphs[0]
+    make_p_rtl(p11)
+    r11 = p11.add_run("4. رئيس الفريق وطاقم العمل الميداني:\n")
+    r11.font.bold = True
+    r11.font.size = Pt(9.5)
+    r11.font.color.rgb = COLOR_PRIMARY
+    r11_sub = p11.add_run("• رئيس المأمورية: ............................................\n• هاتف رئيس الفريق: .........................................\n• العدد الجملي للعمال على متن الوسيلة: [ .... ] أفراد\n• مهمة الفريق: تنفيذ أشغال الجني/التقليم بالضيعة")
+    r11_sub.font.size = Pt(8.5)
+
+    # Spacer
+    sp_p = doc.add_paragraph()
+    sp_p.paragraph_format.space_before = Pt(4)
+    sp_p.paragraph_format.space_after = Pt(2)
+
+    # Equipment Table Header
+    eq_title_p = doc.add_paragraph()
+    make_p_rtl(eq_title_p)
+    eq_t_r = eq_title_p.add_run("5. جرد الآلات والمعدات الفلاحية المنقولة (Inventaire du Matériel Embarqué):")
+    eq_t_r.font.bold = True
+    eq_t_r.font.size = Pt(10)
+    eq_t_r.font.color.rgb = COLOR_PRIMARY
+
+    # Equipment Table (5 cols, 8 rows)
+    eq_tbl = doc.add_table(rows=8, cols=5)
+    make_table_rtl(eq_tbl)
+    
+    headers = ["#", "الآلة / المعدة الفلاحية", "العدد", "الماركة / الطراز / الرقم التسلسلي", "الحالة الفنية والملاحظات"]
+    widths = [Inches(0.4), Inches(2.3), Inches(0.6), Inches(2.1), Inches(1.8)]
+    
+    # Table Header Row
+    for idx, text in enumerate(headers):
+        cell = eq_tbl.cell(0, idx)
+        set_cell_background(cell, "1B2A1B" if idx != 2 else "C8A356")
+        set_cell_margins(cell, top=50, bottom=50, left=50, right=50)
+        p = cell.paragraphs[0]
+        make_p_rtl(p)
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        r = p.add_run(text)
+        r.font.bold = True
+        r.font.size = Pt(8.5)
+        r.font.color.rgb = RGBColor(255, 255, 255) if idx != 2 else RGBColor(27, 42, 27)
+        set_run_font(r, "Arial", True)
+
+    equipment_items = [
+        ("1", "مشاطات كهربائية حديثة لجني الزيتون", "06", "ZinToop Vibrate / Pellenc / Olivion", "حالة ممتازة وجاهزة للعمل"),
+        ("2", "بطاريات ليثيوم ظهرية + كوابل توصيل 15م", "06", "Pack Lithium 44.4V / Câbles", "مشحونة 100% مع شواحنها"),
+        ("3", "مناشير تقليم شجرية حرارية وخفيفة", "04", "Stihl MS 194 T / Husqvarna T435", "سلاسل حادة ومعقمة بمطهر"),
+        ("4", "مفرشات وشباك جني زيتون مقواة", "14", "Filets 10x10m & 8x12m ZinToop", "نظيفة وسليمة دون تمزقات"),
+        ("5", "صناديق بلاستيكية مهواة مخصصة للجني", "80", "Caisses Ajourées ZinToop (20-25 Kg)", "ملكية خاصة لشركة ZinToop"),
+        ("6", "مولد كهربائي ميداني متنقل (Groupe)", "01", "Groupe Essence 3.5 kVA", "جاهز مع خزان وقود كافٍ"),
+        ("7", "ميزان إلكتروني ميداني / باسكول ضيعة", "01", "Bascule Plateforme ZinToop 500 Kg", "معاير ومطابق لشروط الوزن")
+    ]
+
+    for row_idx, item in enumerate(equipment_items, start=1):
+        for col_idx, val in enumerate(item):
+            cell = eq_tbl.cell(row_idx, col_idx)
+            set_cell_background(cell, "FAFAF8" if row_idx % 2 == 0 else "FFFFFF")
+            set_cell_margins(cell, top=40, bottom=40, left=50, right=50)
+            set_cell_borders(cell, 
+                top={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+                bottom={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+                left={'sz': '4', 'val': 'single', 'color': 'CBD5E1'},
+                right={'sz': '4', 'val': 'single', 'color': 'CBD5E1'}
+            )
+            p = cell.paragraphs[0]
+            make_p_rtl(p)
+            if col_idx in (0, 2):
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            r = p.add_run(val)
+            r.font.size = Pt(8)
+            if col_idx == 2:
+                r.font.bold = True
+                r.font.color.rgb = RGBColor(22, 101, 52)
+            set_run_font(r, "Arial", True)
+
+    # Road Check / Security Notice
+    sec_tbl = doc.add_table(rows=1, cols=1)
+    make_table_rtl(sec_tbl)
+    sec_cell = sec_tbl.cell(0, 0)
+    set_cell_background(sec_cell, "FFFBEB")
+    set_cell_margins(sec_cell, top=60, bottom=60, left=80, right=80)
+    set_cell_borders(sec_cell, 
+        top={'sz': '6', 'val': 'single', 'color': 'D97706'},
+        bottom={'sz': '6', 'val': 'single', 'color': 'D97706'},
+        left={'sz': '6', 'val': 'single', 'color': 'D97706'},
+        right={'sz': '12', 'val': 'single', 'color': 'B45309'}
+    )
+    sec_p = sec_cell.paragraphs[0]
+    make_p_rtl(sec_p)
+    sec_r1 = sec_p.add_run("🛡️ شهادة قانونية وإشعار لسلطات المراقبة الأمنية وأعوان حرس المرور والديوانة:\n")
+    sec_r1.font.bold = True
+    sec_r1.font.size = Pt(8.5)
+    sec_r1.font.color.rgb = RGBColor(146, 64, 14)
+    set_run_font(sec_r1, "Arial", True)
+    
+    sec_r2 = sec_p.add_run("تُشهد شركة منصة الزين لزيت الزيتون التونسي (ZinToop SUARL - معرف جبائي: 1969552S) أن كامل المعدات والماكينات والصناديق المذكورة أعلاه هي ملكية قانونية خاصة وحصرية للشركة، منقولة على متن وسيلة النقل المذكورة تحت مسؤولية السائق ورئيس الفريق لأداء أشغال فلاحية تعاقدية بالضيعة المحددة بموجب العقد المرفق. ويُحجر بيعها أو رهنها أو تفويتها. ونرجو من كافة السلطات الأمنية وأعوان حرس المرور تسهيل مرور هذه المأمورية الميدانية وفق التراتيب القانونية الجاري بها العمل.")
+    sec_r2.font.size = Pt(7.5)
+    sec_r2.font.color.rgb = RGBColor(120, 53, 15)
+    set_run_font(sec_r2, "Arial", True)
+
+    # Signatures Table (2 cols)
+    stbl = doc.add_table(rows=1, cols=2)
+    make_table_rtl(stbl)
+    s1 = stbl.cell(0, 0)
+    s2 = stbl.cell(0, 1)
+    
+    for sc in (s1, s2):
+        set_cell_background(sc, "FFFFFF")
+        set_cell_margins(sc, top=50, bottom=50, left=80, right=80)
+        set_cell_borders(sc, 
+            top={'sz': '6', 'val': 'single', 'color': 'CBD5E1'},
+            bottom={'sz': '6', 'val': 'single', 'color': 'CBD5E1'},
+            left={'sz': '6', 'val': 'single', 'color': 'CBD5E1'},
+            right={'sz': '6', 'val': 'single', 'color': 'CBD5E1'}
+        )
+
+    sp1 = s1.paragraphs[0]
+    make_p_rtl(sp1)
+    sr1 = sp1.add_run("عن إدارة الشركة (ZinToop SUARL):\nالممثل القانوني: حمدي الزين (Ezzine Hamdi)\nالتوقيع والختم الرسمي: .......................................")
+    sr1.font.size = Pt(8)
+    sr1.font.bold = True
+    set_run_font(sr1, "Arial", True)
+
+    sp2 = s2.paragraphs[0]
+    make_p_rtl(sp2)
+    sr2 = sp2.add_run("السائق ورئيس الفريق الميداني:\nتعهد بالاستلام ومطابقة المعدات والمسار:\nالتوقيع: ...........................................................")
+    sr2.font.size = Pt(8)
+    sr2.font.bold = True
+    set_run_font(sr2, "Arial", True)
+
+    # Footer
+    ft_p = doc.add_paragraph()
+    make_p_rtl(ft_p)
+    ft_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    ft_r = ft_p.add_run("وثيقة مأمورية رسمية صالحة لكامل تراب الجمهورية التونسية — ZinToop SUARL • MF: 1969552S • القيروان")
+    ft_r.font.size = Pt(7.5)
+    ft_r.font.color.rgb = RGBColor(140, 140, 140)
+    set_run_font(ft_r, "Arial", True)
+
+    sanitize_document_schema(doc)
+    doc.save(output_path)
+    print(f"✅ Generated: {output_path}")
+
 # Run generation
 if __name__ == '__main__':
     base_dirs = ['public/contracts', 'docs/contracts']
@@ -819,3 +1105,5 @@ if __name__ == '__main__':
         build_contract_recolte_ar(os.path.join(d, 'contrat_recolte_zintoop_ar.docx'))
         build_contract_recolte_fr(os.path.join(d, 'contrat_recolte_zintoop_fr.docx'))
         build_contract_fas_agri(os.path.join(d, 'contrat_recolte_fas_agri.docx'))
+        build_ordre_de_mission(os.path.join(d, 'ordre_de_mission_zintoop.docx'))
+

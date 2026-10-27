@@ -776,6 +776,10 @@
                 <span>📄</span>
                 <span id="txtDocx">تحميل Word (.docx)</span>
             </a>
+            <button class="btn btn-outline" onclick="openMissionOrder('recolte')" title="إنشاء إذن مأمورية ونقل معدات فلاحية وفريق العمل المرتبط بهذا العقد" style="border-color: #38bdf8; color: #bae6fd;">
+                <span>🚚</span>
+                <span>إذن المأمورية (Ordre de Mission)</span>
+            </button>
             <button class="btn btn-gold" onclick="window.print()">
                 <span>🖨️</span>
                 <span>طباعة / حفظ PDF</span>
@@ -1454,6 +1458,34 @@
                 else localStorage.removeItem('zintoop_clauses_html_fr');
                 location.reload();
             }
+        function openMissionOrder(type = 'recolte') {
+            const client = (document.querySelector('.slot-client') ? document.querySelector('.slot-client').innerText : '').trim();
+            const phone = (document.querySelector('.slot-phone') ? document.querySelector('.slot-phone').innerText : '').trim();
+            const cin = (document.querySelector('.slot-cin') ? document.querySelector('.slot-cin').innerText : '').trim();
+            const location = (document.querySelector('.slot-location') ? document.querySelector('.slot-location').innerText : '').trim();
+
+            let contractRef = '';
+            const metaSpans = document.querySelectorAll('.doc-meta-row span');
+            metaSpans.forEach(s => {
+                if (s.innerText && s.innerText.includes('REC-')) {
+                    const clean = s.innerText.replace(/.*رقم العقد:\s*|.*N° Contrat:\s*/i, '').trim();
+                    if (clean && !clean.includes('....')) contractRef = clean;
+                }
+            });
+            if (!contractRef) {
+                contractRef = 'REC-2025-' + String(Math.floor(Math.random() * 900) + 100);
+            }
+
+            const params = new URLSearchParams({
+                type: type,
+                contract: contractRef,
+                client: client,
+                phone: phone,
+                cin: cin,
+                location: location
+            });
+
+            window.open(`mission_order.html?${params.toString()}`, '_blank');
         }
 
         // Initialize Placeholders and Editable state
