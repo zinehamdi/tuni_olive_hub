@@ -850,15 +850,15 @@
                 </div>
                 <div class="party-col content-ar">
                     <div class="party-col-title">الطرف الثاني (المستفيد / صاحب الضيعة):</div>
-                    <p>السيد(ة) / المجمع: <span class="fill-line fill-line-md slot-client"></span><br>
-                    ب.ت.و / المعرف: <span class="fill-line fill-line-sm slot-cin"></span> • الهاتف: <span class="fill-line fill-line-sm slot-phone"></span><br>
-                    مقر السكنى: <span class="fill-line fill-line-md slot-address"></span></p>
+                    <p>السيد(ة) / المجمع: <span class="fill-line fill-line-md slot-client" contenteditable="true"></span><br>
+                    ب.ت.و / المعرف: <span class="fill-line fill-line-sm slot-cin" contenteditable="true"></span> • الهاتف: <span class="fill-line fill-line-sm slot-phone" contenteditable="true"></span><br>
+                    مقر السكنى: <span class="fill-line fill-line-md slot-address" contenteditable="true"></span></p>
                 </div>
                 <div class="farm-strip content-ar">
-                    <div><strong>موقع الضيعة:</strong> <span class="fill-line fill-line-md slot-location"></span></div>
-                    <div><strong>صنف الزيتون:</strong> <span class="fill-line fill-line-sm slot-variety"></span></div>
-                    <div><strong>نوع التقليم المطلوب:</strong> [ <span class="fill-line fill-line-xs slot-type"></span> ] (إثمار / صيانة / تجديد وهيكلة)</div>
-                    <div><strong>إجمالي الأصول التقديري:</strong> <span class="fill-line fill-line-xs slot-trees"></span> أصل</div>
+                    <div><strong>موقع الضيعة:</strong> <span class="fill-line fill-line-md slot-location" contenteditable="true"></span></div>
+                    <div><strong>صنف الزيتون:</strong> <span class="fill-line fill-line-sm slot-variety" contenteditable="true"></span></div>
+                    <div><strong>نوع التقليم المطلوب:</strong> [ <span class="fill-line fill-line-xs slot-type" contenteditable="true"></span> ] (إثمار / صيانة / تجديد وهيكلة)</div>
+                    <div><strong>إجمالي الأصول التقديري:</strong> <span class="fill-line fill-line-xs slot-trees" contenteditable="true"></span> أصل</div>
                 </div>
 
                 <!-- FRENCH PARTIES -->
@@ -868,15 +868,15 @@
                 </div>
                 <div class="party-col content-fr">
                     <div class="party-col-title">Deuxième Partie (L'Agriculteur / Client):</div>
-                    <p>M./Mme: <span class="fill-line fill-line-md slot-client"></span><br>
-                    CIN / Identifiant: <span class="fill-line fill-line-sm slot-cin"></span> • Tél: <span class="fill-line fill-line-sm slot-phone"></span><br>
-                    Adresse: <span class="fill-line fill-line-md slot-address"></span></p>
+                    <p>M./Mme: <span class="fill-line fill-line-md slot-client" contenteditable="true"></span><br>
+                    CIN / Identifiant: <span class="fill-line fill-line-sm slot-cin" contenteditable="true"></span> • Tél: <span class="fill-line fill-line-sm slot-phone" contenteditable="true"></span><br>
+                    Adresse: <span class="fill-line fill-line-md slot-address" contenteditable="true"></span></p>
                 </div>
                 <div class="farm-strip content-fr">
-                    <div><strong>Lieu du verger:</strong> <span class="fill-line fill-line-md slot-location"></span></div>
-                    <div><strong>Variété:</strong> <span class="fill-line fill-line-sm slot-variety"></span></div>
-                    <div><strong>Type de taille:</strong> [ <span class="fill-line fill-line-xs slot-type"></span> ] (Fructification / Entretien / Rajeunissement)</div>
-                    <div><strong>Total arbres estimé:</strong> <span class="fill-line fill-line-xs slot-trees"></span> pieds</div>
+                    <div><strong>Lieu du verger:</strong> <span class="fill-line fill-line-md slot-location" contenteditable="true"></span></div>
+                    <div><strong>Variété:</strong> <span class="fill-line fill-line-sm slot-variety" contenteditable="true"></span></div>
+                    <div><strong>Type de taille:</strong> [ <span class="fill-line fill-line-xs slot-type" contenteditable="true"></span> ] (Fructification / Entretien / Rajeunissement)</div>
+                    <div><strong>Total arbres estimé:</strong> <span class="fill-line fill-line-xs slot-trees" contenteditable="true"></span> pieds</div>
                 </div>
             </div>
 
@@ -1478,6 +1478,8 @@
                 btn.style.color = '';
                 txt.innerText = 'تعديل الحقول (معطّل)';
             }
+        }
+
         function openMissionOrder(type = 'taille') {
             const client = (document.querySelector('.slot-client') ? document.querySelector('.slot-client').innerText : '').trim();
             const phone = (document.querySelector('.slot-phone') ? document.querySelector('.slot-phone').innerText : '').trim();

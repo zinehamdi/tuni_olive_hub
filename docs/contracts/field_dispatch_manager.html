@@ -4574,7 +4574,7 @@
                             <!-- Row 2: Contracts & Admin Tools -->
                             <div class="action-row">
                                 ${ (client.service === 'recolte' || client.service === 'mixte') ? `
-                                <a href="harvesting_service_contract.html?client=${encodeURIComponent(client.name)}&phone=${encodeURIComponent(client.phone)}&location=${encodeURIComponent(govDisplayName + ' - ' + delDisplayName + ' - ' + client.location)}&qty=${client.qtyKg}&advance=${client.advance}&trees=${client.treesCount}" target="_blank" class="btn-action btn-action-doc" title="Contrat Récolte">
+                                <a href="harvesting_service_contract.html?client=${encodeURIComponent(client.name)}&phone=${encodeURIComponent(client.phone)}&location=${encodeURIComponent(govDisplayName + ' - ' + delDisplayName + ' - ' + client.location)}&qty=${client.qtyKg}&advance=${client.advance}&trees=${client.treesCount}&rate=${client.pricePerKg || 0.400}" target="_blank" class="btn-action btn-action-doc" title="Contrat Récolte">
                                     📄 ${(currentLang === 'ar') ? 'عقد جني' : 'C. Récolte'}
                                 </a>` : ''}
 
